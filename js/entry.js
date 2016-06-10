@@ -5,7 +5,7 @@ var $ = require('jquery');
 $('body').ready(function () {
 	var
 		oAvaliableModules = {
-			'AuthClient': require('modules/AuthClient/js/manager.js'),
+			'BasicAuthClient': require('modules/BasicAuthClient/js/manager.js'),
 			'MailClient': require('modules/MailClient/js/manager.js'),
 			'ContactsClient': require('modules/ContactsClient/js/manager.js'),
 			'CalendarClient': require('modules/CalendarClient/js/manager.js'),
@@ -14,10 +14,10 @@ $('body').ready(function () {
 			'PhoneClient': require('modules/PhoneClient/js/manager.js'),
 			'SettingsClient': require('modules/SettingsClient/js/manager.js'),
 			'SimpleChatClient': require('modules/SimpleChatClient/js/manager.js'),
-			'SimpleChatEmojiClient': require('modules/SimpleChatEmojiClient/js/manager.js'),
+			'SimpleChatEmojiClientPlugin': require('modules/SimpleChatEmojiClientPlugin/js/manager.js'),
 			
 			'OpenPgpClient': require('modules/OpenPgpClient/js/manager.js'),
-			'MailSensitivityClient': require('modules/MailSensitivityClient/js/manager.js'),
+			'MailSensitivityClientPlugin': require('modules/MailSensitivityClientPlugin/js/manager.js'),
 			'SessionTimeoutClient': require('modules/SessionTimeoutClient/js/manager.js'),
 			'ChangePasswordClient': require('modules/ChangePasswordClient/js/manager.js'),
 			'MobileSyncClient': require('modules/MobileSyncClient/js/manager.js'),

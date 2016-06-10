@@ -20,7 +20,7 @@ function CAlertPopup()
 	this.alertDesc = ko.observable('');
 	this.closeCallback = null;
 	this.popupHeading = ko.observable('');
-	this.okButtonText = ko.observable(TextUtils.i18n('CORE/ACTION_OK'));
+	this.okButtonText = ko.observable(TextUtils.i18n('CORECLIENT/ACTION_OK'));
 }
 
 _.extendOwn(CAlertPopup.prototype, CAbstractPopup.prototype);
@@ -38,7 +38,7 @@ CAlertPopup.prototype.onShow = function (sDesc, fCloseCallback, sHeading, sOkBut
 	this.alertDesc(sDesc);
 	this.closeCallback = fCloseCallback || null;
 	this.popupHeading(sHeading || '');
-	this.okButtonText(sOkButtonText || TextUtils.i18n('CORE/ACTION_OK'));
+	this.okButtonText(sOkButtonText || TextUtils.i18n('CORECLIENT/ACTION_OK'));
 };
 
 CAlertPopup.prototype.onEnterHandler = function ()

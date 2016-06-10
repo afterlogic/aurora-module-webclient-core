@@ -20,8 +20,8 @@ function CConfirmPopup()
 	this.fConfirmCallback = null;
 	this.confirmDesc = ko.observable('');
 	this.popupHeading = ko.observable('');
-	this.okButtonText = ko.observable(TextUtils.i18n('CORE/ACTION_OK'));
-	this.cancelButtonText = ko.observable(TextUtils.i18n('CORE/ACTION_CANCEL'));
+	this.okButtonText = ko.observable(TextUtils.i18n('CORECLIENT/ACTION_OK'));
+	this.cancelButtonText = ko.observable(TextUtils.i18n('CORECLIENT/ACTION_CANCEL'));
 	this.shown = false;
 }
 
@@ -40,8 +40,8 @@ CConfirmPopup.prototype.onShow = function (sDesc, fConfirmCallback, sHeading, sO
 {
 	this.confirmDesc(sDesc);
 	this.popupHeading(sHeading || '');
-	this.okButtonText(sOkButtonText || TextUtils.i18n('CORE/ACTION_OK'));
-	this.cancelButtonText(sCancelButtonText || TextUtils.i18n('CORE/ACTION_CANCEL'));
+	this.okButtonText(sOkButtonText || TextUtils.i18n('CORECLIENT/ACTION_OK'));
+	this.cancelButtonText(sCancelButtonText || TextUtils.i18n('CORECLIENT/ACTION_CANCEL'));
 	if ($.isFunction(fConfirmCallback))
 	{
 		this.fConfirmCallback = fConfirmCallback;

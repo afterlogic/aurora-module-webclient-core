@@ -51,7 +51,7 @@ CInformationView.prototype.showLoading = function (sMessage)
 	}
 	else
 	{
-		this.loadingMessage(TextUtils.i18n('CORE/INFO_LOADING'));
+		this.loadingMessage(TextUtils.i18n('CORECLIENT/INFO_LOADING'));
 	}
 	this.loadingVisible(true);
 	_.defer(_.bind(function () {

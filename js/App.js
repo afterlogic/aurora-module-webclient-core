@@ -125,7 +125,7 @@ CApp.prototype.isMobile = function ()
 
 CApp.prototype.init = function ()
 {
-	ModulesManager.run('AuthClient', 'beforeAppRunning', [this.iUserRole !== Enums.UserRole.Anonymous]);
+	ModulesManager.run('BasicAuthClient', 'beforeAppRunning', [this.iUserRole !== Enums.UserRole.Anonymous]);
 	
 	if (Browser.iosDevice && this.iUserRole !== Enums.UserRole.Anonymous && UserSettings.SyncIosAfterLogin && UserSettings.AllowIosProfile)
 	{
@@ -212,7 +212,7 @@ CApp.prototype.showLastErrorOnLogin = function ()
 		
 		if (UserSettings.LastErrorCode === Enums.Errors.AuthError)
 		{
-			Screens.showError(Utils.i18n('CORE/ERROR_AUTH_PROBLEM'), false, true);
+			Screens.showError(Utils.i18n('CORECLIENT/ERROR_AUTH_PROBLEM'), false, true);
 		}
 	}
 };
@@ -222,7 +222,7 @@ CApp.prototype.showLastErrorOnLogin = function ()
  */
 CApp.prototype.logout = function (iLastErrorCode)
 {
-	ModulesManager.run('AuthClient', 'logout', [iLastErrorCode, this.onLogout, this]);
+	ModulesManager.run('BasicAuthClient', 'logout', [iLastErrorCode, this.onLogout, this]);
 	
 	this.iUserRole = Enums.UserRole.Anonymous;
 };
@@ -307,7 +307,7 @@ CApp.prototype.checkCookies = function ()
 	
 	if (!bResult)
 	{
-		App.Screens.showError(Utils.i18n('CORE/ERROR_COOKIES_DISABLED'), false, true);
+		App.Screens.showError(Utils.i18n('CORECLIENT/ERROR_COOKIES_DISABLED'), false, true);
 	}
 	else
 	{
