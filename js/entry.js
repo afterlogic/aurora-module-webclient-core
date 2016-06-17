@@ -5,6 +5,8 @@ var $ = require('jquery');
 $('body').ready(function () {
 	var
 		oAvaliableModules = {
+			'CoreClient': require('modules/CoreClient/js/manager.js'),
+			'AdminPanelClient': require('modules/AdminPanelClient/js/manager.js'),
 			'BasicAuthClient': require('modules/BasicAuthClient/js/manager.js'),
 			'MailClient': require('modules/MailClient/js/manager.js'),
 			'ContactsClient': require('modules/ContactsClient/js/manager.js'),

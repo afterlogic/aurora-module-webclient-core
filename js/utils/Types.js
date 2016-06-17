@@ -3,7 +3,9 @@
 var
 	_ = require('underscore'),
 	
-	Types = {}
+	Types = {},
+	
+	aStandardPerPageList = [10, 20, 30, 50, 75, 100, 150, 200]
 ;
 
 /**
@@ -94,6 +96,21 @@ Types.isNonEmptyArray = function (aValue, iArrayLen)
 	iArrayLen = iArrayLen || 1;
 	
 	return _.isArray(aValue) && iArrayLen <= aValue.length;
+};
+
+/**
+ * @param {number} iValue
+ * 
+ * @returns {Array}
+ */
+Types.getAdaptedPerPageList = function (iValue)
+{
+	if (-1 === _.indexOf(aStandardPerPageList, iValue))
+	{
+		return _.sortBy(_.union(aStandardPerPageList, [iValue]), function (iItem) { return iItem; });
+	}
+	
+	return aStandardPerPageList;
 };
 
 module.exports = Types;

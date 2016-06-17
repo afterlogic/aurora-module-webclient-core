@@ -1,0 +1,56 @@
+<div class="middle_bar">
+	<div class="panel_top">
+		<h2 class="settings_heading"></h2>
+	</div>
+	<div class="panel_center">
+		<div class="fields">
+			<div class="fieldset">
+				<div class="row">
+					<span class="label" data-bind="i18n: {'key': 'CORECLIENT/LABEL_DB_LOGIN'}"></span>
+					<span class="value">
+						<input class="input" type="text" data-bind="value: dbLogin" />
+					</span>
+				</div>
+				<div class="row">
+					<span class="label" data-bind="i18n: {'key': 'CORECLIENT/LABEL_DB_PASSWORD'}"></span>
+					<span class="value">
+						<input class="input" type="password" data-bind="value: dbPassword" />
+					</span>
+				</div>
+				<div class="row">
+					<span class="label" data-bind="i18n: {'key': 'CORECLIENT/LABEL_DN_NAME'}"></span>
+					<span class="value">
+						<input class="input" type="text" data-bind="value: dbName" />
+					</span>
+				</div>
+				<div class="row">
+					<span class="label" data-bind="i18n: {'key': 'CORECLIENT/LABEL_DB_HOST'}"></span>
+					<span class="value">
+						<input class="input" type="text" data-bind="value: dbHost" />
+					</span>
+				</div>
+				<div class="row">
+					<span class="label"></span>
+					<span class="value buttons">
+						<span class="button" data-bind="i18n: {'key': 'CORECLIENT/BUTTON_DB_TEST_CONNECTION'}"></span>
+					</span>
+				</div>
+				<div class="row" style="margin-top: 40px;">
+					<span class="value buttons">
+						<span class="button" data-bind="i18n: {'key': 'CORECLIENT/BUTTON_DB_CREATE_TABLES'}"></span>
+						<span class="button" data-bind="i18n: {'key': 'CORECLIENT/BUTTON_DB_UPDATE_TABLES'}"></span>
+					</span>
+				</div>
+			</div>		
+
+			<div class="buttons">
+				<span class="button" data-bind="click: save, visible: !isSaving()">
+					<span data-bind="i18n: {'key': 'CORECLIENT/ACTION_SAVE'}"></span>
+				</span>
+				<span class="button" data-bind="visible: isSaving()">
+					<span data-bind="i18n: {'key': 'CORECLIENT/ACTION_SAVE_IN_PROGRESS'}"></span>
+				</span>
+			</div>
+		</div>
+	</div>
+</div>

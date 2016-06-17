@@ -13,6 +13,9 @@ var
 ;
 
 module.exports = {
+	ServerModuleName: 'Core',
+	HashModuleName: 'core',
+	
 	AllowChangeSettings: AppData.App ? !!AppData.App.AllowUsersChangeInterfaceSettings : false,
 	AllowClientDebug: !!AppData.ClientDebug,
 	AllowDesktopNotifications: AppData.User ? !!AppData.User.DesktopNotifications : true,
@@ -63,6 +66,27 @@ module.exports = {
 	SipEnable: AppData.User ? !!AppData.User.SipEnable : true,
 	TwilioEnable: AppData.User ? !!AppData.User.TwilioEnable : true,
 	TwilioNumber: AppData.User ? Types.pInt(AppData.User.TwilioNumber) : 0,
+	
+	init: function (oAppDataSection) {
+		if (oAppDataSection)
+		{
+			this.DateFormat = Types.pString(oAppDataSection.DefaultDateFormat);
+			this.Language = Types.pString(oAppDataSection.DefaultLanguage);
+			this.LogoUrl = Types.pString(oAppDataSection.AppStyleImage);
+			this.SiteName = Types.pString(oAppDataSection.SiteName);
+			this.timeFormat(Types.pString(oAppDataSection.DefaultTimeFormat));
+			
+			//only for admin
+			this.LicenseKey = Types.pString(oAppDataSection.LicenseKey);
+			this.DbHost = Types.pString(oAppDataSection.DBHost);
+			this.DbName = Types.pString(oAppDataSection.DBName);
+			this.DbLogin = Types.pString(oAppDataSection.DBLogin);
+			this.AdminLogin = Types.pString(oAppDataSection.AdminLogin);
+			this.EnableLogging = !!oAppDataSection.EnableLogging;
+			this.EnableEventLogging = !!oAppDataSection.EnableEventLogging;
+			this.LoggingLevel = Types.pString(oAppDataSection.LoggingLevel);
+		}
+	},
 	
 	update: function (iAutoRefreshIntervalMinutes, sDefaultTheme, sLanguage, sTimeFormat, sDesktopNotifications) {
 		this.AutoRefreshIntervalMinutes = iAutoRefreshIntervalMinutes;
