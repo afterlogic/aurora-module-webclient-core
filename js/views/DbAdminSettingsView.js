@@ -66,4 +66,9 @@ CDbAdminSettingsView.prototype.applySavedValues = function (oParameters)
 //	Settings.updateDb(oParameters.DbLogin, oParameters.DbPassword, oParameters.DbName, oParameters.DbHost);
 };
 
+CDbAdminSettingsView.prototype.setAccessLevel = function (sEntitiesName, iEntityId)
+{
+	this.visible(sEntitiesName === '');
+};
+
 module.exports = new CDbAdminSettingsView();

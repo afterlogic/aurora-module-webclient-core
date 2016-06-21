@@ -61,4 +61,9 @@ CLoggingAdminSettingsView.prototype.applySavedValues = function (oParameters)
 //	Settings.updateLogging(oParameters.EnableLogging, oParameters.EnableEventLogging, oParameters.LoggingLevel);
 };
 
+CLoggingAdminSettingsView.prototype.setAccessLevel = function (sEntitiesName, iEntityId)
+{
+	this.visible(sEntitiesName === '');
+};
+
 module.exports = new CLoggingAdminSettingsView();

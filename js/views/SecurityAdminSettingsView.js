@@ -64,4 +64,9 @@ CSecurityAdminSettingsView.prototype.applySavedValues = function (oParameters)
 //	Settings.updateSecurity(oParameters.AdminLogin);
 };
 
+CSecurityAdminSettingsView.prototype.setAccessLevel = function (sEntitiesName, iEntityId)
+{
+	this.visible(sEntitiesName === '');
+};
+
 module.exports = new CSecurityAdminSettingsView();
