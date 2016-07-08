@@ -134,35 +134,43 @@ CApp.prototype.init = function ()
 	
 	if (this.iUserRole !== Enums.UserRole.Anonymous && !this.bPublic)
 	{
-		var AccountList = require('modules/MailClient/js/AccountList.js');
-		this.currentAccountId = AccountList.currentId;
-		this.defaultAccountId = AccountList.defaultId;
-		this.hasAccountWithId = _.bind(AccountList.hasAccountWithId, AccountList);
-		
-		this.currentAccountEmail = ko.computed(function () {
-			var oAccount = AccountList.getAccount(this.currentAccountId());
-			return oAccount ? oAccount.email() : '';
-		}, this);
-		
-		this.defaultAccount = ko.computed(function () {
-			return AccountList.getAccount(this.defaultAccountId());
-		}, this);
-		this.defaultAccountEmail = ko.computed(function () {
-			var oAccount = AccountList.getAccount(this.defaultAccountId());
-			return oAccount ? oAccount.email() : '';
-		}, this);
-		this.defaultAccountFriendlyName = ko.computed(function () {
-			var oAccount = AccountList.getAccount(this.defaultAccountId());
-			return oAccount ? oAccount.friendlyName() : '';
-		}, this);
-		
-		this.getAttendee = function (aAttendees) {
-			return AccountList.getAttendee(
-				_.map(aAttendees, function (mAttendee) {
-					return Types.isString(mAttendee) ? mAttendee : mAttendee.email;
-				}, this)
-			);
-		};
+		var AccountList = ModulesManager.run('Mail', 'getAccountList');
+		if (AccountList)
+		{
+			this.currentAccountId = AccountList.currentId;
+			this.defaultAccountId = AccountList.defaultId;
+			this.hasAccountWithId = _.bind(AccountList.hasAccountWithId, AccountList);
+
+			this.currentAccountEmail = ko.computed(function () {
+				var oAccount = AccountList.getAccount(this.currentAccountId());
+				return oAccount ? oAccount.email() : '';
+			}, this);
+
+			this.defaultAccount = ko.computed(function () {
+				return AccountList.getAccount(this.defaultAccountId());
+			}, this);
+			this.defaultAccountEmail = ko.computed(function () {
+				var oAccount = AccountList.getAccount(this.defaultAccountId());
+				return oAccount ? oAccount.email() : '';
+			}, this);
+			this.defaultAccountFriendlyName = ko.computed(function () {
+				var oAccount = AccountList.getAccount(this.defaultAccountId());
+				return oAccount ? oAccount.friendlyName() : '';
+			}, this);
+
+			this.getAttendee = function (aAttendees) {
+				return AccountList.getAttendee(
+					_.map(aAttendees, function (mAttendee) {
+						return Types.isString(mAttendee) ? mAttendee : mAttendee.email;
+					}, this)
+				);
+			};
+		}
+		else
+		{
+			this.currentAccountEmail = _.bind(function () { return this.sUserName; }, this);
+			this.defaultAccountEmail = _.bind(function () { return this.sUserName; }, this);
+		}
 	}
 	
 	if (!this.bMobile)
