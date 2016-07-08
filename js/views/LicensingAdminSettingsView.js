@@ -57,9 +57,9 @@ CLicensingAdminSettingsView.prototype.applySavedValues = function (oParameters)
 //	Settings.updateLicense(oParameters.LicenseKey);
 };
 
-CLicensingAdminSettingsView.prototype.setAccessLevel = function (sEntitiesName, iEntityId)
+CLicensingAdminSettingsView.prototype.setAccessLevel = function (sEntityType, iEntityId)
 {
-	this.visible(sEntitiesName === '');
+	this.visible(sEntityType === '');
 };
 
 module.exports = new CLicensingAdminSettingsView();
