@@ -70,7 +70,7 @@ Enums.Errors = {
 	'NotSavedInSentItems': 304,
 	'NoRequestedMailbox': 305,
 	'CanNotChangePassword': 502,
-	'AccountOldPasswordNotCorrect': 503,
+	'AccountOldPasswordNotCorrect': 1020,
 	'FetcherIncServerNotAvailable': 702,
 	'FetcherLoginNotCorrect': 703,
 	'HelpdeskThrowInWebmail': 805,

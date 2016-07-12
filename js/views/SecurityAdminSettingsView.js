@@ -4,7 +4,10 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	
 	ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
+	Screens = require('modules/CoreClient/js/Screens.js'),
 	CAbstractSettingsFormView = ModulesManager.run('SettingsClient', 'getAbstractSettingsFormViewClass'),
 	
 	Settings = require('modules/CoreClient/js/Settings.js')
@@ -67,6 +70,16 @@ CSecurityAdminSettingsView.prototype.applySavedValues = function (oParameters)
 CSecurityAdminSettingsView.prototype.setAccessLevel = function (sEntityType, iEntityId)
 {
 	this.visible(sEntityType === '');
+};
+
+CSecurityAdminSettingsView.prototype.validateBeforeSave = function ()
+{
+	if (this.newPass() !== this.confirmPass())
+	{
+		Screens.showError(TextUtils.i18n('CORECLIENT/ERROR_PASSWORDS_DO_NOT_MATCH'));
+		return false;
+	}
+	return true;
 };
 
 module.exports = new CSecurityAdminSettingsView();
