@@ -4,9 +4,13 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
+	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	
 	ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
+	Screens = require('modules/CoreClient/js/Screens.js'),
 	CAbstractSettingsFormView = ModulesManager.run('SettingsClient', 'getAbstractSettingsFormViewClass'),
 	
+	Ajax = require('modules/CoreClient/js/Ajax.js'),
 	Settings = require('modules/CoreClient/js/Settings.js')
 ;
 
@@ -17,9 +21,11 @@ function CDbAdminSettingsView()
 {
 	CAbstractSettingsFormView.call(this, Settings.ServerModuleName);
 	
+	this.sFakePass = 'xxxxxxxxxx';
+	
 	/* Editable fields */
 	this.dbLogin = ko.observable(Settings.DbLogin);
-	this.dbPassword = ko.observable('xxxxxxxxxx');
+	this.dbPassword = ko.observable(this.sFakePass);
 	this.dbName = ko.observable(Settings.DbName);
 	this.dbHost = ko.observable(Settings.DbHost);
 	/*-- Editable fields */
@@ -42,13 +48,21 @@ CDbAdminSettingsView.prototype.getCurrentValues = function()
 CDbAdminSettingsView.prototype.revertGlobalValues = function()
 {
 	this.dbLogin(Settings.DbLogin);
-	this.dbPassword('xxxxxxxxxx');
+	this.dbPassword(this.sFakePass);
 	this.dbName(Settings.DbName);
 	this.dbHost(Settings.DbHost);
 };
 
 CDbAdminSettingsView.prototype.getParametersForSave = function ()
 {
+	if (this.dbPassword() === this.sFakePass)
+	{
+		return {
+			'DbLogin': this.dbLogin(),
+			'DbName': this.dbName(),
+			'DbHost': this.dbHost()
+		};
+	}
 	return {
 		'DbLogin': this.dbLogin(),
 		'DbPassword': this.dbPassword(),
@@ -58,8 +72,7 @@ CDbAdminSettingsView.prototype.getParametersForSave = function ()
 };
 
 /**
- * @param {Object} oResponse
- * @param {Object} oRequest
+ * @param {Object} oParameters
  */
 CDbAdminSettingsView.prototype.applySavedValues = function (oParameters)
 {
@@ -69,6 +82,20 @@ CDbAdminSettingsView.prototype.applySavedValues = function (oParameters)
 CDbAdminSettingsView.prototype.setAccessLevel = function (sEntityType, iEntityId)
 {
 	this.visible(sEntityType === '');
+};
+
+CDbAdminSettingsView.prototype.testConnection = function ()
+{
+	Ajax.send('Core', 'TestDbConnection', this.getParametersForSave(), function (oResponse) {
+		if (oResponse.Result)
+		{
+			Screens.showReport(TextUtils.i18n('CORECLIENT/REPORT_DB_CONNECT_SUCCESSFUL'));
+		}
+		else
+		{
+			Screens.showError(TextUtils.i18n('CORECLIENT/ERROR_DB_CONNECT_SUCCESSFUL'));
+		}
+	}, this);
 };
 
 module.exports = new CDbAdminSettingsView();
