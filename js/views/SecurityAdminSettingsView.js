@@ -20,11 +20,13 @@ function CSecurityAdminSettingsView()
 {
 	CAbstractSettingsFormView.call(this, Settings.ServerModuleName);
 	
+	this.sFakePass = 'xxxxxxxxxx';
+	
 	/* Editable fields */
 	this.login = ko.observable(Settings.AdminLogin);
-	this.pass = ko.observable('xxxxxxxxxx');
-	this.newPass = ko.observable('xxxxxxxxxx');
-	this.confirmPass = ko.observable('xxxxxxxxxx');
+	this.pass = ko.observable(this.sFakePass);
+	this.newPass = ko.observable(this.sFakePass);
+	this.confirmPass = ko.observable(this.sFakePass);
 	/*-- Editable fields */
 }
 
@@ -45,13 +47,20 @@ CSecurityAdminSettingsView.prototype.getCurrentValues = function()
 CSecurityAdminSettingsView.prototype.revertGlobalValues = function()
 {
 	this.login(Settings.AdminLogin);
-	this.pass('xxxxxxxxxx');
-	this.newPass('xxxxxxxxxx');
-	this.confirmPass('xxxxxxxxxx');
+	this.pass(this.sFakePass);
+	this.newPass(this.sFakePass);
+	this.confirmPass(this.sFakePass);
 };
 
 CSecurityAdminSettingsView.prototype.getParametersForSave = function ()
 {
+	if (this.pass() === this.sFakePass)
+	{
+		return {
+			'AdminLogin': this.login()
+		};
+	}
+	
 	return {
 		'AdminLogin': this.login(),
 		'Password': this.pass(),
@@ -74,7 +83,7 @@ CSecurityAdminSettingsView.prototype.setAccessLevel = function (sEntityType, iEn
 
 CSecurityAdminSettingsView.prototype.validateBeforeSave = function ()
 {
-	if (this.newPass() !== this.confirmPass())
+	if (this.pass() !== this.sFakePass && this.newPass() !== this.confirmPass())
 	{
 		Screens.showError(TextUtils.i18n('CORECLIENT/ERROR_PASSWORDS_DO_NOT_MATCH'));
 		return false;
