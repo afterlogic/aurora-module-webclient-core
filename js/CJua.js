@@ -541,7 +541,10 @@ AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback)
 		oFormData.append('jua-post-type', 'ajax');
 		oFormData.append(getValue(this.oOptions, 'name', 'juaFile'), oFileInfo['File']);
 		$.each(aHidden, function (sKey, sValue) {
-			oFormData.append(sKey, getStringOrCallFunction(sValue, [oFileInfo]));
+			if (typeof sKey === 'string' && typeof sValue === 'string')
+			{
+				oFormData.append(sKey, getStringOrCallFunction(sValue, [oFileInfo]));
+			}
 		});
 
 		oXhr.send(oFormData);
@@ -551,6 +554,10 @@ AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback)
 	}
 	catch (oError)
 	{
+		if (window.console)
+		{
+			window.console.error(oError);
+		}
 	}
 
 	fCallback(null, sUid);
