@@ -401,9 +401,9 @@ function getNewInput(sName, bMultiple, sInputPos)
  */
 function getStringOrCallFunction(mStringOrFunction, aFunctionParams)
 {
-	return $.isFunction(mStringOrFunction) ? 
-		mStringOrFunction.apply(null, _.isArray(aFunctionParams) ? aFunctionParams : []).toString() :
-		mStringOrFunction.toString();
+	return Types.pString(_.isFunction(mStringOrFunction) ? 
+		mStringOrFunction.apply(null, _.isArray(aFunctionParams) ? aFunctionParams : []) :
+		mStringOrFunction);
 }
 
 /**
@@ -540,11 +540,8 @@ AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback)
 
 		oFormData.append('jua-post-type', 'ajax');
 		oFormData.append(getValue(this.oOptions, 'name', 'juaFile'), oFileInfo['File']);
-		$.each(aHidden, function (sKey, sValue) {
-			if (typeof sKey === 'string' && typeof sValue === 'string')
-			{
-				oFormData.append(sKey, getStringOrCallFunction(sValue, [oFileInfo]));
-			}
+		$.each(aHidden, function (sKey, mValue) {
+			oFormData.append(sKey, getStringOrCallFunction(mValue, [oFileInfo]));
 		});
 
 		oXhr.send(oFormData);
