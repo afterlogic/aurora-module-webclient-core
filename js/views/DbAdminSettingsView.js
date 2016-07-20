@@ -93,7 +93,21 @@ CDbAdminSettingsView.prototype.testConnection = function ()
 		}
 		else
 		{
-			Screens.showError(TextUtils.i18n('CORECLIENT/ERROR_DB_CONNECT_SUCCESSFUL'));
+			Screens.showError(TextUtils.i18n('CORECLIENT/ERROR_DB_CONNECT_FAILED'));
+		}
+	}, this);
+};
+
+CDbAdminSettingsView.prototype.createTables = function ()
+{
+	Ajax.send('Core', 'CreateTables', null, function (oResponse) {
+		if (oResponse.Result)
+		{
+			Screens.showReport(TextUtils.i18n('CORECLIENT/REPORT_CREATE_TABLES_SUCCESSFUL'));
+		}
+		else
+		{
+			Screens.showError(TextUtils.i18n('CORECLIENT/ERROR_CREATE_TABLES_FAILED'));
 		}
 	}, this);
 };

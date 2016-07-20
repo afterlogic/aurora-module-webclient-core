@@ -35,10 +35,15 @@
 						<span class="button" data-bind="i18n: {'key': 'CORECLIENT/BUTTON_DB_TEST_CONNECTION'}, click: testConnection"></span>
 					</span>
 				</div>
-				<div class="row" style="margin-top: 40px;">
+				<div class="row hint" style="margin-top: 40px;">
+					<span class="label"></span>
+					<span class="value" data-bind="i18n: {'key': 'CORECLIENT/HINT_DB_CREATE_TABLES'}"></span>
+				</div>
+				<div class="row">
+					<span class="label"></span>
 					<span class="value buttons">
-						<span class="button" data-bind="i18n: {'key': 'CORECLIENT/BUTTON_DB_CREATE_TABLES'}"></span>
-						<span class="button" data-bind="i18n: {'key': 'CORECLIENT/BUTTON_DB_UPDATE_TABLES'}"></span>
+						<span class="button" data-bind="i18n: {'key': 'CORECLIENT/BUTTON_DB_CREATE_TABLES'}, click: createTables"></span>
+						<span class="button" data-bind="i18n: {'key': 'CORECLIENT/BUTTON_DB_UPDATE_TABLES'}, visible: false"></span>
 					</span>
 				</div>
 			</div>		
