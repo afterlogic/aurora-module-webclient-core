@@ -242,5 +242,17 @@ TextUtils.getFriendlySize = function (iSizeInBytes)
 	return iSizeInBytes + TextUtils.i18n('CORECLIENT/LABEL_BYTES');
 };
 
+/**
+ * @param {Object} oApp
+ */
+TextUtils.getMobileCredentialsInfo = function (oApp)
+{
+	if (oApp.defaultAccount && oApp.defaultAccount())
+	{
+		return TextUtils.i18n('CORECLIENT/INFO_MOBILE_EMAIL_CREDENTIALS', {'EMAIL': oApp.defaultAccountEmail()});
+	}
+	
+	return TextUtils.i18n('CORECLIENT/INFO_MOBILE_CREDENTIALS');
+};
 
 module.exports = TextUtils;
