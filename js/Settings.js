@@ -94,5 +94,29 @@ module.exports = {
 		this.Language = sLanguage;
 		this.timeFormat(sTimeFormat);
 		this.AllowDesktopNotifications = sDesktopNotifications === '1';
+	},
+	
+	/**
+	 * Updates admin login from settings tab in admin panel.
+	 * 
+	 * @param {string} sAdminLogin Admin login.
+	 */
+	updateSecurity: function (sAdminLogin)
+	{
+		this.AdminLogin = sAdminLogin;
+	},
+	
+	/**
+	 * Updates settings from db settings tab in admin panel.
+	 * 
+	 * @param {string} sDbLogin Database login.
+	 * @param {string} sDbName Database name.
+	 * @param {string} sDbHost Database host.
+	 */
+	updateDb: function (sDbLogin, sDbName, sDbHost)
+	{
+		this.DbHost = sDbHost;
+		this.DbName = sDbName;
+		this.DbLogin = sDbLogin;
 	}
 };

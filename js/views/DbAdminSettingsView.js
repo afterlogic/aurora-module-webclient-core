@@ -76,7 +76,7 @@ CDbAdminSettingsView.prototype.getParametersForSave = function ()
  */
 CDbAdminSettingsView.prototype.applySavedValues = function (oParameters)
 {
-//	Settings.updateDb(oParameters.DbLogin, oParameters.DbPassword, oParameters.DbName, oParameters.DbHost);
+	Settings.updateDb(oParameters.DbLogin, oParameters.DbName, oParameters.DbHost);
 };
 
 CDbAdminSettingsView.prototype.setAccessLevel = function (sEntityType, iEntityId)

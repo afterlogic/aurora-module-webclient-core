@@ -70,11 +70,13 @@ CSecurityAdminSettingsView.prototype.getParametersForSave = function ()
 };
 
 /**
- * @param {Object} oParameters
+ * Applies saved values to the Settings object.
+ * 
+ * @param {Object} oParameters Parameters which were saved on the server side.
  */
 CSecurityAdminSettingsView.prototype.applySavedValues = function (oParameters)
 {
-//	Settings.updateSecurity(oParameters.AdminLogin);
+	Settings.updateSecurity(oParameters.AdminLogin);
 };
 
 CSecurityAdminSettingsView.prototype.setAccessLevel = function (sEntityType, iEntityId)
