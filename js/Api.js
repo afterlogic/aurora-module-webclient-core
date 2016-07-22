@@ -57,6 +57,9 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 		case Enums.Errors.FetcherLoginNotCorrect:
 			sResultError = TextUtils.i18n('CORECLIENT/ERROR_FETCHER_NOT_SAVED');
 			break;
+		case Enums.Errors.AccountAlreadyExists:
+			sResultError = TextUtils.i18n('CORECLIENT/ERROR_ACCOUNT_ALREADY_EXISTS');
+			break;
 		case Enums.Errors.HelpdeskUserNotExists:
 			sResultError = TextUtils.i18n('CORECLIENT/ERROR_FORGOT_NO_HELPDESK_ACCOUNT');
 			break;
