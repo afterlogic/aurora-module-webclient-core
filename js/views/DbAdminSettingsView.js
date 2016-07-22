@@ -35,6 +35,16 @@ _.extendOwn(CDbAdminSettingsView.prototype, CAbstractSettingsFormView.prototype)
 
 CDbAdminSettingsView.prototype.ViewTemplate = 'CoreClient_DbAdminSettingsView';
 
+/**
+ * Returns error text to show on start if the tab has empty fields.
+ * 
+ * @returns {String}
+ */
+CDbAdminSettingsView.prototype.getStartError = function ()
+{
+	return (Settings.DbLogin === '' || Settings.DbName === '' || Settings.DbHost === '') ? TextUtils.i18n('CORECLIENT/ERROR_DB_ACCESS') : '';
+};
+
 CDbAdminSettingsView.prototype.getCurrentValues = function()
 {
 	return [

@@ -35,6 +35,16 @@ _.extendOwn(CSecurityAdminSettingsView.prototype, CAbstractSettingsFormView.prot
 
 CSecurityAdminSettingsView.prototype.ViewTemplate = 'CoreClient_SecurityAdminSettingsView';
 
+/**
+ * Returns error text to show on start if there is no admin password.
+ * 
+ * @returns {String}
+ */
+CSecurityAdminSettingsView.prototype.getStartError = function ()
+{
+	return !Settings.AdminHasPassword ? TextUtils.i18n('CORECLIENT/ERROR_ADMIN_EMPTY_PASSWORD') : '';
+};
+
 CSecurityAdminSettingsView.prototype.getCurrentValues = function()
 {
 	return [
@@ -55,7 +65,7 @@ CSecurityAdminSettingsView.prototype.revertGlobalValues = function()
 
 CSecurityAdminSettingsView.prototype.getParametersForSave = function ()
 {
-	if (this.pass() === '')
+	if (Settings.AdminHasPassword && this.pass() === '')
 	{
 		return {
 			'AdminLogin': this.login()
@@ -86,10 +96,16 @@ CSecurityAdminSettingsView.prototype.setAccessLevel = function (sEntityType, iEn
 
 CSecurityAdminSettingsView.prototype.validateBeforeSave = function ()
 {
-	if (this.pass() === '' && this.newPass() !== '')
+	if (Settings.AdminHasPassword && this.pass() === '' && this.newPass() !== '')
 	{
 		Screens.showError(TextUtils.i18n('CORECLIENT/ERROR_CURRENT_PASSWORD_EMPTY'));
 		this.passFocused(true);
+		return false;
+	}
+	if (this.pass() !== '' && this.newPass() === '')
+	{
+		Screens.showError(TextUtils.i18n('CORECLIENT/ERROR_NEW_PASSWORD_EMPTY'));
+		this.newPassFocused(true);
 		return false;
 	}
 	if (this.pass() !== '' && this.newPass() !== this.confirmPass())
