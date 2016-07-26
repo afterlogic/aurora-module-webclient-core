@@ -6,6 +6,8 @@ var
 	
 	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
 	
+	App = require('modules/CoreClient/js/App.js'),
+	
 	CAbstractScreenView = require('modules/CoreClient/js/views/CAbstractScreenView.js')
 ;
 
@@ -34,11 +36,14 @@ function CInformationView()
 	this.iErrorTimeout = -1;
 	this.isHtmlError = ko.observable(false);
 	this.gray = ko.observable(false);
+	
+	App.broadcastEvent('%ModuleName%::ConstructView::after', {'Name': this.ViewConstructorName, 'View': this});
 }
 
 _.extendOwn(CInformationView.prototype, CAbstractScreenView.prototype);
 
 CInformationView.prototype.ViewTemplate = 'CoreClient_InformationView';
+CInformationView.prototype.ViewConstructorName = 'CInformationView';
 
 /**
  * @param {string} sMessage

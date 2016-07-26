@@ -45,16 +45,13 @@ function CHeaderView()
 	
 	this.mobileDevice = Browser.mobileDevice;
 	
-//	if (AfterLogicApi.runPluginHook)
-//	{
-//		AfterLogicApi.runPluginHook('view-model-defined', [this.__name, this]);
-//	}
+	App.broadcastEvent('%ModuleName%::ConstructView::after', {'Name': this.ViewConstructorName, 'View': this});
 }
 
 _.extendOwn(CHeaderView.prototype, CAbstractScreenView.prototype);
 
 CHeaderView.prototype.ViewTemplate = App.isMobile() ? 'CoreClient_HeaderMobileView' : 'CoreClient_HeaderView';
-CHeaderView.prototype.__name = 'CHeaderView';
+CHeaderView.prototype.ViewConstructorName = 'CHeaderView';
 
 CHeaderView.prototype.logout = function ()
 {

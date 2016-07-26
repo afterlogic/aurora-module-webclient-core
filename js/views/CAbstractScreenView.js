@@ -1,6 +1,10 @@
 'use strict';
 
-var ko = require('knockout');
+var
+	ko = require('knockout'),
+	
+	App = require('modules/CoreClient/js/App.js')
+;
 
 function CAbstractScreenView()
 {
@@ -10,6 +14,7 @@ function CAbstractScreenView()
 }
 
 CAbstractScreenView.prototype.ViewTemplate = '';
+CAbstractScreenView.prototype.ViewName = '';
 
 CAbstractScreenView.prototype.showView = function ()
 {
@@ -19,14 +24,10 @@ CAbstractScreenView.prototype.showView = function ()
 		this.shown(true);
 		this.onShow();
 
-//			if (('undefined' !== typeof AfterLogicApi) && AfterLogicApi.runPluginHook)
-//			{
-//				if (this.__name)
-//				{
-//					AfterLogicApi.runPluginHook('view-model-on-show', [this.__name, this]);
-//				}
-//			}
-
+		if (this.ViewName !== '')
+		{
+			App.broadcastEvent('%ModuleName%::ShowView::after', {'Name': this.ViewName, 'View': this});
+		}
 	}
 };
 
