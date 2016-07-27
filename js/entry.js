@@ -23,7 +23,8 @@ $('body').ready(function () {
 			'SessionTimeoutClient': require('modules/SessionTimeoutClient/js/manager.js'),
 			'ChangePasswordClient': require('modules/ChangePasswordClient/js/manager.js'),
 			'MobileSyncClient': require('modules/MobileSyncClient/js/manager.js'),
-			'OutlookSyncClient': require('modules/OutlookSyncClient/js/manager.js')
+			'OutlookSyncClient': require('modules/OutlookSyncClient/js/manager.js'),
+			'ExternalServices':  require('modules/ExternalServices/js/manager.js')
 		},
 		ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
 		App = require('modules/CoreClient/js/App.js'),
