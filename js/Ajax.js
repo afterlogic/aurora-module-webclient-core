@@ -151,7 +151,7 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeou
 	oCloneRequest.Parameters = JSON.stringify(oCloneRequest.Parameters);
 	
 	oXhr = $.ajax({
-		url: '?/Ajax/',
+		url: '?/Api/',
 		type: 'POST',
 		async: true,
 		dataType: 'json',
