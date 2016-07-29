@@ -26,7 +26,7 @@ module.exports = {
 	AutoRefreshIntervalMinutes: AppData.User ? Types.pInt(AppData.User.AutoRefreshInterval) : 1,
 	CsrfToken: Types.pString(AppData.Token),
 	CustomLogoutUrl: AppData.App ? Types.pString(AppData.App.CustomLogoutUrl) : '',
-	DateFormat: AppData.User ? Types.pString(AppData.User.DefaultDateFormat) : 'DD/MM/YYYY',
+	DateFormat: 'DD/MM/YYYY',
 	DateFormatList: AppData.App && $.isArray(AppData.App.DateFormats) ? AppData.App.DateFormats : [],
 	EntryModule: 'MailClient', // AppData.App.DefaultTab
 	GoogleAnalyticsAccount: AppData.App ? Types.pString(AppData.App.GoogleAnalyticsAccount) : '',
@@ -34,19 +34,19 @@ module.exports = {
 	IsMailsuite: !!AppData.IsMailsuite,
 	IsMobile: !!AppData.IsMobile,
 	IsRTL: bRtl,
-	Language: AppData.User ? Types.pString(AppData.User.DefaultLanguage) : (AppData.App ? Types.pString(AppData.App.DefaultLanguage) : 'English'),
+	Language: 'English',
 	LanguageList: AppData.App && $.isArray(AppData.App.Languages) ? AppData.App.Languages : [],
 	LastErrorCode: Types.pString(AppData.LastErrorCode),
-	LogoUrl: Types.pString(AppData.AppStyleImage),
+	LogoUrl: '',
 	RedirectToHelpdesk: !!AppData.HelpdeskRedirect, // todo
 	ShowQuotaBar: AppData.App ? !!AppData.App.ShowQuotaBar : true, // Files module, Mail module
-	SiteName: AppData.App ? Types.pString(AppData.App.SiteName) : 'AfterLogic WebMail',
+	SiteName: 'Aurora Cloud',
 	SocialName: AppData.User ? Types.pString(AppData.User.SocialName) : '', // Mail module
 	SyncIosAfterLogin: AppData.App ? !!AppData.App.IosDetectOnLogin : false, // ? AllowIosProfile
 	TenantName: Types.pString(AppData.TenantName || UrlUtils.getRequestParam('tenant')),
 	Theme: AppData.User ? Types.pString(AppData.User.DefaultTheme) : (AppData.App ? Types.pString(AppData.App.DefaultTheme) : 'Default'),
 	ThemeList: AppData.App && $.isArray(AppData.App.Themes) ? AppData.App.Themes : [],
-	timeFormat: ko.observable(AppData.User ? Types.pString(AppData.User.DefaultTimeFormat) : '0'), // 0 - 24, 1 - 12
+	timeFormat: ko.observable('0'), // 0 - 24, 1 - 12
 	UserId: AppData.User ? Types.pInt(AppData.User.IdUser) : 0,
 	
 	// unused, should be removed

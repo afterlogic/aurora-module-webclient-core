@@ -1,19 +1,19 @@
 'use strict';
 
 module.exports = function (oAppData, iUserRole, bPublic) {
+	var
+		_ = require('underscore'),
+
+		TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+
+		Settings = require('modules/CoreClient/js/Settings.js'),
+		oSettings = _.extend({}, oAppData[Settings.ServerModuleName] || {}, oAppData['CoreClient'] || {})
+	;
+
+	Settings.init(oSettings);
+
 	if (iUserRole === Enums.UserRole.SuperAdmin)
 	{
-		var
-			_ = require('underscore'),
-
-			TextUtils = require('modules/CoreClient/js/utils/Text.js'),
-
-			Settings = require('modules/CoreClient/js/Settings.js'),
-			oSettings = _.extend({}, oAppData[Settings.ServerModuleName] || {}, oAppData['CoreClient'] || {})
-		;
-
-		Settings.init(oSettings);
-
 		return {
 			start: function (ModulesManager) {
 				ModulesManager.run('AdminPanelClient', 'registerAdminPanelTab', [
