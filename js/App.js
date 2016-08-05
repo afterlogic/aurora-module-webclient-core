@@ -230,7 +230,11 @@ CApp.prototype.showLastErrorOnLogin = function ()
  */
 CApp.prototype.logout = function (iLastErrorCode)
 {
-	ModulesManager.run('BasicAuthClient', 'logout', [iLastErrorCode, this.onLogout, this]);
+	var Ajax = require('modules/CoreClient/js/Ajax.js');
+	
+	Ajax.send('Core', 'Logout', iLastErrorCode ? {'LastErrorCode': iLastErrorCode} : null, this.onLogout, this);
+
+	$.removeCookie('AuthToken');
 	
 	this.iUserRole = Enums.UserRole.Anonymous;
 };
