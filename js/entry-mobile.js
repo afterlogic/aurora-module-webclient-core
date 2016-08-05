@@ -5,7 +5,7 @@ var $ = require('jquery');
 $('body').ready(function () {
 	var
 		oAvaliableModules = {
-			'BasicAuthClient': require('modules/BasicAuthClient/js/manager.js'),
+			'StandardLoginForm': require('modules/StandardLoginForm/js/manager.js'),
 			'MailClient': require('modules/MailClient/js/manager.js'),
 			'ContactsClient': require('modules/ContactsClient/js/manager-mobile.js'),
 			'SessionTimeoutClient': require('modules/SessionTimeoutClient/js/manager.js')
