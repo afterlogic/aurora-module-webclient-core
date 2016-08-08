@@ -8,6 +8,7 @@ $('body').ready(function () {
 			'CoreClient': require('modules/CoreClient/js/manager.js'),
 			'AdminPanelClient': require('modules/AdminPanelClient/js/manager.js'),
 			'StandardLoginForm': require('modules/StandardLoginForm/js/manager.js'),
+			'StandardAuthWebclient': require('modules/StandardAuthWebclient/js/manager.js'),
 			'MailClient': require('modules/MailClient/js/manager.js'),
 			'ContactsClient': require('modules/ContactsClient/js/manager.js'),
 			'CalendarClient': require('modules/CalendarClient/js/manager.js'),
