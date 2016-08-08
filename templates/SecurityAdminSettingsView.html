@@ -4,29 +4,33 @@
 <div class="panel_center">
 	<div class="fields">
 		<div class="fieldset">
+			
+			<!-- fake fields are a workaround for chrome autofill getting the wrong fields -->
+			<input style="display:none" type="text" name="fakeusernameremembered"/>
+			<input style="display:none" type="password" name="fakepasswordremembered"/>
+			
 			<div class="row">
 				<span class="label" data-bind="i18n: {'key': 'CORECLIENT/LABEL_SECURITY_LOGIN'}"></span>
 				<span class="value">
-					<input class="input" autocomplete="off" type="text" data-bind="value: login" />
-					<input class="input" autocomplete="off" type="password" style="display: none;" />
+					<input class="input" type="text" data-bind="value: login" />
 				</span>
 			</div>
 			<div class="row">
 				<span class="label" data-bind="i18n: {'key': 'CORECLIENT/LABEL_SECURITY_PASS'}"></span>
 				<span class="value">
-					<input class="input" autocomplete="off" type="password" data-bind="value: pass, hasFocus: passFocused" />
+					<input class="input" type="password" data-bind="value: pass, hasFocus: passFocused" />
 				</span>
 			</div>
 			<div class="row">
 				<span class="label" data-bind="i18n: {'key': 'CORECLIENT/LABEL_SECURITY_NEW_PASS'}"></span>
 				<span class="value">
-					<input class="input" autocomplete="off" type="password" data-bind="value: newPass, hasFocus: newPassFocused" />
+					<input class="input" type="password" data-bind="value: newPass, hasFocus: newPassFocused" />
 				</span>
 			</div>
 			<div class="row">
 				<span class="label" data-bind="i18n: {'key': 'CORECLIENT/LABEL_SECURITY_CONFIRM_PASS'}"></span>
 				<span class="value">
-					<input class="input" autocomplete="off" type="password" data-bind="value: confirmPass" />
+					<input class="input" type="password" data-bind="value: confirmPass" />
 				</span>
 			</div>
 		</div>		
