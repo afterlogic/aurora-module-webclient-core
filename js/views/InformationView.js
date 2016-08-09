@@ -4,11 +4,11 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	
-	App = require('modules/CoreClient/js/App.js'),
+	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	
-	CAbstractScreenView = require('modules/CoreClient/js/views/CAbstractScreenView.js')
+	CAbstractScreenView = require('%PathToCoreWebclientModule%/js/views/CAbstractScreenView.js')
 ;
 
 /**

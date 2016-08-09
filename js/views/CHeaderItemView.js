@@ -2,8 +2,8 @@
 var
 	ko = require('knockout'),
 	
-	App = require('modules/CoreClient/js/App.js'),
-	Routing = require('modules/CoreClient/js/Routing.js')
+	App = require('%PathToCoreWebclientModule%/js/App.js'),
+	Routing = require('%PathToCoreWebclientModule%/js/Routing.js')
 ;
 
 function CHeaderItemView(sLinkText)

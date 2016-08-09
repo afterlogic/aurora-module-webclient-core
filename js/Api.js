@@ -1,9 +1,9 @@
 'use strict';
 
 var
-	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	
-	Screens = require('modules/CoreClient/js/Screens.js'),
+	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
 			
 	Api = {}
 ;

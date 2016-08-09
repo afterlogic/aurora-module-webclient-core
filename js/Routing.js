@@ -5,8 +5,8 @@ var
 	ko = require('knockout'),
 	hasher = require('hasher'),
 	
-	UrlUtils = require('modules/CoreClient/js/utils/Url.js'),
-	Screens = require('modules/CoreClient/js/Screens.js')
+	UrlUtils = require('%PathToCoreWebclientModule%/js/utils/Url.js'),
+	Screens = require('%PathToCoreWebclientModule%/js/Screens.js')
 ;
 
 /**

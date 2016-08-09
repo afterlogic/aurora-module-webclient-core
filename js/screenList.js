@@ -2,9 +2,9 @@
 
 module.exports = {
 	'header': function () {
-		return require('modules/CoreClient/js/views/HeaderView.js');
+		return require('%PathToCoreWebclientModule%/js/views/HeaderView.js');
 	},
 	'information': function () {
-		return require('modules/CoreClient/js/views/InformationView.js');
+		return require('%PathToCoreWebclientModule%/js/views/InformationView.js');
 	}
 };

@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Popups = require('modules/CoreClient/js/Popups.js')
+	Popups = require('%PathToCoreWebclientModule%/js/Popups.js')
 ;
 
 function CAbstractPopup()

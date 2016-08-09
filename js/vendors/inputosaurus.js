@@ -21,8 +21,8 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
-	AddressUtils = require('modules/CoreClient/js/utils/Address.js'),
-	TextUtils = require('modules/CoreClient/js/utils/Text.js')
+	AddressUtils = require('%PathToCoreWebclientModule%/js/utils/Address.js'),
+	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js')
 ;
 
 require('jquery-ui');

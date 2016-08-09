@@ -5,16 +5,16 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	FilesUtils = require('modules/CoreClient/js/utils/Files.js'),
-	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
-	Types = require('modules/CoreClient/js/utils/Types.js'),
-	UrlUtils = require('modules/CoreClient/js/utils/Url.js'),
-	Utils = require('modules/CoreClient/js/utils/Common.js'),
+	FilesUtils = require('%PathToCoreWebclientModule%/js/utils/Files.js'),
+	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
+	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
+	UrlUtils = require('%PathToCoreWebclientModule%/js/utils/Url.js'),
+	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
 	
-	Ajax = require('modules/CoreClient/js/Ajax.js'),
-	App = require('modules/CoreClient/js/App.js'),
-	Browser = require('modules/CoreClient/js/Browser.js'),
-	WindowOpener = require('modules/CoreClient/js/WindowOpener.js'),
+	Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
+	App = require('%PathToCoreWebclientModule%/js/App.js'),
+	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
+	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js'),
 	
 	aViewMimeTypes = [
 		'image/jpeg', 'image/png', 'image/gif',

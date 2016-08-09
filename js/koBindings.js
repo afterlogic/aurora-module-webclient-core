@@ -5,10 +5,10 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
-	Types = require('modules/CoreClient/js/utils/Types.js'),
+	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
+	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
-	Browser = require('modules/CoreClient/js/Browser.js')
+	Browser = require('%PathToCoreWebclientModule%/js/Browser.js')
 ;
 
 ko.bindingHandlers.i18n = {

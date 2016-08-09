@@ -3,7 +3,7 @@
 var
 	ko = require('knockout'),
 	
-	App = require('modules/CoreClient/js/App.js')
+	App = require('%PathToCoreWebclientModule%/js/App.js')
 ;
 
 function CAbstractScreenView()

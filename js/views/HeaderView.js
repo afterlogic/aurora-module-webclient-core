@@ -4,17 +4,17 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
-	Types = require('modules/CoreClient/js/utils/Types.js'),
+	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
-	Ajax = require('modules/CoreClient/js/Ajax.js'),
-	App = require('modules/CoreClient/js/App.js'),
-	Browser = require('modules/CoreClient/js/Browser.js'),
-	ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
-	Routing = require('modules/CoreClient/js/Routing.js'),
-	Settings = require('modules/CoreClient/js/Settings.js'),
-	Screens = require('modules/CoreClient/js/Screens.js'),
+	Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
+	App = require('%PathToCoreWebclientModule%/js/App.js'),
+	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
+	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
+	Routing = require('%PathToCoreWebclientModule%/js/Routing.js'),
+	Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
+	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
 	
-	CAbstractScreenView = require('modules/CoreClient/js/views/CAbstractScreenView.js')
+	CAbstractScreenView = require('%PathToCoreWebclientModule%/js/views/CAbstractScreenView.js')
 ;
 
 /**

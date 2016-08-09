@@ -5,7 +5,7 @@ var $ = require('jquery');
 $('body').ready(function () {
 	var
 		oAvaliableModules = {
-			'CoreClient': require('modules/CoreClient/js/manager.js'),
+			'CoreClient': require('%PathToCoreWebclientModule%/js/manager.js'),
 			'AdminPanelWebclient': require('modules/AdminPanelWebclient/js/manager.js'),
 			'StandardLoginFormWebclient': require('modules/StandardLoginFormWebclient/js/manager.js'),
 			'StandardAuthWebclient': require('modules/StandardAuthWebclient/js/manager.js'),
@@ -30,8 +30,8 @@ $('body').ready(function () {
 			'GoogleAuthWebclient':  require('modules/GoogleAuthWebclient/js/manager.js'),
 			'DropBoxAuthWebclient':  require('modules/DropBoxAuthWebclient/js/manager.js')
 		},
-		ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
-		App = require('modules/CoreClient/js/App.js'),
+		ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
+		App = require('%PathToCoreWebclientModule%/js/App.js'),
 		bSwitchingToMobile = App.checkMobile()
 	;
 	

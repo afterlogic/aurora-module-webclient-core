@@ -2,12 +2,12 @@
 
 var
 	$ = require('jquery'),
-	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	
-	Popups = require('modules/CoreClient/js/Popups.js'),
-	AlertPopup = require('modules/CoreClient/js/popups/AlertPopup.js'),
+	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
+	AlertPopup = require('%PathToCoreWebclientModule%/js/popups/AlertPopup.js'),
 	
-	UserSettings = require('modules/CoreClient/js/Settings.js'),
+	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	
 	FilesUtils = {}
 ;

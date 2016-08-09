@@ -3,9 +3,9 @@
 var
 	_ = require('underscore'),
 	
-	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
+	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	
-	UserSettings = require('modules/CoreClient/js/Settings.js'),
+	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	
 	SettingsUtils = {}
 ;

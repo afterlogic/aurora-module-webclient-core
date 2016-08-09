@@ -6,33 +6,33 @@ var
 	ko = require('knockout'),
 	modernizr = require('modernizr'),
 	
-	Types = require('modules/CoreClient/js/utils/Types.js'),
-	UrlUtils = require('modules/CoreClient/js/utils/Url.js'),
-	Utils = require('modules/CoreClient/js/utils/Common.js'),
+	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
+	UrlUtils = require('%PathToCoreWebclientModule%/js/utils/Url.js'),
+	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
 	
-	Api = require('modules/CoreClient/js/Api.js'),
-	Browser = require('modules/CoreClient/js/Browser.js'),
-	ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
-	Routing = require('modules/CoreClient/js/Routing.js'),
-	Screens = require('modules/CoreClient/js/Screens.js'),
-	UserSettings = require('modules/CoreClient/js/Settings.js'),
-	WindowOpener = require('modules/CoreClient/js/WindowOpener.js')
+	Api = require('%PathToCoreWebclientModule%/js/Api.js'),
+	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
+	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
+	Routing = require('%PathToCoreWebclientModule%/js/Routing.js'),
+	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
+	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
+	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js')
 ;
 
-require('modules/CoreClient/js/koBindings.js');
-require('modules/CoreClient/js/koExtendings.js');
+require('%PathToCoreWebclientModule%/js/koBindings.js');
+require('%PathToCoreWebclientModule%/js/koExtendings.js');
 
-require('modules/CoreClient/js/enums.js');
+require('%PathToCoreWebclientModule%/js/enums.js');
 
-require('modules/CoreClient/js/vendors/inputosaurus.js');
+require('%PathToCoreWebclientModule%/js/vendors/inputosaurus.js');
 
 require('jquery.cookie');
 
 function InitNotMobileRequires()
 {
-	require('modules/CoreClient/js/splitter.js'); // necessary in mail and contacts modules
-	require('modules/CoreClient/js/CustomTooltip.js');
-	require('modules/CoreClient/js/koBindingsNotMobile.js');
+	require('%PathToCoreWebclientModule%/js/splitter.js'); // necessary in mail and contacts modules
+	require('%PathToCoreWebclientModule%/js/CustomTooltip.js');
+	require('%PathToCoreWebclientModule%/js/koBindingsNotMobile.js');
 }
 
 /**
@@ -182,10 +182,10 @@ CApp.prototype.init = function ()
 	Screens.init();
 	Routing.init();
 	
-	require('modules/CoreClient/js/AppTab.js');
+	require('%PathToCoreWebclientModule%/js/AppTab.js');
 	if (!this.bNewTab)
 	{
-		require('modules/CoreClient/js/Prefetcher.js');
+		require('%PathToCoreWebclientModule%/js/Prefetcher.js');
 	}
 
 	this.useGoogleAnalytics();
@@ -230,7 +230,7 @@ CApp.prototype.showLastErrorOnLogin = function ()
  */
 CApp.prototype.logout = function (iLastErrorCode)
 {
-	var Ajax = require('modules/CoreClient/js/Ajax.js');
+	var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
 	
 	Ajax.send('Core', 'Logout', iLastErrorCode ? {'LastErrorCode': iLastErrorCode} : null, this.onLogout, this);
 
@@ -270,7 +270,7 @@ CApp.prototype.checkMobile = function () {
 	if (UserSettings.AllowMobile && UserSettings.IsMobile === -1)
 	{
 		var
-			Ajax = require('modules/CoreClient/js/Ajax.js'),
+			Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
 			bMobile = !window.matchMedia('all and (min-width: 768px)').matches
 		;
 

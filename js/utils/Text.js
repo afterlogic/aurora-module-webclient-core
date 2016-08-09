@@ -3,9 +3,9 @@
 var
 	$ = require('jquery'),
 	
-	Types = require('modules/CoreClient/js/utils/Types.js'),
+	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
-	oSettings = require('modules/CoreClient/js/Settings.js'),
+	oSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	
 	I18n = window.auroraI18n,
 	

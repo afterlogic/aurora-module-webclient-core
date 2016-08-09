@@ -4,9 +4,9 @@ var
 	$ = require('jquery'),
 	_ = require('underscore'),
 
-	queue = require('modules/CoreClient/js/vendors/queue.js'),
+	queue = require('%PathToCoreWebclientModule%/js/vendors/queue.js'),
 	
-	Types = require('modules/CoreClient/js/utils/Types.js'),
+	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 
 	iDefLimit = 20
 ;

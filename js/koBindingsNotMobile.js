@@ -5,13 +5,13 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
-	Utils = require('modules/CoreClient/js/utils/Common.js'),
-	Browser = require('modules/CoreClient/js/Browser.js')
+	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
+	Browser = require('%PathToCoreWebclientModule%/js/Browser.js')
 ;
 
 require('customscroll');
 require('jquery-ui');
-require('modules/CoreClient/js/autocomplete.js');
+require('%PathToCoreWebclientModule%/js/autocomplete.js');
 
 ko.bindingHandlers.splitter = {
 	'init': function (oElement, fValueAccessor) {

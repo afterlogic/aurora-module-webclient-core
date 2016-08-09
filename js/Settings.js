@@ -4,8 +4,8 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	UrlUtils = require('modules/CoreClient/js/utils/Url.js'),
-	Types = require('modules/CoreClient/js/utils/Types.js'),
+	UrlUtils = require('%PathToCoreWebclientModule%/js/utils/Url.js'),
+	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
 	AppData = window.auroraAppData,
 	

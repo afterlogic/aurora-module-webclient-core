@@ -27,7 +27,7 @@ UrlUtils.getAppPath = function ()
 UrlUtils.downloadByUrl = function (sUrl)
 {
 	var
-		Browser = require('modules/CoreClient/js/Browser.js'),
+		Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
 		oIframe = null
 	;
 	

@@ -3,7 +3,7 @@
 var
 	_ = require('underscore'),
 	
-	CAddressModel = require('modules/CoreClient/js/models/CAddressModel.js')
+	CAddressModel = require('%PathToCoreWebclientModule%/js/models/CAddressModel.js')
 ;
 
 /**

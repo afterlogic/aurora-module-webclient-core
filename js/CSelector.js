@@ -5,11 +5,11 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Types = require('modules/CoreClient/js/utils/Types.js'),
-	Utils = require('modules/CoreClient/js/utils/Common.js'),
+	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
+	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
 	
-	App = require('modules/CoreClient/js/App.js'),
-	Browser = require('modules/CoreClient/js/Browser.js')
+	App = require('%PathToCoreWebclientModule%/js/App.js'),
+	Browser = require('%PathToCoreWebclientModule%/js/Browser.js')
 ;
 
 /**

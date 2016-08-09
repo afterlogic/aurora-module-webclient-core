@@ -3,12 +3,12 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	App = require('modules/CoreClient/js/App.js'),
-	Browser = require('modules/CoreClient/js/Browser.js'),
-	CFavico = require('modules/CoreClient/js/vendors/favico.js'),
-	ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
-	Screens = require('modules/CoreClient/js/Screens.js'),
-	UserSettings = require('modules/CoreClient/js/Settings.js')
+	App = require('%PathToCoreWebclientModule%/js/App.js'),
+	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
+	CFavico = require('%PathToCoreWebclientModule%/js/vendors/favico.js'),
+	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
+	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
+	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js')
 ;
 
 function CAppTab()

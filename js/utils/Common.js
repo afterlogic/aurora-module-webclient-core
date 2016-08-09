@@ -6,9 +6,9 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	Types = require('modules/CoreClient/js/utils/Types.js'),
+	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
-	UserSettings = require('modules/CoreClient/js/Settings.js'),
+	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	
 	Utils = {}
 ;
@@ -111,7 +111,7 @@ Utils.desktopNotify = (function ()
 	var aNotifications = [];
 
 	return function (oData) {
-		var AppTab = require('modules/CoreClient/js/AppTab.js');
+		var AppTab = require('%PathToCoreWebclientModule%/js/AppTab.js');
 		
 		if (oData && UserSettings.AllowDesktopNotifications && window.Notification && !AppTab.focused())
 		{
@@ -332,8 +332,8 @@ Utils.log = (function () {
 
 	return function () {
 		var
-			TextUtils = require('modules/CoreClient/js/utils/Text.js'),
-			Browser = require('modules/CoreClient/js/Browser.js'),
+			TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
+			Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
 			aNewRow = []
 		;
 		

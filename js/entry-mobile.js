@@ -10,8 +10,8 @@ $('body').ready(function () {
 			'ContactsWebclient': require('modules/ContactsWebclient/js/manager-mobile.js'),
 			'SessionTimeoutWeblient': require('modules/SessionTimeoutWeblient/js/manager.js')
 		},
-		ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
-		App = require('modules/CoreClient/js/App.js')
+		ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
+		App = require('%PathToCoreWebclientModule%/js/App.js')
 	;
 	
 	App.setMobile();

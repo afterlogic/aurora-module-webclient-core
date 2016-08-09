@@ -5,7 +5,7 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Utils = require('modules/CoreClient/js/utils/Common.js')
+	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js')
 ;
 
 /**

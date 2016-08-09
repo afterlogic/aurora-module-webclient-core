@@ -5,10 +5,10 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	Types = require('modules/CoreClient/js/utils/Types.js'),
+	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
-	ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
-	Settings = require('modules/CoreClient/js/Settings.js')
+	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
+	Settings = require('%PathToCoreWebclientModule%/js/Settings.js')
 ;
 
 /**
@@ -48,7 +48,7 @@ CScreens.prototype.init = function ()
 		this.addToScreenList(sModuleName, oScreenList);
 	}, this));
 	
-	this.addToScreenList('', require('modules/CoreClient/js/screenList.js'));
+	this.addToScreenList('', require('%PathToCoreWebclientModule%/js/screenList.js'));
 	
 	if (this.oGetScreenFunctions[Settings.EntryModule.toLowerCase()])
 	{

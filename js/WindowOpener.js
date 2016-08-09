@@ -4,8 +4,8 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
-	Popups = require('modules/CoreClient/js/Popups.js'),
-	App = require('modules/CoreClient/js/App.js'),
+	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
+	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	
 	iDefaultRatio = 0.8,
 	aOpenedWins = []

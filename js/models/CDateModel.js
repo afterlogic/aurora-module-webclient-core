@@ -3,10 +3,10 @@
 var
 	moment = require('moment'),
 			
-	TextUtils = require('modules/CoreClient/js/utils/Text.js'),
-	Utils = require('modules/CoreClient/js/utils/Common.js'),
+	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
+	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
 	
-	UserSettings = require('modules/CoreClient/js/Settings.js')
+	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js')
 ;
 
 /**

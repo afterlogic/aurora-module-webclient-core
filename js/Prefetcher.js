@@ -4,11 +4,11 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
-	Ajax = require('modules/CoreClient/js/Ajax.js'),
-	App = require('modules/CoreClient/js/App.js'),
-	ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
+	Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
+	App = require('%PathToCoreWebclientModule%/js/App.js'),
+	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	
-	Settings = require('modules/CoreClient/js/Settings.js'),
+	Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	
 	ModulesPrefetchers = ModulesManager.getModulesPrefetchers(),
 	Prefetcher = {},
