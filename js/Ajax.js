@@ -343,17 +343,17 @@ CAjax.prototype.checkConnection = (function () {
 		}
 		else
 		{
-			if (sModule === 'Ping' && sMethod === 'Ping')
+			if (sModule === 'Core' && sMethod === 'Ping')
 			{
 				Ajax.bInternetConnectionProblem = true;
 				Screens.showError(TextUtils.i18n('CORECLIENT/ERROR_NO_INTERNET_CONNECTION'), false, true, true);
 				iTimer = setTimeout(function () {
-					Ajax.doSend({ Module: 'Ping', Method: 'Ping' });
+					Ajax.doSend({ Module: 'Core', Method: 'Ping' });
 				}, 60000);
 			}
 			else
 			{
-				Ajax.doSend({ Module: 'Ping', Method: 'Ping' });
+				Ajax.doSend({ Module: 'Core', Method: 'Ping' });
 			}
 		}
 	};

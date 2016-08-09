@@ -60,7 +60,7 @@ CHeaderView.prototype.logout = function ()
 
 CHeaderView.prototype.switchToFullVersion = function ()
 {
-	Ajax.send('Core', 'SetMobile', {'Mobile': 0}, function (oResponse) {
+	Ajax.send('Core', 'SetMobile', {'Mobile': false}, function (oResponse) {
 		if (oResponse.Result)
 		{
 			window.location.reload();

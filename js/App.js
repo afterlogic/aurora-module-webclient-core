@@ -271,7 +271,7 @@ CApp.prototype.checkMobile = function () {
 	{
 		var
 			Ajax = require('modules/CoreClient/js/Ajax.js'),
-			bMobile = !window.matchMedia('all and (min-width: 768px)').matches ? 1 : 0
+			bMobile = !window.matchMedia('all and (min-width: 768px)').matches
 		;
 
 		Ajax.send('Core', 'SetMobile', {'Mobile': bMobile}, function (oResponse) {
