@@ -25,10 +25,10 @@ $('body').ready(function () {
 			'ChangePasswordWebclient': require('modules/ChangePasswordWebclient/js/manager.js'),
 			'MobileSyncWebclient': require('modules/MobileSyncWebclient/js/manager.js'),
 			'OutlookSyncWebclient': require('modules/OutlookSyncWebclient/js/manager.js'),
-			'ExternalServices':  require('modules/ExternalServices/js/manager.js'),
-			'FacebookAuth':  require('modules/FacebookAuth/js/manager.js'),
-			'GoogleAuth':  require('modules/GoogleAuth/js/manager.js'),
-			'DropBoxAuth':  require('modules/DropBoxAuth/js/manager.js')
+			'OAuthIntegratorWebclient':  require('modules/OAuthIntegratorWebclient/js/manager.js'),
+			'FacebookAuthWebclient':  require('modules/FacebookAuthWebclient/js/manager.js'),
+			'GoogleAuthWebclient':  require('modules/GoogleAuthWebclient/js/manager.js'),
+			'DropBoxAuthWebclient':  require('modules/DropBoxAuthWebclient/js/manager.js')
 		},
 		ModulesManager = require('modules/CoreClient/js/ModulesManager.js'),
 		App = require('modules/CoreClient/js/App.js'),
