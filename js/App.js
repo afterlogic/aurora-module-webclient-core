@@ -125,7 +125,7 @@ CApp.prototype.isMobile = function ()
 
 CApp.prototype.init = function ()
 {
-	ModulesManager.run('StandardLoginForm', 'beforeAppRunning', [this.iUserRole !== Enums.UserRole.Anonymous]);
+	ModulesManager.run('StandardLoginFormWebclient', 'beforeAppRunning', [this.iUserRole !== Enums.UserRole.Anonymous]);
 	
 	if (Browser.iosDevice && this.iUserRole !== Enums.UserRole.Anonymous && UserSettings.SyncIosAfterLogin && UserSettings.AllowIosProfile)
 	{
