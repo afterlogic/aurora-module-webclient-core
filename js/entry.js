@@ -5,7 +5,7 @@ var $ = require('jquery');
 $('body').ready(function () {
 	var
 		oAvaliableModules = {
-			'CoreClient': require('%PathToCoreWebclientModule%/js/manager.js'),
+			'CoreWebclient': require('%PathToCoreWebclientModule%/js/manager.js'),
 			'AdminPanelWebclient': require('modules/AdminPanelWebclient/js/manager.js'),
 			'StandardLoginFormWebclient': require('modules/StandardLoginFormWebclient/js/manager.js'),
 			'StandardAuthWebclient': require('modules/StandardAuthWebclient/js/manager.js'),

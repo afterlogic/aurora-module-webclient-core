@@ -7,7 +7,7 @@ module.exports = function (oAppData, iUserRole, bPublic) {
 		TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 
 		Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
-		oSettings = _.extend({}, oAppData[Settings.ServerModuleName] || {}, oAppData['CoreClient'] || {})
+		oSettings = _.extend({}, oAppData[Settings.ServerModuleName] || {}, oAppData['CoreWebclient'] || {})
 	;
 
 	Settings.init(oSettings);
