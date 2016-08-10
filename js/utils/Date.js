@@ -9,7 +9,7 @@ var
 DateUtils.getMonthNamesArray = function ()
 {
 	var
-		aMonthes = TextUtils.i18n('CORECLIENT/LIST_MONTH_NAMES').split(' '),
+		aMonthes = TextUtils.i18n('%MODULENAME%/LIST_MONTH_NAMES').split(' '),
 		iLen = 12,
 		iIndex = aMonthes.length
 	;

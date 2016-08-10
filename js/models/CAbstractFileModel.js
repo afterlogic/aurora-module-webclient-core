@@ -152,7 +152,7 @@ function CAbstractFileModel(sModuleName)
 		
 		if (!this.selected && this.allowDownload())
 		{
-			sTitle = TextUtils.i18n('CORECLIENT/INFO_CLICK_TO_DOWNLOAD_FILE', {
+			sTitle = TextUtils.i18n('%MODULENAME%/INFO_CLICK_TO_DOWNLOAD_FILE', {
 				'FILENAME': this.fileName(),
 				'SIZE': this.friendlySize()
 			});
@@ -454,8 +454,8 @@ CAbstractFileModel.prototype.onUploadComplete = function (sFileUid, bResponseRec
 	var
 		bError = !bResponseReceived || !oResult || oResult.Error || false,
 		sError = (oResult && oResult.Error === 'size') ?
-			TextUtils.i18n('CORECLIENT/ERROR_UPLOAD_SIZE') :
-			TextUtils.i18n('CORECLIENT/ERROR_UPLOAD_UNKNOWN')
+			TextUtils.i18n('%MODULENAME%/ERROR_UPLOAD_SIZE') :
+			TextUtils.i18n('%MODULENAME%/ERROR_UPLOAD_UNKNOWN')
 	;
 	
 	this.progressPercent(0);
@@ -463,7 +463,7 @@ CAbstractFileModel.prototype.onUploadComplete = function (sFileUid, bResponseRec
 	
 	this.uploaded(true);
 	this.uploadError(bError);
-	this.statusText(bError ? sError : TextUtils.i18n('CORECLIENT/REPORT_UPLOAD_COMPLETE'));
+	this.statusText(bError ? sError : TextUtils.i18n('%MODULENAME%/REPORT_UPLOAD_COMPLETE'));
 
 	if (!bError)
 	{

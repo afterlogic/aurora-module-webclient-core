@@ -42,7 +42,7 @@ CDbAdminSettingsView.prototype.ViewTemplate = 'CoreWebclient_DbAdminSettingsView
  */
 CDbAdminSettingsView.prototype.getStartError = function ()
 {
-	return (Settings.DbLogin === '' || Settings.DbName === '' || Settings.DbHost === '') ? TextUtils.i18n('CORECLIENT/ERROR_DB_ACCESS') : '';
+	return (Settings.DbLogin === '' || Settings.DbName === '' || Settings.DbHost === '') ? TextUtils.i18n('%MODULENAME%/ERROR_DB_ACCESS') : '';
 };
 
 CDbAdminSettingsView.prototype.getCurrentValues = function()
@@ -99,11 +99,11 @@ CDbAdminSettingsView.prototype.testConnection = function ()
 	Ajax.send('Core', 'TestDbConnection', this.getParametersForSave(), function (oResponse) {
 		if (oResponse.Result)
 		{
-			Screens.showReport(TextUtils.i18n('CORECLIENT/REPORT_DB_CONNECT_SUCCESSFUL'));
+			Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_DB_CONNECT_SUCCESSFUL'));
 		}
 		else
 		{
-			Screens.showError(TextUtils.i18n('CORECLIENT/ERROR_DB_CONNECT_FAILED'));
+			Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_DB_CONNECT_FAILED'));
 		}
 	}, this);
 };
@@ -113,11 +113,11 @@ CDbAdminSettingsView.prototype.createTables = function ()
 	Ajax.send('Core', 'CreateTables', null, function (oResponse) {
 		if (oResponse.Result)
 		{
-			Screens.showReport(TextUtils.i18n('CORECLIENT/REPORT_CREATE_TABLES_SUCCESSFUL'));
+			Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_CREATE_TABLES_SUCCESSFUL'));
 		}
 		else
 		{
-			Screens.showError(TextUtils.i18n('CORECLIENT/ERROR_CREATE_TABLES_FAILED'));
+			Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_CREATE_TABLES_FAILED'));
 		}
 	}, this);
 };

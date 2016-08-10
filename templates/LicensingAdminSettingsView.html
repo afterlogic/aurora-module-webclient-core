@@ -5,21 +5,21 @@
 	<div class="panel_center">
 		<div class="fields">
 			<div class="fieldset">
-				<div class="hint" data-bind="i18n: {'key': 'CORECLIENT/LABEL_LICENSING_HINT'}"></div>
+				<div class="hint" data-bind="i18n: {'key': '%MODULENAME%/LABEL_LICENSING_HINT'}"></div>
 				<div class="row">
-					<span class="label" data-bind="i18n: {'key': 'CORECLIENT/LABEL_LICENSING_KEY'}"></span>
+					<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_LICENSING_KEY'}"></span>
 					<span class="value">
 						<input class="input licensing" type="text" data-bind="value: licenseKey" />
 					</span>
 				</div>
 				<div class="row">
-					<span class="label" data-bind="i18n: {'key': 'CORECLIENT/LABEL_LICENSING_USERS_NUMBER'}"></span>
+					<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_LICENSING_USERS_NUMBER'}"></span>
 					<span class="value">
 						<b data-bind="text: usersNumber"></b>
 					</span>
 				</div>
 				<div class="row">
-					<span class="label" data-bind="i18n: {'key': 'CORECLIENT/LABEL_LICENSING_TYPE'}"></span>
+					<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_LICENSING_TYPE'}"></span>
 					<span class="value">
 						<b data-bind="text: licenseType"></b>
 					</span>
@@ -28,10 +28,10 @@
 
 			<div class="buttons">
 				<span class="button" data-bind="click: save, visible: !isSaving()">
-					<span data-bind="i18n: {'key': 'CORECLIENT/ACTION_SAVE'}"></span>
+					<span data-bind="i18n: {'key': '%MODULENAME%/ACTION_SAVE'}"></span>
 				</span>
 				<span class="button" data-bind="visible: isSaving()">
-					<span data-bind="i18n: {'key': 'CORECLIENT/ACTION_SAVE_IN_PROGRESS'}"></span>
+					<span data-bind="i18n: {'key': '%MODULENAME%/ACTION_SAVE_IN_PROGRESS'}"></span>
 				</span>
 			</div>
 		</div>

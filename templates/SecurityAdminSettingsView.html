@@ -1,5 +1,5 @@
 <div class="panel_top">
-	<h2 class="settings_heading" data-bind="i18n: {'key': 'CORECLIENT/HEADING_SECURITY_SETTINGS'}"></h2>
+	<h2 class="settings_heading" data-bind="i18n: {'key': '%MODULENAME%/HEADING_SECURITY_SETTINGS'}"></h2>
 </div>
 <div class="panel_center">
 	<div class="fields">
@@ -10,25 +10,25 @@
 			<input style="display:none" type="password" name="fakepasswordremembered"/>
 			
 			<div class="row">
-				<span class="label" data-bind="i18n: {'key': 'CORECLIENT/LABEL_SECURITY_LOGIN'}"></span>
+				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SECURITY_LOGIN'}"></span>
 				<span class="value">
 					<input class="input" type="text" data-bind="value: login" />
 				</span>
 			</div>
 			<div class="row">
-				<span class="label" data-bind="i18n: {'key': 'CORECLIENT/LABEL_SECURITY_PASS'}"></span>
+				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SECURITY_PASS'}"></span>
 				<span class="value">
 					<input class="input" type="password" data-bind="value: pass, hasFocus: passFocused" />
 				</span>
 			</div>
 			<div class="row">
-				<span class="label" data-bind="i18n: {'key': 'CORECLIENT/LABEL_SECURITY_NEW_PASS'}"></span>
+				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SECURITY_NEW_PASS'}"></span>
 				<span class="value">
 					<input class="input" type="password" data-bind="value: newPass, hasFocus: newPassFocused" />
 				</span>
 			</div>
 			<div class="row">
-				<span class="label" data-bind="i18n: {'key': 'CORECLIENT/LABEL_SECURITY_CONFIRM_PASS'}"></span>
+				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SECURITY_CONFIRM_PASS'}"></span>
 				<span class="value">
 					<input class="input" type="password" data-bind="value: confirmPass" />
 				</span>
@@ -37,10 +37,10 @@
 
 		<div class="buttons">
 			<span class="button" data-bind="click: save, visible: !isSaving()">
-				<span data-bind="i18n: {'key': 'CORECLIENT/ACTION_SAVE'}"></span>
+				<span data-bind="i18n: {'key': '%MODULENAME%/ACTION_SAVE'}"></span>
 			</span>
 			<span class="button" data-bind="visible: isSaving()">
-				<span data-bind="i18n: {'key': 'CORECLIENT/ACTION_SAVE_IN_PROGRESS'}"></span>
+				<span data-bind="i18n: {'key': '%MODULENAME%/ACTION_SAVE_IN_PROGRESS'}"></span>
 			</span>
 		</div>
 	</div>

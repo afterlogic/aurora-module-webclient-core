@@ -228,18 +228,18 @@ TextUtils.getFriendlySize = function (iSizeInBytes)
 
 	if (iSizeInBytes >= iBytesInGb)
 	{
-		return Types.roundNumber(iSizeInBytes / iBytesInGb, 1) + TextUtils.i18n('CORECLIENT/LABEL_GIGABYTES');
+		return Types.roundNumber(iSizeInBytes / iBytesInGb, 1) + TextUtils.i18n('%MODULENAME%/LABEL_GIGABYTES');
 	}
 	else if (iSizeInBytes >= iBytesInMb)
 	{
-		return Types.roundNumber(iSizeInBytes / iBytesInMb, 1) + TextUtils.i18n('CORECLIENT/LABEL_MEGABYTES');
+		return Types.roundNumber(iSizeInBytes / iBytesInMb, 1) + TextUtils.i18n('%MODULENAME%/LABEL_MEGABYTES');
 	}
 	else if (iSizeInBytes >= iBytesInKb)
 	{
-		return Types.roundNumber(iSizeInBytes / iBytesInKb, 0) + TextUtils.i18n('CORECLIENT/LABEL_KILOBYTES');
+		return Types.roundNumber(iSizeInBytes / iBytesInKb, 0) + TextUtils.i18n('%MODULENAME%/LABEL_KILOBYTES');
 	}
 
-	return iSizeInBytes + TextUtils.i18n('CORECLIENT/LABEL_BYTES');
+	return iSizeInBytes + TextUtils.i18n('%MODULENAME%/LABEL_BYTES');
 };
 
 /**
@@ -249,10 +249,10 @@ TextUtils.getMobileCredentialsInfo = function (oApp)
 {
 	if (oApp.defaultAccount && oApp.defaultAccount())
 	{
-		return TextUtils.i18n('CORECLIENT/INFO_MOBILE_EMAIL_CREDENTIALS', {'EMAIL': oApp.defaultAccountEmail()});
+		return TextUtils.i18n('%MODULENAME%/INFO_MOBILE_EMAIL_CREDENTIALS', {'EMAIL': oApp.defaultAccountEmail()});
 	}
 	
-	return TextUtils.i18n('CORECLIENT/INFO_MOBILE_CREDENTIALS');
+	return TextUtils.i18n('%MODULENAME%/INFO_MOBILE_CREDENTIALS');
 };
 
 module.exports = TextUtils;

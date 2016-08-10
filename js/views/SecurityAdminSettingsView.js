@@ -42,7 +42,7 @@ CSecurityAdminSettingsView.prototype.ViewTemplate = 'CoreWebclient_SecurityAdmin
  */
 CSecurityAdminSettingsView.prototype.getStartError = function ()
 {
-	return !Settings.AdminHasPassword ? TextUtils.i18n('CORECLIENT/ERROR_ADMIN_EMPTY_PASSWORD') : '';
+	return !Settings.AdminHasPassword ? TextUtils.i18n('%MODULENAME%/ERROR_ADMIN_EMPTY_PASSWORD') : '';
 };
 
 CSecurityAdminSettingsView.prototype.getCurrentValues = function()
@@ -98,19 +98,19 @@ CSecurityAdminSettingsView.prototype.validateBeforeSave = function ()
 {
 	if (Settings.AdminHasPassword && this.pass() === '' && this.newPass() !== '')
 	{
-		Screens.showError(TextUtils.i18n('CORECLIENT/ERROR_CURRENT_PASSWORD_EMPTY'));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_CURRENT_PASSWORD_EMPTY'));
 		this.passFocused(true);
 		return false;
 	}
 	if (this.pass() !== '' && this.newPass() === '')
 	{
-		Screens.showError(TextUtils.i18n('CORECLIENT/ERROR_NEW_PASSWORD_EMPTY'));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_NEW_PASSWORD_EMPTY'));
 		this.newPassFocused(true);
 		return false;
 	}
 	if (this.pass() !== '' && this.newPass() !== this.confirmPass())
 	{
-		Screens.showError(TextUtils.i18n('CORECLIENT/ERROR_PASSWORDS_DO_NOT_MATCH'));
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_PASSWORDS_DO_NOT_MATCH'));
 		this.newPassFocused(true);
 		return false;
 	}

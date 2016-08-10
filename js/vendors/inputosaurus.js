@@ -680,9 +680,9 @@ var inputosaurustext = {
 			oEmail = AddressUtils.getEmailParts(fullValue, true),
 			name = oEmail.name ? oEmail.name : oEmail.email,
 			title = fullValue ?
-				' title="' + TextUtils.i18n('CORECLIENT/ACTION_EDIT_ADDRESS', {'EMAIL': fullValue.replace(/"/g, '&quot;')}) + '"' :
+				' title="' + TextUtils.i18n('%MODULENAME%/ACTION_EDIT_ADDRESS', {'EMAIL': fullValue.replace(/"/g, '&quot;')}) + '"' :
 				'',
-			deleteTitle = TextUtils.i18n('CORECLIENT/ACTION_DELETE_ADDRESS'),
+			deleteTitle = TextUtils.i18n('%MODULENAME%/ACTION_DELETE_ADDRESS'),
 			deleteHtml = '<a href="javascript:void(0);" class="ficon" title="' + deleteTitle + '">&#x2716;</a>',
 			li = null,
 			widget = this

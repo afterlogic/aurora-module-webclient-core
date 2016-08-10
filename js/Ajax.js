@@ -346,7 +346,7 @@ CAjax.prototype.checkConnection = (function () {
 			if (sModule === 'Core' && sMethod === 'Ping')
 			{
 				Ajax.bInternetConnectionProblem = true;
-				Screens.showError(TextUtils.i18n('CORECLIENT/ERROR_NO_INTERNET_CONNECTION'), false, true, true);
+				Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_NO_INTERNET_CONNECTION'), false, true, true);
 				iTimer = setTimeout(function () {
 					Ajax.doSend({ Module: 'Core', Method: 'Ping' });
 				}, 60000);

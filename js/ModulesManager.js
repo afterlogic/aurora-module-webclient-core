@@ -28,7 +28,7 @@ module.exports = {
 		
 		if (Settings.AllowChangeSettings)
 		{
-			this.run('SettingsWebclient', 'registerSettingsTab', [function () { return require('%PathToCoreWebclientModule%/js/views/CommonSettingsPaneView.js'); }, 'common', TextUtils.i18n('CORECLIENT/LABEL_COMMON_SETTINGS_TABNAME')]);
+			this.run('SettingsWebclient', 'registerSettingsTab', [function () { return require('%PathToCoreWebclientModule%/js/views/CommonSettingsPaneView.js'); }, 'common', TextUtils.i18n('%MODULENAME%/LABEL_COMMON_SETTINGS_TABNAME')]);
 		}
 		
 		_.each(oModules, _.bind(function (oModule) {
