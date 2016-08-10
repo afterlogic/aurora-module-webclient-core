@@ -1,5 +1,5 @@
 <?php
 
-class CoreClientModule extends AApiModule
+class CoreWebclientModule extends AApiModule
 {
 }

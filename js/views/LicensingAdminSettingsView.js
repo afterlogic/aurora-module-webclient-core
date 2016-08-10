@@ -27,7 +27,7 @@ function CLicensingAdminSettingsView()
 
 _.extendOwn(CLicensingAdminSettingsView.prototype, CAbstractSettingsFormView.prototype);
 
-CLicensingAdminSettingsView.prototype.ViewTemplate = 'CoreClient_LicensingAdminSettingsView';
+CLicensingAdminSettingsView.prototype.ViewTemplate = 'CoreWebclient_LicensingAdminSettingsView';
 
 CLicensingAdminSettingsView.prototype.getCurrentValues = function()
 {

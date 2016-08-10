@@ -19,7 +19,7 @@ function CEmbedHtmlPopup()
 
 _.extendOwn(CEmbedHtmlPopup.prototype, CAbstractPopup.prototype);
 
-CEmbedHtmlPopup.prototype.PopupTemplate = 'CoreClient_EmbedHtmlPopup';
+CEmbedHtmlPopup.prototype.PopupTemplate = 'CoreWebclient_EmbedHtmlPopup';
 
 CEmbedHtmlPopup.prototype.onShow = function (sHtmlEmbed)
 {

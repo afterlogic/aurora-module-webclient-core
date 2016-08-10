@@ -27,7 +27,7 @@ function CConfirmPopup()
 
 _.extendOwn(CConfirmPopup.prototype, CAbstractPopup.prototype);
 
-CConfirmPopup.prototype.PopupTemplate = 'CoreClient_ConfirmPopup';
+CConfirmPopup.prototype.PopupTemplate = 'CoreWebclient_ConfirmPopup';
 
 /**
  * @param {string} sDesc

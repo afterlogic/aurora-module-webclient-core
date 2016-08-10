@@ -42,7 +42,7 @@ function CInformationView()
 
 _.extendOwn(CInformationView.prototype, CAbstractScreenView.prototype);
 
-CInformationView.prototype.ViewTemplate = 'CoreClient_InformationView';
+CInformationView.prototype.ViewTemplate = 'CoreWebclient_InformationView';
 CInformationView.prototype.ViewConstructorName = 'CInformationView';
 
 /**

@@ -59,7 +59,7 @@ function CCommonSettingsPaneView()
 
 _.extendOwn(CCommonSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
 
-CCommonSettingsPaneView.prototype.ViewTemplate = 'CoreClient_CommonSettingsPaneView';
+CCommonSettingsPaneView.prototype.ViewTemplate = 'CoreWebclient_CommonSettingsPaneView';
 
 /**
  * Returns an array with the values of editable fields.

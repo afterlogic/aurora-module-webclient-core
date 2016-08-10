@@ -33,7 +33,7 @@ function CDbAdminSettingsView()
 
 _.extendOwn(CDbAdminSettingsView.prototype, CAbstractSettingsFormView.prototype);
 
-CDbAdminSettingsView.prototype.ViewTemplate = 'CoreClient_DbAdminSettingsView';
+CDbAdminSettingsView.prototype.ViewTemplate = 'CoreWebclient_DbAdminSettingsView';
 
 /**
  * Returns error text to show on start if the tab has empty fields.

@@ -33,7 +33,7 @@ function CSecurityAdminSettingsView()
 
 _.extendOwn(CSecurityAdminSettingsView.prototype, CAbstractSettingsFormView.prototype);
 
-CSecurityAdminSettingsView.prototype.ViewTemplate = 'CoreClient_SecurityAdminSettingsView';
+CSecurityAdminSettingsView.prototype.ViewTemplate = 'CoreWebclient_SecurityAdminSettingsView';
 
 /**
  * Returns error text to show on start if there is no admin password.

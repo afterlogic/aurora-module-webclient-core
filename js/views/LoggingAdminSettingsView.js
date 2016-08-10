@@ -26,7 +26,7 @@ function CLoggingAdminSettingsView()
 
 _.extendOwn(CLoggingAdminSettingsView.prototype, CAbstractSettingsFormView.prototype);
 
-CLoggingAdminSettingsView.prototype.ViewTemplate = 'CoreClient_LoggingAdminSettingsView';
+CLoggingAdminSettingsView.prototype.ViewTemplate = 'CoreWebclient_LoggingAdminSettingsView';
 
 CLoggingAdminSettingsView.prototype.getCurrentValues = function()
 {

@@ -25,7 +25,7 @@ function CAlertPopup()
 
 _.extendOwn(CAlertPopup.prototype, CAbstractPopup.prototype);
 
-CAlertPopup.prototype.PopupTemplate = 'CoreClient_AlertPopup';
+CAlertPopup.prototype.PopupTemplate = 'CoreWebclient_AlertPopup';
 
 /**
  * @param {string} sDesc

@@ -113,7 +113,7 @@ function CPageSwitcherView(iCount, iPerPage)
 	this.hotKeysBind();
 }
 
-CPageSwitcherView.prototype.ViewTemplate = 'CoreClient_PageSwitcherView';
+CPageSwitcherView.prototype.ViewTemplate = 'CoreWebclient_PageSwitcherView';
 
 CPageSwitcherView.prototype.hotKeysBind = function ()
 {
