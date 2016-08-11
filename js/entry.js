@@ -28,7 +28,8 @@ $('body').ready(function () {
 			'OAuthIntegratorWebclient':  require('modules/OAuthIntegratorWebclient/js/manager.js'),
 			'FacebookAuthWebclient':  require('modules/FacebookAuthWebclient/js/manager.js'),
 			'GoogleAuthWebclient':  require('modules/GoogleAuthWebclient/js/manager.js'),
-			'DropBoxAuthWebclient':  require('modules/DropBoxAuthWebclient/js/manager.js')
+			'DropBoxAuthWebclient':  require('modules/DropBoxAuthWebclient/js/manager.js'),
+			'MagicLinkWebclient':  require('modules/MagicLinkWebclient/js/manager.js')
 		},
 		ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 		App = require('%PathToCoreWebclientModule%/js/App.js'),
