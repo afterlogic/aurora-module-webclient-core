@@ -14,8 +14,8 @@ var
  */
 function CRouting()
 {
-	this.currentHash = ko.observable('');
-	this.previousHash = ko.observable('');
+	this.currentHash = ko.observable(this.getHashFromHref());
+	this.previousHash = ko.observable(this.getHashFromHref());
 }
 
 /**
@@ -243,5 +243,11 @@ module.exports = {
 	finalize: _.bind(Routing.finalize, Routing),
 	currentHash: Routing.currentHash,
 	replaceHashDirectly: _.bind(Routing.replaceHashDirectly, Routing),
-	setPreviousHash: _.bind(Routing.setPreviousHash, Routing)
+	setPreviousHash: _.bind(Routing.setPreviousHash, Routing),
+	getCurrentHashArray: function () {
+		return Routing.currentHash().split('/');
+	},
+	getAppUrlWithHash: function (aRoutingParts) {
+		return UrlUtils.getAppPath() + Routing.buildHashFromArray(aRoutingParts);
+	}
 };

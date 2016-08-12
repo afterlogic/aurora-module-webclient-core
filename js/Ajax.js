@@ -117,12 +117,11 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 			Method: sMethod
 		}, App.getCommonRequestParameters());
 		
-//		if (AfterLogicApi.runPluginHook)
-//		{
-//			AfterLogicApi.runPluginHook('ajax-default-request', [sModule, sMethod, oParameters]);
-//		}
+		oParameters = oParameters || {};
+		
+		App.broadcastEvent('SendAjaxRequest::before', {'Module': sModule, 'Method': sMethod, 'Parameters': oParameters});
 
-		oRequest.Parameters = oParameters || {};
+		oRequest.Parameters = oParameters;
 		
 		this.abortRequests(oRequest);
 	
