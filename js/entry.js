@@ -8,6 +8,7 @@ $('body').ready(function () {
 			'CoreWebclient': require('%PathToCoreWebclientModule%/js/manager.js'),
 			'AdminPanelWebclient': require('modules/AdminPanelWebclient/js/manager.js'),
 			'StandardLoginFormWebclient': require('modules/StandardLoginFormWebclient/js/manager.js'),
+			'StandardRegisterFormWebclient': require('modules/StandardRegisterFormWebclient/js/manager.js'),
 			'StandardAuthWebclient': require('modules/StandardAuthWebclient/js/manager.js'),
 			'MailWebclient': require('modules/MailWebclient/js/manager.js'),
 			'ContactsWebclient': require('modules/ContactsWebclient/js/manager.js'),
