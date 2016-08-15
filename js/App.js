@@ -15,6 +15,7 @@ var
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	Routing = require('%PathToCoreWebclientModule%/js/Routing.js'),
 	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
+	Storage = require('%PathToCoreWebclientModule%/js/Storage.js'),
 	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js')
 ;
@@ -205,6 +206,13 @@ CApp.prototype.init = function ()
 	this.checkCookies();
 	
 	this.showLastErrorOnLogin();
+	
+	var sMessageOnAppRun = Storage.getData('MessageOnAppRun');
+	if (sMessageOnAppRun)
+	{
+		Screens.showReport(sMessageOnAppRun, 0);
+		Storage.removeData('MessageOnAppRun');
+	}
 };
 
 CApp.prototype.showLastErrorOnLogin = function ()

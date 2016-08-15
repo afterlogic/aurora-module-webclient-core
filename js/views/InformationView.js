@@ -16,7 +16,7 @@ var
  */
 function CInformationView()
 {
-	CAbstractScreenView.call(this);
+	CAbstractScreenView.call(this, '%ModuleName%');
 	
 	this.iAnimationDuration = 500;
 	this.iReportDuration = 5000;

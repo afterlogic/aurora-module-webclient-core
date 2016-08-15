@@ -6,15 +6,16 @@ var
 	App = require('%PathToCoreWebclientModule%/js/App.js')
 ;
 
-function CAbstractScreenView()
+function CAbstractScreenView(sModuleName)
 {
 	this.shown = ko.observable(false);
 	this.$viewDom = null;
 	this.browserTitle = ko.observable('');
+	this.sModuleName = sModuleName;
 }
 
 CAbstractScreenView.prototype.ViewTemplate = '';
-CAbstractScreenView.prototype.ViewName = '';
+CAbstractScreenView.prototype.ViewConstructorName = '';
 
 CAbstractScreenView.prototype.showView = function ()
 {
@@ -24,9 +25,9 @@ CAbstractScreenView.prototype.showView = function ()
 		this.shown(true);
 		this.onShow();
 
-		if (this.ViewName !== '')
+		if (this.ViewConstructorName !== '')
 		{
-			App.broadcastEvent('%ModuleName%::ShowView::after', {'Name': this.ViewName, 'View': this});
+			App.broadcastEvent(this.sModuleName + '::ShowView::after', {'Name': this.ViewConstructorName, 'View': this});
 		}
 	}
 };
