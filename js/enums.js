@@ -103,9 +103,10 @@ Enums.TimeFormat = {
  */
 Enums.UserRole = {
 	'SuperAdmin': 0,
-	'PowerUser': 1,
-	'RegisteredUser': 2,
-	'Anonymous': 3
+	'TenantAdmin': 1,
+	'NormalUser': 2,
+	'Customer': 3,
+	'Anonymous': 4
 };
 
 if (typeof window.Enums === 'undefined')
