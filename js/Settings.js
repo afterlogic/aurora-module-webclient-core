@@ -75,6 +75,7 @@ module.exports = {
 			this.LogoUrl = Types.pString(oAppDataSection.AppStyleImage);
 			this.SiteName = Types.pString(oAppDataSection.SiteName);
 			this.timeFormat(Types.pString(oAppDataSection.DefaultTimeFormat));
+			this.EUserRole = oAppDataSection.EUserRole;
 			
 			//only for admin
 			this.LicenseKey = Types.pString(oAppDataSection.LicenseKey);

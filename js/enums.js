@@ -2,6 +2,9 @@
 
 var
 	_ = require('underscore'),
+	
+	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
+	
 	Enums = {
 		has: function (sEnumName, mFoundValue) {
 			return !!_.find(window.Enums[sEnumName], function (mValue) {
@@ -101,13 +104,7 @@ Enums.TimeFormat = {
 /**
  * @enum {number}
  */
-Enums.UserRole = {
-	'SuperAdmin': 0,
-	'TenantAdmin': 1,
-	'NormalUser': 2,
-	'Customer': 3,
-	'Anonymous': 4
-};
+Enums.UserRole = UserSettings.EUserRole;
 
 if (typeof window.Enums === 'undefined')
 {

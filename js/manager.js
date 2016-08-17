@@ -11,6 +11,8 @@ module.exports = function (oAppData, iUserRole, bPublic) {
 	;
 
 	Settings.init(oSettings);
+	
+	require('%PathToCoreWebclientModule%/js/enums.js');
 
 	if (iUserRole === Enums.UserRole.SuperAdmin)
 	{

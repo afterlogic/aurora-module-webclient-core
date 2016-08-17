@@ -23,8 +23,6 @@ var
 require('%PathToCoreWebclientModule%/js/koBindings.js');
 require('%PathToCoreWebclientModule%/js/koExtendings.js');
 
-require('%PathToCoreWebclientModule%/js/enums.js');
-
 require('%PathToCoreWebclientModule%/js/vendors/inputosaurus.js');
 
 require('jquery.cookie');
