@@ -8,25 +8,25 @@
 				<div class="row">
 					<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_DB_LOGIN'}"></span>
 					<span class="value">
-						<input class="input" type="text" data-bind="value: dbLogin" />
+						<input class="input" type="text" data-bind="value: dbLogin, valueUpdate: 'afterkeydown', onEnter: save" />
 					</span>
 				</div>
 				<div class="row">
 					<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_DB_PASSWORD'}"></span>
 					<span class="value">
-						<input class="input" type="password" data-bind="value: dbPassword" />
+						<input class="input" type="password" data-bind="value: dbPassword, valueUpdate: 'afterkeydown', onEnter: save" />
 					</span>
 				</div>
 				<div class="row">
 					<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_DN_NAME'}"></span>
 					<span class="value">
-						<input class="input" type="text" data-bind="value: dbName" />
+						<input class="input" type="text" data-bind="value: dbName, valueUpdate: 'afterkeydown', onEnter: save" />
 					</span>
 				</div>
 				<div class="row">
 					<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_DB_HOST'}"></span>
 					<span class="value">
-						<input class="input" type="text" data-bind="value: dbHost" />
+						<input class="input" type="text" data-bind="value: dbHost, valueUpdate: 'afterkeydown', onEnter: save" />
 					</span>
 				</div>
 				<div class="row">

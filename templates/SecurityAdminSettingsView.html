@@ -12,25 +12,25 @@
 			<div class="row">
 				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SECURITY_LOGIN'}"></span>
 				<span class="value">
-					<input class="input" type="text" data-bind="value: login" />
+					<input class="input" type="text" data-bind="value: login, valueUpdate: 'afterkeydown', onEnter: save" />
 				</span>
 			</div>
 			<div class="row">
 				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SECURITY_PASS'}"></span>
 				<span class="value">
-					<input class="input" type="password" data-bind="value: pass, hasFocus: passFocused" />
+					<input class="input" type="password" data-bind="value: pass, hasFocus: passFocused, valueUpdate: 'afterkeydown', onEnter: save" />
 				</span>
 			</div>
 			<div class="row">
 				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SECURITY_NEW_PASS'}"></span>
 				<span class="value">
-					<input class="input" type="password" data-bind="value: newPass, hasFocus: newPassFocused" />
+					<input class="input" type="password" data-bind="value: newPass, hasFocus: newPassFocused, valueUpdate: 'afterkeydown', onEnter: save" />
 				</span>
 			</div>
 			<div class="row">
 				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SECURITY_CONFIRM_PASS'}"></span>
 				<span class="value">
-					<input class="input" type="password" data-bind="value: confirmPass" />
+					<input class="input" type="password" data-bind="value: confirmPass, valueUpdate: 'afterkeydown', onEnter: save" />
 				</span>
 			</div>
 		</div>		

@@ -9,7 +9,7 @@
 				<div class="row">
 					<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_LICENSING_KEY'}"></span>
 					<span class="value">
-						<input class="input licensing" type="text" data-bind="value: licenseKey" />
+						<input class="input licensing" type="text" data-bind="value: licenseKey, valueUpdate: 'afterkeydown', onEnter: save" />
 					</span>
 				</div>
 				<div class="row">
