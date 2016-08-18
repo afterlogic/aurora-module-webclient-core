@@ -204,13 +204,6 @@ CApp.prototype.init = function ()
 	this.checkCookies();
 	
 	this.showLastErrorOnLogin();
-	
-	var sMessageOnAppRun = Storage.getData('MessageOnAppRun');
-	if (sMessageOnAppRun)
-	{
-		Screens.showReport(sMessageOnAppRun, 0);
-		Storage.removeData('MessageOnAppRun');
-	}
 };
 
 CApp.prototype.showLastErrorOnLogin = function ()
