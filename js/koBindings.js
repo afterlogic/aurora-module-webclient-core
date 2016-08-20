@@ -483,13 +483,9 @@ ko.bindingHandlers.onEnter = {
 
 ko.bindingHandlers.onFocusSelect = {
 	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel) {
-		ko.bindingHandlers.event.init(oElement, function () {
-			return {
-				'focus': function () {
-					oElement.select();
-				}
-			};
-		}, fAllBindingsAccessor, oViewModel);
+		$(oElement).on('focus', function (oEvent) {
+			oElement.select();
+		});
 	}
 };
 

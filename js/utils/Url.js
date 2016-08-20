@@ -93,6 +93,14 @@ UrlUtils.getRequestParam = function (sParamName)
  */
 UrlUtils.clearAndReloadLocation = function (bOnlyReload, bClearSearch)
 {
+	var
+		App = require('%PathToCoreWebclientModule%/js/App.js'),
+		oParams = { 'OnlyReload': bOnlyReload, 'ClearSearch': bClearSearch }
+	;
+	App.broadcastEvent('clearAndReloadLocation::before', oParams);
+	bOnlyReload = oParams.OnlyReload;
+	bClearSearch = oParams.ClearSearch;
+	
 	if (!bOnlyReload && (window.location.search !== '' || window.location.hash !== ''))
 	{
 		var sNewHref = UrlUtils.getAppPath();
