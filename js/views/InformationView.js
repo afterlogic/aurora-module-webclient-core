@@ -34,7 +34,6 @@ function CInformationView()
 	this.errorHidden = ko.observable(true);
 	this.errorVisible = ko.observable(false);
 	this.iErrorTimeout = -1;
-	this.isHtmlError = ko.observable(false);
 	this.gray = ko.observable(false);
 	
 	App.broadcastEvent('%ModuleName%::ConstructView::after', {'Name': this.ViewConstructorName, 'View': this});
@@ -129,17 +128,15 @@ CInformationView.prototype.selfHideReport = function ()
  * Displays an error message. Starts a timer for hiding.
  *
  * @param {string} sMessage
- * @param {boolean=} bHtml = false
  * @param {boolean=} bNotHide = false
  * @param {boolean=} bGray = false
  */
-CInformationView.prototype.showError = function (sMessage, bHtml, bNotHide, bGray)
+CInformationView.prototype.showError = function (sMessage, bNotHide, bGray)
 {
 	if (sMessage && sMessage !== '')
 	{
 		this.gray(!!bGray);
 		this.errorMessage(sMessage);
-		this.isHtmlError(!!bHtml);
 		
 		this.errorVisible(true);
 		_.defer(_.bind(function () {

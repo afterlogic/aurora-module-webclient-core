@@ -80,7 +80,7 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 		{
 			sResultError += ' (' + sResponseError + ')';
 		}
-		Screens.showError(sResultError, false, !!bNotHide);
+		Screens.showError(sResultError, !!bNotHide);
 	}
 	else if (sResponseError !== '')
 	{

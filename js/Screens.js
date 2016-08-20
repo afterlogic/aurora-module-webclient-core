@@ -240,15 +240,14 @@ CScreens.prototype.showReport = function (sMessage, iDelay)
 
 /**
  * @param {string} sMessage
- * @param {boolean=} bHtml = false
  * @param {boolean=} bNotHide = false
  * @param {boolean=} bGray = false
  */
-CScreens.prototype.showError = function (sMessage, bHtml, bNotHide, bGray)
+CScreens.prototype.showError = function (sMessage, bNotHide, bGray)
 {
 	if (this.informationScreen())
 	{
-		this.informationScreen().showError(sMessage, bHtml, bNotHide, bGray);
+		this.informationScreen().showError(sMessage, bNotHide, bGray);
 	}
 };
 

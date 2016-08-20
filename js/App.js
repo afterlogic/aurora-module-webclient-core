@@ -218,7 +218,7 @@ CApp.prototype.showLastErrorOnLogin = function ()
 		
 		if (UserSettings.LastErrorCode === Enums.Errors.AuthError)
 		{
-			Screens.showError(Utils.i18n('%MODULENAME%/ERROR_AUTH_PROBLEM'), false, true);
+			Screens.showError(Utils.i18n('%MODULENAME%/ERROR_AUTH_PROBLEM'), true);
 		}
 	}
 };
@@ -317,7 +317,7 @@ CApp.prototype.checkCookies = function ()
 	
 	if (!bResult)
 	{
-		App.Screens.showError(Utils.i18n('%MODULENAME%/ERROR_COOKIES_DISABLED'), false, true);
+		App.Screens.showError(Utils.i18n('%MODULENAME%/ERROR_COOKIES_DISABLED'), true);
 	}
 	else
 	{
