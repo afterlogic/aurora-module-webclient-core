@@ -16,6 +16,7 @@ var
  */
 Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 {
+	console.log('oResponse, sDefaultError, bNotHide', oResponse, sDefaultError, bNotHide);
 	var
 		iErrorCode = oResponse.ErrorCode,
 		sResponseError = oResponse.ErrorMessage || '',
