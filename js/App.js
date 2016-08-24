@@ -209,11 +209,14 @@ CApp.prototype.showLastErrorOnLogin = function ()
 {
 	if (this.iUserRole === Enums.UserRole.Anonymous)
 	{
-		var iError = Types.pInt(UrlUtils.getRequestParam('error'));
-
+		var
+			iError = Types.pInt(UrlUtils.getRequestParam('error')),
+			sErrorModule = Types.pString(UrlUtils.getRequestParam('module'))
+		;
+		
 		if (iError !== 0)
 		{
-			Api.showErrorByCode({'ErrorCode': iError, 'ErrorMessage': ''}, '', true);
+			Api.showErrorByCode({'ErrorCode': iError, 'ErrorMessage': '', 'ErrorModule': sErrorModule}, '', true);
 		}
 		
 		if (UserSettings.LastErrorCode === Enums.Errors.AuthError)

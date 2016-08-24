@@ -109,6 +109,13 @@ module.exports = {
 		return oModules[sModuleName] && (!oModules[sModuleName].enableModule || oModules[sModuleName].enableModule());
 	},
 	
+	/**
+	 * Calls a specified function of a specified module if the module and the function exist and are available.
+	 * @param {string} sModuleName Name of the module.
+	 * @param {string} sFunctionName Name of the function.
+	 * @param {Array} aParams Array of parameters that will be passed to the function.
+	 * @returns {Boolean}
+	 */
 	run: function (sModuleName, sFunctionName, aParams)
 	{
 		var oModule = oModules[sModuleName];
