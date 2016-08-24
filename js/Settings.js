@@ -1,6 +1,7 @@
 'use strict';
 
 var
+	_ = require('underscore'),
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
@@ -12,7 +13,7 @@ var
 	bRtl = $('html').hasClass('rtl')
 ;
 
-module.exports = {
+var Settings = {
 	ServerModuleName: 'Core',
 	HashModuleName: 'core',
 	
@@ -122,3 +123,9 @@ module.exports = {
 		this.DbLogin = sDbLogin;
 	}
 };
+
+var oAppDataSection = _.extend({}, AppData[Settings.ServerModuleName] || {}, AppData['CoreWebclient'] || {});
+
+Settings.init(oAppDataSection);
+
+module.exports = Settings;
