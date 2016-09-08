@@ -67,7 +67,7 @@ function CAbstractFileModel(sModuleName)
 	this.iframedView = ko.observable(false);
 
 	this.downloadLink = ko.computed(function () {
-		return FilesUtils.getDownloadLink(sModuleName, this.hash());
+		return FilesUtils.getDownloadLink(sModuleName, this.hash(), this.sPublicHash);
 	}, this);
 
 	this.viewLink = ko.computed(function () {

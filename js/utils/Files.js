@@ -20,9 +20,9 @@ var
  * 
  * @return {string}
  */
-FilesUtils.getDownloadLink = function (sModuleName, sHash)
+FilesUtils.getDownloadLink = function (sModuleName, sHash, sPublicHash)
 {
-	return sHash.length > 0 ? '?/Download/' + sModuleName + '/DownloadFile/' + sHash + '/' + $.cookie('AuthToken') : '';
+	return sHash.length > 0 ? '?/Download/' + sModuleName + '/DownloadFile/' + sHash + '/' + (sPublicHash ? '0/' + sPublicHash : $.cookie('AuthToken')) : '';
 };
 
 /**
@@ -33,9 +33,9 @@ FilesUtils.getDownloadLink = function (sModuleName, sHash)
  * 
  * @return {string}
  */
-FilesUtils.getViewLink = function (sModuleName, sHash)
+FilesUtils.getViewLink = function (sModuleName, sHash, sPublicHash)
 {
-	return sHash.length > 0 ? '?/Download/' + sModuleName + '/ViewFile/' + sHash + '/' + $.cookie('AuthToken') : '';
+	return sHash.length > 0 ? '?/Download/' + sModuleName + '/ViewFile/' + sHash + '/' + (sPublicHash ? '0/' + sPublicHash : $.cookie('AuthToken')) : '';
 };
 
 /**
@@ -59,9 +59,9 @@ FilesUtils.getIframeWrappwer = function (iAccountId, sUrl)
  *
  * @return {string}
  */
-FilesUtils.getThumbnailLink = function (sModuleName, sHash)
+FilesUtils.getThumbnailLink = function (sModuleName, sHash, sPublicHash)
 {
-	return sHash.length > 0 ? '?/Download/' + sModuleName + '/GetFileThumbnail/' + sHash + '/' + $.cookie('AuthToken') : '';
+	return sHash.length > 0 ? '?/Download/' + sModuleName + '/GetFileThumbnail/' + sHash + '/' + (sPublicHash ? '0/' + sPublicHash : $.cookie('AuthToken')) : '';
 };
 
 FilesUtils.thumbQueue = (function () {
