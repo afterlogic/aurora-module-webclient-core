@@ -7,7 +7,7 @@ $('body').ready(function () {
 		oAvaliableModules = {
 			'StandardLoginFormWebclient': require('modules/StandardLoginFormWebclient/js/manager.js'),
 			'MailWebclient': require('modules/MailWebclient/js/manager.js'),
-			'ContactsWebclient': require('modules/ContactsWebclient/js/manager-mobile.js'),
+			'ContactsWebclient': require('modules/ContactsWebclient/js/manager.js'),
 			'SessionTimeoutWeblient': require('modules/SessionTimeoutWeblient/js/manager.js')
 		},
 		ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
@@ -15,6 +15,6 @@ $('body').ready(function () {
 	;
 	
 	App.setMobile();
-	ModulesManager.init(oAvaliableModules, App.getUserRole(), App.isPublic());
+	ModulesManager.init(oAvaliableModules);
 	App.init();
 });
