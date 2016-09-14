@@ -30,7 +30,7 @@ function CScreens()
 	
 	this.browserTitle = ko.computed(function () {
 		var oCurrScreen = this.oScreens[this.currentScreen()];
-		return oCurrScreen ? oCurrScreen.browserTitle() : '';
+		return oCurrScreen && _.isFunction(oCurrScreen.browserTitle) ? oCurrScreen.browserTitle() : '';
 	}, this);
 
 	this.informationScreen = ko.observable(null);
@@ -121,7 +121,9 @@ CScreens.prototype.route = function (aParams)
 	{
 		if (sCurrentScreen !== sNextScreen)
 		{
-			if (oCurrentScreen)
+			this.currentScreen(sNextScreen);
+			
+			if (oCurrentScreen && _.isFunction(oCurrentScreen.hideView))
 			{
 				oCurrentScreen.hideView();
 			}
@@ -129,9 +131,8 @@ CScreens.prototype.route = function (aParams)
 			oCurrentScreen = this.showView(sNextScreen);
 		}
 		
-		if (oCurrentScreen)
+		if (oCurrentScreen && _.isFunction(oCurrentScreen.onRoute))
 		{
-			this.currentScreen(sNextScreen);
 			oCurrentScreen.onRoute(aParams);
 		}
 	}
@@ -155,7 +156,7 @@ CScreens.prototype.showView = function (sScreen)
 		oScreen = this.initView(sScreenId, fGetScreen);
 	}
 	
-	if (oScreen)
+	if (oScreen && _.isFunction(oScreen.showView))
 	{
 		oScreen.showView();
 	}
