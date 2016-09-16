@@ -280,15 +280,12 @@ CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, o
 		oResponse = { Result: false, ErrorCode: 0 };
 	}
 	
-//	if (AfterLogicApi.runPluginHook)
-//	{
-//		AfterLogicApi.runPluginHook('ajax-default-response', [oRequest.Module, oRequest.Method, oData]);
-//	}
-	
 	if ($.isFunction(fResponseHandler) && !oResponse.StopExecuteResponse)
 	{
 		fResponseHandler.apply(oContext, [oResponse, oRequest]);
 	}
+	
+	App.broadcastEvent('ReceiveAjaxResponse::after', {'Request': oRequest, 'Response': oResponse});
 };
 
 /**
