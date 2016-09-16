@@ -1,7 +1,6 @@
 'use strict';
 
 var
-	$ = require('jquery'),
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	
 	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
@@ -15,27 +14,29 @@ var
 /**
  * Gets link for download by hash.
  *
- * @param {string} sModuleName
- * @param {string} sHash
+ * @param {string} sModuleName Name of module that owns the file.
+ * @param {string} sHash Hash of the file.
+ * @param {string} sPublicHash Hash of shared folder if the file is displayed by public link.
  * 
  * @return {string}
  */
 FilesUtils.getDownloadLink = function (sModuleName, sHash, sPublicHash)
 {
-	return sHash.length > 0 ? '?/Download/' + sModuleName + '/DownloadFile/' + sHash + '/' + (sPublicHash ? '0/' + sPublicHash : $.cookie('AuthToken')) : '';
+	return sHash.length > 0 ? '?/Download/' + sModuleName + '/DownloadFile/' + sHash + '/' + (sPublicHash ? '0/' + sPublicHash : '') : '';
 };
 
 /**
  * Gets link for download by hash.
  *
- * @param {string} sModuleName
- * @param {string} sHash
+ * @param {string} sModuleName Name of module that owns the file.
+ * @param {string} sHash Hash of the file.
+ * @param {string} sPublicHash Hash of shared folder if the file is displayed by public link.
  * 
  * @return {string}
  */
 FilesUtils.getViewLink = function (sModuleName, sHash, sPublicHash)
 {
-	return sHash.length > 0 ? '?/Download/' + sModuleName + '/ViewFile/' + sHash + '/' + (sPublicHash ? '0/' + sPublicHash : $.cookie('AuthToken')) : '';
+	return sHash.length > 0 ? '?/Download/' + sModuleName + '/ViewFile/' + sHash + '/' + (sPublicHash ? '0/' + sPublicHash : '') : '';
 };
 
 /**
@@ -54,14 +55,15 @@ FilesUtils.getIframeWrappwer = function (iAccountId, sUrl)
 /**
  * Gets link for thumbnail by hash.
  *
- * @param {string} sModuleName
- * @param {string} sHash
+ * @param {string} sModuleName Name of module that owns the file.
+ * @param {string} sHash Hash of the file.
+ * @param {string} sPublicHash Hash of shared folder if the file is displayed by public link.
  *
  * @return {string}
  */
 FilesUtils.getThumbnailLink = function (sModuleName, sHash, sPublicHash)
 {
-	return sHash.length > 0 ? '?/Download/' + sModuleName + '/GetFileThumbnail/' + sHash + '/' + (sPublicHash ? '0/' + sPublicHash : $.cookie('AuthToken')) : '';
+	return sHash.length > 0 ? '?/Download/' + sModuleName + '/GetFileThumbnail/' + sHash + '/' + (sPublicHash ? '0/' + sPublicHash : '') : '';
 };
 
 FilesUtils.thumbQueue = (function () {
