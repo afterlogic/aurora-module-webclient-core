@@ -1,2 +1,2 @@
 # aurora-module-webclient-core
-System module who provide Web application core functionality and UI framework
+System module that provides Web application core functionality and UI framework
