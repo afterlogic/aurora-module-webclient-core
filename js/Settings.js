@@ -25,7 +25,6 @@ var Settings = {
 	AllowPrefetch: AppData.App ? !!AppData.App.AllowPrefetch : true,
 	AttachmentSizeLimit: AppData.App ? Types.pInt(AppData.App.AttachmentSizeLimit) : 0, // Mail, Helpdesk
 	AutoRefreshIntervalMinutes: AppData.User ? Types.pInt(AppData.User.AutoRefreshInterval) : 1,
-	CsrfToken: Types.pString(AppData.Token),
 	CustomLogoutUrl: AppData.App ? Types.pString(AppData.App.CustomLogoutUrl) : '',
 	DateFormat: 'DD/MM/YYYY',
 	DateFormatList: AppData.App && $.isArray(AppData.App.DateFormats) ? AppData.App.DateFormats : [],
