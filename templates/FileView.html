@@ -29,14 +29,17 @@
 
 		<span class="image">
 			<!-- ko if: thumb() -->
-			<img class="thumb download" data-bind="attr: {'src': thumbnailSrc()}, event: { load: onImageLoad },
+			<span class="thumb download" data-bind="initDom: thumbDom, customTooltip: downloadTitle(), 
+				click: function (oViewModel, oEvent) { onIconClick(oViewModel, oEvent); }, visible: !hasHtmlEmbed()"></span>
+			<img class="thumb download" data-bind="attr: {'src': thumbnailSrc()},
 				customTooltip: downloadTitle(), click: function (oViewModel, oEvent) { onIconClick(oViewModel, oEvent); },
-				visible: thumbnailLoaded()" />
-			<span class="icon play" data-bind="click: viewFile, visible: thumbnailLoaded() && hasHtmlEmbed()"></span>
+				visible: hasHtmlEmbed()" />
+			<span class="icon play" data-bind="click: viewFile, visible: hasHtmlEmbed()"></span>
 			<!-- /ko -->
+			<!-- ko if: !thumb() -->
 			<span class="icon download" data-bind="css: extension().toLowerCase() + (hasHtmlEmbed() ? ' ' + embedType().toLowerCase() : ''),
-				customTooltip: downloadTitle(), click: function (oViewModel, oEvent) { onIconClick(oViewModel, oEvent); },
-				visible: !thumbnailLoaded()"></span>
+				customTooltip: downloadTitle(), click: function (oViewModel, oEvent) { onIconClick(oViewModel, oEvent); }"></span>
+			<!-- /ko -->
 		</span>
 
 		<!-- ko if: (allowSharing()) -->
