@@ -440,7 +440,6 @@ var jQuery = require('jquery');
 	*
 	* @param {Function} ctorA constructor
 	* @param {Function} ctorB constructor we inherit from
-	* @api private
 	*/
 	function inherits (ctorA, ctorB) {
 		function f() {};
