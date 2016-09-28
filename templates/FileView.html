@@ -28,19 +28,19 @@
 		<span class="cancel" data-bind="click: function () { $parent.onFileRemove( uploadUid() ); }, customTooltip: '%MODULENAME%/ACTION_CANCEL'"></span>
 
 		<span class="image">
-			<!-- ko if: thumb() -->
+			<!-- ko if: thumbnailSrc() !== '' -->
 			<img class="thumb download" data-bind="attr: {'src': thumbnailSrc()},
 				customTooltip: downloadTitle(), click: function (oViewModel, oEvent) { onIconClick(oViewModel, oEvent); }" />
 			<span class="icon play" data-bind="click: viewFile, visible: hasHtmlEmbed()"></span>
 			<!-- /ko -->
-			<!-- ko if: !thumb() -->
+			<!-- ko if: thumbnailSrc() === '' -->
 			<span class="icon download" data-bind="css: extension().toLowerCase() + (hasHtmlEmbed() ? ' ' + embedType().toLowerCase() : ''),
 				customTooltip: downloadTitle(), click: function (oViewModel, oEvent) { onIconClick(oViewModel, oEvent); }"></span>
 			<!-- /ko -->
 		</span>
 
 		<!-- ko if: (allowSharing()) -->
-		<span class="shared_icon" data-bind="css: {'with_thumb': thumbnailLoaded()}, click: function (oItem) { $root.onShareIconClick(oItem); }"></span>
+		<span class="shared_icon" data-bind="css: {'with_thumb': thumbnailSrc() !== ''}, click: function (oItem) { $root.onShareIconClick(oItem); }"></span>
 		<!-- /ko -->
 		<span class="progress" data-bind="visible: visibleProgress()">
 			<span data-bind="style: {'width': progressPercent() + '%'}"></span>

@@ -80,7 +80,7 @@ function CAbstractFileModel(sModuleName)
 	this.thumbnailSessionUid = ko.observable('');
 
 	this.thumbnailLink = ko.computed(function () {
-		return FilesUtils.getThumbnailLink(sModuleName, this.hash());
+		return sModuleName !== 'Files' ? Utils.getThumbnailLink(sModuleName, this.hash()) : '';
 	}, this);
 
 	this.type = ko.observable('');
