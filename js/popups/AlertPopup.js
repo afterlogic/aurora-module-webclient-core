@@ -43,7 +43,7 @@ CAlertPopup.prototype.onShow = function (sDesc, fCloseCallback, sHeading, sOkBut
 
 CAlertPopup.prototype.onEnterHandler = function ()
 {
-	this.closePopup();
+	this.cancelPopup();
 };
 
 CAlertPopup.prototype.cancelPopup = function ()

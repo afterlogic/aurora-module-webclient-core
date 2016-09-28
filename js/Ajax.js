@@ -8,6 +8,9 @@ var
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
+	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
+	AlertPopup = require('%PathToCoreWebclientModule%/js/popups/AlertPopup.js'),
+	
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	Screens = require('%PathToCoreWebclientModule%/js/Screens.js')
 ;
@@ -211,6 +214,13 @@ CAjax.prototype.abortAllRequests = function ()
  */
 CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse, sType, oXhr)
 {
+	if (App.getUserRole() !== Enums.UserRole.Anonymous && oResponse && oResponse.AuthenticatedUserId !== App.getUserId())
+	{
+		Popups.showPopup(AlertPopup, [TextUtils.i18n('%MODULENAME%/ERROR_AUTHENTICATED_USER_CONFLICT'), function () {
+			App.logout();
+		}, '', TextUtils.i18n('%MODULENAME%/ACTION_LOGOUT')]);
+	}
+	
 	if (oResponse && !oResponse.Result)
 	{
 		switch (oResponse.ErrorCode)
