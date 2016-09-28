@@ -29,11 +29,8 @@
 
 		<span class="image">
 			<!-- ko if: thumb() -->
-			<span class="thumb download" data-bind="initDom: thumbDom, customTooltip: downloadTitle(), 
-				click: function (oViewModel, oEvent) { onIconClick(oViewModel, oEvent); }, visible: !hasHtmlEmbed()"></span>
 			<img class="thumb download" data-bind="attr: {'src': thumbnailSrc()},
-				customTooltip: downloadTitle(), click: function (oViewModel, oEvent) { onIconClick(oViewModel, oEvent); },
-				visible: hasHtmlEmbed()" />
+				customTooltip: downloadTitle(), click: function (oViewModel, oEvent) { onIconClick(oViewModel, oEvent); }" />
 			<span class="icon play" data-bind="click: viewFile, visible: hasHtmlEmbed()"></span>
 			<!-- /ko -->
 			<!-- ko if: !thumb() -->
