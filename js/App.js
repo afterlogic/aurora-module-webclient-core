@@ -76,6 +76,24 @@ function CApp()
 	this.bPublic = false;
 	this.bNewTab = false;
 	this.bMobile = false;
+	this.userAccountLogin = ko.observable('');
+
+	this.subscribeEvent('ReceiveAjaxResponse::after', _.bind(function (oParams) {
+		if (oParams.Request.Module === 'StandardAuth' && oParams.Request.Method === 'GetUserAccounts')
+		{
+			if (Types.isNonEmptyArray(oParams.Response.Result))
+			{
+				this.userAccountLogin(oParams.Response.Result[0].login);
+			}
+		}
+		if (this.userAccountLogin() === '' && oParams.Request.Module === 'OAuthIntegratorWebclient' && oParams.Request.Method === 'GetAccounts')
+		{
+			if (Types.isNonEmptyArray(oParams.Response.Result))
+			{
+				this.userAccountLogin(Types.pString(oParams.Response.Result[0].Email));
+			}
+		}
+	}, this));
 }
 
 CApp.prototype.getUserRole = function ()
