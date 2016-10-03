@@ -77,6 +77,9 @@ function CApp()
 	this.bNewTab = false;
 	this.bMobile = false;
 	this.userAccountLogin = ko.observable('');
+	this.userAccountLogin.subscribe(function () {
+		console.log('this.userAccountLogin', this.userAccountLogin());
+	},this);
 
 	this.subscribeEvent('ReceiveAjaxResponse::after', _.bind(function (oParams) {
 		console.log(oParams.Request.Module, oParams.Request.Method);
