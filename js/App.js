@@ -79,18 +79,23 @@ function CApp()
 	this.userAccountLogin = ko.observable('');
 
 	this.subscribeEvent('ReceiveAjaxResponse::after', _.bind(function (oParams) {
+		console.log(oParams.Request.Module, oParams.Request.Method);
 		if (oParams.Request.Module === 'StandardAuth' && oParams.Request.Method === 'GetUserAccounts')
 		{
+			console.log('* oParams.Response.Result', oParams.Response.Result, Types.isNonEmptyArray(oParams.Response.Result));
 			if (Types.isNonEmptyArray(oParams.Response.Result))
 			{
 				this.userAccountLogin(oParams.Response.Result[0].login);
+				console.log('* this.userAccountLogin', this.userAccountLogin());
 			}
 		}
 		if (this.userAccountLogin() === '' && oParams.Request.Module === 'OAuthIntegratorWebclient' && oParams.Request.Method === 'GetAccounts')
 		{
+			console.log('+ oParams.Response.Result', oParams.Response.Result, Types.isNonEmptyArray(oParams.Response.Result));
 			if (Types.isNonEmptyArray(oParams.Response.Result))
 			{
 				this.userAccountLogin(Types.pString(oParams.Response.Result[0].Email));
+				console.log('+ this.userAccountLogin', this.userAccountLogin());
 			}
 		}
 	}, this));
