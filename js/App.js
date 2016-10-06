@@ -76,24 +76,7 @@ function CApp()
 	this.bPublic = false;
 	this.bNewTab = false;
 	this.bMobile = false;
-	this.userAccountLogin = ko.observable('');
-
-	this.subscribeEvent('ReceiveAjaxResponse::after', _.bind(function (oParams) {
-		if (oParams.Request.Module === 'StandardAuth' && oParams.Request.Method === 'GetUserAccounts')
-		{
-			if (Types.isNonEmptyArray(oParams.Response.Result))
-			{
-				this.userAccountLogin(oParams.Response.Result[0].login);
-			}
-		}
-		if (this.userAccountLogin() === '' && oParams.Request.Module === 'OAuthIntegratorWebclient' && oParams.Request.Method === 'GetAccounts')
-		{
-			if (Types.isNonEmptyArray(oParams.Response.Result))
-			{
-				this.userAccountLogin(Types.pString(oParams.Response.Result[0].Email));
-			}
-		}
-	}, this));
+	this.userPublicId = ko.observable('');
 }
 
 CApp.prototype.getUserRole = function ()
@@ -145,6 +128,14 @@ CApp.prototype.init = function ()
 {
 	ModulesManager.run('StandardLoginFormWebclient', 'beforeAppRunning', [this.iUserRole !== Enums.UserRole.Anonymous]);
 	
+	var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
+	Ajax.send('Core', 'GetUser', {'UserId': this.iUserId}, _.bind(function (oResponse, oRequest) {
+		if (oResponse.Result && oRequest.Parameters.UserId === this.iUserId)
+		{
+			this.userPublicId(oResponse.Result.PublicId);
+		}
+	}, this));
+
 	if (Browser.iosDevice && this.iUserRole !== Enums.UserRole.Anonymous && UserSettings.SyncIosAfterLogin && UserSettings.AllowIosProfile)
 	{
 		window.location.href = '?ios';
