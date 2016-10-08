@@ -6,9 +6,9 @@ var
 	ko = require('knockout'),
 	modernizr = require('modernizr'),
 	
+	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	UrlUtils = require('%PathToCoreWebclientModule%/js/utils/Url.js'),
-	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
 	
 	Api = require('%PathToCoreWebclientModule%/js/Api.js'),
 	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
@@ -96,7 +96,7 @@ CApp.prototype.isAccountDeletingAvaliable = function ()
 {
 	if (this.userAccountsCount() <= 1)
 	{
-		Screens.showError(Utils.i18n('%MODULENAME%/ERROR_ACCOUNT_DELETING_DISABLE'), true);
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_ACCOUNT_DELETING_DISABLE'), true);
 		return false;
 	}
 	return true;
@@ -255,7 +255,7 @@ CApp.prototype.showLastErrorOnLogin = function ()
 		
 		if (UserSettings.LastErrorCode === Enums.Errors.AuthError)
 		{
-			Screens.showError(Utils.i18n('%MODULENAME%/ERROR_AUTH_PROBLEM'), true);
+			Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_AUTH_PROBLEM'), true);
 		}
 	}
 };
@@ -354,7 +354,7 @@ CApp.prototype.checkCookies = function ()
 	
 	if (!bResult)
 	{
-		App.Screens.showError(Utils.i18n('%MODULENAME%/ERROR_COOKIES_DISABLED'), true);
+		App.Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_COOKIES_DISABLED'), true);
 	}
 	else
 	{
