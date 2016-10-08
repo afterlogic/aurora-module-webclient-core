@@ -77,7 +77,21 @@ function CApp()
 	this.bNewTab = false;
 	this.bMobile = false;
 	this.userPublicId = ko.observable('');
+	
+	this.koUserAccountsCount = ko.observableArray([]);
+	this.userAccountsCount = ko.computed(function () {
+		var iCount = _.reduce(this.koUserAccountsCount(), function(iSum, koUserAccountsCount){
+			return iSum + koUserAccountsCount();
+		}, 0);
+		console.log('iCount', iCount);
+		return iCount;
+	}, this);
 }
+
+CApp.prototype.registerUserAccountsCount = function (koUserAccountsCount)
+{
+	this.koUserAccountsCount.push(koUserAccountsCount);
+};
 
 CApp.prototype.getUserRole = function ()
 {
