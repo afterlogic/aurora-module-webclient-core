@@ -83,7 +83,6 @@ function CApp()
 		var iCount = _.reduce(this.koUserAccountsCount(), function(iSum, koUserAccountsCount){
 			return iSum + koUserAccountsCount();
 		}, 0);
-		console.log('iCount', iCount);
 		return iCount;
 	}, this);
 }
@@ -91,6 +90,16 @@ function CApp()
 CApp.prototype.registerUserAccountsCount = function (koUserAccountsCount)
 {
 	this.koUserAccountsCount.push(koUserAccountsCount);
+};
+
+CApp.prototype.isAccountDeletingAvaliable = function ()
+{
+	if (this.userAccountsCount() <= 1)
+	{
+		Screens.showError(Utils.i18n('%MODULENAME%/ERROR_ACCOUNT_DELETING_DISABLE'), true);
+		return false;
+	}
+	return true;
 };
 
 CApp.prototype.getUserRole = function ()
