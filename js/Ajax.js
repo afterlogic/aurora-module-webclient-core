@@ -285,6 +285,13 @@ CAjax.prototype.fail = function (oRequest, fResponseHandler, oContext, oXhr, sTy
  */
 CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, oResponse, oRequest)
 {
+	if (Types.isNonEmptyArray(oResponse.Result))
+	{
+		oResponse = _.find(oResponse.Result, function (oResult) {
+			return oResult.Module === oRequest.Module;
+		}) || oResponse;
+	}
+	
 	if (!oResponse)
 	{
 		oResponse = { Result: false, ErrorCode: 0 };
