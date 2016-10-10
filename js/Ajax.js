@@ -304,7 +304,7 @@ CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, o
 		fResponseHandler.apply(oContext, [oMainResponse, oRequest]);
 	}
 	
-	App.broadcastEvent('ReceiveAjaxResponse::after', {'Request': oRequest, 'MainResponse': oMainResponse, 'Responses': oResponse});
+	App.broadcastEvent('ReceiveAjaxResponse::after', {'Request': oRequest, 'MainResponse': oMainResponse, 'Responses': oResponse.Result});
 };
 
 /**
