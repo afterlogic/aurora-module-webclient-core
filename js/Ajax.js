@@ -290,7 +290,7 @@ CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, o
 	if (Types.isNonEmptyArray(oResponse.Result))
 	{
 		oMainResponse = _.find(oResponse.Result, function (oResult) {
-			return oResult.Module === oRequest.Module;
+			return oResult.Module === oRequest.Module && oResult.Method === oRequest.Method;
 		}) || oResponse;
 	}
 	
