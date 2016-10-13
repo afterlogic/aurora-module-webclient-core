@@ -9,7 +9,7 @@ var
 	Browser = require('%PathToCoreWebclientModule%/js/Browser.js')
 ;
 
-require('customscroll');
+require('%PathToCoreWebclientModule%/js/vendors/customscroll.js');
 require('jquery-ui');
 require('%PathToCoreWebclientModule%/js/autocomplete.js');
 

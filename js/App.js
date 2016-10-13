@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	ko = require('knockout'),
-	modernizr = require('modernizr'),
+	modernizr = require('%PathToCoreWebclientModule%/js/vendors/modernizr.js'),
 	
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
@@ -26,7 +26,7 @@ require('%PathToCoreWebclientModule%/js/koExtendings.js');
 
 require('%PathToCoreWebclientModule%/js/vendors/inputosaurus.js');
 
-require('jquery.cookie');
+require('%PathToCoreWebclientModule%/js/vendors/jquery.cookie.js');
 
 function InitNotMobileRequires()
 {
