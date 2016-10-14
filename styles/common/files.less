@@ -170,6 +170,14 @@
 				background-position: -1360px -400px;
 			}
 		}
+		
+		&.url {
+			background-position: -720px -360px;
+
+			.large & {
+				background-position: -1440px -400px;
+			}
+		}
 
 		&.play {
 			background: none;
@@ -187,6 +195,10 @@
 
 			.init-icon-font();
 			
+			&:hover {
+				opacity: 1;
+			}
+			
 			&:before {
 				border-radius: 31px;
 				box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.5);
@@ -194,10 +206,6 @@
 				display: block;
 				overflow: hidden;
 			}
-		}
-
-		&.play:hover {
-			opacity: 1;
 		}
 	}
 }
