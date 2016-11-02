@@ -25,7 +25,10 @@ body {
 
 .screens {
 	.box-sizing;
-	.resize-compensation-top(@theme-tabs-height);
+	
+	&.show-header {
+		.resize-compensation-top(@theme-tabs-height);
+	}
 
 	height: 100%;
 	

@@ -3,6 +3,7 @@
 var
 	_ = require('underscore'),
 	ko = require('knockout'),
+	$ = require('jquery'),
 	
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
@@ -25,7 +26,6 @@ function CHeaderView()
 	CAbstractScreenView.call(this, '%ModuleName%');
 	
 	this.tabs = ModulesManager.getModulesTabs(false);
-	
 	ko.computed(function () {
 		_.each(this.tabs, function (oTab) {
 			if (oTab.isCurrent)
@@ -46,6 +46,10 @@ function CHeaderView()
 	this.mobileDevice = Browser.mobileDevice;
 	
 	App.broadcastEvent('%ModuleName%::ConstructView::after', {'Name': this.ViewConstructorName, 'View': this});
+	
+	if (!_.isEmpty(this.tabs) || this.showLogout) {
+		$('#auroraContent > .screens').addClass('show-header');
+	}
 }
 
 _.extendOwn(CHeaderView.prototype, CAbstractScreenView.prototype);
