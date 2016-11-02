@@ -285,26 +285,17 @@ CAjax.prototype.fail = function (oRequest, fResponseHandler, oContext, oXhr, sTy
  */
 CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, oResponse, oRequest)
 {
-	var oMainResponse = null;
-	
-	if (Types.isNonEmptyArray(oResponse.Result))
+	if (!oResponse)
 	{
-		oMainResponse = _.find(oResponse.Result, function (oResult) {
-			return oResult.Module === oRequest.Module && oResult.Method === oRequest.Method;
-		}) || oResponse;
+		oResponse = { Result: false, ErrorCode: 0 };
 	}
 	
-	if (!oMainResponse)
+	if ($.isFunction(fResponseHandler) && !oResponse.StopExecuteResponse)
 	{
-		oMainResponse = { Result: false, ErrorCode: 0 };
+		fResponseHandler.apply(oContext, [oResponse, oRequest]);
 	}
 	
-	if ($.isFunction(fResponseHandler) && !oMainResponse.StopExecuteResponse)
-	{
-		fResponseHandler.apply(oContext, [oMainResponse, oRequest]);
-	}
-	
-	App.broadcastEvent('ReceiveAjaxResponse::after', {'Request': oRequest, 'MainResponse': oMainResponse, 'Responses': oResponse.Result});
+	App.broadcastEvent('ReceiveAjaxResponse::after', {'Request': oRequest, 'MainResponse': oResponse, 'Responses': oResponse.Result});
 };
 
 /**
