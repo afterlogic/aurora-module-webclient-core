@@ -238,8 +238,10 @@ CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse
 				}
 				break;
 		}
+		
+		oResponse.Result = false;
 	}
-
+	
 	this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest);
 };
 
