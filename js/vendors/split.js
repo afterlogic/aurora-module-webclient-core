@@ -487,6 +487,9 @@ var global = this
                 gutter[addEventListener]('touchstart', startDragging.bind(pair))
 
                 parent.insertBefore(gutter, el)
+				
+				var gutterInner = document.createElement('div')
+				gutter.appendChild(gutterInner)
 
                 pair.gutter = gutter
             }
