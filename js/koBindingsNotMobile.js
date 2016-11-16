@@ -6,7 +6,8 @@ var
 	$ = require('jquery'),
 	
 	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
-	Browser = require('%PathToCoreWebclientModule%/js/Browser.js')
+	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
+	splitter = require('%PathToCoreWebclientModule%/js/vendors/split.js')
 ;
 
 require('%PathToCoreWebclientModule%/js/vendors/customscroll.js');
@@ -17,6 +18,28 @@ ko.bindingHandlers.splitter = {
 	'init': function (oElement, fValueAccessor) {
 		setTimeout(function() {
 			$(oElement).splitter(fValueAccessor());
+		}, 1);
+	}
+};
+
+ko.bindingHandlers.splitter1 = {
+	'init': function (oElement, fValueAccessor) {
+		setTimeout(function() {
+			// $(oElement).splitter(fValueAccessor());
+			var oCommand = _.defaults(fValueAccessor(), {
+				'oScroll' : null,
+				'scrollToTopTrigger': null,
+				'scrollToBottomTrigger': null,
+				'scrollTo': null
+
+			});
+			
+			
+			splitter($(oElement).children(), {
+				// sizes: [20, 20, 60],
+				minSize: 200,
+				gutterSize: 0
+			});
 		}, 1);
 	}
 };
