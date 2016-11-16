@@ -12,6 +12,8 @@ body {
 .auroraMain {
 	height: 100%;
 	overflow: hidden;
+	
+	
 }
 
 #auroraContent {
@@ -51,6 +53,7 @@ input:focus {
 	.theme-clear-left-panel();
 	.items_list_group_style();
 	
+	
 	.items_list .item .title .name {
 		.fadeout-text-init();
 		.fadeout-text(@theme-group-style-item-bg);
@@ -69,4 +72,44 @@ input:focus {
 		background-image: url("../../images/sprites2x.png");
 		background-size: 1520px 560px;
 	}
+}
+
+
+.split p {
+padding: 20px;
+}
+
+.split {
+-webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
+		box-sizing: border-box;
+
+overflow-y: auto;
+overflow-x: hidden;
+}
+
+.gutter {
+background-color: #eee;
+
+background-repeat: no-repeat;
+background-position: 50%;
+
+flex-basis: 10px;
+flex-grow: 0;
+flex-shrink: 0;
+}
+
+.gutter.gutter-horizontal {
+background-image: url('grips/vertical.png');
+cursor: ew-resize;
+}
+
+.gutter.gutter-vertical {
+background-image: url('grips/horizontal.png');
+cursor: ns-resize;
+}
+
+.split.split-horizontal, .gutter.gutter-horizontal {
+height: 100%;
+float: left;
 }

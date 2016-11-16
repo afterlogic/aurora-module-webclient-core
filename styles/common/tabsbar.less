@@ -1,12 +1,25 @@
 /*=== Tabsbar CSS ===*/
 .tabs_panel {
     .theme-tabsbar();
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-content: center;
 	
-	height: @theme-tabs-height;
-	line-height: @theme-tabs-height;
+	// min-height: @theme-tabs-height;
+		min-height: 60px;
+	
+	//line-height: @theme-tabs-height;
 	padding: 0px 5px;
 	position: relative;
 	z-index: 1000;
+	
+	& > .cont {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-content: center;
+	}
 	
 	.item {
 		.theme-tabsbar-item();
@@ -17,7 +30,9 @@
 		line-height: 120%;
 		position: relative;
 		text-shadow: @tabsbar-item-font-shadow;
-		vertical-align: middle;
+		//vertical-align: middle;
+		
+		align-self: center;
 		
 		.cssanimations &.recivedAnim {
 			border-radius: 4px;
@@ -115,13 +130,15 @@
 	
 	.settings,
 	.logout {
-		display: block;
-		float: right;
+		//display: block;
+		//float: right;
 		font-size: 8pt;
 		height: auto;
 		margin-left: 6px;
 		margin-right: 0px;
-		margin-top: @tabsbar-item-top-offset;
+		//margin-top: @tabsbar-item-top-offset;
+		
+		//align-self: flex-end;
 		
 		html.rtl & {
 			float: left;

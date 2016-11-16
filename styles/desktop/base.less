@@ -8,8 +8,8 @@ body {
 }
 
 .auroraMain {
-    min-width: 640px;
-	min-height: 480px;
+    //min-width: 480px;
+	//min-height: 480px;
 
 	html.non-adjustable & {
 		height: auto;
@@ -26,9 +26,15 @@ body {
 .screens {
 	.box-sizing;
 	
-	&.show-header {
-		.resize-compensation-top(@theme-tabs-height);
-	}
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	
+	
+	
+	//&.show-header {
+	//	.resize-compensation-top(@theme-tabs-height);
+	//}
 
 	height: 100%;
 	
@@ -38,6 +44,7 @@ body {
 	
 	.screen {
 		height: 100%;
+		overflow: auto;
 	}
 }
 
