@@ -1,3 +1,4 @@
+// https://nathancahill.github.io/Split.js/
 // The programming goals of Split.js are to deliver readable, understandable and
 // maintainable code, while at the same time manually optimizing for tiny minified file size,
 // browser compatibility without additional requirements, graceful fallback (IE8 is supported)
@@ -157,7 +158,7 @@ var global = this
 
             // Call the onDragStart callback.
             if (!self.dragging && options.onDragStart) {
-                options.onDragStart()
+                options.onDragStart(self)
             }
 
             // Don't actually drag the element. We emulate that in the drag function.
@@ -211,7 +212,7 @@ var global = this
               , b = self.b
 
             if (self.dragging && options.onDragEnd) {
-                options.onDragEnd()
+                options.onDragEnd(self)
             }
 
             self.dragging = false
@@ -291,7 +292,7 @@ var global = this
             // Call the drag callback continously. Don't do anything too intensive
             // in this callback.
             if (options.onDrag) {
-                options.onDrag()
+                options.onDrag(self)
             }
         }
 

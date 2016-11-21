@@ -7,6 +7,7 @@ var
 	
 	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
 	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
+	Storage = require('%PathToCoreWebclientModule%/js/Storage.js'),
 	splitter = require('%PathToCoreWebclientModule%/js/vendors/split.js')
 ;
 
@@ -22,25 +23,39 @@ ko.bindingHandlers.splitter = {
 	}
 };
 
-ko.bindingHandlers.splitter1 = {
+ko.bindingHandlers.splitterFlex = {
 	'init': function (oElement, fValueAccessor) {
-		setTimeout(function() {
-			// $(oElement).splitter(fValueAccessor());
-			var oCommand = _.defaults(fValueAccessor(), {
-				'oScroll' : null,
-				'scrollToTopTrigger': null,
-				'scrollToBottomTrigger': null,
-				'scrollTo': null
-
-			});
-			
+		_.defer(function() {
+			//https://nathancahill.github.io/Split.js/
+			var 
+				oCommand = _.defaults(fValueAccessor(), {
+					'minSize' : 200,
+					'name': ''
+				}),
+				aInitSizes = Storage.getData(oCommand['name'] + 'ResizerWidth') || oCommand['sizes']
+			;
 			
 			splitter($(oElement).children(), {
-				// sizes: [20, 20, 60],
-				minSize: 200,
-				gutterSize: 0
+				sizes: aInitSizes,
+				minSize: oCommand['minSize'],
+				gutterSize: 0,
+				onDragEnd: function (split) {
+					var 
+						parentWidth = $(split.parent).width(),
+						aSizes = []
+					;
+
+					_.each($(oElement).children('.panel'), function (item) {
+						aSizes.push($(item).width() / parentWidth * 100);
+					});
+					
+					if (oCommand['name'])
+					{
+						Storage.setData(oCommand['name'] + 'ResizerWidth', aSizes);
+					}
+				}
 			});
-		}, 1);
+		});
 	}
 };
 
