@@ -102,7 +102,8 @@ CScreens.prototype.route = function (aParams)
 	var
 		sCurrentScreen = this.currentScreen(),
 		oCurrentScreen = this.oScreens[sCurrentScreen],
-		sNextScreen = aParams.shift()
+		sNextScreen = aParams.shift(),
+		self = this
 	;
 	
 	if (sCurrentScreen === '' && sNextScreen === '')
@@ -128,37 +129,60 @@ CScreens.prototype.route = function (aParams)
 				oCurrentScreen.hideView();
 			}
 			
-			oCurrentScreen = this.showView(sNextScreen);
+			oCurrentScreen = this.showView(sNextScreen, function (oScreen) {
+				self.onRouteCallback(oScreen, aParams);
+			});
 		}
 		
-		if (oCurrentScreen && _.isFunction(oCurrentScreen.onRoute))
+		if (oCurrentScreen)
 		{
-			oCurrentScreen.onRoute(aParams);
+			//call callback for sync code
+			this.onRouteCallback(oCurrentScreen, aParams);
 		}
 	}
 };
+
+CScreens.prototype.onRouteCallback = function (oScreen, aParams)
+{
+	if (oScreen && _.isFunction(oScreen.onRoute))
+	{
+		oScreen.onRoute(aParams);
+	}
+};
+
 
 /**
  * @param {string} sScreen
  * 
  * @returns {Object}
  */
-CScreens.prototype.showView = function (sScreen)
+CScreens.prototype.showView = function (sScreen, fCallback)
 {
 	var
 		sScreenId = sScreen,
 		fGetScreen = this.oGetScreenFunctions[sScreenId],
-		oScreen = this.oScreens[sScreenId]
+		oScreen = this.oScreens[sScreenId],
+		self = this
 	;
 	
 	if (!oScreen && fGetScreen)
 	{
-		oScreen = this.initView(sScreenId, fGetScreen);
+		// oScreen = this.initView(sScreenId, fGetScreen);
+		this.initView(sScreenId, fGetScreen, function () {
+			self.showView(sScreen, fCallback);
+		});
+		
+		return null;
 	}
 	
 	if (oScreen && _.isFunction(oScreen.showView))
 	{
 		oScreen.showView();
+	}
+	
+	if (_.isFunction(fCallback))
+	{
+		fCallback(oScreen);
 	}
 	
 	return oScreen;
@@ -170,10 +194,39 @@ CScreens.prototype.showView = function (sScreen)
  * 
  * @returns {Object}
  */
-CScreens.prototype.initView = function (sScreenId, fGetScreen)
+CScreens.prototype.initView = function (sScreenId, fGetScreen, fCallback)
 {
-	var oScreen = fGetScreen();
+	var 
+		self = this,
+		oScreen = fGetScreen()
+	;
+
+	//may fail in Safari 
+	if (oScreen instanceof Promise)
+	{
+		oScreen.then(function (oScreen) {
+			self.initViewCallback.call(self, sScreenId, oScreen);
+			
+			if (oScreen && _.isFunction(fCallback))
+			{
+				fCallback(oScreen);
+			}
+		});
+	}
+	else
+	{
+		this.initViewCallback.call(this, sScreenId, oScreen);
+		
+		if (oScreen && _.isFunction(fCallback))
+		{
+			fCallback(oScreen);
+		}
+	}
 	
+};
+
+CScreens.prototype.initViewCallback = function (sScreenId, oScreen)
+{
 	if (oScreen.ViewTemplate)
 	{
 		var $templatePlace = $('<!-- ko template: { name: \'' + oScreen.ViewTemplate + '\' } --><!-- /ko -->').appendTo($('#auroraContent .screens'));
@@ -189,8 +242,6 @@ CScreens.prototype.initView = function (sScreenId, fGetScreen)
 	
 	this.oScreens[sScreenId] = oScreen;
 	delete this.oGetScreenFunctions[sScreenId];
-	
-	return oScreen;
 };
 
 /**
@@ -265,7 +316,15 @@ CScreens.prototype.hideError = function (bGray)
 
 CScreens.prototype.initInformation = function ()
 {
-	this.informationScreen(this.showView('information'));
+	var self = this;
+	
+	this.showView('information', function (oScreen) {
+		if (oScreen)
+		{
+			self.informationScreen(oScreen);
+		}
+	});
+	
 };
 
 var Screens = new CScreens();
