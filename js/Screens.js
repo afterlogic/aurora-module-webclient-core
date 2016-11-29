@@ -200,9 +200,9 @@ CScreens.prototype.initView = function (sScreenId, fGetScreen, fCallback)
 		self = this,
 		oScreen = fGetScreen()
 	;
-
-	//may fail in Safari 
-	if (oScreen instanceof Promise)
+	
+	//TODO need to better test for promise
+	if (_.isFunction(oScreen.then))
 	{
 		oScreen.then(function (oScreen) {
 			self.initViewCallback.call(self, sScreenId, oScreen);
