@@ -201,7 +201,7 @@ CScreens.prototype.initView = function (sScreenId, fGetScreen, fCallback)
 		oScreen = fGetScreen()
 	;
 	
-	//TODO need to better test for promise
+	//TODO better testing for promise is needed
 	if (_.isFunction(oScreen.then))
 	{
 		oScreen.then(function (oScreen) {
