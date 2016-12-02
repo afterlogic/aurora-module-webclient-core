@@ -15,7 +15,7 @@ var
  */
 function CPageSwitcherView(iCount, iPerPage)
 {
-	this.shown = false;
+	this.bShown = false;
 	
 	this.currentPage = ko.observable(1);
 	this.count = ko.observable(iCount);
@@ -118,7 +118,7 @@ CPageSwitcherView.prototype.ViewTemplate = 'CoreWebclient_PageSwitcherView';
 CPageSwitcherView.prototype.hotKeysBind = function ()
 {
 	$(document).on('keydown', $.proxy(function(ev) {
-		if (this.shown && !Utils.isTextFieldFocused())
+		if (this.bShown && !Utils.isTextFieldFocused())
 		{
 			var sKey = ev.keyCode;
 			if (ev.ctrlKey && sKey === Enums.Key.Left)
@@ -135,12 +135,12 @@ CPageSwitcherView.prototype.hotKeysBind = function ()
 
 CPageSwitcherView.prototype.hide = function ()
 {
-	this.shown = false;
+	this.bShown = false;
 };
 
 CPageSwitcherView.prototype.show = function ()
 {
-	this.shown = true;
+	this.bShown = true;
 };
 
 CPageSwitcherView.prototype.clear = function ()
