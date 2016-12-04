@@ -59,8 +59,6 @@ function CAbstractFileModel(sModuleName)
 		return this.size() > 0 ? TextUtils.getFriendlySize(this.size()) : '';
 	}, this);
 	
-	this.content = ko.observable('');
-
 	this.accountId = ko.observable(App.defaultAccountId ? App.defaultAccountId() : 0);
 	this.hash = ko.observable('');
 	this.thumb = ko.observable(false);
@@ -80,16 +78,13 @@ function CAbstractFileModel(sModuleName)
 	this.thumbnailSessionUid = ko.observable('');
 
 	this.thumbnailLink = ko.computed(function () {
-		return sModuleName !== 'Files' ? Utils.getThumbnailLink(sModuleName, this.hash()) : '';
+		return sModuleName !== 'Files' ? FilesUtils.getThumbnailLink(sModuleName, this.hash()) : '';
 	}, this);
 
 	this.type = ko.observable('');
 	this.uploadUid = ko.observable('');
 	this.uploaded = ko.observable(false);
 	this.uploadError = ko.observable(false);
-	this.visibleImportLink = ko.computed(function () {
-		return false;//UserSettings.enableOpenPgp() && this.extension().toLowerCase() === 'asc' && this.content() !== '' && !this.isPopupItem();
-	}, this);
 	this.isViewMimeType = ko.computed(function () {
 		return (-1 !== $.inArray(this.type(), aViewMimeTypes)) || this.iframedView();
 	}, this);
@@ -201,7 +196,6 @@ CAbstractFileModel.prototype.parse = function (oData, iAccountId)
 
 		this.type(Types.pString(oData.MimeType));
 		this.size(oData.EstimatedSize ? Types.pInt(oData.EstimatedSize) : Types.pInt(oData.SizeInBytes));
-		this.content(Types.pString(oData.Content));
 
 		this.thumb(!!oData.Thumb);
 
@@ -297,24 +291,6 @@ CAbstractFileModel.prototype.collapseFile = function ()
 CAbstractFileModel.prototype.getInstance = function ()
 {
 	return new CAbstractFileModel();
-};
-
-/**
- * Starts importing attachment on click.
- */
-CAbstractFileModel.prototype.importFile = function ()
-{
-//	var
-//		sContent = this.content(),
-//		fPgpCallback = _.bind(function (oPgp) {
-//			if (oPgp)
-//			{
-//				Popups.showPopup(CImportOpenPgpKeyPopup, [oPgp, sContent]);
-//			}
-//		}, this)
-//	;
-//	
-//	App.Api.pgp(fPgpCallback, UserSettings.UserId);
 };
 
 /**
