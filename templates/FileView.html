@@ -1,15 +1,5 @@
 <div class="item file attachment" data-bind="
-	css: {
-		'dragHandle': allowDrag(),
-		'selected': allowSelect() && selected(),
-		'checked': allowCheck() && checked(),
-		'deleted': allowDelete() && deleted(),
-		'incomplete': allowUpload() && !uploaded(),
-		'shared': allowSharing() && shared(),
-		'fail': uploadError(), 
-		'success': !uploadError(),
-		'aslink': isLink()
-	},
+	css: cssClasses,
 	event: isPopupItem() ? null : { 'dragstart': eventDragStart },
 	draggablePlace: !isPopupItem() && allowDrag() ? $parent.dragAndDropHelperBinded : null,
 	draggableDragStartCallback: function() {if (!isPopupItem() && allowDrag()) {$root.dragover(true);}},

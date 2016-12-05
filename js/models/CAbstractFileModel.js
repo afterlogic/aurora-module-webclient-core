@@ -39,7 +39,6 @@ function CAbstractFileModel(sModuleName)
 {
 	this.isIosDevice = Browser.iosDevice;
 
-	this.isLink = ko.observable(false);
 	this.isPopupItem = ko.observable(false);
 	
 	this.id = ko.observable('');
@@ -134,9 +133,6 @@ function CAbstractFileModel(sModuleName)
 	}, this);
 	
 	this.allowDrag = ko.observable(false);
-	this.allowSelect = ko.observable(false);
-	this.allowCheck = ko.observable(false);
-	this.allowDelete = ko.observable(false);
 	this.allowUpload = ko.observable(false);
 	this.allowSharing = ko.observable(false);
 	this.allowHeader = ko.observable(false);
@@ -160,12 +156,36 @@ function CAbstractFileModel(sModuleName)
 		
 		return sTitle;
 	}, this);
+	
+	this.cssClasses = ko.computed(function () {
+		return this.getCommonClasses().join(' ');
+	}, this);
 }
 
 /**
  * Can be overridden.
  */
 CAbstractFileModel.prototype.dataObjectName = '';
+
+CAbstractFileModel.prototype.getCommonClasses = function ()
+{
+	var aClasses = [];
+
+	if (this.allowUpload() && !this.uploaded())
+	{
+		aClasses.push('incomplete');
+	}
+	if (this.uploadError())
+	{
+		aClasses.push('fail');
+	}
+	else
+	{
+		aClasses.push('success');
+	}
+
+	return aClasses;
+};
 
 /**
  * Can be overridden.
