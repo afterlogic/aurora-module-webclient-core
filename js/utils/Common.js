@@ -397,4 +397,24 @@ Utils.getHash = function (sUniqVal)
 	return Types.pString(iHash);
 };
 
+Utils.downloadViaApiRequest = function (sModule, sMethod, oParameters)
+{
+	var
+		sIframeName = 'download_iframe_' + Math.random(),
+		oForm = $('<form action="?/Api/" method="post" target="' + sIframeName + '"></form>').hide().appendTo(document.body),
+		oIframe = $('<iframe name="' + sIframeName + '"></iframe>').hide().appendTo(document.body)
+	;
+	$('<input type="hidden" name="Module" />').val(sModule).appendTo(oForm);
+	$('<input type="hidden" name="Method" />').val(sMethod).appendTo(oForm);
+	$('<input type="hidden" name="AuthToken" />').val($.cookie('AuthToken')).appendTo(oForm);
+	$('<input type="hidden" name="TenantName" />').val(UserSettings.TenantName).appendTo(oForm);
+	$('<input type="hidden" name="Parameters" />').val(JSON.stringify(oParameters)).appendTo(oForm);
+	$('<input type="hidden" name="Format" />').val('Raw').appendTo(oForm);
+	oForm.submit();
+	setTimeout(function () {
+		oForm.remove();
+		oIframe.remove();
+	}, 200000);
+};
+
 module.exports = Utils;
