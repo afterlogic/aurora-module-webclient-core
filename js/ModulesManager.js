@@ -118,16 +118,19 @@ module.exports = {
 	 */
 	run: function (sModuleName, sFunctionName, aParams)
 	{
-		var oModule = oModules[sModuleName];
-		
-		if (oModule && $.isFunction(oModule[sFunctionName]))
+		if (this.isModuleEnabled(sModuleName))
 		{
-			if (!_.isArray(aParams))
+			var oModule = oModules[sModuleName];
+
+			if (oModule && $.isFunction(oModule[sFunctionName]))
 			{
-				aParams = [];
+				if (!_.isArray(aParams))
+				{
+					aParams = [];
+				}
+
+				return oModule[sFunctionName].apply(oModule, aParams);
 			}
-			
-			return oModule[sFunctionName].apply(oModule, aParams);
 		}
 		
 		return false;
