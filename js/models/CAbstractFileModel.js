@@ -37,8 +37,6 @@ if ($('html').hasClass('pdf'))
  */
 function CAbstractFileModel(sModuleName)
 {
-	this.isIosDevice = Browser.iosDevice;
-
 	this.isPopupItem = ko.observable(false);
 	
 	this.id = ko.observable('');
@@ -88,27 +86,8 @@ function CAbstractFileModel(sModuleName)
 		return (-1 !== $.inArray(this.type(), aViewMimeTypes)) || this.iframedView();
 	}, this);
 	this.isMessageType = ko.observable(false);
-	this.visibleViewLink = ko.computed(function () {
-		return this.isVisibleViewLink() && !this.isPopupItem();
-	}, this);
-	this.visibleDownloadLink = ko.computed(function () {
-		return !this.isPopupItem();
-	}, this);
-	this.visibleOpenLink = ko.observable(false); // overrided
 	this.hasHtmlEmbed = ko.observable(false);
 
-	this.subFiles = ko.observableArray([]);
-	this.allowExpandSubFiles = ko.observable(false);
-	this.subFilesLoaded = ko.observable(false);
-	this.subFilesCollapsed = ko.observable(false);
-	this.subFilesStartedLoading = ko.observable(false);
-	this.visibleExpandLink = ko.computed(function () {
-		return this.allowExpandSubFiles() && !this.subFilesCollapsed() && !this.subFilesStartedLoading();
-	}, this);
-	this.visibleExpandingText = ko.computed(function () {
-		return this.allowExpandSubFiles() && !this.subFilesCollapsed() && this.subFilesStartedLoading();
-	}, this);
-	
 	this.statusText = ko.observable('');
 	this.statusTooltip = ko.computed(function () {
 		return this.uploadError() ? this.statusText() : '';
@@ -138,10 +117,11 @@ function CAbstractFileModel(sModuleName)
 	this.allowHeader = ko.observable(false);
 	this.allowDownload = ko.observable(true);
 
-	this.downloadTitle = ko.computed(function () {
+	this.iconAction = ko.observable('download');
+	this.iconTooltip = ko.computed(function () {
 		var sTitle = '';
 		
-		if (!this.selected && this.allowDownload())
+		if (this.iconAction() === 'download')
 		{
 			sTitle = TextUtils.i18n('%MODULENAME%/INFO_CLICK_TO_DOWNLOAD_FILE', {
 				'FILENAME': this.fileName(),
@@ -159,6 +139,22 @@ function CAbstractFileModel(sModuleName)
 	
 	this.cssClasses = ko.computed(function () {
 		return this.getCommonClasses().join(' ');
+	}, this);
+	
+	this.leftAction = ko.observable('');
+	this.hasLeftAction = ko.computed(function () {
+		return this.leftAction() !== '';
+	}, this);
+	this.leftActionText = ko.observable('');
+	
+	this.rightAction = ko.observable('download');
+	this.hasRightAction = ko.computed(function () {
+		return this.rightAction() !== '';
+	}, this);
+	this.rightActionText = ko.observable(TextUtils.i18n('%MODULENAME%/ACTION_DOWNLOAD_FILE'));
+	
+	this.actionsSetter = ko.computed(function () {
+		this.setCommonActions();
 	}, this);
 }
 
@@ -185,6 +181,56 @@ CAbstractFileModel.prototype.getCommonClasses = function ()
 	}
 
 	return aClasses;
+};
+
+CAbstractFileModel.prototype.setCommonActions = function ()
+{
+	if (this.isVisibleViewLink())
+	{
+		this.leftAction('view');
+		this.leftActionText(TextUtils.i18n('COREWEBCLIENT/ACTION_VIEW_FILE'));
+	}
+	
+	if (Browser.iosDevice)
+	{
+		this.leftAction('download');
+		this.leftActionText(TextUtils.i18n('COREWEBCLIENT/ACTION_VIEW_FILE'));
+		this.rightAction('');
+		this.rightActionText('');
+	}
+};
+
+CAbstractFileModel.prototype.doLeftAction = function ()
+{
+	if (this.leftAction() === 'view')
+	{
+		this.viewFile();
+	}
+};
+
+CAbstractFileModel.prototype.doRightAction = function ()
+{
+	this.doCommonRightAction();
+};
+
+CAbstractFileModel.prototype.doCommonRightAction = function ()
+{
+	switch (this.rightAction())
+	{
+		case 'download':
+			this.downloadFile();
+			break;
+	}
+};
+
+CAbstractFileModel.prototype.doIconAction = function ()
+{
+	switch (this.iconAction())
+	{
+		case 'download':
+			this.downloadFile();
+			break;
+	}
 };
 
 /**
@@ -221,7 +267,6 @@ CAbstractFileModel.prototype.parse = function (oData, iAccountId)
 
 		this.hash(Types.pString(oData.Hash));
 		this.accountId(iAccountId);
-		this.allowExpandSubFiles(!!oData.Expand);
 		
 		this.iframedView(!!oData.Iframed);
 
@@ -258,71 +303,6 @@ CAbstractFileModel.prototype.downloadFile = function ()
 };
 
 /**
- * @param {Object} oResponse
- * @param {Object} oRequest
- */
-CAbstractFileModel.prototype.onFileExpandResponse = function (oResponse, oRequest)
-{
-	this.subFiles([]);
-	if (Types.isNonEmptyArray(oResponse.Result))
-	{
-		_.each(oResponse.Result, _.bind(function (oRawFile) {
-			var oFile = this.getInstance();
-			oRawFile['@Object'] = this.dataObjectName;
-			oFile.parse(oRawFile, this.accountId());
-			this.subFiles.push(oFile);
-		}, this));
-		this.subFilesLoaded(true);
-		this.subFilesCollapsed(true);
-	}
-	this.subFilesStartedLoading(false);
-};
-
-/**
- * Starts expanding attachment on click.
- */
-CAbstractFileModel.prototype.expandFile = function ()
-{
-	if (!this.subFilesLoaded())
-	{
-		this.subFilesStartedLoading(true);
-		Ajax.send({
-			'Action': 'FileExpand',
-			'RawKey': this.hash()
-		}, this.onFileExpandResponse, this);
-	}
-	else
-	{
-		this.subFilesCollapsed(true);
-	}
-};
-
-/**
- * Collapse attachment on click.
- */
-CAbstractFileModel.prototype.collapseFile = function ()
-{
-	this.subFilesCollapsed(false);
-};
-
-/**
- * @returns {CAbstractFileModel}
- */
-CAbstractFileModel.prototype.getInstance = function ()
-{
-	return new CAbstractFileModel();
-};
-
-/**
- * @param {Object} oViewModel
- * @param {Object} oEvent
- */
-CAbstractFileModel.prototype.onIconClick = function (oViewModel, oEvent)
-{
-	this.downloadFile();
-};
-
-/**
  * Can be overridden.
  * 
  * Starts viewing attachment on click.
@@ -348,7 +328,7 @@ CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 		sUrl = UrlUtils.getAppPath() + this.viewLink();
 	}
 
-	if (this.visibleViewLink() && this.viewLink().length > 0 && this.viewLink() !== '#')
+	if (this.isVisibleViewLink() && this.viewLink().length > 0 && this.viewLink() !== '#')
 	{
 		if (this.iframedView())
 		{

@@ -17,15 +17,13 @@
 
 		<span class="cancel" data-bind="click: function () { $parent.onFileRemove( uploadUid() ); }, customTooltip: '%MODULENAME%/ACTION_CANCEL'"></span>
 
-		<span class="image">
+		<span class="image" data-bind="customTooltip: iconTooltip(), click: doIconAction">
 			<!-- ko if: thumbnailSrc() !== '' -->
-			<img class="thumb download" data-bind="attr: {'src': thumbnailSrc()},
-				customTooltip: downloadTitle(), click: function (oViewModel, oEvent) { onIconClick(oViewModel, oEvent); }" />
+			<img class="thumb download" data-bind="attr: {'src': thumbnailSrc()}" />
 			<span class="icon play" data-bind="click: viewFile, visible: hasHtmlEmbed()"></span>
 			<!-- /ko -->
 			<!-- ko if: thumbnailSrc() === '' -->
-			<span class="icon download" data-bind="css: extension().toLowerCase() + (hasHtmlEmbed() ? ' ' + embedType().toLowerCase() : ''),
-				customTooltip: downloadTitle(), click: function (oViewModel, oEvent) { onIconClick(oViewModel, oEvent); }"></span>
+			<span class="icon download" data-bind="css: extension().toLowerCase() + (hasHtmlEmbed() ? ' ' + embedType().toLowerCase() : '')"></span>
 			<!-- /ko -->
 		</span>
 
@@ -36,32 +34,19 @@
 			<span data-bind="style: {'width': progressPercent() + '%'}"></span>
 		</span>
 		<span class="status_text" data-bind="text: statusText(), css: {'hide': !(statusText().length > 0), 'error': uploadError()}, customTooltip: statusTooltip"></span>
-		<div class="buttons" data-bind="visible: !isPopupItem(), css: {'hide': statusText().length > 0 || !uploaded()}">
-			<!--ko if: isIosDevice -->
-			<a class="button view" href="javascript: void(0)"
-			   data-bind="i18n: {'key': '%MODULENAME%/ACTION_VIEW_FILE'}, click: function () {downloadFile();}"></a>
-			<!-- /ko -->
-			<!--ko if: !isIosDevice -->
-			<a class="button download" href="javascript: void(0)" data-bind="visible: visibleDownloadLink(), click: function () { downloadFile(); }, i18n: {'key': '%MODULENAME%/ACTION_DOWNLOAD_FILE'}"></a>
-			<a class="button open" href="javascript: void(0)" data-bind="visible: visibleOpenLink(), click: function () { openLink(); }, i18n: {'key': '%MODULENAME%/ACTION_OPEN_LINK'}"></a>
-			<a class="button view" href="javascript: void(0)" data-bind="visible: visibleViewLink(), i18n: {'key': '%MODULENAME%/ACTION_VIEW_FILE'}, click: viewFile"></a>
-			<!-- /ko -->
-			<a class="button view" href="javascript: void(0)" data-bind="visible: visibleExpandLink(), i18n: {'key': '%MODULENAME%/ACTION_EXPAND_FILE'}, click: expandFile"></a>
-			<span data-bind="visible: visibleExpandingText(), i18n: {'key': '%MODULENAME%/INFO_LOADING'}"></span>
-			<a class="button view" href="javascript: void(0)" data-bind="visible: subFilesCollapsed(), i18n: {'key': '%MODULENAME%/ACTION_COLLAPSE_FILE'}, click: collapseFile"></a>
+		<div class="buttons" data-bind="visible: !isPopupItem() && uploaded() && !uploadError(), css: {'hide': statusText().length > 0 || !uploaded()}">
+			<a class="button view" href="javascript: void(0)" data-bind="visible: hasLeftAction(), 
+					click: doLeftAction, text: leftActionText"></a>
+			<a class="button download" href="javascript: void(0)" data-bind="visible: hasRightAction(), 
+					click: doRightAction, text: rightActionText"></a>
 		</div>
 	</span>
 
 	<span class="size" data-bind="text: friendlySize()"></span>
 
-	<span class="title" data-bind="customTooltip: fileName(), css: {no_size: friendlySize() === ''}">
+	<span class="title" data-bind="customTooltip: fileName(), css: {entire_line: friendlySize() === ''}">
 		<span class="name" data-bind="text: displayName"></span>
-		<!--<span class="ext" data-bind="text: '.' + extension(), visible: extension().length > 0"></span>-->
 	</span>
-	
-	<div class="children" data-bind="visible: subFilesCollapsed()">
-		<!-- ko template: {name: 'CoreWebclient_FileView', foreach: subFiles} --><!-- /ko -->
-	</div>
 </div>
 
 <!-- ko if: isMessageType() && messagePart() -->
