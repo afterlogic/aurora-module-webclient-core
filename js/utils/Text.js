@@ -212,6 +212,18 @@ TextUtils.getPlural = function (sLang, iNumber)
 };
 
 /**
+ * Convert string in CamelCase format to dash-separated
+ * 
+ * @param {string} sName
+ * @returns {string}
+ */
+
+TextUtils.getUrlFriendlyName = function (sName)
+{
+	return sName.replace(/([A-Z])/g, '-$1').replace(/^-/g, '').toLowerCase();
+};
+
+/**
  * @param {(number|string)} iSizeInBytes
  * 
  * @return {string}
