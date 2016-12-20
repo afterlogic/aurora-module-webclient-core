@@ -68,6 +68,7 @@ Enums.Errors = {
 	'DemoLimitations': 106,
 	'Captcha': 107,
 	'AccessDenied': 108,
+	'UserAlreadyExists': 111,
 	'CanNotGetMessage': 202,
 	'ImapQuota': 205,
 	'NotSavedInSentItems': 304,
