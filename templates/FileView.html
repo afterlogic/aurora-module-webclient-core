@@ -17,13 +17,13 @@
 
 		<span class="cancel" data-bind="click: function () { $parent.onFileRemove( uploadUid() ); }, customTooltip: '%MODULENAME%/ACTION_CANCEL'"></span>
 
-		<span class="image" data-bind="customTooltip: iconTooltip(), click: doIconAction">
+		<span class="image" data-bind="customTooltip: iconTooltip(), click: doIconAction, css: {'has_action': iconAction() !== ''}">
 			<!-- ko if: thumbnailSrc() !== '' -->
-			<img class="thumb download" data-bind="attr: {'src': thumbnailSrc()}" />
+			<img data-bind="attr: {'src': thumbnailSrc()}" />
 			<span class="icon play" data-bind="click: viewFile, visible: hasHtmlEmbed()"></span>
 			<!-- /ko -->
 			<!-- ko if: thumbnailSrc() === '' -->
-			<span class="icon download" data-bind="css: extension().toLowerCase() + (hasHtmlEmbed() ? ' ' + embedType().toLowerCase() : '')"></span>
+			<span class="icon" data-bind="css: extension().toLowerCase() + (hasHtmlEmbed() ? ' ' + embedType().toLowerCase() : '')"></span>
 			<!-- /ko -->
 		</span>
 
