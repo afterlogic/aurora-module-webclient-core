@@ -24,15 +24,15 @@ function CInformationView()
 	
 	this.loadingMessage = ko.observable('');
 	this.loadingHidden = ko.observable(true);
-	this.loadingVisible = ko.observable(false);
+//	this.loadingVisible = ko.observable(false);
 	this.reportMessage = ko.observable('');
 	this.reportHidden = ko.observable(true);
-	this.reportVisible = ko.observable(false);
+//	this.reportVisible = ko.observable(false);
 	this.reportVisibleClose = ko.observable(false);
 	this.iReportTimeout = -1;
 	this.errorMessage = ko.observable('');
 	this.errorHidden = ko.observable(true);
-	this.errorVisible = ko.observable(false);
+//	this.errorVisible = ko.observable(false);
 	this.iErrorTimeout = -1;
 	this.gray = ko.observable(false);
 	
@@ -57,22 +57,22 @@ CInformationView.prototype.showLoading = function (sMessage)
 	{
 		this.loadingMessage(TextUtils.i18n('%MODULENAME%/INFO_LOADING'));
 	}
-	this.loadingVisible(true);
-	_.defer(_.bind(function () {
+//	this.loadingVisible(true);
+//	_.defer(_.bind(function () {
 		this.loadingHidden(false);
-	}, this));
+//	}, this));
 }
 ;
 
 CInformationView.prototype.hideLoading = function ()
 {
 	this.loadingHidden(true);
-	setTimeout(_.bind(function () {
-		if (this.loadingHidden())
-		{
-			this.loadingVisible(false);
-		}
-	}, this), this.iAnimationDuration);
+//	setTimeout(_.bind(function () {
+//		if (this.loadingHidden())
+//		{
+//			this.loadingVisible(false);
+//		}
+//	}, this), this.iAnimationDuration);
 };
 
 /**
@@ -92,8 +92,10 @@ CInformationView.prototype.showReport = function (sMessage, iDelay)
 	{
 		this.reportMessage(sMessage);
 		
-		this.reportVisible(true);
-		_.defer(_.bind(this.reportHidden, this, false));
+//		this.reportVisible(true);
+//		_.defer(_.bind(
+				this.reportHidden(false);
+//		, this, false));
 		
 		clearTimeout(this.iReportTimeout);
 		if (iDelay === 0)
@@ -109,19 +111,19 @@ CInformationView.prototype.showReport = function (sMessage, iDelay)
 	else
 	{
 		this.reportHidden(true);
-		this.reportVisible(false);
+//		this.reportVisible(false);
 	}
 };
 
 CInformationView.prototype.selfHideReport = function ()
 {
 	this.reportHidden(true);
-	setTimeout(_.bind(function () {
-		if (this.reportHidden())
-		{
-			this.reportVisible(false);
-		}
-	}, this), this.iAnimationDuration);
+//	setTimeout(_.bind(function () {
+//		if (this.reportHidden())
+//		{
+//			this.reportVisible(false);
+//		}
+//	}, this), this.iAnimationDuration);
 };
 
 /**
@@ -138,10 +140,10 @@ CInformationView.prototype.showError = function (sMessage, bNotHide, bGray)
 		this.gray(!!bGray);
 		this.errorMessage(sMessage);
 		
-		this.errorVisible(true);
-		_.defer(_.bind(function () {
+//		this.errorVisible(true);
+//		_.defer(_.bind(function () {
 			this.errorHidden(false);
-		}, this));
+//		}, this));
 		
 		clearTimeout(this.iErrorTimeout);
 		if (!bNotHide)
@@ -160,12 +162,12 @@ CInformationView.prototype.showError = function (sMessage, bNotHide, bGray)
 CInformationView.prototype.selfHideError = function ()
 {
 	this.errorHidden(true);
-	setTimeout(_.bind(function () {
-		if (this.errorHidden())
-		{
-			this.errorVisible(false);
-		}
-	}, this), this.iAnimationDuration);
+//	setTimeout(_.bind(function () {
+//		if (this.errorHidden())
+//		{
+//			this.errorVisible(false);
+//		}
+//	}, this), this.iAnimationDuration);
 };
 
 /**
