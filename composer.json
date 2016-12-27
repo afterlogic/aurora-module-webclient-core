@@ -1,11 +1,6 @@
 {
 	"name": "afterlogic/aurora-module-webclient-core",
-		"version":"0.2.0",
-		"type": "aurora-module",
-		"dist":{
-			"url":"https://github.com/afterlogic/aurora-module-webclient-core/archive/master.zip",
-			"type":"zip"
-		},
+	"type": "aurora-module",
 	"require":{
 		"php":">=5.4.0",
 		"afterlogic/aurora-framework": "~0.2"
