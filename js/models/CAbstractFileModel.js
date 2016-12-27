@@ -428,7 +428,7 @@ CAbstractFileModel.prototype.onUploadProgress = function (iUploadedSize, iTotalS
 CAbstractFileModel.prototype.onUploadComplete = function (sFileUid, bResponseReceived, oResult)
 {
 	var
-		bError = !bResponseReceived || !oResult || oResult.Error || false,
+		bError = !bResponseReceived || !oResult || !!oResult.ErrorCode || false,
 		sError = (oResult && oResult.Error === 'size') ?
 			TextUtils.i18n('%MODULENAME%/ERROR_UPLOAD_SIZE') :
 			TextUtils.i18n('%MODULENAME%/ERROR_UPLOAD_UNKNOWN')
