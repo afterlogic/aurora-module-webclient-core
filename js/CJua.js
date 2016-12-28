@@ -362,25 +362,32 @@ function createNextLabel()
 
 /**
  * @param {string} sInputPos
+ * @param {string=} sAccept = ''
  * @return {?Object}
  */
-function createNextInput(sInputPos)
+function createNextInput(sInputPos, sAccept)
 {
-	return $('<input type="file" tabindex="-1" hidefocus="hidefocus" style="position: absolute; ' + sInputPos + ': -9999px;" />');
+	if (sAccept !== '')
+	{
+		sAccept = ' accept="' + sAccept + '"';
+	}
+	return $('<input type="file" tabindex="-1" hidefocus="hidefocus" style="position: absolute; ' + sInputPos + ': -9999px;"' + sAccept + ' />');
 }
 
 /**
  * @param {string=} sName
  * @param {boolean=} bMultiple = true
  * @param {string=} sInputPos = 'left'
+ * @param {string=} sAccept = ''
  * @return {?Object}
  */
-function getNewInput(sName, bMultiple, sInputPos)
+function getNewInput(sName, bMultiple, sInputPos, sAccept)
 {
 	sName = isUndefined(sName) ? '' : sName.toString();
 	sInputPos = isUndefined(sInputPos) ? 'left' : sInputPos.toString();
+	sAccept = isUndefined(sAccept) ? '' : sAccept.toString();
 
-	var oLocal = createNextInput(sInputPos);
+	var oLocal = createNextInput(sInputPos, sAccept);
 	if (0 < sName.length)
 	{
 		oLocal.attr('name', sName);
@@ -571,7 +578,7 @@ AjaxDriver.prototype.generateNewInput = function (oClickElement)
 
 	if (oClickElement)
 	{
-		oInput = getNewInput('', !getValue(this.oOptions, 'disableMultiple', false), getValue(this.oOptions, 'hiddenElementsPosition', 'left'));
+		oInput = getNewInput('', !getValue(this.oOptions, 'disableMultiple', false), getValue(this.oOptions, 'hiddenElementsPosition', 'left'), getValue(this.oOptions, 'accept', ''));
 		oLabel = createNextLabel();
 		oLabel.append(oInput);
 
@@ -765,7 +772,7 @@ IframeDriver.prototype.generateNewInput = function (oClickElement)
 	{
 		sUid = getNewUid();
 
-		oInput = getNewInput(getValue(this.oOptions, 'name', 'juaFile'), !getValue(this.oOptions, 'disableMultiple', false), getValue(this.oOptions, 'hiddenElementsPosition', 'left'));
+		oInput = getNewInput(getValue(this.oOptions, 'name', 'juaFile'), !getValue(this.oOptions, 'disableMultiple', false), getValue(this.oOptions, 'hiddenElementsPosition', 'left'), getValue(this.oOptions, 'accept', ''));
 
 		oForm = $('<form action="' + sAction + '" target="iframe-' + sUid + '" ' +
 ' method="POST" enctype="multipart/form-data" style="display: block; cursor: pointer;"></form>');
