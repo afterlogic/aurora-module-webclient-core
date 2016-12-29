@@ -104,10 +104,15 @@
 			}
 		}
 		
+		.footer {
+			height: 22px;
+		}
+		
 		.progress {
 			display: block;
 			height: 3px;
 			margin-bottom: -3px;
+			padding: 12px 0px
 			width: 100%;
 			
 			span {
@@ -201,51 +206,29 @@
 		}
 		
 		.status_text {
-			.transition(~"opacity 500ms ease 0s, visibility 1ms linear 0ms");
-			
 			display: block;
-			height: 15px;
-			margin: 6px 0px -21px;
-			opacity: 1;
-			overflow: hidden;
-			visibility: visible;
+			margin: 0;
+			padding: 6px 0px;
 			white-space: normal;
-			
-			&.hide {
-				.transition(~"opacity 500ms ease 0s, visibility 1ms linear 600ms");
-				
-				opacity: 0;
-				visibility: hidden;
-			}
 		}
 		
 		&.fail .status_text {
-			color:#ff0000;
+			color: #ff0000;
 		}
 		
 		&.success .status_text {
-			color:#308F00;
+			color: #308F00;
 		}
 		
 		.buttons {
 			.clearfix-helper();
-			.transition(~"opacity 500ms ease 0s, visibility 1ms linear 0ms");
 
-			border: 0px;
 			display: block;
-			margin: 6px 0px 0px;
-			opacity: 1;
-			padding: 0px;
+			margin: 0;
+			padding: 6px 0px;
 			text-align: left;
 			visibility: visible;
 			
-			&.hide {
-				.transition(~"opacity 500ms ease 0s, visibility 1ms linear 600ms");
-				
-				opacity: 0;
-				visibility: hidden;
-			}
-
 			.button {
 				background: none;
 				border: 0px;
@@ -254,6 +237,11 @@
 				font-weight: normal;
 				padding: 0px;
 				text-shadow: none;
+				float: left;
+
+				html.rtl & {
+					float: right;
+				}
 
 				&.open,
 				&.download {

@@ -30,15 +30,17 @@
 		<!-- ko if: (allowSharing()) -->
 		<span class="shared_icon" data-bind="css: {'with_thumb': thumbnailSrc() !== ''}, click: function (oItem) { $root.onShareIconClick(oItem); }"></span>
 		<!-- /ko -->
-		<span class="progress" data-bind="visible: visibleProgress()">
-			<span data-bind="style: {'width': progressPercent() + '%'}"></span>
-		</span>
-		<span class="status_text" data-bind="text: statusText(), css: {'hide': !(statusText().length > 0), 'error': uploadError()}, customTooltip: statusTooltip"></span>
-		<div class="buttons" data-bind="visible: !isPopupItem() && uploaded() && !uploadError(), css: {'hide': statusText().length > 0 || !uploaded()}">
-			<a class="button view" href="javascript: void(0)" data-bind="visible: hasLeftAction(), 
-					click: doLeftAction, text: leftActionText"></a>
-			<a class="button download" href="javascript: void(0)" data-bind="visible: hasRightAction(), 
-					click: doRightAction, text: rightActionText"></a>
+		<div class="footer">
+			<span class="progress" data-bind="visible: visibleProgress()">
+				<span data-bind="style: {'width': progressPercent() + '%'}"></span>
+			</span>
+			<span class="status_text" data-bind="text: statusText(), css: {'error': uploadError()}, customTooltip: statusTooltip, visible: statusText().length > 0"></span>
+			<div class="buttons" data-bind="visible: !isPopupItem() && uploaded() && !uploadError() && statusText().length === 0">
+				<a class="button view" href="javascript: void(0)" data-bind="visible: hasLeftAction(), 
+						click: doLeftAction, text: leftActionText"></a>
+				<a class="button download" href="javascript: void(0)" data-bind="visible: hasRightAction(), 
+						click: doRightAction, text: rightActionText"></a>
+			</div>
 		</div>
 	</span>
 
