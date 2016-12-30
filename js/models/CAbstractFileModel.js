@@ -11,7 +11,6 @@ var
 	UrlUtils = require('%PathToCoreWebclientModule%/js/utils/Url.js'),
 	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
 	
-	Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
 	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js'),
@@ -114,8 +113,9 @@ function CAbstractFileModel(sModuleName)
 	this.allowDrag = ko.observable(false);
 	this.allowUpload = ko.observable(false);
 	this.allowSharing = ko.observable(false);
-	this.allowHeader = ko.observable(false);
 	this.allowDownload = ko.observable(true);
+	
+	this.headerText = ko.observable('');
 
 	this.iconAction = ko.observable('download');
 	this.iconTooltip = ko.computed(function () {

@@ -6,11 +6,8 @@
 	draggableDragStopCallback: function() {if (!isPopupItem() && allowDrag()) {$root.dragover(false);}}
 ">
 
-	<!-- ko if: (allowHeader()) -->
-	<span class="header">
-		<span class="author" data-bind="text: ownerHeaderText"></span>
-		<span class="date" data-bind="text: lastModifiedHeaderText"></span>
-	</span>
+	<!-- ko if: (headerText().length > 0) -->
+	<span class="header" data-bind="text: headerText"></span>
 	<!-- /ko -->
 
 	<span class="item_content ui-droppable dragHandle">
