@@ -12,7 +12,6 @@ var
 	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
 	
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
-	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
 	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js'),
 	
 	aViewMimeTypes = [
@@ -36,6 +35,15 @@ if ($('html').hasClass('pdf'))
  */
 function CAbstractFileModel(sModuleName)
 {
+	this.oActionTexts = {
+		'view': TextUtils.i18n('COREWEBCLIENT/ACTION_VIEW_FILE'),
+		'download': TextUtils.i18n('COREWEBCLIENT/ACTION_DOWNLOAD_FILE')
+	};
+	this.oActionHandlers = {
+		'view': _.bind(function () { this.viewFile(); }, this),
+		'download': _.bind(function () { this.downloadFile(); }, this)
+	};
+	
 	this.isPopupItem = ko.observable(false);
 	
 	this.id = ko.observable('');
@@ -118,43 +126,50 @@ function CAbstractFileModel(sModuleName)
 	this.headerText = ko.observable('');
 
 	this.iconAction = ko.observable('download');
-	this.iconTooltip = ko.computed(function () {
-		var sTitle = '';
-		
-		if (this.iconAction() === 'download')
-		{
-			sTitle = TextUtils.i18n('%MODULENAME%/INFO_CLICK_TO_DOWNLOAD_FILE', {
+	this.oActionTooltips = {
+		'download': ko.computed(function () {
+			var sTitle = TextUtils.i18n('%MODULENAME%/INFO_CLICK_TO_DOWNLOAD_FILE', {
 				'FILENAME': this.fileName(),
 				'SIZE': this.friendlySize()
 			});
-			
+
 			if (this.friendlySize() === '')
 			{
 				sTitle = sTitle.replace(' ()', '');
 			}
-		}
-		
-		return sTitle;
-	}, this);
+
+			return sTitle;
+		}, this)
+	};
 	
 	this.cssClasses = ko.computed(function () {
 		return this.getCommonClasses().join(' ');
 	}, this);
 	
-	this.leftAction = ko.observable('');
-	this.hasLeftAction = ko.computed(function () {
-		return this.leftAction() !== '';
-	}, this);
-	this.leftActionText = ko.observable('');
+	this.actions = ko.observableArray([]);
 	
-	this.rightAction = ko.observable('download');
-	this.hasRightAction = ko.computed(function () {
-		return this.rightAction() !== '';
+	this.firstAction = ko.computed(function () {
+		if (this.actions().length > 1)
+		{
+			return this.actions()[0];
+		}
+		return '';
 	}, this);
-	this.rightActionText = ko.observable(TextUtils.i18n('%MODULENAME%/ACTION_DOWNLOAD_FILE'));
 	
-	this.actionsSetter = ko.computed(function () {
-		this.setCommonActions();
+	this.secondAction = ko.computed(function () {
+		if (this.actions().length === 1)
+		{
+			return this.actions()[0];
+		}
+		if (this.actions().length > 1)
+		{
+			return this.actions()[1];
+		}
+		return '';
+	}, this);
+	
+	this.cssClasses = ko.computed(function () {
+		return this.getCommonClasses().join(' ');
 	}, this);
 }
 
@@ -163,6 +178,54 @@ function CAbstractFileModel(sModuleName)
  */
 CAbstractFileModel.prototype.dataObjectName = '';
 
+/**
+ * Returns button text for specified action.
+ * @param {string} sAction
+ * @returns string
+ */
+CAbstractFileModel.prototype.getActionText = function (sAction)
+{
+	if (typeof this.oActionTexts[sAction] === 'string')
+	{
+		return this.oActionTexts[sAction];
+	}
+	return '';
+};
+
+/**
+ * Executes specified action.
+ * @param {string} sAction
+ */
+CAbstractFileModel.prototype.executeAction = function (sAction)
+{
+	if (_.isFunction(this.oActionHandlers[sAction]))
+	{
+		this.oActionHandlers[sAction]();
+	}
+};
+
+/**
+ * Returns tooltip for specified action.
+ * @param {string} sAction
+ * @returns string
+ */
+CAbstractFileModel.prototype.getTooltip = function (sAction)
+{
+	if (typeof this.oActionTooltips[sAction] === 'string')
+	{
+		return this.oActionTooltips[sAction];
+	}
+	if (_.isFunction(this.oActionTooltips[sAction]))
+	{
+		return this.oActionTooltips[sAction]();
+	}
+	return '';
+};
+
+/**
+ * Returns list of css classes for file.
+ * @returns array
+ */
 CAbstractFileModel.prototype.getCommonClasses = function ()
 {
 	var aClasses = [];
@@ -183,59 +246,8 @@ CAbstractFileModel.prototype.getCommonClasses = function ()
 	return aClasses;
 };
 
-CAbstractFileModel.prototype.setCommonActions = function ()
-{
-	if (this.isVisibleViewLink())
-	{
-		this.leftAction('view');
-		this.leftActionText(TextUtils.i18n('COREWEBCLIENT/ACTION_VIEW_FILE'));
-	}
-	
-	if (Browser.iosDevice)
-	{
-		this.leftAction('download');
-		this.leftActionText(TextUtils.i18n('COREWEBCLIENT/ACTION_VIEW_FILE'));
-		this.rightAction('');
-		this.rightActionText('');
-	}
-};
-
-CAbstractFileModel.prototype.doLeftAction = function ()
-{
-	if (this.leftAction() === 'view')
-	{
-		this.viewFile();
-	}
-};
-
-CAbstractFileModel.prototype.doRightAction = function ()
-{
-	this.doCommonRightAction();
-};
-
-CAbstractFileModel.prototype.doCommonRightAction = function ()
-{
-	switch (this.rightAction())
-	{
-		case 'download':
-			this.downloadFile();
-			break;
-	}
-};
-
-CAbstractFileModel.prototype.doIconAction = function ()
-{
-	switch (this.iconAction())
-	{
-		case 'download':
-			this.downloadFile();
-			break;
-	}
-};
-
 /**
  * Can be overridden.
- * 
  * @returns {boolean}
  */
 CAbstractFileModel.prototype.isVisibleViewLink = function ()
@@ -245,7 +257,6 @@ CAbstractFileModel.prototype.isVisibleViewLink = function ()
 
 /**
  * Parses attachment data from server.
- *
  * @param {AjaxAttachmenResponse} oData
  * @param {number} iAccountId
  */
@@ -273,10 +284,25 @@ CAbstractFileModel.prototype.parse = function (oData, iAccountId)
 		this.uploadUid(this.hash());
 		this.uploaded(true);
 		
+		this.fillActions();
+		
 		if ($.isFunction(this.additionalParse))
 		{
 			this.additionalParse(oData);
 		}
+	}
+};
+
+/**
+ * Temporary function
+ */
+CAbstractFileModel.prototype.fillActions = function ()
+{
+	this.actions.push('download');
+
+	if ((-1 !== $.inArray(this.type(), aViewMimeTypes)) || this.iframedView())
+	{
+		this.actions.unshift('view');
 	}
 };
 
@@ -304,7 +330,6 @@ CAbstractFileModel.prototype.downloadFile = function ()
 
 /**
  * Can be overridden.
- * 
  * Starts viewing attachment on click.
  * @param {Object} oViewModel
  * @param {Object} oEvent

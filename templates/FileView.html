@@ -14,7 +14,7 @@
 
 		<span class="cancel" data-bind="click: function () { $parent.onFileRemove( uploadUid() ); }, customTooltip: '%MODULENAME%/ACTION_CANCEL'"></span>
 
-		<span class="image" data-bind="customTooltip: iconTooltip(), click: doIconAction, css: {'has_action': iconAction() !== ''}">
+		<span class="image" data-bind="customTooltip: getTooltip(iconAction()), click: function () { executeAction(iconAction()); }, css: {'has_action': iconAction() !== ''}">
 			<!-- ko if: thumbnailSrc() !== '' -->
 			<img data-bind="attr: {'src': thumbnailSrc()}" />
 			<span class="icon play" data-bind="click: viewFile, visible: hasHtmlEmbed()"></span>
@@ -33,10 +33,10 @@
 			</span>
 			<span class="status_text" data-bind="text: statusText(), css: {'error': uploadError()}, customTooltip: statusTooltip, visible: statusText().length > 0"></span>
 			<div class="buttons" data-bind="visible: !isPopupItem() && uploaded() && !uploadError() && statusText().length === 0">
-				<a class="button view" href="javascript: void(0)" data-bind="visible: hasLeftAction(), 
-						click: doLeftAction, text: leftActionText"></a>
-				<a class="button download" href="javascript: void(0)" data-bind="visible: hasRightAction(), 
-						click: doRightAction, text: rightActionText"></a>
+				<a class="button view" href="javascript: void(0)" data-bind="visible: firstAction().length > 0, 
+						click: function () { executeAction(firstAction()); }, text: getActionText(firstAction())"></a>
+				<a class="button download" href="javascript: void(0)" data-bind="visible: secondAction().length > 0, 
+						click: function () { executeAction(secondAction()); }, text: getActionText(secondAction())"></a>
 			</div>
 		</div>
 	</span>
