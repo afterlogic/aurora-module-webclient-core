@@ -68,29 +68,29 @@ function CAbstractFileModel(sModuleName)
 	this.thumb = ko.observable(false);
 	this.iframedView = ko.observable(false);
 
-	this.downloadLink = ko.computed(function () {
-		return FilesUtils.getDownloadLink(sModuleName, this.hash(), this.sPublicHash);
-	}, this);
+	this.getDownloadLink = function () {
+		return FilesUtils.getDownloadLink(sModuleName, this.hash());
+	};
 
-	this.viewLink = ko.computed(function () {
+	this.getViewLink = function () {
 		var sUrl = FilesUtils.getViewLink(sModuleName, this.hash());
 		return this.iframedView() ? FilesUtils.getIframeWrappwer(this.accountId(), sUrl) : sUrl;
-	}, this);
+	};
 
 	this.thumbnailSrc = ko.observable('');
 	this.thumbnailLoaded = ko.observable(false);
 	this.thumbnailSessionUid = ko.observable('');
 
-	this.thumbnailLink = ko.computed(function () {
+	this.getThumbnailLink = function () {
 		return sModuleName !== 'Files' ? FilesUtils.getThumbnailLink(sModuleName, this.hash()) : '';
-	}, this);
+	};
 
-	this.type = ko.observable('');
+	this.mimeType = ko.observable('');
 	this.uploadUid = ko.observable('');
 	this.uploaded = ko.observable(false);
 	this.uploadError = ko.observable(false);
 	this.isViewMimeType = ko.computed(function () {
-		return (-1 !== $.inArray(this.type(), aViewMimeTypes)) || this.iframedView();
+		return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes)) || this.iframedView();
 	}, this);
 	this.isMessageType = ko.observable(false);
 	this.hasHtmlEmbed = ko.observable(false);
@@ -271,7 +271,7 @@ CAbstractFileModel.prototype.parse = function (oData, iAccountId)
 			this.tempName(this.fileName());
 		}
 
-		this.type(Types.pString(oData.MimeType));
+		this.mimeType(Types.pString(oData.MimeType));
 		this.size(oData.EstimatedSize ? Types.pInt(oData.EstimatedSize) : Types.pInt(oData.SizeInBytes));
 
 		this.thumb(!!oData.Thumb);
@@ -300,7 +300,7 @@ CAbstractFileModel.prototype.fillActions = function ()
 {
 	this.actions.push('download');
 
-	if ((-1 !== $.inArray(this.type(), aViewMimeTypes)) || this.iframedView())
+	if ((-1 !== $.inArray(this.mimeType(), aViewMimeTypes)) || this.iframedView())
 	{
 		this.actions.unshift('view');
 	}
@@ -311,7 +311,7 @@ CAbstractFileModel.prototype.getInThumbQueue = function (sThumbSessionUid)
 	this.thumbnailSessionUid(sThumbSessionUid);
 	if(this.thumb() && (!this.linked || this.linked && !this.linked()))
 	{
-		FilesUtils.thumbQueue(this.thumbnailSessionUid(), this.thumbnailLink(), this.thumbnailSrc);
+		FilesUtils.thumbQueue(this.thumbnailSessionUid(), this.getThumbnailLink(), this.thumbnailSrc);
 	}
 };
 
@@ -321,10 +321,11 @@ CAbstractFileModel.prototype.getInThumbQueue = function (sThumbSessionUid)
 CAbstractFileModel.prototype.downloadFile = function ()
 {
 	//todo: UrlUtils.downloadByUrl in nessesary context in new window
+	var sDownloadLink = this.getDownloadLink();
 	
-	if (this.allowDownload() && this.downloadLink().length > 0 && this.downloadLink() !== '#')
+	if (this.allowDownload() && sDownloadLink.length > 0 && sDownloadLink !== '#')
 	{
-		UrlUtils.downloadByUrl(this.downloadLink());
+		UrlUtils.downloadByUrl(sDownloadLink);
 	}
 };
 
@@ -346,14 +347,17 @@ CAbstractFileModel.prototype.viewFile = function (oViewModel, oEvent)
  */
 CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 {
-	var oWin = null;
+	var
+		oWin = null,
+		sViewLink = this.getViewLink()
+	;
 	
 	if (!Types.isNonEmptyString(sUrl))
 	{
-		sUrl = UrlUtils.getAppPath() + this.viewLink();
+		sUrl = UrlUtils.getAppPath() + sViewLink;
 	}
 
-	if (this.isVisibleViewLink() && this.viewLink().length > 0 && this.viewLink() !== '#')
+	if (this.isVisibleViewLink() && sViewLink.length > 0 && sViewLink !== '#')
 	{
 		if (this.iframedView())
 		{
@@ -392,13 +396,13 @@ CAbstractFileModel.prototype.eventDragStart = function (oAttachment, oEvent)
  */
 CAbstractFileModel.prototype.generateTransferDownloadUrl = function ()
 {
-	var sLink = this.downloadLink();
+	var sLink = this.getDownloadLink();
 	if ('http' !== sLink.substr(0, 4))
 	{
 		sLink = UrlUtils.getAppPath() + sLink;
 	}
 
-	return this.type() + ':' + this.fileName() + ':' + sLink;
+	return this.mimeType() + ':' + this.fileName() + ':' + sLink;
 };
 
 /**
@@ -410,7 +414,7 @@ CAbstractFileModel.prototype.generateTransferDownloadUrl = function ()
 CAbstractFileModel.prototype.onUploadSelect = function (sFileUid, oFileData)
 {
 	this.fileName(Types.pString(oFileData['FileName']));
-	this.type(Types.pString(oFileData['Type']));
+	this.mimeType(Types.pString(oFileData['Type']));
 	this.size(Types.pInt(oFileData['Size']));
 
 	this.uploadUid(sFileUid);
