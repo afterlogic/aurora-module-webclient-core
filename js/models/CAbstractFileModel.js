@@ -178,6 +178,11 @@ function CAbstractFileModel(sModuleName)
  */
 CAbstractFileModel.prototype.dataObjectName = '';
 
+CAbstractFileModel.prototype.hasAction = function (sAction)
+{
+	return _.indexOf(this.actions(), sAction) !== -1;
+};
+
 /**
  * Returns button text for specified action.
  * @param {string} sAction
@@ -247,15 +252,6 @@ CAbstractFileModel.prototype.getCommonClasses = function ()
 };
 
 /**
- * Can be overridden.
- * @returns {boolean}
- */
-CAbstractFileModel.prototype.isVisibleViewLink = function ()
-{
-	return this.uploaded() && !this.uploadError() && this.isViewMimeType();
-};
-
-/**
  * Parses attachment data from server.
  * @param {AjaxAttachmenResponse} oData
  * @param {number} iAccountId
@@ -293,6 +289,11 @@ CAbstractFileModel.prototype.parse = function (oData, iAccountId)
 	}
 };
 
+CAbstractFileModel.prototype.isViewSupported = function ()
+{
+	return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes)) || this.iframedView();
+};
+
 /**
  * Temporary function
  */
@@ -300,7 +301,7 @@ CAbstractFileModel.prototype.fillActions = function ()
 {
 	this.actions.push('download');
 
-	if ((-1 !== $.inArray(this.mimeType(), aViewMimeTypes)) || this.iframedView())
+	if (this.isViewSupported())
 	{
 		this.actions.unshift('view');
 	}
@@ -357,7 +358,7 @@ CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 		sUrl = UrlUtils.getAppPath() + sViewLink;
 	}
 
-	if (this.isVisibleViewLink() && sViewLink.length > 0 && sViewLink !== '#')
+	if (sViewLink.length > 0 && sViewLink !== '#')
 	{
 		if (this.iframedView())
 		{

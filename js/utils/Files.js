@@ -122,7 +122,7 @@ FilesUtils.thumbBase64Queue = (function () {
 			Ajax.send('Files', 'GetFileThumbnail', { Type: oFile.type(), Name: oFile.fileName(), Path: oFile.path() }, function (oResponse) {
 				if (oResponse.Result)
 				{
-					var sThumb = 'data:' + oFile.contentType() + ';base64,' + oResponse.Result;
+					var sThumb = 'data:' + oFile.mimeType() + ';base64,' + oResponse.Result;
 					oThumbs[fGetFileKey(oFile)] = sThumb;
 					oFile.thumbnailSrc(sThumb);
 				}
