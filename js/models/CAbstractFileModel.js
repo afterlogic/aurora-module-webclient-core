@@ -35,16 +35,18 @@ if ($('html').hasClass('pdf'))
  */
 function CAbstractFileModel(sModuleName)
 {
-	this.oActionTexts = {
-		'view': TextUtils.i18n('COREWEBCLIENT/ACTION_VIEW_FILE'),
-		'download': TextUtils.i18n('COREWEBCLIENT/ACTION_DOWNLOAD_FILE')
-	};
-	this.oActionHandlers = {
-		'view': _.bind(function () { this.viewFile(); }, this),
-		'download': _.bind(function () { this.downloadFile(); }, this)
+	this.oActionsData = {
+		'view': {
+			'Text': TextUtils.i18n('COREWEBCLIENT/ACTION_VIEW_FILE'),
+			'Handler': _.bind(function () { this.viewFile(); }, this)
+		},
+		'download': {
+			'Text': TextUtils.i18n('COREWEBCLIENT/ACTION_DOWNLOAD_FILE'),
+			'Handler': _.bind(function () { this.downloadFile(); }, this)
+		}
 	};
 	
-	this.isPopupItem = ko.observable(false);
+	this.allowActions = ko.observable(true);
 	
 	this.id = ko.observable('');
 	this.fileName = ko.observable('');
@@ -167,10 +169,6 @@ function CAbstractFileModel(sModuleName)
 		}
 		return '';
 	}, this);
-	
-	this.cssClasses = ko.computed(function () {
-		return this.getCommonClasses().join(' ');
-	}, this);
 }
 
 /**
@@ -190,9 +188,9 @@ CAbstractFileModel.prototype.hasAction = function (sAction)
  */
 CAbstractFileModel.prototype.getActionText = function (sAction)
 {
-	if (typeof this.oActionTexts[sAction] === 'string')
+	if (this.oActionsData[sAction] && typeof this.oActionsData[sAction].Text === 'string')
 	{
-		return this.oActionTexts[sAction];
+		return this.oActionsData[sAction].Text;
 	}
 	return '';
 };
@@ -203,9 +201,9 @@ CAbstractFileModel.prototype.getActionText = function (sAction)
  */
 CAbstractFileModel.prototype.executeAction = function (sAction)
 {
-	if (_.isFunction(this.oActionHandlers[sAction]))
+	if (this.oActionsData[sAction] && _.isFunction(this.oActionsData[sAction].Handler))
 	{
-		this.oActionHandlers[sAction]();
+		this.oActionsData[sAction].Handler();
 	}
 };
 

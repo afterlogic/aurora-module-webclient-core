@@ -1,9 +1,9 @@
 <div class="item file attachment" data-bind="
 	css: cssClasses,
-	event: isPopupItem() ? null : { 'dragstart': eventDragStart },
-	draggablePlace: !isPopupItem() && allowDrag() ? $parent.dragAndDropHelperBinded : null,
-	draggableDragStartCallback: function() {if (!isPopupItem() && allowDrag()) {$root.dragover(true);}},
-	draggableDragStopCallback: function() {if (!isPopupItem() && allowDrag()) {$root.dragover(false);}}
+	event: allowDrag() ? { 'dragstart': eventDragStart } : null,
+	draggablePlace: allowDrag() ? $parent.dragAndDropHelperBinded : null,
+	draggableDragStartCallback: function() { if (allowDrag()) { $root.dragover(true); } },
+	draggableDragStopCallback: function() { if (allowDrag()) { $root.dragover(false); } }
 ">
 
 	<!-- ko if: (headerText().length > 0) -->
@@ -32,7 +32,7 @@
 				<span data-bind="style: {'width': progressPercent() + '%'}"></span>
 			</span>
 			<span class="status_text" data-bind="text: statusText(), css: {'error': uploadError()}, customTooltip: statusTooltip, visible: statusText().length > 0"></span>
-			<div class="buttons" data-bind="visible: !isPopupItem() && uploaded() && !uploadError() && statusText().length === 0">
+			<div class="buttons" data-bind="visible: allowActions() && uploaded() && !uploadError() && statusText().length === 0">
 				<a class="button view" href="javascript: void(0)" data-bind="visible: firstAction().length > 0, 
 						click: function () { executeAction(firstAction()); }, text: getActionText(firstAction())"></a>
 				<a class="button download" href="javascript: void(0)" data-bind="visible: secondAction().length > 0, 
