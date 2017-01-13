@@ -95,7 +95,7 @@ function CAbstractFileModel(sModuleName)
 		return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes)) || this.iframedView();
 	}, this);
 	this.isMessageType = ko.observable(false);
-	this.hasHtmlEmbed = ko.observable(false);
+	this.bHasHtmlEmbed = false;
 
 	this.statusText = ko.observable('');
 	this.statusTooltip = ko.computed(function () {
@@ -125,7 +125,7 @@ function CAbstractFileModel(sModuleName)
 	this.allowSharing = ko.observable(false);
 	this.allowDownload = ko.observable(true);
 	
-	this.headerText = ko.observable('');
+	this.sHeaderText = '';
 
 	this.iconAction = ko.observable('download');
 	this.oActionTooltips = {
@@ -409,13 +409,17 @@ CAbstractFileModel.prototype.generateTransferDownloadUrl = function ()
  *
  * @param {string} sFileUid
  * @param {Object} oFileData
+ * @param {bool} bOnlyUploadStatus
  */
-CAbstractFileModel.prototype.onUploadSelect = function (sFileUid, oFileData)
+CAbstractFileModel.prototype.onUploadSelect = function (sFileUid, oFileData, bOnlyUploadStatus)
 {
-	this.fileName(Types.pString(oFileData['FileName']));
-	this.mimeType(Types.pString(oFileData['Type']));
-	this.size(Types.pInt(oFileData['Size']));
-
+	if (!bOnlyUploadStatus)
+	{
+		this.fileName(Types.pString(oFileData['FileName']));
+		this.mimeType(Types.pString(oFileData['Type']));
+		this.size(Types.pInt(oFileData['Size']));
+	}
+	
 	this.uploadUid(sFileUid);
 	this.uploaded(false);
 	this.statusText('');

@@ -6,8 +6,8 @@
 	draggableDragStopCallback: function() { if (allowDrag()) { $root.dragover(false); } }
 ">
 
-	<!-- ko if: (headerText().length > 0) -->
-	<span class="header" data-bind="text: headerText"></span>
+	<!-- ko if: (sHeaderText.length > 0) -->
+	<span class="header" data-bind="text: sHeaderText"></span>
 	<!-- /ko -->
 
 	<span class="item_content ui-droppable dragHandle">
@@ -17,10 +17,10 @@
 		<span class="image" data-bind="customTooltip: getTooltip(iconAction()), click: function () { executeAction(iconAction()); }, css: {'has_action': iconAction() !== ''}">
 			<!-- ko if: thumbnailSrc() !== '' -->
 			<img data-bind="attr: {'src': thumbnailSrc()}" />
-			<span class="icon play" data-bind="click: viewFile, visible: hasHtmlEmbed()"></span>
+			<span class="icon play" data-bind="click: viewFile, visible: bHasHtmlEmbed"></span>
 			<!-- /ko -->
 			<!-- ko if: thumbnailSrc() === '' -->
-			<span class="icon" data-bind="css: extension().toLowerCase() + (hasHtmlEmbed() ? ' ' + embedType().toLowerCase() : '')"></span>
+			<span class="icon" data-bind="css: extension().toLowerCase() + (bHasHtmlEmbed ? ' ' + sLinkType.toLowerCase() : '')"></span>
 			<!-- /ko -->
 		</span>
 
