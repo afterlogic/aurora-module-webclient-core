@@ -111,7 +111,7 @@ CAjax.prototype.registerOnAllRequestsClosedHandler = function (fHandler)
  * @param {object=} oContext
  * @param {number=} iTimeout
  */
-CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler, oContext, iTimeout)
+CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler, oContext, iTimeout, oMainParams)
 {
 	if (this.bAllowRequests && !this.bInternetConnectionProblem)
 	{
@@ -119,6 +119,11 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 			Module: sModule,
 			Method: sMethod
 		}, App.getCommonRequestParameters());
+		
+		if (oMainParams)
+		{
+			oRequest = _.extendOwn(oRequest, oMainParams);
+		}
 		
 		oParameters = oParameters || {};
 		
@@ -267,11 +272,11 @@ CAjax.prototype.fail = function (oRequest, fResponseHandler, oContext, oXhr, sTy
 		case 'parseerror':
 			if (sErrorText === '')
 			{
-				oResponse = { Result: false, ErrorCode: Enums.Errors.NotDisplayedError };
+				oResponse = { Result: false, ErrorCode: Enums.Errors.NotDisplayedError, ResponseText:  oXhr.responseText};
 			}
 			else
 			{
-				oResponse = { Result: false, ErrorCode: Enums.Errors.DataTransferFailed };
+				oResponse = { Result: false, ErrorCode: Enums.Errors.DataTransferFailed, ResponseText:  oXhr.responseText };
 			}
 			break;
 	}

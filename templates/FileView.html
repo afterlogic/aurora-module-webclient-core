@@ -14,7 +14,8 @@
 
 		<span class="cancel" data-bind="click: function () { $parent.onFileRemove( uploadUid() ); }, customTooltip: '%MODULENAME%/ACTION_CANCEL'"></span>
 
-		<span class="image" data-bind="customTooltip: getTooltip(iconAction()), click: function () { executeAction(iconAction()); }, css: {'has_action': iconAction() !== ''}">
+		<span class="image" data-bind="customTooltip: getTooltip(iconAction()), click: function () { executeAction(iconAction()); }, 
+				css: {'has_action': iconAction() !== ''}, clickBubble: iconAction() === ''">
 			<!-- ko if: thumbnailSrc() !== '' -->
 			<img data-bind="attr: {'src': thumbnailSrc()}" />
 			<span class="icon play" data-bind="click: viewFile, visible: bHasHtmlEmbed"></span>
@@ -34,9 +35,9 @@
 			<span class="status_text" data-bind="text: statusText(), css: {'error': uploadError()}, customTooltip: statusTooltip, visible: statusText().length > 0"></span>
 			<div class="buttons" data-bind="visible: allowActions() && uploaded() && !uploadError() && statusText().length === 0">
 				<a class="button view" href="javascript: void(0)" data-bind="visible: firstAction().length > 0, 
-						click: function () { executeAction(firstAction()); }, text: getActionText(firstAction())"></a>
+						click: function () { executeAction(firstAction()); }, text: getActionText(firstAction()), clickBubble: false"></a>
 				<a class="button download" href="javascript: void(0)" data-bind="visible: secondAction().length > 0, 
-						click: function () { executeAction(secondAction()); }, text: getActionText(secondAction())"></a>
+						click: function () { executeAction(secondAction()); }, text: getActionText(secondAction()), clickBubble: false"></a>
 			</div>
 		</div>
 	</span>
