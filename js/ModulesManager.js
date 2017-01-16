@@ -16,7 +16,7 @@ var
 module.exports = {
 	init: function (oAvaliableModules) {
 		_.each(oAvaliableModules, function (fModuleConstructor, sModuleName) {
-			if (_.indexOf(AppData.DisabledModules, sModuleName) === -1 && _.isFunction(fModuleConstructor))
+			if (_.isFunction(fModuleConstructor))
 			{
 				var oModule = fModuleConstructor(AppData);
 				if (oModule)
