@@ -220,7 +220,7 @@ TextUtils.getPlural = function (sLang, iNumber)
 
 TextUtils.getUrlFriendlyName = function (sName)
 {
-	return sName.replace(/([A-Z])/g, '-$1').replace(/^-/g, '').toLowerCase();
+	return sName.replace(/([A-Z])/g, '-$1').replace(/(^-)/g, '').replace(/\s+/g, '-').replace(/-{2,}/g, '-').toLowerCase();
 };
 
 /**
