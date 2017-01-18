@@ -69,7 +69,7 @@ module.exports = {
 							this.aStandardTabs.push(oHeaderItem.item);
 						}
 						this.aTabs.push(oHeaderItem.item);
-						
+
 						if (oModules[sModuleName] && oModules[sModuleName].enableModule)
 						{
 							oHeaderItem.item.visible(oModules[sModuleName].enableModule());
@@ -80,8 +80,19 @@ module.exports = {
 					}
 				}
 			}, this));
+			
+			this.aStandardTabs = _.sortBy(this.aStandardTabs, function (oTab) {
+				var iIndex = _.indexOf(Settings.HeaderModulesOrder, oTab.sName);
+				return iIndex !== -1 ? iIndex : Settings.HeaderModulesOrder.length;
+			});
+			
+			this.aTabs = _.sortBy(this.aTabs, function (oTab) {
+				var iIndex = _.indexOf(Settings.HeaderModulesOrder, oTab.sName);
+				return iIndex !== -1 ? iIndex : Settings.HeaderModulesOrder.length;
+			});
 		}
 		
+		//TODO actualy, the item's order of aTabs affects on order of tabs in html
 		return bOnlyStandard ? this.aStandardTabs : this.aTabs;
 	},
 	

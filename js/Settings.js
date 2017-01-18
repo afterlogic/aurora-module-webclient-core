@@ -48,6 +48,7 @@ var Settings = {
 	ThemeList: AppData.App && $.isArray(AppData.App.Themes) ? AppData.App.Themes : [],
 	timeFormat: ko.observable('0'), // 0 - 24, 1 - 12
 	UserId: AppData.User ? Types.pInt(AppData.User.IdUser) : 0,
+	HeaderModulesOrder: ["mail", "contacts", "files"],
 	
 	// unused, should be removed
 	AllowBodySize: AppData.App ? !!AppData.App.AllowBodySize : false,
