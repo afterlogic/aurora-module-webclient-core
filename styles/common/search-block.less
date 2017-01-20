@@ -146,23 +146,24 @@
 
 	.expand .extended {
 		opacity: 1;
+		max-height: 200px;
 		visibility: visible;
-		
-		.transition(~"opacity 500ms ease 0ms, visibility 10ms linear 0s");
+		.transition(~"max-height 0.5s ease 0s, opacity 0.5s ease 0s, visibility 0s linear 0s");
 	}
 
 	.extended {
 		.box-sizing;
+		.transition(~"max-height 0.5s ease 0s, opacity 0.5s ease 0s, visibility 10ms  linear 2s");
+		
+		max-height: 0px;
 
 		display: block;
-		height: 100%;
+		//height: 100%;
 		margin-top: -24px;
 		opacity: 0;
 		overflow: hidden;
 		visibility: hidden;
 		width: 100%;
-		
-		.transition(~"opacity 500ms ease 0ms, visibility 10ms linear 500ms");
 
 		.search_fieldset {
 			display: block;
@@ -242,7 +243,7 @@
 				border-top: 1px solid #eae7e7;
 				display: block;
 				margin: 0px 18px 0px 0px;
-				padding: 10px 0px 0px 0px;
+				padding: 10px 0px;
 				width: auto;
 
 				html.rtl & {
