@@ -30,7 +30,6 @@ require('%PathToCoreWebclientModule%/js/vendors/jquery.cookie.js');
 
 function InitNotMobileRequires()
 {
-	require('%PathToCoreWebclientModule%/js/splitter.js'); // necessary in mail and contacts modules
 	require('%PathToCoreWebclientModule%/js/CustomTooltip.js');
 	require('%PathToCoreWebclientModule%/js/koBindingsNotMobile.js');
 }

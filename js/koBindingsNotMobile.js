@@ -15,14 +15,6 @@ require('%PathToCoreWebclientModule%/js/vendors/customscroll.js');
 require('jquery-ui');
 require('%PathToCoreWebclientModule%/js/autocomplete.js');
 
-ko.bindingHandlers.splitter = {
-	'init': function (oElement, fValueAccessor) {
-		setTimeout(function() {
-			$(oElement).splitter(fValueAccessor());
-		}, 1);
-	}
-};
-
 ko.bindingHandlers.splitterFlex = {
 	'init': function (oElement, fValueAccessor) {
 		_.defer(function() {
