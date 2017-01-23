@@ -1,6 +1,18 @@
 {
-    "Disabled": [
+	"AllowDesktopNotifications": [
 		false,
 		"bool"
+	],
+	"AutoRefreshIntervalMinutes": [
+		1,
+		"int"
+	],
+	"Disabled": [
+		false,
+		"bool"
+	],
+	"Theme": [
+		"Default",
+		"string"
 	]
 }

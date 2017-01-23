@@ -17,66 +17,74 @@ var Settings = {
 	ServerModuleName: 'Core',
 	HashModuleName: 'core',
 	
-	AllowChangeSettings: AppData.App ? !!AppData.App.AllowUsersChangeInterfaceSettings : false,
-	AllowClientDebug: !!AppData.ClientDebug,
-	AllowDesktopNotifications: AppData.User ? !!AppData.User.DesktopNotifications : true,
-	AllowIosProfile: AppData.App ? !!AppData.App.AllowIosProfile : false, // ? IosDetectOnLogin
-	AllowMobile: !!AppData.AllowMobile,
-	AllowPrefetch: AppData.App ? !!AppData.App.AllowPrefetch : true,
-	AttachmentSizeLimit: AppData.App ? Types.pInt(AppData.App.AttachmentSizeLimit) : 0, // Mail, Helpdesk
-	AutoRefreshIntervalMinutes: AppData.User ? Types.pInt(AppData.User.AutoRefreshInterval) : 1,
-	CustomLogoutUrl: AppData.App ? Types.pString(AppData.App.CustomLogoutUrl) : '',
+	AllowChangeSettings: false,
+	AllowClientDebug: false,
+	AllowDesktopNotifications: false,
+	AllowIosProfile: false,
+	AllowMobile: false,
+	AllowPrefetch: false,
+	AttachmentSizeLimit: 0,
+	AutoRefreshIntervalMinutes: 1,
+	CustomLogoutUrl: '',
 	DateFormat: 'DD/MM/YYYY',
-	DateFormatList: AppData.App && $.isArray(AppData.App.DateFormats) ? AppData.App.DateFormats : [],
-	EntryModule: 'MailWebclient', // AppData.App.DefaultTab
-	GoogleAnalyticsAccount: AppData.App ? Types.pString(AppData.App.GoogleAnalyticsAccount) : '',
-	IsDemo: AppData.User ? !!AppData.User.IsDemo : false,
-	IsMailsuite: !!AppData.IsMailsuite,
-	IsMobile: !!AppData.IsMobile,
+	DateFormatList: [],
+	EntryModule: '',
+	GoogleAnalyticsAccount: '',
+	IsDemo: false,
+	IsMailsuite: false,
+	IsMobile: false,
 	IsRTL: bRtl,
 	Language: 'English',
-	LanguageList: AppData.App && $.isArray(AppData.App.Languages) ? AppData.App.Languages : [],
-	LastErrorCode: Types.pString(AppData.LastErrorCode),
+	LanguageList: [],
+	LastErrorCode: 0,
 	LogoUrl: '',
-	RedirectToHelpdesk: !!AppData.HelpdeskRedirect, // todo
-	ShowQuotaBar: AppData.App ? !!AppData.App.ShowQuotaBar : true, // Files module, Mail module
-	SiteName: 'Aurora Cloud',
-	SocialName: AppData.User ? Types.pString(AppData.User.SocialName) : '', // Mail module
-	SyncIosAfterLogin: AppData.App ? !!AppData.App.IosDetectOnLogin : false, // ? AllowIosProfile
-	TenantName: Types.pString(AppData.TenantName || UrlUtils.getRequestParam('tenant')),
-	Theme: AppData.User ? Types.pString(AppData.User.DefaultTheme) : (AppData.App ? Types.pString(AppData.App.DefaultTheme) : 'Default'),
-	ThemeList: AppData.App && $.isArray(AppData.App.Themes) ? AppData.App.Themes : [],
+	RedirectToHelpdesk: false,
+	ShowQuotaBar: false,
+	SiteName: 'Afterlogic Platform',
+	SocialName: '',
+	SyncIosAfterLogin: false,
+	TenantName: '',
+	Theme: 'Default',
+	ThemeList: [],
 	timeFormat: ko.observable('0'), // 0 - 24, 1 - 12
-	UserId: AppData.User ? Types.pInt(AppData.User.IdUser) : 0,
-	HeaderModulesOrder: ["mail", "contacts", "files"],
-	
-	// unused, should be removed
-	AllowBodySize: AppData.App ? !!AppData.App.AllowBodySize : false,
-	DefaultLanguageShort: AppData.User ? Types.pString(AppData.User.DefaultLanguageShort) : (AppData.App ? Types.pString(AppData.App.DefaultLanguageShort) : 'en'),
-	DemoWebMail: AppData.App ? !!AppData.App.DemoWebMail : false,
-	MaxBodySize: AppData.App ? Types.pInt(AppData.App.MaxBodySize) : 0,
-	MaxSubjectSize: AppData.App ? Types.pInt(AppData.App.MaxSubjectSize) : 0,
-	ServerUrlRewriteBase: AppData.App ? Types.pString(AppData.App.ServerUrlRewriteBase) : '',
-	ServerUseUrlRewrite: AppData.App ? Types.pString(AppData.App.ServerUseUrlRewrite) : '',
-	AllowVoice: AppData.User ? !!AppData.User.AllowVoice : true,
-	CanLoginWithPassword: AppData.User ? !!AppData.User.CanLoginWithPassword : true,
-	EmailNotification: AppData.User ? Types.pString(AppData.User.EmailNotification) : '',
-	LastLogin: AppData.User ? Types.pInt(AppData.User.LastLogin) : 0,
-	LoginsCount: AppData.User ? Types.pInt(AppData.User.LoginsCount) : 0,
-	SipCallerID: AppData.User ? Types.pString(AppData.User.SipCallerID) : '',
-	SipEnable: AppData.User ? !!AppData.User.SipEnable : true,
-	TwilioEnable: AppData.User ? !!AppData.User.TwilioEnable : true,
-	TwilioNumber: AppData.User ? Types.pInt(AppData.User.TwilioNumber) : 0,
+	UserId: 0,
+	HeaderModulesOrder: [],
 	
 	init: function (oAppDataSection) {
 		if (oAppDataSection)
 		{
-			this.DateFormat = Types.pString(oAppDataSection.DefaultDateFormat);
-			this.Language = Types.pString(oAppDataSection.DefaultLanguage);
-			this.LogoUrl = Types.pString(oAppDataSection.AppStyleImage);
-			this.SiteName = Types.pString(oAppDataSection.SiteName);
-			this.timeFormat(Types.pString(oAppDataSection.DefaultTimeFormat));
+			this.AllowChangeSettings = !!oAppDataSection.AllowChangeSettings;
+			this.AllowClientDebug = !!oAppDataSection.AllowClientDebug;
+			this.AllowDesktopNotifications = !!oAppDataSection.AllowDesktopNotifications;
+			this.AllowIosProfile = !!oAppDataSection.AllowIosProfile;
+			this.AllowMobile = !!oAppDataSection.AllowMobile;
+			this.AllowPrefetch = !!oAppDataSection.AllowPrefetch;
+			this.AttachmentSizeLimit = Types.pInt(oAppDataSection.AttachmentSizeLimit);
+			this.AutoRefreshIntervalMinutes = Types.pInt(oAppDataSection.AutoRefreshIntervalMinutes);
+			this.CustomLogoutUrl = Types.pString(oAppDataSection.CustomLogoutUrl);
+			this.DateFormat = Types.pString(oAppDataSection.DateFormat);
+			this.DateFormatList = _.isArray(oAppDataSection.DateFormatList) ? oAppDataSection.DateFormatList : [],
+			this.EntryModule = Types.pString(oAppDataSection.EntryModule);
 			this.EUserRole = oAppDataSection.EUserRole;
+			this.GoogleAnalyticsAccount = Types.pString(oAppDataSection.GoogleAnalyticsAccount);
+			this.IsDemo = !!oAppDataSection.IsDemo;
+			this.IsMailsuite = !!oAppDataSection.IsMailsuite;
+			this.IsMobile = !!oAppDataSection.IsMobile;
+			this.Language = Types.pString(oAppDataSection.Language);
+			this.LanguageList = _.isArray(oAppDataSection.LanguageList) ? oAppDataSection.LanguageList : [],
+			this.LastErrorCode = Types.pInt(oAppDataSection.LastErrorCode);
+			this.LogoUrl = Types.pString(oAppDataSection.LogoUrl);
+			this.RedirectToHelpdesk = !!oAppDataSection.RedirectToHelpdesk;
+			this.ShowQuotaBar = !!oAppDataSection.ShowQuotaBar;
+			this.SiteName = Types.pString(oAppDataSection.SiteName);
+			this.SocialName = Types.pString(oAppDataSection.SocialName);
+			this.SyncIosAfterLogin = !!oAppDataSection.SyncIosAfterLogin;
+			this.TenantName = Types.pString(oAppDataSection.TenantName || UrlUtils.getRequestParam('tenant'));
+			this.Theme = Types.pString(oAppDataSection.Theme);
+			this.ThemeList = _.isArray(oAppDataSection.ThemeList) ? oAppDataSection.ThemeList : [],
+			this.timeFormat(Types.pString(oAppDataSection.TimeFormat));
+			this.UserId = Types.pInt(oAppDataSection.UserId);
+			this.HeaderModulesOrder = _.isArray(oAppDataSection.HeaderModulesOrder) ? oAppDataSection.HeaderModulesOrder : [],
 			
 			//only for admin
 			this.LicenseKey = Types.pString(oAppDataSection.LicenseKey);
@@ -91,12 +99,12 @@ var Settings = {
 		}
 	},
 	
-	update: function (iAutoRefreshIntervalMinutes, sDefaultTheme, sLanguage, sTimeFormat, sDesktopNotifications) {
+	update: function (iAutoRefreshIntervalMinutes, sDefaultTheme, sLanguage, sTimeFormat, bAllowDesktopNotifications) {
 		this.AutoRefreshIntervalMinutes = iAutoRefreshIntervalMinutes;
 		this.Theme = sDefaultTheme;
 		this.Language = sLanguage;
 		this.timeFormat(sTimeFormat);
-		this.AllowDesktopNotifications = sDesktopNotifications === '1';
+		this.AllowDesktopNotifications = bAllowDesktopNotifications;
 	},
 	
 	/**
@@ -124,7 +132,7 @@ var Settings = {
 	}
 };
 
-var oAppDataSection = _.extend({}, AppData[Settings.ServerModuleName] || {}, AppData['CoreWebclient'] || {});
+var oAppDataSection = _.extend({}, AppData[Settings.ServerModuleName] || {}, AppData['%ModuleName%'] || {});
 
 Settings.init(oAppDataSection);
 

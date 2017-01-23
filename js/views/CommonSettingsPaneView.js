@@ -20,11 +20,11 @@ function CCommonSettingsPaneView()
 {
 	CAbstractSettingsFormView.call(this);
 	
-	this.aSkins = UserSettings.ThemeList;
+	this.aThemes = UserSettings.ThemeList;
 	this.aLanguages = UserSettings.LanguageList;
 	
 	/* Editable fields */
-	this.selectedSkin = ko.observable(UserSettings.Theme);
+	this.selectedTheme = ko.observable(UserSettings.Theme);
 	this.selectedLanguage = ko.observable(UserSettings.Language);
 	this.autoRefreshInterval = ko.observable(UserSettings.AutoRefreshIntervalMinutes);
 	this.aRefreshIntervals = [
@@ -69,7 +69,7 @@ CCommonSettingsPaneView.prototype.ViewTemplate = 'CoreWebclient_CommonSettingsPa
 CCommonSettingsPaneView.prototype.getCurrentValues = function ()
 {
 	return [
-		this.selectedSkin(),
+		this.selectedTheme(),
 		this.selectedLanguage(),
 		this.autoRefreshInterval(),
 		this.timeFormat(),
@@ -82,7 +82,7 @@ CCommonSettingsPaneView.prototype.getCurrentValues = function ()
  */
 CCommonSettingsPaneView.prototype.revertGlobalValues = function ()
 {
-	this.selectedSkin(UserSettings.Theme);
+	this.selectedTheme(UserSettings.Theme);
 	this.selectedLanguage(UserSettings.Language);
 	this.autoRefreshInterval(UserSettings.AutoRefreshIntervalMinutes);
 	this.timeFormat(UserSettings.timeFormat());
@@ -97,11 +97,11 @@ CCommonSettingsPaneView.prototype.revertGlobalValues = function ()
 CCommonSettingsPaneView.prototype.getParametersForSave = function ()
 {
 	return {
-		'AutoRefreshInterval': Types.pInt(this.autoRefreshInterval()),
-		'Theme': this.selectedSkin(),
+		'AutoRefreshIntervalMinutes': Types.pInt(this.autoRefreshInterval()),
+		'Theme': this.selectedTheme(),
 		'Language': this.selectedLanguage(),
 		'TimeFormat': this.timeFormat(),
-		'AllowDesktopNotifications': this.desktopNotifications() ? '1' : '0'
+		'AllowDesktopNotifications': this.desktopNotifications()
 	};
 };
 
@@ -118,7 +118,7 @@ CCommonSettingsPaneView.prototype.applySavedValues = function (oParameters)
 	}
 	else
 	{
-		UserSettings.updateCommonSettings(oParameters.AutoRefreshInterval,
+		UserSettings.update(oParameters.AutoRefreshIntervalMinutes,
 			oParameters.Theme, oParameters.Language,
 			oParameters.TimeFormat, oParameters.AllowDesktopNotifications);
 	}

@@ -20,4 +20,47 @@
 
 class CoreWebclientModule extends AApiModule
 {
+	/**
+	 * Initializes CoreWebclient Module.
+	 * 
+	 * @ignore
+	 */
+	public function init() {
+		$this->extendObject('CUser', array(
+				'AutoRefreshIntervalMinutes'	=> array('int', 1),
+				'Theme'							=> array('string', 'Default'),
+				'AllowDesktopNotifications'		=> array('bool', false),
+			)
+		);
+		
+		$this->subscribeEvent('Core::UpdateSettings::after', array($this, 'onAfterUpdateSettings'));
+	}
+	
+	public function GetSettings()
+	{
+		\CApi::checkUserRoleIsAtLeast(\EUserRole::Anonymous);
+		
+		$oUser = \CApi::getAuthenticatedUser();
+		
+		return array(
+			'AutoRefreshIntervalMinutes' => $oUser ? $oUser->{$this->GetName().'::AutoRefreshIntervalMinutes'} : $this->getConfig('AutoRefreshIntervalMinutes', 1),
+			'Theme' => $oUser ? $oUser->{$this->GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),
+			'AllowDesktopNotifications' => $oUser ? $oUser->{$this->GetName().'::AllowDesktopNotifications'} : $this->getConfig('AllowDesktopNotifications', false),
+		);
+	}
+	
+	public function onAfterUpdateSettings($Args, &$Result)
+	{
+		\CApi::checkUserRoleIsAtLeast(\EUserRole::NormalUser);
+		
+		$oUser = \CApi::getAuthenticatedUser();
+		if ($oUser && $oUser->Role === \EUserRole::NormalUser)
+		{
+			$oCoreDecorator = \CApi::GetModuleDecorator('Core');
+			$oUser->{$this->GetName().'::AutoRefreshIntervalMinutes'} = $Args['AutoRefreshIntervalMinutes'];
+			$oUser->{$this->GetName().'::Theme'} = $Args['Theme'];
+			$oUser->{$this->GetName().'::AllowDesktopNotifications'} = $Args['AllowDesktopNotifications'];
+			$oCoreDecorator->UpdateUserObject($oUser);
+		}
+	}
 }
