@@ -27,18 +27,16 @@ var Settings = {
 	AutoRefreshIntervalMinutes: 1,
 	CustomLogoutUrl: '',
 	DateFormat: 'DD/MM/YYYY',
-	DateFormatList: [],
+	DateFormatList: ['DD/MM/YYYY'],
 	EntryModule: '',
 	GoogleAnalyticsAccount: '',
 	IsDemo: false,
-	IsMailsuite: false,
-	IsMobile: false,
+	IsMobile: -1,
 	IsRTL: bRtl,
 	Language: 'English',
-	LanguageList: [],
+	LanguageList: [{name: 'English', text: 'English'}],
 	LastErrorCode: 0,
 	LogoUrl: '',
-	RedirectToHelpdesk: false,
 	ShowQuotaBar: false,
 	SiteName: 'Afterlogic Platform',
 	SocialName: '',
@@ -63,18 +61,16 @@ var Settings = {
 			this.AutoRefreshIntervalMinutes = Types.pInt(oAppDataSection.AutoRefreshIntervalMinutes);
 			this.CustomLogoutUrl = Types.pString(oAppDataSection.CustomLogoutUrl);
 			this.DateFormat = Types.pString(oAppDataSection.DateFormat);
-			this.DateFormatList = _.isArray(oAppDataSection.DateFormatList) ? oAppDataSection.DateFormatList : [],
+			this.DateFormatList = _.isArray(oAppDataSection.DateFormatList) ? oAppDataSection.DateFormatList : ['DD/MM/YYYY'],
 			this.EntryModule = Types.pString(oAppDataSection.EntryModule);
 			this.EUserRole = oAppDataSection.EUserRole;
 			this.GoogleAnalyticsAccount = Types.pString(oAppDataSection.GoogleAnalyticsAccount);
 			this.IsDemo = !!oAppDataSection.IsDemo;
-			this.IsMailsuite = !!oAppDataSection.IsMailsuite;
-			this.IsMobile = !!oAppDataSection.IsMobile;
+			this.IsMobile = Types.pInt(oAppDataSection.IsMobile);
 			this.Language = Types.pString(oAppDataSection.Language);
-			this.LanguageList = _.isArray(oAppDataSection.LanguageList) ? oAppDataSection.LanguageList : [],
+			this.LanguageList = _.isArray(oAppDataSection.LanguageListWithNames) ? oAppDataSection.LanguageListWithNames : [{name: 'English', text: 'English'}],
 			this.LastErrorCode = Types.pInt(oAppDataSection.LastErrorCode);
 			this.LogoUrl = Types.pString(oAppDataSection.LogoUrl);
-			this.RedirectToHelpdesk = !!oAppDataSection.RedirectToHelpdesk;
 			this.ShowQuotaBar = !!oAppDataSection.ShowQuotaBar;
 			this.SiteName = Types.pString(oAppDataSection.SiteName);
 			this.SocialName = Types.pString(oAppDataSection.SocialName);

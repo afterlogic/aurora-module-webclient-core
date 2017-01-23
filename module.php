@@ -27,13 +27,36 @@ class CoreWebclientModule extends AApiModule
 	 */
 	public function init() {
 		$this->extendObject('CUser', array(
-				'AutoRefreshIntervalMinutes'	=> array('int', 1),
-				'Theme'							=> array('string', 'Default'),
-				'AllowDesktopNotifications'		=> array('bool', false),
+				'AllowDesktopNotifications'		=> array('bool', $this->getConfig('AllowDesktopNotifications', false)),
+				'AutoRefreshIntervalMinutes'	=> array('int', $this->getConfig('AutoRefreshIntervalMinutes', 0)),
+				'Theme'							=> array('string', $this->getConfig('Theme', 'Default')),
 			)
 		);
 		
 		$this->subscribeEvent('Core::UpdateSettings::after', array($this, 'onAfterUpdateSettings'));
+	}
+	
+	private function getLanguageList($aSystemList)
+	{
+		$aResultList = [];
+		$aLanguageNames = $this->getConfig('LanguageNames', false);
+		foreach ($aSystemList as $sLanguage) {
+			if (isset($aLanguageNames[$sLanguage]))
+			{
+				$aResultList[] = [
+					'name' => $aLanguageNames[$sLanguage],
+					'value' => $sLanguage
+				];
+			}
+			else
+			{
+				$aResultList[] = [
+					'name' => $sLanguage,
+					'value' => $sLanguage
+				];
+			}
+		}
+		return $aResultList;
 	}
 	
 	public function GetSettings()
@@ -41,11 +64,29 @@ class CoreWebclientModule extends AApiModule
 		\CApi::checkUserRoleIsAtLeast(\EUserRole::Anonymous);
 		
 		$oUser = \CApi::getAuthenticatedUser();
+		$oApiIntegrator = \CApi::GetSystemManager('integrator');
 		
 		return array(
-			'AutoRefreshIntervalMinutes' => $oUser ? $oUser->{$this->GetName().'::AutoRefreshIntervalMinutes'} : $this->getConfig('AutoRefreshIntervalMinutes', 1),
-			'Theme' => $oUser ? $oUser->{$this->GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),
+			'AllowChangeSettings' => $this->getConfig('AllowChangeSettings', false),
+			'AllowClientDebug' => $this->getConfig('AllowClientDebug', false),
 			'AllowDesktopNotifications' => $oUser ? $oUser->{$this->GetName().'::AllowDesktopNotifications'} : $this->getConfig('AllowDesktopNotifications', false),
+			'AllowIosProfile' => $this->getConfig('AllowIosProfile', false),
+			'AllowMobile' => $this->getConfig('AllowMobile', false),
+			'AllowPrefetch' => $this->getConfig('AllowPrefetch', false),
+			'AttachmentSizeLimit' => $this->getConfig('AttachmentSizeLimit', 0),
+			'AutoRefreshIntervalMinutes' => $oUser ? $oUser->{$this->GetName().'::AutoRefreshIntervalMinutes'} : $this->getConfig('AutoRefreshIntervalMinutes', 0),
+			'CustomLogoutUrl' => $this->getConfig('CustomLogoutUrl', ''),
+			'EntryModule' => $this->getConfig('EntryModule', ''),
+			'GoogleAnalyticsAccount' => $this->getConfig('GoogleAnalyticsAccount', ''),
+			'HeaderModulesOrder' => $this->getConfig('HeaderModulesOrder', []),
+			'IsDemo' => $this->getConfig('IsDemo', false),
+			'IsMobile' => -1,
+			'LanguageListWithNames' => $this->getLanguageList($oApiIntegrator->getLanguageList()),
+			'LogoUrl' => $this->getConfig('LogoUrl'),
+			'ShowQuotaBar' => $this->getConfig('ShowQuotaBar', false),
+			'SyncIosAfterLogin' => $this->getConfig('SyncIosAfterLogin', false),
+			'Theme' => $oUser ? $oUser->{$this->GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),
+			'ThemeList' => $this->getConfig('ThemeList', ['Default']),
 		);
 	}
 	
@@ -56,10 +97,20 @@ class CoreWebclientModule extends AApiModule
 		$oUser = \CApi::getAuthenticatedUser();
 		if ($oUser && $oUser->Role === \EUserRole::NormalUser)
 		{
+			if (isset($Args['AllowDesktopNotifications']))
+			{
+				$oUser->{$this->GetName().'::AllowDesktopNotifications'} = $Args['AllowDesktopNotifications'];
+			}
+			if (isset($Args['AutoRefreshIntervalMinutes']))
+			{
+				$oUser->{$this->GetName().'::AutoRefreshIntervalMinutes'} = $Args['AutoRefreshIntervalMinutes'];
+			}
+			if (isset($Args['Theme']))
+			{
+				$oUser->{$this->GetName().'::Theme'} = $Args['Theme'];
+			}
+			
 			$oCoreDecorator = \CApi::GetModuleDecorator('Core');
-			$oUser->{$this->GetName().'::AutoRefreshIntervalMinutes'} = $Args['AutoRefreshIntervalMinutes'];
-			$oUser->{$this->GetName().'::Theme'} = $Args['Theme'];
-			$oUser->{$this->GetName().'::AllowDesktopNotifications'} = $Args['AllowDesktopNotifications'];
 			$oCoreDecorator->UpdateUserObject($oUser);
 		}
 	}
