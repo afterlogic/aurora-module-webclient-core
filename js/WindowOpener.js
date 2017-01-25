@@ -81,42 +81,15 @@ module.exports = {
 	/**
 	 * @returns {Array}
 	 */
-	getOpenedDraftUids: function ()
+	getOpenedWindows: function ()
 	{
 		aOpenedWins = _.filter(aOpenedWins, function (oWin) {
 			return !oWin.closed;
 		});
 		
-		var aDraftUids = _.map(aOpenedWins, function (oWin) {
-			return (oWin.App && (window.location.origin === oWin.location.origin)) ? oWin.App.MailCache.editedDraftUid() : '';
-		});
-		
-		if (Popups.hasOpenedMinimizedPopups())
-		{
-			aDraftUids.push(App.MailCache.editedDraftUid());
-		}
-		
-		return _.uniq(_.compact(aDraftUids));
+		return aOpenedWins;
 	},
 	
-	/**
-	 * @param {string} aUids
-	 */
-	closeComposesWithDraftUids: function (aUids)
-	{
-		_.each(aOpenedWins, function (oWin) {
-			if (oWin.App && -1 !== $.inArray(oWin.App.MailCache.editedDraftUid(), aUids))
-			{
-				oWin.close();
-			}
-		});
-		
-		if (-1 !== $.inArray(App.MailCache.editedDraftUid(), aUids))
-		{
-			App.Api.closeComposePopup();
-		}
-	},
-
 	closeAll: function ()
 	{
 		_.each(aOpenedWins, function (oWin) {
