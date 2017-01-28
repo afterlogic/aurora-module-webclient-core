@@ -278,8 +278,6 @@ CAbstractFileModel.prototype.parse = function (oData, iAccountId)
 		this.uploadUid(this.hash());
 		this.uploaded(true);
 		
-		this.fillActions();
-		
 		if ($.isFunction(this.additionalParse))
 		{
 			this.additionalParse(oData);
@@ -290,19 +288,6 @@ CAbstractFileModel.prototype.parse = function (oData, iAccountId)
 CAbstractFileModel.prototype.isViewSupported = function ()
 {
 	return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes)) || this.iframedView();
-};
-
-/**
- * Temporary function
- */
-CAbstractFileModel.prototype.fillActions = function ()
-{
-	this.actions.push('download');
-
-	if (this.isViewSupported())
-	{
-		this.actions.unshift('view');
-	}
 };
 
 CAbstractFileModel.prototype.getInThumbQueue = function (sThumbSessionUid)
