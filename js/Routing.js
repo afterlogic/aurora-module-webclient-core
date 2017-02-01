@@ -112,6 +112,7 @@ CRouting.prototype.replaceHashDirectly = function (aRoutingParts)
 {
 	hasher.stop();
 	this.replaceHashFromString(this.buildHashFromArray(aRoutingParts));
+	this.currentHash(location.hash.replace(/^#/, ''));
 	hasher.init();
 };
 
