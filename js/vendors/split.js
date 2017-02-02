@@ -1,3 +1,4 @@
+// https://nathancahill.github.io/Split.js/
 // The programming goals of Split.js are to deliver readable, understandable and
 // maintainable code, while at the same time manually optimizing for tiny minified file size,
 // browser compatibility without additional requirements, graceful fallback (IE8 is supported)
@@ -20,18 +21,12 @@
 //
 // Save a couple long function names that are used frequently.
 // This optimization saves around 400 bytes.
-//
-// Set a float fudging global, used when dividing and setting sizes to long floats.
-// There's a chance that sometimes the sum of the floats would end up being slightly
-// larger than 100%, breaking the layout. The float fudging value is subtracted from
-// the percentage size.
 var global = this
   , isIE8 = global.attachEvent && !global[addEventListener]
   , document = global.document
   , addEventListener = 'addEventListener'
   , removeEventListener = 'removeEventListener'
   , getBoundingClientRect = 'getBoundingClientRect'
-  , FLOAT_FUDGING = 0.5
 
   // This library only needs two helper functions:
   //
@@ -91,9 +86,12 @@ var global = this
   //    A lot of the behavior in the rest of the library is paramatized down to
   //    rely on CSS strings and classes.
   // 3. Define the dragging helper functions, and a few helpers to go with them.
-  // 4. Loop through the elements while pairing them off. Every pair gets an
+  // 4. Define a few more functions that "balance" the entire split instance.
+  //    Split.js tries it's best to cope with min sizes that don't add up.
+  // 5. Loop through the elements while pairing them off. Every pair gets an
   //    `pair` object, a gutter, and special isFirst/isLast properties.
-  // 5. Actually size the pair elements, insert gutters and attach event listeners.
+  // 6. Actually size the pair elements, insert gutters and attach event listeners.
+  // 7. Balance all of the pairs to accomodate min sizes as best as possible.
   , Split = function (ids, options) {
     var dimension
       , i
@@ -114,28 +112,6 @@ var global = this
     if (typeof options.minSize === 'undefined') options.minSize = 100
     if (typeof options.snapOffset === 'undefined') options.snapOffset = 30
     if (typeof options.direction === 'undefined') options.direction = 'horizontal'
-    if (typeof options.elementStyle === 'undefined') options.elementStyle = function (dimension, size, gutterSize) {
-        var style = {}
-
-        if (typeof size !== 'string' && !(size instanceof String)) {
-            if (!isIE8) {
-                style[dimension] = calc + '(' + size + '% - ' + gutterSize + 'px)'
-            } else {
-                style[dimension] = size + '%'
-            }
-        } else {
-            style[dimension] = size
-        }
-
-        return style
-    }
-    if (typeof options.gutterStyle === 'undefined') options.gutterStyle = function (dimension, gutterSize) {
-        var style = {}
-
-        style[dimension] = gutterSize + 'px'
-
-        return style
-    }
 
     // 2. Initialize a bunch of strings based on the direction we're splitting.
     // A lot of the behavior in the rest of the library is paramatized down to
@@ -182,7 +158,7 @@ var global = this
 
             // Call the onDragStart callback.
             if (!self.dragging && options.onDragStart) {
-                options.onDragStart()
+                options.onDragStart(self)
             }
 
             // Don't actually drag the element. We emulate that in the drag function.
@@ -236,7 +212,7 @@ var global = this
               , b = self.b
 
             if (self.dragging && options.onDragEnd) {
-                options.onDragEnd()
+                options.onDragEnd(self)
             }
 
             self.dragging = false
@@ -310,15 +286,13 @@ var global = this
                 offset = this.size - (this.bMin + this.bGutterSize)
             }
 
-            offset = offset - FLOAT_FUDGING
-
             // Actually adjust the size.
             adjust.call(this, offset)
 
             // Call the drag callback continously. Don't do anything too intensive
             // in this callback.
             if (options.onDrag) {
-                options.onDrag()
+                options.onDrag(self)
             }
         }
 
@@ -352,28 +326,65 @@ var global = this
       // Element a's size is the same as offset. b's size is total size - a size.
       // Both sizes are calculated from the initial parent percentage, then the gutter size is subtracted.
       , adjust = function (offset) {
-            setElementSize(this.a, (offset / this.size * this.percentage), this.aGutterSize)
-            setElementSize(this.b, (this.percentage - (offset / this.size * this.percentage)), this.bGutterSize)
+            this.a.style[dimension] = calc + '(' + (offset / this.size * this.percentage) + '% - ' + this.aGutterSize + 'px)'
+            this.b.style[dimension] = calc + '(' + (this.percentage - (offset / this.size * this.percentage)) + '% - ' + this.bGutterSize + 'px)'
+        }
+
+      // 4. Define a few more functions that "balance" the entire split instance.
+      // Split.js tries it's best to cope with min sizes that don't add up.
+      // At some point this should go away since it breaks out of the calc(% - px) model.
+      // Maybe it's a user error if you pass uncomputable minSizes.
+      , fitMin = function () {
+            var self = this
+              , a = self.a
+              , b = self.b
+
+            if (a[getBoundingClientRect]()[dimension] < self.aMin) {
+                a.style[dimension] = (self.aMin - self.aGutterSize) + 'px'
+                b.style[dimension] = (self.size - self.aMin - self.aGutterSize) + 'px'
+            } else if (b[getBoundingClientRect]()[dimension] < self.bMin) {
+                a.style[dimension] = (self.size - self.bMin - self.bGutterSize) + 'px'
+                b.style[dimension] = (self.bMin - self.bGutterSize) + 'px'
+            }
+        }
+      , fitMinReverse = function () {
+            var self = this
+              , a = self.a
+              , b = self.b
+
+            if (b[getBoundingClientRect]()[dimension] < self.bMin) {
+                a.style[dimension] = (self.size - self.bMin - self.bGutterSize) + 'px'
+                b.style[dimension] = (self.bMin - self.bGutterSize) + 'px'
+            } else if (a[getBoundingClientRect]()[dimension] < self.aMin) {
+                a.style[dimension] = (self.aMin - self.aGutterSize) + 'px'
+                b.style[dimension] = (self.size - self.aMin - self.aGutterSize) + 'px'
+            }
+        }
+      , balancePairs = function (pairs) {
+            for (var i = 0; i < pairs.length; i++) {
+                calculateSizes.call(pairs[i])
+                fitMin.call(pairs[i])
+            }
+
+            for (i = pairs.length - 1; i >= 0; i--) {
+                calculateSizes.call(pairs[i])
+                fitMinReverse.call(pairs[i])
+            }
         }
       , setElementSize = function (el, size, gutterSize) {
             // Split.js allows setting sizes via numbers (ideally), or if you must,
             // by string, like '300px'. This is less than ideal, because it breaks
             // the fluid layout that `calc(% - px)` provides. You're on your own if you do that,
             // make sure you calculate the gutter size by hand.
-            var style = options.elementStyle(dimension, size, gutterSize)
-              , props = Object.keys(style)
-
-            for (var i = 0; i < props.length; i++) {
-                el.style[props[i]] = style[props[i]]
+            if (typeof size !== 'string' && !(size instanceof String)) {
+                if (!isIE8) {
+                    size = calc + '(' + size + '% - ' + gutterSize + 'px)'
+                } else {
+                    size = options.sizes[i] + '%'
+                }
             }
-        }
-      , setGutterSize = function (gutter, gutterSize) {
-            var style = options.gutterStyle(dimension, gutterSize)
-              , props = Object.keys(style)
 
-            for (var i = 0; i < props.length; i++) {
-                gutter.style[props[i]] = style[props[i]]
-            }
+            el.style[dimension] = size
         }
 
       // No-op function to prevent default. Used to prevent selection.
@@ -432,8 +443,6 @@ var global = this
           , size = options.sizes[i]
           , gutterSize = options.gutterSize
           , pair
-          , parentFlexDirection = window.getComputedStyle(parent).flexDirection
-          , temp
 
         if (i > 0) {
             // Create the pair object with it's metadata.
@@ -460,13 +469,6 @@ var global = this
             if (isLastPair) {
                 pair.bGutterSize = options.gutterSize / 2
             }
-
-            // if the parent has a reverse flex-direction, switch the pair elements.
-            if (parentFlexDirection === 'row-reverse' || parentFlexDirection === 'column-reverse') {
-                temp = pair.a;
-                pair.a = pair.b;
-                pair.b = temp;
-            }
         }
 
         // Determine the size of the current element. IE8 is supported by
@@ -480,13 +482,15 @@ var global = this
                 var gutter = document.createElement('div')
 
                 gutter.className = gutterClass
-
-                setGutterSize(gutter, gutterSize)
+                gutter.style[dimension] = options.gutterSize + 'px'
 
                 gutter[addEventListener]('mousedown', startDragging.bind(pair))
                 gutter[addEventListener]('touchstart', startDragging.bind(pair))
 
                 parent.insertBefore(gutter, el)
+				
+				var gutterInner = document.createElement('div')
+				gutter.appendChild(gutterInner)
 
                 pair.gutter = gutter
             }
@@ -500,25 +504,15 @@ var global = this
         // Set the element size to our determined size.
         setElementSize(el, size, gutterSize)
 
-        if (i > 0) {
-            var aSize = pair.a[getBoundingClientRect]()[dimension]
-              , bSize = pair.b[getBoundingClientRect]()[dimension]
-
-            if (aSize < pair.aMin) {
-                pair.aMin = aSize
-            }
-
-            if (bSize < pair.bMin) {
-                pair.bMin = bSize
-            }
-        }
-
         // After the first iteration, and we have a pair object, append it to the
         // list of pairs.
         if (i > 0) {
             pairs.push(pair)
         }
     }
+
+    // Balance the pairs to try to accomodate min sizes.
+    balancePairs(pairs)
 
     return {
         setSizes: function (sizes) {
@@ -530,23 +524,6 @@ var global = this
                     setElementSize(pair.b, sizes[i], pair.bGutterSize)
                 }
             }
-        },
-        getSizes: function () {
-            var sizes = []
-
-            for (var i = 0; i < pairs.length; i++) {
-                var pair = pairs[i]
-                  , computedStyle = global.getComputedStyle(pair.parent)
-                  , parentSize = pair.parent[clientDimension] - parseFloat(computedStyle[paddingA]) - parseFloat(computedStyle[paddingB])
-
-                sizes.push((pair.a[getBoundingClientRect]()[dimension] + pair.aGutterSize) / parentSize * 100)
-
-                if (i === pairs.length - 1) {
-                    sizes.push((pair.b[getBoundingClientRect]()[dimension] + pair.bGutterSize) / parentSize * 100)
-                }
-            }
-
-            return sizes
         },
         collapse: function (i) {
             var pair
