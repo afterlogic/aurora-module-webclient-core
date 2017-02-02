@@ -16,38 +16,41 @@ require('jquery-ui');
 require('%PathToCoreWebclientModule%/js/autocomplete.js');
 
 ko.bindingHandlers.splitterFlex = {
-	'init': function (oElement, fValueAccessor) {
-		_.defer(function() {
-			//https://nathancahill.github.io/Split.js/
-			var 
-				oCommand = _.defaults(fValueAccessor(), {
-					'minSize' : 200,
-					'name': ''
-				}),
-				aInitSizes = Storage.getData(oCommand['name'] + 'ResizerWidth') || oCommand['sizes']
-			;
-			
-			splitter($(oElement).children(), {
-				sizes: aInitSizes,
-				minSize: oCommand['minSize'],
-				gutterSize: 0,
-				onDragEnd: function (split) {
-					var 
-						parentWidth = $(split.parent).width(),
-						aSizes = []
-					;
+	'update': function (oElement, fValueAccessor) {
+		if (fValueAccessor())
+		{
+			_.defer(function() {
+				//https://nathancahill.github.io/Split.js/
+				var 
+					oCommand = _.defaults(fValueAccessor(), {
+						'minSize' : 200,
+						'name': ''
+					}),
+					aInitSizes = Storage.getData(oCommand['name'] + 'ResizerWidth') || oCommand['sizes']
+				;
 
-					_.each($(oElement).children('.panel'), function (item) {
-						aSizes.push($(item).width() / parentWidth * 100);
-					});
-					
-					if (oCommand['name'])
-					{
-						Storage.setData(oCommand['name'] + 'ResizerWidth', aSizes);
+				splitter($(oElement).children(), {
+					sizes: aInitSizes,
+					minSize: oCommand['minSize'],
+					gutterSize: 0,
+					onDragEnd: function (split) {
+						var 
+							parentWidth = $(split.parent).width(),
+							aSizes = []
+						;
+
+						_.each($(oElement).children('.panel'), function (item) {
+							aSizes.push($(item).width() / parentWidth * 100);
+						});
+
+						if (oCommand['name'])
+						{
+							Storage.setData(oCommand['name'] + 'ResizerWidth', aSizes);
+						}
 					}
-				}
+				});
 			});
-		});
+		}
 	}
 };
 
