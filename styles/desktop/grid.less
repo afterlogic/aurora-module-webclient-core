@@ -381,6 +381,14 @@ html.non-adjustable .panels {
 		.data {
 			display: block;
 			overflow: hidden;
+			
+			&.table {
+				display: flex;
+				
+				& > span {
+					flex-grow: 1;
+				}
+			}
 		}
 		
 		.group,
