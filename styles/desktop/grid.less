@@ -387,6 +387,13 @@ html.non-adjustable .panels {
 				
 				& > span {
 					flex-grow: 1;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					padding: 0px 10px;
+					
+					&.fixed {
+						flex-grow: 0;
+					}
 				}
 			}
 		}
