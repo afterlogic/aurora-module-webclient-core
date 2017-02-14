@@ -11,14 +11,17 @@
 
 html.non-adjustable .panels {
 	height: auto;
+	
+	.panel {
+		flex-grow: 0 !important;
+	}
 }
 
-.panels .panel_helper {
-	display: inline-block;
-	vertical-align: top;
-	
-	.box-sizing;
-}
+// .panels .panel_helper {
+	// display: inline-block;
+	// vertical-align: top;
+	// .box-sizing;
+// }
 
 .panel {
 	border-radius: 5px;
@@ -29,7 +32,7 @@ html.non-adjustable .panels {
 	white-space: normal;
 	
 	flex-basis: auto;
-	flex-grow: 0;
+	flex-grow: 1;
 	background: #fff;
 
 	.box-sizing;
@@ -37,34 +40,6 @@ html.non-adjustable .panels {
 	.rtl & {
 		box-shadow: 1px 0 2px rgba(0,0,0,0.11);
 	}
-	
-	.panels & {
-		//display: inline-block;
-		//vertical-align: top;
-	}
-	
-/*	.resize_handler {
-		.user-select(none);
-
-		cursor: e-resize;
-		float: right;
-		height: 100%;
-		left: -6px;
-		margin-right: -10px;
-		position: relative;
-		width: 6px;
-		z-index: 100;
-
-		html.rtl & {
-			float: left;
-		}
-
-		&.active {
-			left: -50px;
-			margin-right: -100px;
-			width: 100px;
-		}
-	}*/
 	
 	.panel_content {
 		height: 100%;
