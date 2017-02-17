@@ -65,7 +65,6 @@ function CAbstractFileModel(sModuleName)
 		return this.size() > 0 ? TextUtils.getFriendlySize(this.size()) : '';
 	}, this);
 	
-	this.accountId = ko.observable(App.defaultAccountId ? App.defaultAccountId() : 0);
 	this.hash = ko.observable('');
 	this.thumb = ko.observable(false);
 	this.iframedView = ko.observable(false);
@@ -76,7 +75,7 @@ function CAbstractFileModel(sModuleName)
 
 	this.getViewLink = function () {
 		var sUrl = FilesUtils.getViewLink(sModuleName, this.hash());
-		return this.iframedView() ? FilesUtils.getIframeWrappwer(this.accountId(), sUrl) : sUrl;
+		return this.iframedView() ? FilesUtils.getIframeWrappwer(App.getUserId(), sUrl) : sUrl;
 	};
 
 	this.thumbnailSrc = ko.observable('');
@@ -252,9 +251,8 @@ CAbstractFileModel.prototype.getCommonClasses = function ()
 /**
  * Parses attachment data from server.
  * @param {AjaxAttachmenResponse} oData
- * @param {number} iAccountId
  */
-CAbstractFileModel.prototype.parse = function (oData, iAccountId)
+CAbstractFileModel.prototype.parse = function (oData)
 {
 	if (oData['@Object'] === this.dataObjectName)
 	{
@@ -271,7 +269,6 @@ CAbstractFileModel.prototype.parse = function (oData, iAccountId)
 		this.thumb(!!oData.Thumb);
 
 		this.hash(Types.pString(oData.Hash));
-		this.accountId(iAccountId);
 		
 		this.iframedView(!!oData.Iframed);
 

@@ -71,7 +71,8 @@ function CApp()
 {
 	this.iUserRole = window.auroraAppData.User ? Types.pInt(window.auroraAppData.User.Role) : Enums.UserRole.Anonymous;
 	this.sUserName = window.auroraAppData.User ? Types.pString(window.auroraAppData.User.Name) : '';
-	this.iUserId = window.auroraAppData.User ? Types.pInt(window.auroraAppData.User.Id) : '';
+	this.sUserPublicId = window.auroraAppData.User ? Types.pString(window.auroraAppData.User.PublicId) : '';
+	this.iUserId = window.auroraAppData.User ? Types.pInt(window.auroraAppData.User.Id) : 0;
 	this.bPublic = false;
 	this.bNewTab = false;
 	this.bMobile = false;
@@ -109,6 +110,11 @@ CApp.prototype.getUserRole = function ()
 CApp.prototype.getUserName = function ()
 {
 	return this.sUserName;
+};
+
+CApp.prototype.getUserPublicId = function ()
+{
+	return this.sUserPublicId;
 };
 
 CApp.prototype.getUserId = function ()
@@ -169,24 +175,11 @@ CApp.prototype.init = function ()
 		if (AccountList)
 		{
 			this.currentAccountId = AccountList.currentId;
-			this.defaultAccountId = AccountList.defaultId;
 			this.hasAccountWithId = _.bind(AccountList.hasAccountWithId, AccountList);
 
 			this.currentAccountEmail = ko.computed(function () {
 				var oAccount = AccountList.getAccount(this.currentAccountId());
 				return oAccount ? oAccount.email() : '';
-			}, this);
-
-			this.defaultAccount = ko.computed(function () {
-				return AccountList.getAccount(this.defaultAccountId());
-			}, this);
-			this.defaultAccountEmail = ko.computed(function () {
-				var oAccount = AccountList.getAccount(this.defaultAccountId());
-				return oAccount ? oAccount.email() : '';
-			}, this);
-			this.defaultAccountFriendlyName = ko.computed(function () {
-				var oAccount = AccountList.getAccount(this.defaultAccountId());
-				return oAccount ? oAccount.friendlyName() : '';
 			}, this);
 
 			this.getAttendee = function (aAttendees) {
@@ -200,7 +193,6 @@ CApp.prototype.init = function ()
 		else
 		{
 			this.currentAccountEmail = _.bind(function () { return this.sUserName; }, this);
-			this.defaultAccountEmail = _.bind(function () { return this.sUserName; }, this);
 		}
 	}
 	
