@@ -31,23 +31,9 @@ if ($('html').hasClass('pdf'))
 
 /**
  * @constructor
- * @param {string} sModuleName
  */
-function CAbstractFileModel(sModuleName)
+function CAbstractFileModel()
 {
-	this.oActionsData = {
-		'view': {
-			'Text': TextUtils.i18n('COREWEBCLIENT/ACTION_VIEW_FILE'),
-			'Handler': _.bind(function () { this.viewFile(); }, this)
-		},
-		'download': {
-			'Text': TextUtils.i18n('COREWEBCLIENT/ACTION_DOWNLOAD_FILE'),
-			'Handler': _.bind(function () { this.downloadFile(); }, this)
-		}
-	};
-	
-	this.allowActions = ko.observable(true);
-	
 	this.id = ko.observable('');
 	this.fileName = ko.observable('');
 	this.tempName = ko.observable('');
@@ -116,22 +102,33 @@ function CAbstractFileModel(sModuleName)
 	
 	this.sHeaderText = '';
 
-	this.iconAction = ko.observable('download');
-	this.oActionTooltips = {
-		'download': ko.computed(function () {
-			var sTitle = TextUtils.i18n('%MODULENAME%/INFO_CLICK_TO_DOWNLOAD_FILE', {
-				'FILENAME': this.fileName(),
-				'SIZE': this.friendlySize()
-			});
+	this.oActionsData = {
+		'view': {
+			'Text': TextUtils.i18n('COREWEBCLIENT/ACTION_VIEW_FILE'),
+			'Handler': _.bind(function () { this.viewFile(); }, this)
+		},
+		'download': {
+			'Text': TextUtils.i18n('COREWEBCLIENT/ACTION_DOWNLOAD_FILE'),
+			'Handler': _.bind(function () { this.downloadFile(); }, this),
+			'Tooltip': ko.computed(function () {
+				var sTitle = TextUtils.i18n('%MODULENAME%/INFO_CLICK_TO_DOWNLOAD_FILE', {
+					'FILENAME': this.fileName(),
+					'SIZE': this.friendlySize()
+				});
 
-			if (this.friendlySize() === '')
-			{
-				sTitle = sTitle.replace(' ()', '');
-			}
+				if (this.friendlySize() === '')
+				{
+					sTitle = sTitle.replace(' ()', '');
+				}
 
-			return sTitle;
-		}, this)
+				return sTitle;
+			}, this)
+		}
 	};
+	
+	this.allowActions = ko.observable(true);
+	
+	this.iconAction = ko.observable('download');
 	
 	this.cssClasses = ko.computed(function () {
 		return this.getCommonClasses().join(' ');
@@ -177,7 +174,7 @@ CAbstractFileModel.prototype.hasAction = function (sAction)
  */
 CAbstractFileModel.prototype.getActionText = function (sAction)
 {
-	if (this.oActionsData[sAction] && typeof this.oActionsData[sAction].Text === 'string')
+	if (this.hasAction(sAction) && this.oActionsData[sAction] && typeof this.oActionsData[sAction].Text === 'string')
 	{
 		return this.oActionsData[sAction].Text;
 	}
@@ -190,7 +187,7 @@ CAbstractFileModel.prototype.getActionText = function (sAction)
  */
 CAbstractFileModel.prototype.executeAction = function (sAction)
 {
-	if (this.oActionsData[sAction] && _.isFunction(this.oActionsData[sAction].Handler))
+	if (this.hasAction(sAction) && this.oActionsData[sAction] && _.isFunction(this.oActionsData[sAction].Handler))
 	{
 		this.oActionsData[sAction].Handler();
 	}
@@ -203,13 +200,14 @@ CAbstractFileModel.prototype.executeAction = function (sAction)
  */
 CAbstractFileModel.prototype.getTooltip = function (sAction)
 {
-	if (typeof this.oActionTooltips[sAction] === 'string')
+	var mTootip = this.hasAction(sAction) && this.oActionsData[sAction] ? this.oActionsData[sAction].Tooltip : '';
+	if (typeof mTootip === 'string')
 	{
-		return this.oActionTooltips[sAction];
+		return mTootip;
 	}
-	if (_.isFunction(this.oActionTooltips[sAction]))
+	if (_.isFunction(mTootip))
 	{
-		return this.oActionTooltips[sAction]();
+		return mTootip();
 	}
 	return '';
 };
