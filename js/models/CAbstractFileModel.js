@@ -265,6 +265,16 @@ CAbstractFileModel.prototype.parse = function (oData)
 		this.sViewUrl = Types.pString(oData.ViewUrl);
 		this.sDownloadUrl = Types.pString(oData.DownloadUrl);
 		this.sThumbUrl = Types.pString(oData.ThumbnailUrl);
+		if (Types.isNonEmptyArray(oData.Actions))
+		{
+			this.actions(oData.Actions);
+			this.sMainAction = Types.pString(oData.Actions[0]);
+		}
+		else
+		{
+			this.actions(['view']);
+			this.sMainAction = 'view';
+		}
 		
 		this.iframedView(!!oData.Iframed);
 
