@@ -72,10 +72,6 @@ function CAbstractFileModel(sModuleName)
 	this.sDownloadUrl = '';
 	this.sThumbUrl = '';
 
-	this.getDownloadLink = function () {
-		return FilesUtils.getDownloadLink(sModuleName, this.hash());
-	};
-
 	this.thumbnailSrc = ko.observable('');
 	this.thumbnailLoaded = ko.observable(false);
 	this.thumbnailSessionUid = ko.observable('');
