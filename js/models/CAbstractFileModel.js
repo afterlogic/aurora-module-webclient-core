@@ -66,25 +66,19 @@ function CAbstractFileModel(sModuleName)
 	}, this);
 	
 	this.hash = ko.observable('');
-	this.thumb = ko.observable(false);
 	this.iframedView = ko.observable(false);
+	
+	this.sViewUrl = '';
+	this.sDownloadUrl = '';
+	this.sThumbUrl = '';
 
 	this.getDownloadLink = function () {
 		return FilesUtils.getDownloadLink(sModuleName, this.hash());
 	};
 
-	this.getViewLink = function () {
-		var sUrl = FilesUtils.getViewLink(sModuleName, this.hash());
-		return this.iframedView() ? FilesUtils.getIframeWrappwer(App.getUserId(), sUrl) : sUrl;
-	};
-
 	this.thumbnailSrc = ko.observable('');
 	this.thumbnailLoaded = ko.observable(false);
 	this.thumbnailSessionUid = ko.observable('');
-
-	this.getThumbnailLink = function () {
-		return sModuleName !== 'Files' ? FilesUtils.getThumbnailLink(sModuleName, this.hash()) : '';
-	};
 
 	this.mimeType = ko.observable('');
 	this.uploadUid = ko.observable('');
@@ -266,9 +260,11 @@ CAbstractFileModel.prototype.parse = function (oData)
 		this.mimeType(Types.pString(oData.MimeType));
 		this.size(oData.EstimatedSize ? Types.pInt(oData.EstimatedSize) : Types.pInt(oData.SizeInBytes));
 
-		this.thumb(!!oData.Thumb);
-
 		this.hash(Types.pString(oData.Hash));
+		
+		this.sViewUrl = Types.pString(oData.ViewUrl);
+		this.sDownloadUrl = Types.pString(oData.DownloadUrl);
+		this.sThumbUrl = Types.pString(oData.ThumbUrl);
 		
 		this.iframedView(!!oData.Iframed);
 
@@ -290,9 +286,9 @@ CAbstractFileModel.prototype.isViewSupported = function ()
 CAbstractFileModel.prototype.getInThumbQueue = function (sThumbSessionUid)
 {
 	this.thumbnailSessionUid(sThumbSessionUid);
-	if(this.thumb() && (!this.linked || this.linked && !this.linked()))
+	if(this.sThumbUrl !== '' && (!this.linked || this.linked && !this.linked()))
 	{
-		FilesUtils.thumbQueue(this.thumbnailSessionUid(), this.getThumbnailLink(), this.thumbnailSrc);
+		FilesUtils.thumbQueue(this.thumbnailSessionUid(), this.sThumbUrl, this.thumbnailSrc);
 	}
 };
 
@@ -302,7 +298,7 @@ CAbstractFileModel.prototype.getInThumbQueue = function (sThumbSessionUid)
 CAbstractFileModel.prototype.downloadFile = function ()
 {
 	//todo: UrlUtils.downloadByUrl in nessesary context in new window
-	var sDownloadLink = this.getDownloadLink();
+	var sDownloadLink = this.sDownloadUrl;
 	
 	if (this.allowDownload() && sDownloadLink.length > 0 && sDownloadLink !== '#')
 	{
@@ -330,7 +326,7 @@ CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 {
 	var
 		oWin = null,
-		sViewLink = this.getViewLink()
+		sViewLink = this.sViewUrl
 	;
 	
 	if (!Types.isNonEmptyString(sUrl))
@@ -377,7 +373,7 @@ CAbstractFileModel.prototype.eventDragStart = function (oAttachment, oEvent)
  */
 CAbstractFileModel.prototype.generateTransferDownloadUrl = function ()
 {
-	var sLink = this.getDownloadLink();
+	var sLink = this.sDownloadUrl;
 	if ('http' !== sLink.substr(0, 4))
 	{
 		sLink = UrlUtils.getAppPath() + sLink;
@@ -483,7 +479,7 @@ CAbstractFileModel.prototype.fillDataAfterUploadComplete = function (oResult, sF
  */
 CAbstractFileModel.prototype.onImageLoad = function (oAttachmentModel, oEvent)
 {
-	if(this.thumb() && !this.thumbnailLoaded())
+	if(this.sThumbUrl !== '' && !this.thumbnailLoaded())
 	{
 		this.thumbnailLoaded(true);
 		FilesUtils.thumbQueue(this.thumbnailSessionUid());

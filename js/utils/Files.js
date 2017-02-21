@@ -26,20 +26,6 @@ FilesUtils.getDownloadLink = function (sModuleName, sHash, sPublicHash)
 };
 
 /**
- * Gets link for download by hash.
- *
- * @param {string} sModuleName Name of module that owns the file.
- * @param {string} sHash Hash of the file.
- * @param {string} sPublicHash Hash of shared folder if the file is displayed by public link.
- * 
- * @return {string}
- */
-FilesUtils.getViewLink = function (sModuleName, sHash, sPublicHash)
-{
-	return sHash.length > 0 ? '?/Download/' + sModuleName + '/ViewFile/' + sHash + '/' + (sPublicHash ? '0/' + sPublicHash : '') : '';
-};
-
-/**
  * Gets link for view by hash in iframe.
  *
  * @param {number} iAccountId
@@ -50,20 +36,6 @@ FilesUtils.getViewLink = function (sModuleName, sHash, sPublicHash)
 FilesUtils.getIframeWrappwer = function (iAccountId, sUrl)
 {
 	return '?/Raw/Iframe/' + iAccountId + '/' + window.encodeURIComponent(sUrl) + '/';
-};
-
-/**
- * Gets link for thumbnail by hash.
- *
- * @param {string} sModuleName Name of module that owns the file.
- * @param {string} sHash Hash of the file.
- * @param {string} sPublicHash Hash of shared folder if the file is displayed by public link.
- *
- * @return {string}
- */
-FilesUtils.getThumbnailLink = function (sModuleName, sHash, sPublicHash)
-{
-	return sHash.length > 0 ? '?/Download/' + sModuleName + '/GetFileThumbnail/' + sHash + '/' + (sPublicHash ? '0/' + sPublicHash : '') : '';
 };
 
 FilesUtils.thumbQueue = (function () {
