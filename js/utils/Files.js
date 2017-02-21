@@ -81,56 +81,6 @@ FilesUtils.thumbQueue = (function () {
 	};
 }());
 
-FilesUtils.thumbBase64Queue = (function () {
-
-	var
-		Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
-		aFiles = [],
-		oThumbs = {},
-		fGetFileKey = function (oFile) {
-			return ['Type', oFile.type(), 'Name', oFile.fileName(), 'Path', oFile.path()].join('-');
-		},
-		fLoadBase64Thumb = function (oFile) {
-			Ajax.send('Files', 'GetFileThumbnail', { Type: oFile.type(), Name: oFile.fileName(), Path: oFile.path() }, function (oResponse) {
-				if (oResponse.Result)
-				{
-					var sThumb = 'data:' + oFile.mimeType() + ';base64,' + oResponse.Result;
-					oThumbs[fGetFileKey(oFile)] = sThumb;
-					oFile.thumbnailSrc(sThumb);
-				}
-			});
-		}
-	;
-	
-	Ajax.registerOnAllRequestsClosedHandler(function () {
-		if (aFiles.length > 0)
-		{
-			var oShiftedFile = aFiles.shift();
-			fLoadBase64Thumb(oShiftedFile);
-		}
-	});
-
-	return function (oFile)
-	{
-		if (oFile)
-		{
-			var sThumb = oThumbs[fGetFileKey(oFile)];
-			if (sThumb)
-			{
-				oFile.thumbnailSrc(sThumb);
-			}
-			else if (Ajax.hasOpenedRequests())
-			{
-				aFiles.push(oFile);
-			}
-			else
-			{
-				fLoadBase64Thumb(oFile);
-			}
-		}
-	};
-}());
-
 /**
  * @param {string} sFileName
  * @param {number} iSize
