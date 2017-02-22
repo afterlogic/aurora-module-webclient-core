@@ -18,7 +18,9 @@
  * @package Modules
  */
 
-class CoreWebclientModule extends AApiModule
+namespace Aurora\Modules;
+
+class CoreWebclientModule extends \AApiModule
 {
 	/**
 	 * Initializes CoreWebclient Module.
