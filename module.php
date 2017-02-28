@@ -20,7 +20,7 @@
 
 namespace Aurora\Modules;
 
-class CoreWebclientModule extends \AApiModule
+class CoreWebclientModule extends \Aurora\System\AbstractModule
 {
 	/**
 	 * Initializes CoreWebclient Module.
@@ -63,10 +63,10 @@ class CoreWebclientModule extends \AApiModule
 	
 	public function GetSettings()
 	{
-		\CApi::checkUserRoleIsAtLeast(\EUserRole::Anonymous);
+		\Aurora\System\Api::checkUserRoleIsAtLeast(\EUserRole::Anonymous);
 		
-		$oUser = \CApi::getAuthenticatedUser();
-		$oApiIntegrator = \CApi::GetSystemManager('integrator');
+		$oUser = \Aurora\System\Api::getAuthenticatedUser();
+		$oApiIntegrator = \Aurora\System\Api::GetSystemManager('integrator');
 		
 		return array(
 			'AllowChangeSettings' => $this->getConfig('AllowChangeSettings', false),
@@ -94,9 +94,9 @@ class CoreWebclientModule extends \AApiModule
 	
 	public function onAfterUpdateSettings($Args, &$Result)
 	{
-		\CApi::checkUserRoleIsAtLeast(\EUserRole::NormalUser);
+		\Aurora\System\Api::checkUserRoleIsAtLeast(\EUserRole::NormalUser);
 		
-		$oUser = \CApi::getAuthenticatedUser();
+		$oUser = \Aurora\System\Api::getAuthenticatedUser();
 		if ($oUser && $oUser->Role === \EUserRole::NormalUser)
 		{
 			if (isset($Args['AllowDesktopNotifications']))
@@ -112,7 +112,7 @@ class CoreWebclientModule extends \AApiModule
 				$oUser->{$this->GetName().'::Theme'} = $Args['Theme'];
 			}
 			
-			$oCoreDecorator = \CApi::GetModuleDecorator('Core');
+			$oCoreDecorator = \Aurora\System\Api::GetModuleDecorator('Core');
 			$oCoreDecorator->UpdateUserObject($oUser);
 		}
 	}
