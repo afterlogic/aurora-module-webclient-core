@@ -264,11 +264,6 @@ CAbstractFileModel.prototype.parse = function (oData)
 			this.actions(oData.Actions);
 			this.sMainAction = Types.pString(oData.Actions[0]);
 		}
-		else
-		{
-			this.actions(['view']);
-			this.sMainAction = 'view';
-		}
 		
 		this.iframedView(!!oData.Iframed);
 
