@@ -489,7 +489,7 @@ AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback)
 		;
 
 		oXhr.open('POST', sAction, true);
-		oXhr.setRequestHeader('Authorization', 'Bearer ' + aHidden.AuthToken);
+		oXhr.setRequestHeader('Authorization', 'Bearer ' + $.cookie('AuthToken'));
 		delete aHidden.AuthToken;
 		
 		if (fProgressFunction && oXhr.upload)
