@@ -358,7 +358,6 @@ CApp.prototype.checkCookies = function ()
 CApp.prototype.getCommonRequestParameters = function ()
 {
 	var oParameters = {
-		AuthToken: $.cookie('AuthToken'),
 		TenantName: UserSettings.TenantName
 	};
 	
