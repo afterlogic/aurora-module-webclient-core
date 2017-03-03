@@ -20,7 +20,7 @@
 
 namespace Aurora\Modules;
 
-class CoreWebclientModule extends \Aurora\System\AbstractModule
+class CoreWebclientModule extends \Aurora\System\Module\AbstractModule
 {
 	/**
 	 * Initializes CoreWebclient Module.
