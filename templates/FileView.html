@@ -1,7 +1,7 @@
 <div class="item file attachment" data-bind="
 	css: cssClasses,
 	event: allowDrag() ? { 'dragstart': eventDragStart } : null,
-	draggablePlace: allowDrag() ? $parent.dragAndDropHelperBinded : null,
+	draggablePlace: allowDrag() ? $parent.dragAndDropHelperBound : null,
 	draggableDragStartCallback: function() { if (allowDrag()) { $root.dragover(true); } },
 	draggableDragStopCallback: function() { if (allowDrag()) { $root.dragover(false); } }
 ">

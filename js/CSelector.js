@@ -248,7 +248,7 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 		return 0 < iM && 0 < iC && iM > iC;
 	}, this);
 
-	this.onKeydownBinded = _.bind(this.onKeydown, this);
+	this.onKeydownBound = _.bind(this.onKeydown, this);
 }
 
 CSelector.prototype.iTimer = 0;
@@ -296,7 +296,7 @@ CSelector.prototype.getLastOrSelected = function ()
  */
 CSelector.prototype.initOnApplyBindings = function (sActionSelector, sSelectabelSelector, sCheckboxSelector, oListScope, oScrollScope)
 {
-	$(document).on('keydown', this.onKeydownBinded);
+	$(document).on('keydown', this.onKeydownBound);
 
 	this.oListScope = oListScope;
 	this.oScrollScope = oScrollScope;

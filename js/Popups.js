@@ -82,8 +82,8 @@ CPopups.prototype.addPopup = function (oPopup)
 
 	if (this.popups.length === 1)
 	{
-		this.keyupPopupBinded = _.bind(this.keyupPopup, this);
-		$(document).on('keyup', this.keyupPopupBinded);
+		this.keyupPopupBound = _.bind(this.keyupPopup, this);
+		$(document).on('keyup', this.keyupPopupBound);
 	}
 };
 
@@ -126,10 +126,10 @@ CPopups.prototype.removePopup = function (oPopup)
  */
 CPopups.prototype.removePopup = function (oPopup)
 {
-	if (this.keyupPopupBinded && this.popups.length === 1)
+	if (this.keyupPopupBound && this.popups.length === 1)
 	{
-		$(document).off('keyup', this.keyupPopupBinded);
-		this.keyupPopupBinded = undefined;
+		$(document).off('keyup', this.keyupPopupBound);
+		this.keyupPopupBound = undefined;
 	}
 
 	this.popups = _.without(this.popups, oPopup);
