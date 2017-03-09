@@ -54,8 +54,6 @@ function CAbstractFileModel()
 	this.hash = ko.observable('');
 	this.iframedView = ko.observable(false);
 	
-	this.sViewUrl = '';
-	this.sDownloadUrl = '';
 	this.sThumbUrl = '';
 
 	this.thumbnailSrc = ko.observable('');
@@ -98,7 +96,6 @@ function CAbstractFileModel()
 	this.allowDrag = ko.observable(false);
 	this.allowUpload = ko.observable(false);
 	this.allowSharing = ko.observable(false);
-	this.allowDownload = ko.observable(true);
 	
 	this.sHeaderText = '';
 
@@ -162,6 +159,11 @@ function CAbstractFileModel()
  */
 CAbstractFileModel.prototype.dataObjectName = '';
 
+CAbstractFileModel.prototype.getMainAction = function ()
+{
+	return this.actions()[0];
+};
+
 CAbstractFileModel.prototype.hasAction = function (sAction)
 {
 	return _.indexOf(this.actions(), sAction) !== -1;
@@ -179,6 +181,11 @@ CAbstractFileModel.prototype.getActionText = function (sAction)
 		return this.oActionsData[sAction].Text;
 	}
 	return '';
+};
+
+CAbstractFileModel.prototype.getActionUrl = function (sAction)
+{
+	return (this.hasAction(sAction) && this.oActionsData[sAction]) ? (this.oActionsData[sAction].Url || '') : '';
 };
 
 /**
@@ -256,14 +263,15 @@ CAbstractFileModel.prototype.parse = function (oData)
 
 		this.hash(Types.pString(oData.Hash));
 		
-		this.sViewUrl = Types.pString(oData.ViewUrl);
-		this.sDownloadUrl = Types.pString(oData.DownloadUrl);
 		this.sThumbUrl = Types.pString(oData.ThumbnailUrl);
-		if (Types.isNonEmptyArray(oData.Actions))
-		{
-			this.actions(oData.Actions);
-			this.sMainAction = Types.pString(oData.Actions[0]);
-		}
+		_.each (oData.Actions, function (oData, sAction) {
+			if (!this.oActionsData[sAction])
+			{
+				this.oActionsData[sAction] = {};
+			}
+			this.oActionsData[sAction].Url = Types.pString(oData.url);
+			this.actions.push(sAction);
+		}, this);
 		
 		this.iframedView(!!oData.Iframed);
 
@@ -297,9 +305,8 @@ CAbstractFileModel.prototype.getInThumbQueue = function (sThumbSessionUid)
 CAbstractFileModel.prototype.downloadFile = function ()
 {
 	//todo: UrlUtils.downloadByUrl in nessesary context in new window
-	var sDownloadLink = this.sDownloadUrl;
-	
-	if (this.allowDownload() && sDownloadLink.length > 0 && sDownloadLink !== '#')
+	var sDownloadLink = this.getActionUrl('download');
+	if (sDownloadLink.length > 0 && sDownloadLink !== '#')
 	{
 		UrlUtils.downloadByUrl(sDownloadLink);
 	}
@@ -325,7 +332,7 @@ CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 {
 	var
 		oWin = null,
-		sViewLink = this.sViewUrl
+		sViewLink = this.getActionUrl('view')
 	;
 	
 	if (!Types.isNonEmptyString(sUrl))
@@ -372,7 +379,7 @@ CAbstractFileModel.prototype.eventDragStart = function (oAttachment, oEvent)
  */
 CAbstractFileModel.prototype.generateTransferDownloadUrl = function ()
 {
-	var sLink = this.sDownloadUrl;
+	var sLink = this.getActionUrl('download');
 	if ('http' !== sLink.substr(0, 4))
 	{
 		sLink = UrlUtils.getAppPath() + sLink;
