@@ -15,9 +15,10 @@ function CBrowser()
 	this.ie10AndAbove = this.ie && this.ieVersion >= 10;
 	this.opera = !!window.opera || /opr/.test(navigator.userAgent.toLowerCase());
 	this.firefox = /firefox/.test(navigator.userAgent.toLowerCase());
-	this.chrome = /chrome/.test(navigator.userAgent.toLowerCase()) && !/opr/.test(navigator.userAgent.toLowerCase());
+	this.edge = /edge/.test(navigator.userAgent.toLowerCase());
+	this.chrome = /chrome/.test(navigator.userAgent.toLowerCase()) && !/opr/.test(navigator.userAgent.toLowerCase()) && !this.edge;
 	this.chromeIos = /crios/.test(navigator.userAgent.toLowerCase());
-	this.safari = /safari/.test(navigator.userAgent.toLowerCase()) && !this.chromeIos;
+	this.safari = /safari/.test(navigator.userAgent.toLowerCase()) && !this.chromeIos && !this.edge;
 	
 	this.windowsPhone = -1 < navigator.userAgent.indexOf('Windows Phone');
 	this.iosDevice = !this.windowsPhone && (-1 < navigator.userAgent.indexOf('iPhone') ||
