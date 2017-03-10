@@ -11,7 +11,6 @@ var
 	UrlUtils = require('%PathToCoreWebclientModule%/js/utils/Url.js'),
 	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
 	
-	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js'),
 	
@@ -155,11 +154,6 @@ function CAbstractFileModel()
 	}, this);
 }
 
-/**
- * Can be overridden.
- */
-CAbstractFileModel.prototype.dataObjectName = '';
-
 CAbstractFileModel.prototype.getMainAction = function ()
 {
 	return this.actions()[0];
@@ -250,39 +244,36 @@ CAbstractFileModel.prototype.getCommonClasses = function ()
  */
 CAbstractFileModel.prototype.parse = function (oData)
 {
-	if (oData['@Object'] === this.dataObjectName)
+	this.fileName(Types.pString(oData.FileName));
+	this.tempName(Types.pString(oData.TempName));
+	if (this.tempName() === '')
 	{
-		this.fileName(Types.pString(oData.FileName));
-		this.tempName(Types.pString(oData.TempName));
-		if (this.tempName() === '')
+		this.tempName(this.fileName());
+	}
+
+	this.mimeType(Types.pString(oData.MimeType));
+	this.size(oData.EstimatedSize ? Types.pInt(oData.EstimatedSize) : Types.pInt(oData.SizeInBytes));
+
+	this.hash(Types.pString(oData.Hash));
+
+	this.sThumbUrl = Types.pString(oData.ThumbnailUrl);
+	_.each (oData.Actions, function (oData, sAction) {
+		if (!this.oActionsData[sAction])
 		{
-			this.tempName(this.fileName());
+			this.oActionsData[sAction] = {};
 		}
+		this.oActionsData[sAction].Url = Types.pString(oData.url);
+		this.actions.push(sAction);
+	}, this);
 
-		this.mimeType(Types.pString(oData.MimeType));
-		this.size(oData.EstimatedSize ? Types.pInt(oData.EstimatedSize) : Types.pInt(oData.SizeInBytes));
+	this.iframedView(!!oData.Iframed);
 
-		this.hash(Types.pString(oData.Hash));
-		
-		this.sThumbUrl = Types.pString(oData.ThumbnailUrl);
-		_.each (oData.Actions, function (oData, sAction) {
-			if (!this.oActionsData[sAction])
-			{
-				this.oActionsData[sAction] = {};
-			}
-			this.oActionsData[sAction].Url = Types.pString(oData.url);
-			this.actions.push(sAction);
-		}, this);
-		
-		this.iframedView(!!oData.Iframed);
+	this.uploadUid(this.hash());
+	this.uploaded(true);
 
-		this.uploadUid(this.hash());
-		this.uploaded(true);
-		
-		if ($.isFunction(this.additionalParse))
-		{
-			this.additionalParse(oData);
-		}
+	if ($.isFunction(this.additionalParse))
+	{
+		this.additionalParse(oData);
 	}
 };
 
