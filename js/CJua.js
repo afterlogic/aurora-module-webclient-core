@@ -8,6 +8,8 @@ var
 	
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 
+	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
+	
 	iDefLimit = 20
 ;
 /**
@@ -547,7 +549,7 @@ AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback)
 		}
 
 		oFormData.append('jua-post-type', 'ajax');
-		oFormData.append(getValue(this.oOptions, 'name', 'juaFile'), oFileInfo['File']);
+		oFormData.append(getValue(this.oOptions, 'name', 'juaFile'), oFileInfo['File'], oFileInfo['FileName']);
 		$.each(aHidden, function (sKey, mValue) {
 			oFormData.append(sKey, getStringOrCallFunction(mValue, [oFileInfo]));
 		});
@@ -1229,8 +1231,16 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 	var fOnSelect = this.getEvent('onSelect');
 	if (oFileInfo && (!fOnSelect || (false !== fOnSelect(sUid, oFileInfo))))
 	{
-		this.oDriver.regTaskUid(sUid);
-		this.oQueue.defer(scopeBind(this.oDriver.uploadTask, this.oDriver), sUid, oFileInfo);
+		var fCallback = _.bind(function (sUid, oFileInfo) {
+			this.oDriver.regTaskUid(sUid);
+			this.oQueue.defer(scopeBind(this.oDriver.uploadTask, this.oDriver), sUid, oFileInfo);
+		}, this);
+		var bIsCrypted = ModulesManager.run('CoreJscryptoWebclientPlugin', 'encryptFile', [sUid, oFileInfo, fCallback]);
+		
+		if (bIsCrypted === false) {
+			this.oDriver.regTaskUid(sUid);
+			this.oQueue.defer(scopeBind(this.oDriver.uploadTask, this.oDriver), sUid, oFileInfo);
+		}
 	}
 	else
 	{

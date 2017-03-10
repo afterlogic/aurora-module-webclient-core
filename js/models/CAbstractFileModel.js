@@ -12,6 +12,7 @@ var
 	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
 	
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
+	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js'),
 	
 	aViewMimeTypes = [
@@ -306,7 +307,9 @@ CAbstractFileModel.prototype.downloadFile = function ()
 {
 	//todo: UrlUtils.downloadByUrl in nessesary context in new window
 	var sDownloadLink = this.getActionUrl('download');
-	if (sDownloadLink.length > 0 && sDownloadLink !== '#')
+	var bIsCrypted = ModulesManager.run('CoreJscryptoWebclientPlugin', 'decryptFile', [sDownloadLink, this.fileName()]);
+
+	if (sDownloadLink.length > 0 && sDownloadLink !== '#' && bIsCrypted === false)
 	{
 		UrlUtils.downloadByUrl(sDownloadLink);
 	}
