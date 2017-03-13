@@ -49,6 +49,8 @@
 	</span>
 </div>
 
-<!-- ko if: isMessageType() && messagePart() -->
-	<!-- ko template: {name: 'Mail_PrintMessageView', data: messagePart} --><!-- /ko -->
+<!-- ko foreach: otherTemplates -->
+	<!-- ko if: $data.data() !== null -->
+		<!-- ko template: $data --><!-- /ko -->
+	<!-- /ko -->
 <!-- /ko -->
