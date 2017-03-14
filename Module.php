@@ -27,7 +27,13 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	 * 
 	 * @ignore
 	 */
-	public function init() {
+	public function init() 
+	{
+		$this->AddEntries(array(
+			'' => 'EntryRoot',
+			'xdebug_session_start' => 'EntryRoot'
+		));
+		
 		$this->extendObject('CUser', array(
 				'AllowDesktopNotifications'		=> array('bool', $this->getConfig('AllowDesktopNotifications', false)),
 				'AutoRefreshIntervalMinutes'	=> array('int', $this->getConfig('AutoRefreshIntervalMinutes', 0)),
@@ -42,7 +48,8 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	{
 		$aResultList = [];
 		$aLanguageNames = $this->getConfig('LanguageNames', false);
-		foreach ($aSystemList as $sLanguage) {
+		foreach ($aSystemList as $sLanguage) 
+		{
 			if (isset($aLanguageNames[$sLanguage]))
 			{
 				$aResultList[] = [
@@ -116,4 +123,59 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			$oCoreDecorator->UpdateUserObject($oUser);
 		}
 	}
+	
+	/**
+	 * @ignore
+	 */
+	public function EntryRoot()
+	{
+		$sResult = '';
+		
+		$oApiIntegrator = \Aurora\System\Api::GetSystemManager('integrator');
+		
+		if ($oApiIntegrator) 
+		{
+			$sModuleHash = '';
+			$aArgs = array();
+			$this->broadcastEvent(
+				'GenerateHTML', 
+				$aArgs,
+				$sModuleHash
+			);
+					
+			@\header('Content-Type: text/html; charset=utf-8', true);
+			
+			$sUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+			if (!\strpos(\strtolower($sUserAgent), 'firefox')) 
+			{
+				@\header('Last-Modified: '.\gmdate('D, d M Y H:i:s').' GMT');
+			}
+			
+			if ((\Aurora\System\Api::GetConf('labs.cache-ctrl', true) && isset($_COOKIE['aft-cache-ctrl']))) 
+			{
+				\setcookie('aft-cache-ctrl', '', \time() - 3600);
+				\MailSo\Base\Http::SingletonInstance()->StatusHeader(304);
+				exit();
+			}
+			
+			$sResult = \file_get_contents($this->GetPath().'/templates/Index.html');
+			if (\is_string($sResult)) 
+			{
+				$sFrameOptions = \Aurora\System\Api::GetConf('labs.x-frame-options', '');
+				if (0 < \strlen($sFrameOptions)) 
+				{
+					@\header('X-Frame-Options: '.$sFrameOptions);
+				}
+
+				$sResult = strtr($sResult, array(
+					'{{AppVersion}}' => AURORA_APP_VERSION,
+					'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
+					'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink(),
+					'{{IntegratorBody}}' => $oApiIntegrator->buildBody($sModuleHash)
+				));
+			}
+		}
+
+		return $sResult;
+	}		
 }
