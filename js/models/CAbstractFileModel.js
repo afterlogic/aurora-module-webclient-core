@@ -67,8 +67,9 @@ function CAbstractFileModel()
 	this.isViewMimeType = ko.computed(function () {
 		return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes)) || this.iframedView();
 	}, this);
-	this.isMessageType = ko.observable(false);
 	this.bHasHtmlEmbed = false;
+	
+	this.otherTemplates = ko.observableArray([]);
 
 	this.statusText = ko.observable('');
 	this.statusTooltip = ko.computed(function () {
