@@ -44,6 +44,11 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		$this->subscribeEvent('Core::UpdateSettings::after', array($this, 'onAfterUpdateSettings'));
 	}
 	
+	/**
+	 * 
+	 * @param array $aSystemList
+	 * @return array
+	 */
 	private function getLanguageList($aSystemList)
 	{
 		$aResultList = [];
@@ -68,6 +73,10 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		return $aResultList;
 	}
 	
+	/**
+	 * 
+	 * @return array
+	 */
 	public function GetSettings()
 	{
 		\Aurora\System\Api::checkUserRoleIsAtLeast(\EUserRole::Anonymous);
@@ -99,6 +108,11 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		);
 	}
 	
+	/**
+	 * 
+	 * @param array $Args
+	 * @param mixed $Result
+	 */
 	public function onAfterUpdateSettings($Args, &$Result)
 	{
 		\Aurora\System\Api::checkUserRoleIsAtLeast(\EUserRole::NormalUser);
