@@ -15,7 +15,7 @@ var jQuery = require('jquery');
 		}
 
 		return $('<li>')
-			.append('<a>' + item.label + (item.global ? '' : '<span class="del"></span>') + '</a>')
+			.append('<a>' + item.label + (item.team ? '' : '<span class="del"></span>') + '</a>')
 			.appendTo(ul);
 	};
 
