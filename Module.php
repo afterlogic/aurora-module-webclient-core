@@ -165,7 +165,8 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 				@\header('Last-Modified: '.\gmdate('D, d M Y H:i:s').' GMT');
 			}
 			
-			if ((\Aurora\System\Api::GetConf('labs.cache-ctrl', true) && isset($_COOKIE['aft-cache-ctrl']))) 
+			$oSettings =& \Aurora\System\Api::GetSettings();
+			if (($oSettings->GetConf('CacheCtrl', true) && isset($_COOKIE['aft-cache-ctrl']))) 
 			{
 				\setcookie('aft-cache-ctrl', '', \time() - 3600);
 				\MailSo\Base\Http::SingletonInstance()->StatusHeader(304);
@@ -175,7 +176,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			$sResult = \file_get_contents($this->GetPath().'/templates/Index.html');
 			if (\is_string($sResult)) 
 			{
-				$sFrameOptions = \Aurora\System\Api::GetConf('labs.x-frame-options', '');
+				$sFrameOptions = $oSettings->GetConf('XFrameOptions', '');
 				if (0 < \strlen($sFrameOptions)) 
 				{
 					@\header('X-Frame-Options: '.$sFrameOptions);
