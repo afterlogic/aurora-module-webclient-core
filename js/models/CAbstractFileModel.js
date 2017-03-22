@@ -299,7 +299,7 @@ CAbstractFileModel.prototype.downloadFile = function ()
 {
 	//todo: UrlUtils.downloadByUrl in nessesary context in new window
 	var sDownloadLink = this.getActionUrl('download');
-	var bIsCrypted = ModulesManager.run('CoreJscryptoWebclientPlugin', 'decryptFile', [sDownloadLink, this.fileName()]);
+	var bIsCrypted = ModulesManager.run('CoreJscryptoWebclientPlugin', 'decryptFile', [sDownloadLink, this.fileName(), this.chunksLinks ? this.chunksLinks : null]);
 
 	if (sDownloadLink.length > 0 && sDownloadLink !== '#' && bIsCrypted === false)
 	{

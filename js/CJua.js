@@ -1228,16 +1228,28 @@ CJua.prototype.addNewFile = function (oFileInfo)
  */
 CJua.prototype.addFile = function (sUid, oFileInfo)
 {
-	var fOnSelect = this.getEvent('onSelect');
+	var
+		fOnSelect = this.getEvent('onSelect'),
+		fOnChunkEncryptCallback = null,
+		bIsCrypted = false
+	;
 	if (oFileInfo && (!fOnSelect || (false !== fOnSelect(sUid, oFileInfo))))
 	{
-		var fCallback = _.bind(function (sUid, oFileInfo) {
+		fOnChunkEncryptCallback = _.bind(function (sUid, oFileInfo, fProcessNextChunkCallback) {
+			var fOnUploadCallback = function ()
+			{
+				if (fProcessNextChunkCallback)
+				{
+					fProcessNextChunkCallback(sUid, fOnChunkEncryptCallback);
+				}
+			};
 			this.oDriver.regTaskUid(sUid);
-			this.oQueue.defer(scopeBind(this.oDriver.uploadTask, this.oDriver), sUid, oFileInfo);
+			this.oDriver.uploadTask(sUid, oFileInfo, fOnUploadCallback);
 		}, this);
-		var bIsCrypted = ModulesManager.run('CoreJscryptoWebclientPlugin', 'encryptFile', [sUid, oFileInfo, fCallback]);
+		bIsCrypted = ModulesManager.run('CoreJscryptoWebclientPlugin', 'encryptFile', [sUid, oFileInfo, fOnChunkEncryptCallback]);
 		
-		if (bIsCrypted === false) {
+		if (bIsCrypted === false)
+		{
 			this.oDriver.regTaskUid(sUid);
 			this.oQueue.defer(scopeBind(this.oDriver.uploadTask, this.oDriver), sUid, oFileInfo);
 		}
