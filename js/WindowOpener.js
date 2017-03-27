@@ -4,7 +4,6 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	
-	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	
 	iDefaultRatio = 0.8,
@@ -70,10 +69,13 @@ module.exports = {
 		sParams += GetSizeParameters();
 
 		oWin = window.open(sUrl, sPopupName, sParams);
-		oWin.focus();
-		oWin.name = App.currentAccountId ? App.currentAccountId() : 0;
-
-		aOpenedWins.push(oWin);
+		
+		if (oWin)
+		{
+			oWin.focus();
+			oWin.name = App.currentAccountId ? App.currentAccountId() : 0;
+			aOpenedWins.push(oWin);
+		}
 		
 		return oWin;
 	},
