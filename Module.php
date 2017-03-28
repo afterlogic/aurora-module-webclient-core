@@ -30,8 +30,8 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	public function init() 
 	{
 		$this->AddEntries(array(
-			'' => 'EntryRoot',
-			'xdebug_session_start' => 'EntryRoot'
+			'default' => 'EntryDefault',
+			'xdebug_session_start' => 'EntryDefault'
 		));
 		
 		$this->extendObject('CUser', array(
@@ -141,7 +141,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	/**
 	 * @ignore
 	 */
-	public function EntryRoot()
+	public function EntryDefault()
 	{
 		$sResult = '';
 		
