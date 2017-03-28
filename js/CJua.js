@@ -7,7 +7,7 @@ var
 	queue = require('%PathToCoreWebclientModule%/js/vendors/queue.js'),
 	
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
-
+	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	
 	iDefLimit = 20
@@ -1230,19 +1230,23 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 {
 	var
 		fOnSelect = this.getEvent('onSelect'),
-		fOnChunkEncryptCallback = null,
-		bIsCrypted = false,
+		fOnChunkReadyCallback = null,
+		bBreakUpload = false,
 		aHidden = getValue(this.oOptions, 'hidden', {}),
-		oParameters = Object
+		oParameters = Object,
+		fRegularUploadFileCallback = _.bind(function (sUid, oFileInfo) {
+			this.oDriver.regTaskUid(sUid);
+			this.oQueue.defer(scopeBind(this.oDriver.uploadTask, this.oDriver), sUid, oFileInfo);
+		}, this)
 	;
 	if (oFileInfo && (!fOnSelect || (false !== fOnSelect(sUid, oFileInfo))))
 	{
-		fOnChunkEncryptCallback = _.bind(function (sUid, oFileInfo, fProcessNextChunkCallback, iCurrChunk, iChunkNumber, iv) {
+		fOnChunkReadyCallback = _.bind(function (sUid, oFileInfo, fProcessNextChunkCallback, iCurrChunk, iChunkNumber, iv) {
 			var fOnUploadCallback = function ()
 			{
 				if (fProcessNextChunkCallback)
 				{
-					fProcessNextChunkCallback(sUid, fOnChunkEncryptCallback);
+					fProcessNextChunkCallback(sUid, fOnChunkReadyCallback);
 				}
 			};
 			
@@ -1250,7 +1254,7 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 			{
 				oParameters = JSON.parse(getStringOrCallFunction(aHidden.Parameters, [oFileInfo]));
 				oParameters.RangeType = 1;
-				oParameters.extendedProps = { 'InitializationVector': iv };
+				oParameters.ExtendedProps = { 'InitializationVector': iv };
 
 				aHidden.Parameters = JSON.stringify(oParameters);
 				setValue(this.oOptions, 'hidden', aHidden);
@@ -1259,13 +1263,11 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 			this.oDriver.regTaskUid(sUid);
 			this.oDriver.uploadTask(sUid, oFileInfo, fOnUploadCallback, iCurrChunk < iChunkNumber);
 		}, this);
+		bBreakUpload = App.broadcastEvent('Jua::FileUpload::before', {sUid: sUid, oFileInfo: oFileInfo, fOnChunkReadyCallback: fOnChunkReadyCallback, sModuleName: aHidden.Module, fRegularUploadFileCallback: fRegularUploadFileCallback});
 
-		bIsCrypted = ModulesManager.run('CoreJscryptoWebclientPlugin', 'encryptFile', [sUid, oFileInfo, fOnChunkEncryptCallback, aHidden.Module]);
-
-		if (bIsCrypted === false)
+		if (bBreakUpload === false)
 		{
-			this.oDriver.regTaskUid(sUid);
-			this.oQueue.defer(scopeBind(this.oDriver.uploadTask, this.oDriver), sUid, oFileInfo);
+			fRegularUploadFileCallback(sUid, oFileInfo);
 		}
 	}
 	else

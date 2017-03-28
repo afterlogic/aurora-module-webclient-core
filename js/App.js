@@ -371,7 +371,9 @@ CApp.prototype.broadcastEvent = function (sEventName, oArguments)
 		_.each(this.aEventsCallbacks[sEventName], function (fCallback) {
 			fCallback(oArguments);
 		});
+		return true;
 	}
+	return  false;
 };
 
 CApp.prototype.subscribeEvent = function (sEventName, fCallback)

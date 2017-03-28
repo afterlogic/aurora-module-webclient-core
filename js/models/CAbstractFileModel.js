@@ -5,6 +5,7 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
+	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	FilesUtils = require('%PathToCoreWebclientModule%/js/utils/Files.js'),
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
@@ -300,14 +301,18 @@ CAbstractFileModel.prototype.downloadFile = function ()
 	//todo: UrlUtils.downloadByUrl in nessesary context in new window
 	var 
 		sDownloadLink = this.getActionUrl('download'),
-		bIsCrypted = false
+		bBreakDownload = false,
+		fRegularDownloadFileCallback = function (sDownloadLink) {
+			if (sDownloadLink.length > 0 && sDownloadLink !== '#')
+			{
+				UrlUtils.downloadByUrl(sDownloadLink);
+			}
+		}
 	;
-	
-	if (this.aInitializationVector)
-	{
-		bIsCrypted = ModulesManager.run('CoreJscryptoWebclientPlugin', 'decryptFile', [sDownloadLink, this.fileName(), this.size(), this.aInitializationVector]);
-	}
-	if (sDownloadLink.length > 0 && sDownloadLink !== '#' && bIsCrypted === false)
+
+	bBreakDownload = App.broadcastEvent('AbstractFileModel::FileDownload::before', {oFile: this, fRegularDownloadFileCallback: fRegularDownloadFileCallback});
+
+	if (sDownloadLink.length > 0 && sDownloadLink !== '#' && bBreakDownload === false)
 	{
 		UrlUtils.downloadByUrl(sDownloadLink);
 	}
