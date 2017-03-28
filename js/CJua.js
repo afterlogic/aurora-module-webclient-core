@@ -469,7 +469,7 @@ AjaxDriver.prototype.regTaskUid = function (sUid)
  * @param {?} oFileInfo
  * @param {Function} fCallback
  */
-AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback)
+AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCompleteFunction = false)
 {
 	if (false === this.oUids[sUid] || !oFileInfo || !oFileInfo['File'])
 	{
@@ -506,7 +506,7 @@ AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback)
 		oXhr.onreadystatechange = function () {
 			if (4 === oXhr.readyState && 200 === oXhr.status)
 			{
-				if (fCompleteFunction)
+				if (fCompleteFunction && !bSkipCompleteFunction)
 				{
 					var
 						bResult = false,
@@ -692,7 +692,7 @@ IframeDriver.prototype.regTaskUid = function (sUid)
  * @param {?} oFileInfo
  * @param {Function} fCallback
  */
-IframeDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback)
+IframeDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCompleteFunction = false)
 {
 	if (false === this.oUids[sUid])
 	{
@@ -1231,11 +1231,13 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 	var
 		fOnSelect = this.getEvent('onSelect'),
 		fOnChunkEncryptCallback = null,
-		bIsCrypted = false
+		bIsCrypted = false,
+		aHidden = getValue(this.oOptions, 'hidden', {}),
+		oParameters = Object
 	;
 	if (oFileInfo && (!fOnSelect || (false !== fOnSelect(sUid, oFileInfo))))
 	{
-		fOnChunkEncryptCallback = _.bind(function (sUid, oFileInfo, fProcessNextChunkCallback) {
+		fOnChunkEncryptCallback = _.bind(function (sUid, oFileInfo, fProcessNextChunkCallback, iCurrChunk, iChunkNumber, iv) {
 			var fOnUploadCallback = function ()
 			{
 				if (fProcessNextChunkCallback)
@@ -1243,11 +1245,23 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 					fProcessNextChunkCallback(sUid, fOnChunkEncryptCallback);
 				}
 			};
+			
+			if (iCurrChunk === 1)
+			{
+				oParameters = JSON.parse(getStringOrCallFunction(aHidden.Parameters, [oFileInfo]));
+				oParameters.RangeType = 1;
+				oParameters.extendedProps = { 'InitializationVector': iv };
+
+				aHidden.Parameters = JSON.stringify(oParameters);
+				setValue(this.oOptions, 'hidden', aHidden);
+			}
+				
 			this.oDriver.regTaskUid(sUid);
-			this.oDriver.uploadTask(sUid, oFileInfo, fOnUploadCallback);
+			this.oDriver.uploadTask(sUid, oFileInfo, fOnUploadCallback, iCurrChunk < iChunkNumber);
 		}, this);
-		bIsCrypted = ModulesManager.run('CoreJscryptoWebclientPlugin', 'encryptFile', [sUid, oFileInfo, fOnChunkEncryptCallback]);
-		
+
+		bIsCrypted = ModulesManager.run('CoreJscryptoWebclientPlugin', 'encryptFile', [sUid, oFileInfo, fOnChunkEncryptCallback, aHidden.Module]);
+
 		if (bIsCrypted === false)
 		{
 			this.oDriver.regTaskUid(sUid);

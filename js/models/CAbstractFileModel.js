@@ -298,9 +298,15 @@ CAbstractFileModel.prototype.getInThumbQueue = function (sThumbSessionUid)
 CAbstractFileModel.prototype.downloadFile = function ()
 {
 	//todo: UrlUtils.downloadByUrl in nessesary context in new window
-	var sDownloadLink = this.getActionUrl('download');
-	var bIsCrypted = ModulesManager.run('CoreJscryptoWebclientPlugin', 'decryptFile', [sDownloadLink, this.fileName(), this.chunksLinks ? this.chunksLinks : null]);
-
+	var 
+		sDownloadLink = this.getActionUrl('download'),
+		bIsCrypted = false
+	;
+	
+	if (this.aInitializationVector)
+	{
+		bIsCrypted = ModulesManager.run('CoreJscryptoWebclientPlugin', 'decryptFile', [sDownloadLink, this.fileName(), this.size(), this.aInitializationVector]);
+	}
 	if (sDownloadLink.length > 0 && sDownloadLink !== '#' && bIsCrypted === false)
 	{
 		UrlUtils.downloadByUrl(sDownloadLink);
