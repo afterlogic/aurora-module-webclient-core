@@ -149,14 +149,6 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		
 		if ($oApiIntegrator) 
 		{
-			$sModuleHash = '';
-			$aArgs = array();
-			$this->broadcastEvent(
-				'GenerateHTML', 
-				$aArgs,
-				$sModuleHash
-			);
-					
 			@\header('Content-Type: text/html; charset=utf-8', true);
 			
 			$sUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
@@ -181,12 +173,18 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 				{
 					@\header('X-Frame-Options: '.$sFrameOptions);
 				}
+				
+				$aConfig = array(
+//					'modules_list' => array(),
+//					'public_app' => false,
+//					'new_tab' => false
+				);
 
 				$sResult = strtr($sResult, array(
 					'{{AppVersion}}' => AURORA_APP_VERSION,
 					'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
 					'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink(),
-					'{{IntegratorBody}}' => $oApiIntegrator->buildBody($sModuleHash)
+					'{{IntegratorBody}}' => $oApiIntegrator->buildBody($aConfig)
 				));
 			}
 		}
