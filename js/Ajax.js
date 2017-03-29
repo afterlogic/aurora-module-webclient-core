@@ -110,6 +110,7 @@ CAjax.prototype.registerOnAllRequestsClosedHandler = function (fHandler)
  * @param {function=} fResponseHandler
  * @param {object=} oContext
  * @param {number=} iTimeout
+ * @param {object=} oMainParams
  */
 CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler, oContext, iTimeout, oMainParams)
 {
