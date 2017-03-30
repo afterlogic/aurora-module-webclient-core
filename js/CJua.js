@@ -469,7 +469,7 @@ AjaxDriver.prototype.regTaskUid = function (sUid)
  * @param {?} oFileInfo
  * @param {Function} fCallback
  */
-AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCompleteFunction = false)
+AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCompleteFunction)
 {
 	if (false === this.oUids[sUid] || !oFileInfo || !oFileInfo['File'])
 	{
@@ -692,7 +692,7 @@ IframeDriver.prototype.regTaskUid = function (sUid)
  * @param {?} oFileInfo
  * @param {Function} fCallback
  */
-IframeDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCompleteFunction = false)
+IframeDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCompleteFunction)
 {
 	if (false === this.oUids[sUid])
 	{
