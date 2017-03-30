@@ -496,7 +496,7 @@ AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCom
 		if (fProgressFunction && oXhr.upload)
 		{
 			oXhr.upload.onprogress = function (oEvent) {
-				if (oEvent && oEvent.lengthComputable && !isUndefined(oEvent.loaded) && !isUndefined(oEvent.total))
+				if (oEvent && oEvent.lengthComputable && !isUndefined(oEvent.loaded) && !isUndefined(oEvent.total) && !bSkipCompleteFunction)
 				{
 					fProgressFunction(sUid, oEvent.loaded, oEvent.total);
 				}
@@ -1234,6 +1234,7 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 		bBreakUpload = false,
 		aHidden = getValue(this.oOptions, 'hidden', {}),
 		oParameters = Object,
+		fProgressFunction = this.getEvent('onProgress'),
 		fRegularUploadFileCallback = _.bind(function (sUid, oFileInfo) {
 			this.oDriver.regTaskUid(sUid);
 			this.oQueue.defer(scopeBind(this.oDriver.uploadTask, this.oDriver), sUid, oFileInfo);
@@ -1259,9 +1260,10 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 				aHidden.Parameters = JSON.stringify(oParameters);
 				setValue(this.oOptions, 'hidden', aHidden);
 			}
-				
+		
 			this.oDriver.regTaskUid(sUid);
 			this.oDriver.uploadTask(sUid, oFileInfo, fOnUploadCallback, iCurrChunk < iChunkNumber);
+			fProgressFunction(sUid, iCurrChunk, iChunkNumber);
 		}, this);
 		bBreakUpload = App.broadcastEvent('Jua::FileUpload::before', {sUid: sUid, oFileInfo: oFileInfo, fOnChunkReadyCallback: fOnChunkReadyCallback, sModuleName: aHidden.Module, fRegularUploadFileCallback: fRegularUploadFileCallback});
 
