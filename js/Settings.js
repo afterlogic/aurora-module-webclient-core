@@ -89,9 +89,6 @@ var Settings = {
 			this.DbLogin = Types.pString(oAppDataSection.DBLogin);
 			this.AdminLogin = Types.pString(oAppDataSection.AdminLogin);
 			this.AdminHasPassword = !!oAppDataSection.AdminHasPassword;
-			this.EnableLogging = !!oAppDataSection.EnableLogging;
-			this.EnableEventLogging = !!oAppDataSection.EnableEventLogging;
-			this.LoggingLevel = Types.pString(oAppDataSection.LoggingLevel);
 		}
 	},
 	
