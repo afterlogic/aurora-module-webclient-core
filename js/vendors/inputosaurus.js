@@ -83,7 +83,10 @@ var inputosaurustext = {
 		deleteSelectedItem: function (widget) {
 			var self = this;
 			this.autoCompleteDeleteItem(this.selectedItem);
-			$.ui.autocomplete.prototype.__response.call(GetAutocomplete($(widget.elements.input)), _.filter(this.sourceResponseItems, function(oItem){ return oItem.value !== self.selectedItem.value; }));
+			this.sourceResponseItems = _.filter(this.sourceResponseItems, function (oItem) {
+				return oItem.id !== self.selectedItem.id;
+			});
+			$.ui.autocomplete.prototype.__response.call(GetAutocomplete($(widget.elements.input)), this.sourceResponseItems);
 		},
 		sourceResponseItems: null,
 		selectedItem: null,
