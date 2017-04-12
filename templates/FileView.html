@@ -12,7 +12,7 @@
 
 	<span class="item_content ui-droppable dragHandle">
 
-		<span class="cancel" data-bind="click: function () { $parent.onFileRemove( uploadUid() ); }, customTooltip: '%MODULENAME%/ACTION_CANCEL'"></span>
+		<span class="cancel" data-bind="click: function () { $parent.onFileRemove( uploadUid(), $data); }, customTooltip: '%MODULENAME%/ACTION_CANCEL'"></span>
 
 		<span class="image" data-bind="customTooltip: getTooltip(iconAction()), click: function () { executeAction(iconAction()); }, 
 				css: {'has_action': iconAction() !== ''}, clickBubble: iconAction() === ''">
@@ -33,7 +33,7 @@
 				<span data-bind="style: {'width': progressPercent() + '%'}"></span>
 			</span>
 			<span class="status_text" data-bind="text: statusText(), css: {'error': uploadError()}, customTooltip: statusTooltip, visible: statusText().length > 0"></span>
-			<div class="buttons" data-bind="visible: allowActions() && uploaded() && !uploadError() && statusText().length === 0">
+			<div class="buttons" data-bind="visible: allowActions() && uploaded() && !uploadError() && statusText().length === 0 && !downloading()">
 				<a class="button view" href="javascript: void(0)" data-bind="visible: firstAction().length > 0, 
 						click: function () { executeAction(firstAction()); }, text: getActionText(firstAction()), clickBubble: false"></a>
 				<a class="button download" href="javascript: void(0)" data-bind="visible: secondAction().length > 0, 

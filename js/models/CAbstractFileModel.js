@@ -68,6 +68,10 @@ function CAbstractFileModel()
 	this.uploadUid = ko.observable('');
 	this.uploaded = ko.observable(false);
 	this.uploadError = ko.observable(false);
+	this.downloading = ko.observable(false);
+	this.isViewMimeType = ko.computed(function () {
+		return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes));
+	}, this);
 	this.bHasHtmlEmbed = false;
 	
 	this.otherTemplates = ko.observableArray([]);
@@ -92,6 +96,18 @@ function CAbstractFileModel()
 			this.progressPercent(100);
 			this.visibleProgress(false);
 			this.uploaded(true);
+		}
+	}, this);
+	
+	this.downloading.subscribe(function () {
+		if (this.downloading())
+		{
+			this.visibleProgress(true);
+		}
+		else
+		{
+			this.visibleProgress(false);
+			this.progressPercent(0);
 		}
 	}, this);
 	
@@ -249,7 +265,7 @@ CAbstractFileModel.prototype.getCommonClasses = function ()
 {
 	var aClasses = [];
 
-	if (this.allowUpload() && !this.uploaded())
+	if ((this.allowUpload() && !this.uploaded()) || this.downloading())
 	{
 		aClasses.push('incomplete');
 	}
@@ -482,6 +498,21 @@ CAbstractFileModel.prototype.onUploadProgress = function (iUploadedSize, iTotalS
 };
 
 /**
+ * Fills progress download data.
+ *
+ * @param {number} iDownloadedSize
+ * @param {number} iTotalSize
+ */
+CAbstractFileModel.prototype.onDownloadProgress = function (iDownloadedSize, iTotalSize)
+{
+	if (iTotalSize > 0)
+	{
+		this.progressPercent(Math.ceil(iDownloadedSize / iTotalSize * 100));
+		this.visibleProgress(true);
+	}
+};
+
+/**
  * Fills data when upload has completed.
  *
  * @param {string} sFileUid
@@ -537,6 +568,22 @@ CAbstractFileModel.prototype.onImageLoad = function (oAttachmentModel, oEvent)
 		this.thumbnailLoaded(true);
 		FilesUtils.thumbQueue(this.thumbnailSessionUid());
 	}
+};
+
+/**
+ * Signalise that file download was stoped.
+ */
+CAbstractFileModel.prototype.stopDownloading = function ()
+{
+	this.downloading(false);
+};
+
+/**
+ * Signalise that file download was started.
+ */
+CAbstractFileModel.prototype.startDownloading = function ()
+{
+	this.downloading(true);
 };
 
 module.exports = CAbstractFileModel;
