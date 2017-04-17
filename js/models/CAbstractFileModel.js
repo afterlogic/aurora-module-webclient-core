@@ -12,7 +12,6 @@ var
 	UrlUtils = require('%PathToCoreWebclientModule%/js/utils/Url.js'),
 	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
 	
-	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js'),
 	
 	aViewMimeTypes = [
@@ -55,7 +54,10 @@ function CAbstractFileModel()
 	this.hash = ko.observable('');
 	this.iframedView = ko.observable(false);
 	
-	this.sThumbUrl = '';
+	this.thumbUrlInQueue = ko.observable('');
+	this.thumbUrlInQueueSubscribtion = this.thumbUrlInQueue.subscribe(function () {
+		this.getInThumbQueue();
+	}, this);
 
 	this.thumbnailSrc = ko.observable('');
 	this.thumbnailLoaded = ko.observable(false);
@@ -154,7 +156,27 @@ function CAbstractFileModel()
 		}
 		return '';
 	}, this);
+	
+	this.subFiles = ko.observableArray([]);
+	this.subFilesExpanded = ko.observable(false);
 }
+
+CAbstractFileModel.prototype.addAction = function (sAction, bMain, oActionData)
+{
+	if (bMain)
+	{
+		this.actions.unshift(sAction);
+	}
+	else
+	{
+		this.actions.push(sAction);
+	}
+	this.actions(_.compact(this.actions()));
+	if (oActionData)
+	{
+		this.oActionsData[sAction] = oActionData;
+	}
+};
 
 CAbstractFileModel.prototype.getMainAction = function ()
 {
@@ -173,7 +195,7 @@ CAbstractFileModel.prototype.hasAction = function (sAction)
  */
 CAbstractFileModel.prototype.getActionText = function (sAction)
 {
-	if (this.hasAction(sAction) && this.oActionsData[sAction] && typeof this.oActionsData[sAction].Text === 'string')
+	if (this.hasAction(sAction) && this.oActionsData[sAction] && (typeof this.oActionsData[sAction].Text === 'string' || _.isFunction(this.oActionsData[sAction].Text)))
 	{
 		return this.oActionsData[sAction].Text;
 	}
@@ -258,7 +280,7 @@ CAbstractFileModel.prototype.parse = function (oData)
 
 	this.hash(Types.pString(oData.Hash));
 
-	this.sThumbUrl = Types.pString(oData.ThumbnailUrl);
+	this.thumbUrlInQueue(Types.pString(oData.ThumbnailUrl));
 	_.each (oData.Actions, function (oData, sAction) {
 		if (!this.oActionsData[sAction])
 		{
@@ -284,12 +306,12 @@ CAbstractFileModel.prototype.isViewSupported = function ()
 	return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes)) || this.iframedView();
 };
 
-CAbstractFileModel.prototype.getInThumbQueue = function (sThumbSessionUid)
+CAbstractFileModel.prototype.getInThumbQueue = function ()
 {
-	this.thumbnailSessionUid(sThumbSessionUid);
-	if(this.sThumbUrl !== '' && (!this.linked || this.linked && !this.linked()))
+	if(this.thumbUrlInQueue() !== '' && (!this.linked || this.linked && !this.linked()))
 	{
-		FilesUtils.thumbQueue(this.thumbnailSessionUid(), this.sThumbUrl, this.thumbnailSrc);
+		this.thumbnailSessionUid(Date.now().toString());
+		FilesUtils.thumbQueue(this.thumbnailSessionUid(), this.thumbUrlInQueue(), this.thumbnailSrc);
 	}
 };
 
@@ -491,7 +513,7 @@ CAbstractFileModel.prototype.fillDataAfterUploadComplete = function (oResult, sF
  */
 CAbstractFileModel.prototype.onImageLoad = function (oAttachmentModel, oEvent)
 {
-	if(this.sThumbUrl !== '' && !this.thumbnailLoaded())
+	if(this.thumbUrlInQueue() !== '' && !this.thumbnailLoaded())
 	{
 		this.thumbnailLoaded(true);
 		FilesUtils.thumbQueue(this.thumbnailSessionUid());
