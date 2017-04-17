@@ -280,15 +280,7 @@ CAbstractFileModel.prototype.parse = function (oData)
 
 	this.hash(Types.pString(oData.Hash));
 
-	this.thumbUrlInQueue(Types.pString(oData.ThumbnailUrl));
-	_.each (oData.Actions, function (oData, sAction) {
-		if (!this.oActionsData[sAction])
-		{
-			this.oActionsData[sAction] = {};
-		}
-		this.oActionsData[sAction].Url = Types.pString(oData.url);
-		this.actions.push(sAction);
-	}, this);
+	this.parseActions(oData);
 
 	this.iframedView(!!oData.Iframed);
 
@@ -299,6 +291,24 @@ CAbstractFileModel.prototype.parse = function (oData)
 	{
 		this.additionalParse(oData);
 	}
+};
+
+CAbstractFileModel.prototype.parseActions = function (oData)
+{
+	this.commonParseActions(oData);
+};
+
+CAbstractFileModel.prototype.commonParseActions = function (oData)
+{
+	this.thumbUrlInQueue(Types.pString(oData.ThumbnailUrl));
+	_.each (oData.Actions, function (oData, sAction) {
+		if (!this.oActionsData[sAction])
+		{
+			this.oActionsData[sAction] = {};
+		}
+		this.oActionsData[sAction].Url = Types.pString(oData.url);
+		this.actions.push(sAction);
+	}, this);
 };
 
 CAbstractFileModel.prototype.isViewSupported = function ()
