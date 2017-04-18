@@ -8,7 +8,6 @@ var
 	
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
-	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	
 	iDefLimit = 20
 ;
@@ -531,7 +530,7 @@ AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCom
 					self.oXhrs[sUid] = null;
 				}
 
-				fCallback(null, sUid);
+				fCallback($.parseJSON(oXhr.responseText), sUid);
 			}
 			else
 			{
@@ -883,6 +882,8 @@ function CJua(oOptions)
 		'multipleSizeLimit': 50,
 		'hiddenElementsPosition': 'left'
 	}, oOptions);
+	
+	self.oOptions.aParsedHidden = [];
 
 	self.oQueue = queue(Types.pInt(getValue(self.oOptions, 'queueSize', 10)));
 	if (self.runEvent('onCompleteAll'))
@@ -1233,8 +1234,8 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 		fOnChunkReadyCallback = null,
 		bBreakUpload = false,
 		aHidden = getValue(this.oOptions, 'hidden', {}),
-		oParameters = Object,
 		fProgressFunction = this.getEvent('onProgress'),
+		fCompleteFunction = this.getEvent('onComplete'),
 		fRegularUploadFileCallback = _.bind(function (sUid, oFileInfo) {
 			this.oDriver.regTaskUid(sUid);
 			this.oQueue.defer(scopeBind(this.oDriver.uploadTask, this.oDriver), sUid, oFileInfo);
@@ -1243,9 +1244,13 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 	if (oFileInfo && (!fOnSelect || (false !== fOnSelect(sUid, oFileInfo))))
 	{
 		fOnChunkReadyCallback = _.bind(function (sUid, oFileInfo, fProcessNextChunkCallback, iCurrChunk, iChunkNumber, iv) {
-			var fOnUploadCallback = function ()
+			var fOnUploadCallback = function (oResult, sFileUploadUid)
 			{
-				if (fProcessNextChunkCallback)
+				if (oResult.Result.Error && oResult.Result.Error === Enums.Errors.FileAlreadyExists)
+				{
+					fCompleteFunction(sFileUploadUid, false, {ErrorCode: oResult.Result.Error});
+				}
+				else if (fProcessNextChunkCallback)
 				{
 					fProcessNextChunkCallback(sUid, fOnChunkReadyCallback);
 				}
@@ -1253,11 +1258,16 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 			
 			if (iCurrChunk === 1)
 			{
-				oParameters = JSON.parse(getStringOrCallFunction(aHidden.Parameters, [oFileInfo]));
-				oParameters.RangeType = 1;
-				oParameters.ExtendedProps = { 'InitializationVector': iv };
-
-				aHidden.Parameters = JSON.stringify(oParameters);
+				this.oOptions.aParsedHidden = JSON.parse(getStringOrCallFunction(aHidden.Parameters, [oFileInfo]));
+				this.oOptions.aParsedHidden.RangeType = 1;
+				this.oOptions.aParsedHidden.ExtendedProps = { 'InitializationVector': iv, 'FirstChunk': true };
+				aHidden.Parameters = JSON.stringify(this.oOptions.aParsedHidden);
+				setValue(this.oOptions, 'hidden', aHidden);
+			}
+			else if (this.oOptions.aParsedHidden.ExtendedProps.FirstChunk)
+			{
+				this.oOptions.aParsedHidden.ExtendedProps = { 'InitializationVector': iv };
+				aHidden.Parameters = JSON.stringify(this.oOptions.aParsedHidden);
 				setValue(this.oOptions, 'hidden', aHidden);
 			}
 		

@@ -85,6 +85,7 @@ Enums.Errors = {
 	'HelpdeskUserNotActivated': 808,
 	'IncorrectFileExtension': 811,
 	'CanNotUploadFileQuota': 812,
+	'FileAlreadyExists': 813,
 	'MailServerError': 901,
 	'DataTransferFailed': 1100,
 	'NotDisplayedError': 1155
