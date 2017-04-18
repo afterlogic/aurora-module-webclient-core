@@ -52,7 +52,6 @@ function CAbstractFileModel()
 	}, this);
 	
 	this.hash = ko.observable('');
-	this.iframedView = ko.observable(false);
 	
 	this.thumbUrlInQueue = ko.observable('');
 	this.thumbUrlInQueueSubscribtion = this.thumbUrlInQueue.subscribe(function () {
@@ -68,7 +67,7 @@ function CAbstractFileModel()
 	this.uploaded = ko.observable(false);
 	this.uploadError = ko.observable(false);
 	this.isViewMimeType = ko.computed(function () {
-		return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes)) || this.iframedView();
+		return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes));
 	}, this);
 	this.bHasHtmlEmbed = false;
 	
@@ -282,8 +281,6 @@ CAbstractFileModel.prototype.parse = function (oData)
 
 	this.parseActions(oData);
 
-	this.iframedView(!!oData.Iframed);
-
 	this.uploadUid(this.hash());
 	this.uploaded(true);
 
@@ -313,7 +310,7 @@ CAbstractFileModel.prototype.commonParseActions = function (oData)
 
 CAbstractFileModel.prototype.isViewSupported = function ()
 {
-	return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes)) || this.iframedView();
+	return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes));
 };
 
 CAbstractFileModel.prototype.getInThumbQueue = function ()
@@ -368,26 +365,16 @@ CAbstractFileModel.prototype.viewFile = function (oViewModel, oEvent)
  */
 CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 {
-	var
-		oWin = null,
-		sViewLink = this.getActionUrl('view')
-	;
+	var oWin = null;
 	
 	if (!Types.isNonEmptyString(sUrl))
 	{
-		sUrl = UrlUtils.getAppPath() + sViewLink;
+		sUrl = UrlUtils.getAppPath() + this.getActionUrl('view');
 	}
 
-	if (sViewLink.length > 0 && sViewLink !== '#')
+	if (sUrl.length > 0 && sUrl !== '#')
 	{
-		if (this.iframedView())
-		{
-			oWin = WindowOpener.openTab(sUrl);
-		}
-		else
-		{
-			oWin = WindowOpener.open(sUrl, sUrl, false);
-		}
+		oWin = WindowOpener.open(sUrl, sUrl, false);
 
 		if (oWin)
 		{
