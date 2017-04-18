@@ -18,9 +18,10 @@ var
 		'image/jpeg', 'image/png', 'image/gif',
 		'text/html', 'text/plain', 'text/css',
 		'text/rfc822-headers', 'message/delivery-status',
-		'application/x-httpd-php', 'application/javascript',
-		'application/pdf'
-	]
+		'application/x-httpd-php', 'application/javascript'
+	],
+	
+	aViewExtensions = []
 ;
 
 if ($('html').hasClass('pdf'))
@@ -66,9 +67,6 @@ function CAbstractFileModel()
 	this.uploadUid = ko.observable('');
 	this.uploaded = ko.observable(false);
 	this.uploadError = ko.observable(false);
-	this.isViewMimeType = ko.computed(function () {
-		return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes));
-	}, this);
 	this.bHasHtmlEmbed = false;
 	
 	this.otherTemplates = ko.observableArray([]);
@@ -308,9 +306,17 @@ CAbstractFileModel.prototype.commonParseActions = function (oData)
 	}, this);
 };
 
+CAbstractFileModel.addViewExtensions = function (aAddViewExtensions)
+{
+	if (_.isArray(aAddViewExtensions))
+	{
+		aViewExtensions = _.union(aViewExtensions, aAddViewExtensions);
+	}
+};
+
 CAbstractFileModel.prototype.isViewSupported = function ()
 {
-	return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes));
+	return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes) || -1 !== $.inArray(this.extension(), aViewExtensions));
 };
 
 CAbstractFileModel.prototype.getInThumbQueue = function ()
