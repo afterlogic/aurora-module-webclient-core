@@ -175,6 +175,11 @@ CAbstractFileModel.prototype.addAction = function (sAction, bMain, oActionData)
 	}
 };
 
+CAbstractFileModel.prototype.removeAction = function (sAction)
+{
+	this.actions(_.without(this.actions(), sAction));
+};
+
 CAbstractFileModel.prototype.getMainAction = function ()
 {
 	return this.actions()[0];
