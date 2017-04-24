@@ -104,10 +104,12 @@ var Settings = {
 	 * Updates admin login from settings tab in admin panel.
 	 * 
 	 * @param {string} sAdminLogin Admin login.
+	 * @param {boolean} bAdminHasPassword
 	 */
-	updateSecurity: function (sAdminLogin)
+	updateSecurity: function (sAdminLogin, bAdminHasPassword)
 	{
 		this.AdminLogin = sAdminLogin;
+		this.AdminHasPassword = bAdminHasPassword;
 	},
 	
 	/**
