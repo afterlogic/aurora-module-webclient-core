@@ -36,6 +36,7 @@ if ($('html').hasClass('pdf'))
 function CAbstractFileModel()
 {
 	this.id = ko.observable('');
+	this.index = ko.observable(0);
 	this.fileName = ko.observable('');
 	this.tempName = ko.observable('');
 	this.displayName = ko.observable('');
@@ -376,7 +377,10 @@ CAbstractFileModel.prototype.viewFile = function (oViewModel, oEvent)
  */
 CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 {
-	var oWin = null;
+	var 
+		oWin = null,
+		bBreakView = false
+	;
 	
 	if (!Types.isNonEmptyString(sUrl))
 	{
@@ -385,11 +389,16 @@ CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 
 	if (sUrl.length > 0 && sUrl !== '#')
 	{
-		oWin = WindowOpener.open(sUrl, sUrl, false);
-
-		if (oWin)
+		bBreakView = App.broadcastEvent('AbstractFileModel::FileView::before', {sUrl: sUrl, index: this.index()});
+		
+		if (!bBreakView)
 		{
-			oWin.focus();
+			oWin = WindowOpener.open(sUrl, sUrl, false);
+
+			if (oWin)
+			{
+				oWin.focus();
+			}
 		}
 	}
 };
