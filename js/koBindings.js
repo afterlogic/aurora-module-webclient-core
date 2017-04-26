@@ -412,13 +412,9 @@ ko.bindingHandlers.minHeightAdjust = {
 
 ko.bindingHandlers.listWithMoreButton = {
 	'init': function (oElement, fValueAccessor) {
-		var
-			$Element = $(oElement),
-			skipOneResize = false //for some flicker at slow resize (does not solve the problem completely TODO)
-		;
-
-		$Element.closest('div.panel.message_panel').resize(function () {
-			
+		var $Element = $(oElement);
+		
+		$Element.resize(function () {
 			var
 				$ItemsVisible = $Element.find('span.hotkey'),
 				$ItemsHidden = $Element.find('span.item'),
@@ -428,38 +424,29 @@ ko.bindingHandlers.listWithMoreButton = {
 				bHideMoreHints = true
 			;
 
-			if (!skipOneResize)
-			{
-				_.each($ItemsVisible, function (oItem, index) {
-					var
-						$Item = $(oItem),
-						iItemWidth = $Item.width()
-					;
+			_.each($ItemsVisible, function (oItem, index) {
+				var
+					$Item = $(oItem),
+					iItemWidth = $Item.width()
+				;
 
-					if (bHideMoreHints && iMoreWidth + iItemWidth < iElementWidth)
-					{
-						skipOneResize = false;
-						$Item.show();
-						$($ItemsHidden[index]).hide();
-						iMoreWidth += iItemWidth;
-					}
-					else
-					{
-						skipOneResize = true;
-						bHideMoreHints = false;
-						$Item.hide();
-						$($ItemsHidden[index]).show();
-					}
-				});
-
-				if (bHideMoreHints)
+				if (bHideMoreHints && iMoreWidth + iItemWidth < iElementWidth)
 				{
-					$MoreHints.hide();
+					$Item.show();
+					$($ItemsHidden[index]).hide();
+					iMoreWidth += iItemWidth;
 				}
-			}
-			else
+				else
+				{
+					bHideMoreHints = false;
+					$Item.hide();
+					$($ItemsHidden[index]).show();
+				}
+			});
+
+			if (bHideMoreHints)
 			{
-				skipOneResize = false;
+				$MoreHints.hide();
 			}
 		});
 	}
