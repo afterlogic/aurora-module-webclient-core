@@ -71,6 +71,7 @@ Enums.Errors = {
 	'UserAlreadyExists': 111,
 	'CanNotGetMessage': 202,
 	'ImapQuota': 205,
+	'LibraryNoFound': 208,
 	'NotSavedInSentItems': 304,
 	'NoRequestedMailbox': 305,
 	'CanNotChangePassword': 502,
