@@ -100,7 +100,7 @@
 		"string"
 	],
     "ShowQuotaBar": [
-		false,
+		true,
 		"bool"
 	],
     "SyncIosAfterLogin": [
