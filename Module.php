@@ -24,6 +24,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	{
 		$this->AddEntries(array(
 			'default' => 'EntryDefault',
+			'error' => 'EntryDefault',
 			'xdebug_session_start' => 'EntryDefault'
 		));
 		
