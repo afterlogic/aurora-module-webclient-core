@@ -56,8 +56,11 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 			case Enums.Errors.CanNotGetMessage:
 				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_MESSAGE_DELETED');
 				break;
-			case Enums.Errors.NoRequestedMailbox:
-				sResultError = sDefaultError + ' ' + TextUtils.i18n('%MODULENAME%/ERROR_INVALID_ADDRESS', {'ADDRESS': (oResponse.Mailbox || '')});
+			case Enums.Errors.UnableSendToRecipients:
+				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_UNABLE_SEND_TO_RECIPIENTS', {'ADDRESS': (oResponse.Mailbox || '')});
+				break;
+			case Enums.Errors.ExternalRecipientsBlocked:
+				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_UNABLE_SEND_TO_RECIPIENTS', {'ADDRESS': (oResponse.Mailbox || '')}) + ' ' + TextUtils.i18n('%MODULENAME%/ERROR_EXTERNAL_RECIPIENTS_BLOCKED');
 				break;
 			case Enums.Errors.CanNotChangePassword:
 				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_UNABLE_CHANGE_PASSWORD');
