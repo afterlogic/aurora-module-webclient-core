@@ -269,6 +269,15 @@ CApp.prototype.authProblem = function ()
 	this.logout(Enums.Errors.AuthError);
 };
 
+CApp.prototype.tokenProblem = function ()
+{
+	var
+		sReloadFunc = 'window.location.reload(); return false;',
+		sHtmlError = TextUtils.i18n('%MODULENAME%/ERROR_TOKEN_PROBLEM_HTML', {'RELOAD_FUNC': sReloadFunc})
+	;
+	Screens.showError(sHtmlError, true);
+};
+
 CApp.prototype.onLogout = function ()
 {
 	WindowOpener.closeAll();
@@ -344,7 +353,7 @@ CApp.prototype.checkCookies = function ()
 	
 	if (!bResult)
 	{
-		App.Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_COOKIES_DISABLED'), true);
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_COOKIES_DISABLED'), true);
 	}
 	else
 	{
