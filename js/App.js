@@ -200,7 +200,6 @@ CApp.prototype.init = function ()
 	{
 		InitNotMobileRequires();
 	}
-	InitModernizr();
 	
 	Screens.init();
 	Routing.init();
@@ -393,4 +392,6 @@ CApp.prototype.subscribeEvent = function (sEventName, fCallback)
 
 var App = new CApp();
 
+InitModernizr();
+	
 module.exports = App;
