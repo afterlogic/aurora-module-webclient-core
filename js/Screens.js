@@ -290,6 +290,14 @@ CScreens.prototype.showReport = function (sMessage, iDelay)
 	}
 };
 
+CScreens.prototype.hideReport = function ()
+{
+	if (this.informationScreen())
+	{
+		this.informationScreen().hideReport();
+	}
+};
+
 /**
  * @param {string} sMessage
  * @param {boolean=} bNotHide = false

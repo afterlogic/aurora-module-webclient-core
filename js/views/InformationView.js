@@ -32,7 +32,6 @@ function CInformationView()
 	this.iErrorTimeout = -1;
 	this.gray = ko.observable(false);
 	
-	this.selfHideReport = _.bind(this.selfHideReport, this);
 	this.selfHideError = _.bind(this.selfHideError, this);
 	
 	App.broadcastEvent('%ModuleName%::ConstructView::after', {'Name': this.ViewConstructorName, 'View': this});
@@ -92,16 +91,16 @@ CInformationView.prototype.showReport = function (sMessage, iDelay)
 		else
 		{
 			this.closeReportButtonVisible(false);
-			this.iReportTimeout = setTimeout(this.selfHideReport, iDelay);
+			this.iReportTimeout = setTimeout(this.hideReport, iDelay);
 		}
 	}
 	else
 	{
-		this.selfHideReport();
+		this.hideReport();
 	}
 };
 
-CInformationView.prototype.selfHideReport = function ()
+CInformationView.prototype.hideReport = function ()
 {
 	this.reportHidden(true);
 };
