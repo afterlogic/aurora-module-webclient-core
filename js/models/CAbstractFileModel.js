@@ -379,7 +379,7 @@ CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 {
 	var 
 		oWin = null,
-		bBreakView = false
+		oParams = null
 	;
 	
 	if (!Types.isNonEmptyString(sUrl))
@@ -389,9 +389,11 @@ CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 
 	if (sUrl.length > 0 && sUrl !== '#')
 	{
-		bBreakView = App.broadcastEvent('AbstractFileModel::FileView::before', {sUrl: sUrl, index: this.index()});
+		oParams = {sUrl: sUrl, index: this.index(), bBreakView: false};
 		
-		if (!bBreakView)
+		App.broadcastEvent('AbstractFileModel::FileView::before', oParams);
+		
+		if (!oParams.bBreakView)
 		{
 			oWin = WindowOpener.open(sUrl, sUrl, false);
 
