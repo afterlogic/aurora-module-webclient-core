@@ -87,6 +87,9 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 			case Enums.Errors.NotDisplayedError:
 				sResultError = '';
 				break;
+			case Enums.Errors.SystemNotConfigured:
+				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_SYSTEM_NOT_CONFIGURED');
+				break;
 		}
 	}
 	

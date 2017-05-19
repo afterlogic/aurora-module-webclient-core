@@ -89,6 +89,8 @@ var Settings = {
 			this.DbLogin = Types.pString(oAppDataSection.DBLogin);
 			this.AdminLogin = Types.pString(oAppDataSection.AdminLogin);
 			this.AdminHasPassword = !!oAppDataSection.AdminHasPassword;
+			this.SaltNotEmpty = !!oAppDataSection.SaltNotEmpty;
+			this.DataExistAndWritable = !!oAppDataSection.DataExistAndWritable;
 		}
 	},
 	

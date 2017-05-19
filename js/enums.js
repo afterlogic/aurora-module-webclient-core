@@ -69,6 +69,7 @@ Enums.Errors = {
 	'Captcha': 107,
 	'AccessDenied': 108,
 	'UserAlreadyExists': 111,
+	'SystemNotConfigured': 112,
 	'CanNotGetMessage': 202,
 	'ImapQuota': 205,
 	'LibraryNoFound': 208,
