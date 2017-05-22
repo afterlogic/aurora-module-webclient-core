@@ -73,7 +73,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	 */
 	public function GetSettings()
 	{
-		\Aurora\System\Api::checkUserRoleIsAtLeast(\EUserRole::Anonymous);
+		\Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::Anonymous);
 		
 		$oUser = \Aurora\System\Api::getAuthenticatedUser();
 		$oApiIntegrator = \Aurora\System\Api::GetSystemManager('integrator');
@@ -109,10 +109,10 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	 */
 	public function onAfterUpdateSettings($Args, &$Result)
 	{
-		\Aurora\System\Api::checkUserRoleIsAtLeast(\EUserRole::NormalUser);
+		\Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::NormalUser);
 		
 		$oUser = \Aurora\System\Api::getAuthenticatedUser();
-		if ($oUser && $oUser->Role === \EUserRole::NormalUser)
+		if ($oUser && $oUser->Role === \Aurora\System\Enums\UserRole::NormalUser)
 		{
 			if (isset($Args['AllowDesktopNotifications']))
 			{
