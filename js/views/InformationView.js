@@ -91,7 +91,7 @@ CInformationView.prototype.showReport = function (sMessage, iDelay)
 		else
 		{
 			this.closeReportButtonVisible(false);
-			this.iReportTimeout = setTimeout(this.hideReport, iDelay);
+			this.iReportTimeout = setTimeout(_.bind(this.hideReport, this), iDelay);
 		}
 	}
 	else
