@@ -1246,7 +1246,8 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 		fRegularUploadFileCallback = _.bind(function (sUid, oFileInfo) {
 			this.oDriver.regTaskUid(sUid);
 			this.oQueue.defer(scopeBind(this.oDriver.uploadTask, this.oDriver), sUid, oFileInfo);
-		}, this)
+		}, this),
+		fCancelFunction = this.getEvent('onCancel')
 	;
 	if (oFileInfo && (!fOnSelect || (false !== fOnSelect(sUid, oFileInfo))))
 	{
@@ -1312,7 +1313,13 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 			this.oDriver.uploadTask(sUid, oFileInfo, fOnUploadCallback, iCurrChunk < iChunkNumber, true);
 			fProgressFunction(sUid, iCurrChunk, iChunkNumber);
 		}, this);
-		bBreakUpload = App.broadcastEvent('Jua::FileUpload::before', {sUid: sUid, oFileInfo: oFileInfo, fOnChunkReadyCallback: fOnChunkReadyCallback, sModuleName: aHidden.Module, fRegularUploadFileCallback: fRegularUploadFileCallback});
+		bBreakUpload = App.broadcastEvent('Jua::FileUpload::before', {
+			sUid: sUid, oFileInfo: oFileInfo,
+			fOnChunkReadyCallback: fOnChunkReadyCallback,
+			sModuleName: aHidden.Module,
+			fRegularUploadFileCallback: fRegularUploadFileCallback,
+			fCancelFunction: fCancelFunction
+		});
 
 		if (bBreakUpload === false)
 		{
