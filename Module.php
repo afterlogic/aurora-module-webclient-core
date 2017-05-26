@@ -127,7 +127,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 				$oUser->{$this->GetName().'::Theme'} = $Args['Theme'];
 			}
 			
-			$oCoreDecorator = \Aurora\System\Api::GetModuleDecorator('Core');
+			$oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
 			$oCoreDecorator->UpdateUserObject($oUser);
 		}
 	}
