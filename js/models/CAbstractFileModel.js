@@ -114,6 +114,7 @@ function CAbstractFileModel()
 	this.allowDrag = ko.observable(false);
 	this.allowUpload = ko.observable(false);
 	this.allowSharing = ko.observable(false);
+	this.bIsSecure = ko.observable(false);
 	
 	this.sHeaderText = '';
 

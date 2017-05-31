@@ -28,6 +28,9 @@
 		<!-- ko if: (allowSharing()) -->
 		<span class="shared_icon" data-bind="css: {'with_thumb': thumbnailSrc() !== ''}, click: function (oItem) { $root.onShareIconClick(oItem); }"></span>
 		<!-- /ko -->
+		<!-- ko if: (bIsSecure()) -->
+		<span class="secure-image"></span>
+		<!-- /ko -->
 		<div class="footer">
 			<span class="progress" data-bind="visible: visibleProgress()">
 				<span data-bind="style: {'width': progressPercent() + '%'}"></span>
