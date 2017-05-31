@@ -76,7 +76,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		\Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::Anonymous);
 		
 		$oUser = \Aurora\System\Api::getAuthenticatedUser();
-		$oApiIntegrator = \Aurora\System\Api::GetSystemManager('integrator');
+		$oApiIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
 		
 		return array(
 			'AllowChangeSettings' => $this->getConfig('AllowChangeSettings', false),
@@ -139,7 +139,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	{
 		$sResult = '';
 		
-		$oApiIntegrator = \Aurora\System\Api::GetSystemManager('integrator');
+		$oApiIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
 		
 		if ($oApiIntegrator) 
 		{
