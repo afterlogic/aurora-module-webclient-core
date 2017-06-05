@@ -486,7 +486,9 @@ AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCom
 			aHidden = getValue(this.oOptions, 'hidden', {}),
 			fStartFunction = this.oJua.getEvent('onStart'),
 			fCompleteFunction = this.oJua.getEvent('onComplete'),
-			fProgressFunction = this.oJua.getEvent('onProgress')
+			fProgressFunction = this.oJua.getEvent('onProgress'),
+			oParsedHiddenParameters = null,
+			oHiddenParametersOld = aHidden.Parameters
 		;
 
 		oXhr.open('POST', sAction, true);
@@ -556,9 +558,16 @@ AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCom
 
 		oFormData.append('jua-post-type', 'ajax');
 		oFormData.append(getValue(this.oOptions, 'name', 'juaFile'), oFileInfo['File'], oFileInfo['FileName']);
+		//extending jua hidden parameters with file hidden parameters
+		oParsedHiddenParameters = JSON.parse(getStringOrCallFunction(aHidden.Parameters, [oFileInfo]));
+		oParsedHiddenParameters =  _.extend(oParsedHiddenParameters, oFileInfo.Hidden || {});
+		aHidden.Parameters = JSON.stringify(oParsedHiddenParameters);
+		
 		$.each(aHidden, function (sKey, mValue) {
 			oFormData.append(sKey, getStringOrCallFunction(mValue, [oFileInfo]));
 		});
+		//restore jua hidden parameters
+		aHidden.Parameters = oHiddenParametersOld;
 
 		oXhr.send(oFormData);
 
@@ -890,8 +899,6 @@ function CJua(oOptions)
 		'hiddenElementsPosition': 'left'
 	}, oOptions);
 	
-	self.oOptions.aParsedHidden = [];
-
 	self.oQueue = queue(Types.pInt(getValue(self.oOptions, 'queueSize', 10)));
 	if (self.runEvent('onCompleteAll'))
 	{
@@ -1252,29 +1259,8 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 	if (oFileInfo && (!fOnSelect || (false !== fOnSelect(sUid, oFileInfo))))
 	{
 		// fOnChunkReadyCallback runs when chunk ready for uploading
-		fOnChunkReadyCallback = _.bind(function (sUid, oFileInfo, fProcessNextChunkCallback, iCurrChunk, iChunkNumber, iv) {
+		fOnChunkReadyCallback = _.bind(function (sUid, oFileInfo, fProcessNextChunkCallback, iCurrChunk, iChunkNumber) {
 			var fOnUploadCallback = null;
-			
-			if (iCurrChunk === 1)
-			{ // for first chunk enable 'FirstChunk' attribute. This is necessary to solve the problem of simultaneous loading of files with the same name
-				this.oOptions.aParsedHidden = JSON.parse(getStringOrCallFunction(aHidden.Parameters, [oFileInfo]));
-				this.oOptions.aParsedHidden.RangeType = 1;
-				this.oOptions.aParsedHidden.ExtendedProps = { 'InitializationVector': iv, 'FirstChunk': true };
-				aHidden.Parameters = JSON.stringify(this.oOptions.aParsedHidden);
-				setValue(this.oOptions, 'hidden', aHidden);
-			}
-			else if (iCurrChunk === iChunkNumber)
-			{ // unmark file as loading
-				this.oOptions.aParsedHidden.ExtendedProps = { 'InitializationVector': iv };
-				aHidden.Parameters = JSON.stringify(this.oOptions.aParsedHidden);
-				setValue(this.oOptions, 'hidden', aHidden);
-			}
-			else if (this.oOptions.aParsedHidden.ExtendedProps.FirstChunk)
-			{ // mark file as loading until upload doesn't finish
-				this.oOptions.aParsedHidden.ExtendedProps = { 'InitializationVector': iv , 'Loading': true };
-				aHidden.Parameters = JSON.stringify(this.oOptions.aParsedHidden);
-				setValue(this.oOptions, 'hidden', aHidden);
-			}
 			// fOnUploadCallback runs when server have responded for upload
 			fOnUploadCallback = function (sResponse, sFileUploadUid)
 			{
@@ -1314,7 +1300,8 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 			fProgressFunction(sUid, iCurrChunk, iChunkNumber);
 		}, this);
 		bBreakUpload = App.broadcastEvent('Jua::FileUpload::before', {
-			sUid: sUid, oFileInfo: oFileInfo,
+			sUid: sUid,
+			oFileInfo: oFileInfo,
 			fOnChunkReadyCallback: fOnChunkReadyCallback,
 			sModuleName: aHidden.Module,
 			fRegularUploadFileCallback: fRegularUploadFileCallback,
