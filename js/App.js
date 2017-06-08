@@ -156,13 +156,16 @@ CApp.prototype.init = function ()
 {
 	ModulesManager.run('StandardLoginFormWebclient', 'beforeAppRunning', [this.iUserRole !== Enums.UserRole.Anonymous]);
 	
-	var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
-	Ajax.send('Core', 'GetUser', {'UserId': this.iUserId}, _.bind(function (oResponse, oRequest) {
-		if (oResponse.Result && oRequest.Parameters.UserId === this.iUserId)
-		{
-			this.userPublicId(oResponse.Result.PublicId);
-		}
-	}, this));
+	if (this.iUserId > 0)
+	{
+		var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
+		Ajax.send('Core', 'GetUser', {'UserId': this.iUserId}, _.bind(function (oResponse, oRequest) {
+			if (oResponse.Result && oRequest.Parameters.UserId === this.iUserId)
+			{
+				this.userPublicId(oResponse.Result.PublicId);
+			}
+		}, this));
+	}
 
 	if (Browser.iosDevice && this.iUserRole !== Enums.UserRole.Anonymous && UserSettings.SyncIosAfterLogin && UserSettings.AllowIosProfile)
 	{
