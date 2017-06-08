@@ -153,7 +153,9 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeou
 		failFunc = _.bind(this.fail, this, oRequest, fResponseHandler, oContext),
 		alwaysFunc = _.bind(this.always, this, oRequest),
 		oXhr = null,
-		oCloneRequest = _.clone(oRequest)
+		oCloneRequest = _.clone(oRequest),
+		sAuthToken = $.cookie('AuthToken') || '',
+		oHeader = (sAuthToken !== '') ? { 'Authorization': 'Bearer ' + sAuthToken } : {}
 	;
 	
 	oCloneRequest.Parameters = JSON.stringify(oCloneRequest.Parameters);
@@ -163,7 +165,7 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeou
 		type: 'POST',
 		async: true,
 		dataType: 'json',
-		headers: {'Authorization': 'Bearer ' + $.cookie('AuthToken')},
+		headers: oHeader,
 		data: oCloneRequest,
 		success: doneFunc,
 		error: failFunc,
