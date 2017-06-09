@@ -70,6 +70,10 @@ function InitModernizr()
 function CApp()
 {
 	this.iUserRole = window.auroraAppData.User ? Types.pInt(window.auroraAppData.User.Role) : Enums.UserRole.Anonymous;
+	if (this.iUserRole === Enums.UserRole.Anonymous)
+	{
+		$.removeCookie('AuthToken');
+	}
 	this.sUserName = window.auroraAppData.User ? Types.pString(window.auroraAppData.User.Name) : '';
 	this.sUserPublicId = window.auroraAppData.User ? Types.pString(window.auroraAppData.User.PublicId) : '';
 	this.iUserId = window.auroraAppData.User ? Types.pInt(window.auroraAppData.User.Id) : 0;
