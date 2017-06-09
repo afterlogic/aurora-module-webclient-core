@@ -34,6 +34,7 @@
 		<div class="footer">
 			<span class="progress" data-bind="visible: visibleProgress()">
 				<span data-bind="style: {'width': progressPercent() + '%'}"></span>
+				<span class="progress-percent" data-bind="text: progressPercent() + '%'"></span>
 			</span>
 			<span class="status_text" data-bind="text: statusText(), css: {'error': uploadError()}, customTooltip: statusTooltip, visible: statusText().length > 0"></span>
 			<div class="buttons" data-bind="visible: allowActions() && uploaded() && !uploadError() && statusText().length === 0 && !downloading()">
