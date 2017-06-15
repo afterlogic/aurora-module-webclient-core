@@ -92,7 +92,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'GoogleAnalyticsAccount' => $this->getConfig('GoogleAnalyticsAccount', ''),
 			'HeaderModulesOrder' => $this->getConfig('HeaderModulesOrder', []),
 			'IsDemo' => $this->getConfig('IsDemo', false),
-			'IsMobile' => -1,
+			'IsMobile' => $oApiIntegrator->isMobile(),
 			'LanguageListWithNames' => $this->getLanguageList($oApiIntegrator->getLanguageList()),
 			'LogoUrl' => $this->getConfig('LogoUrl'),
 			'ShowQuotaBar' => $this->getConfig('ShowQuotaBar', false),
