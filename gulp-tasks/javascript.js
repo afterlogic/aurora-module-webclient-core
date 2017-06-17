@@ -25,7 +25,7 @@ if (sOutputName === '')
 function GetModuleName(sFilePath) {
     return sFilePath.replace(/.*modules[\\/](.*?)[\\/]js.*/, "$1");
 }
-
+console.log(path.resolve('./'));
 var 
 	aModules = _.compact(_.map(aModulesNames, function (sModuleName) {
 		var
@@ -33,7 +33,7 @@ var
 			sTenantFilePath = './tenants/' + sTenantName + '/modules/' + sModuleName + '/js/manager.js',
 			sFoundedFilePath = ''
 		;
-		
+
 		if (fs.existsSync(sTenantFilePath))
 		{
 			sFoundedFilePath = sTenantFilePath;
@@ -109,8 +109,6 @@ var
 	}
 ;
 
-console.log(aModulesNames);
-
 
 function jsTask(sTaskName, sName, oWebPackConfig) {
 	var
@@ -167,13 +165,11 @@ function jsTask(sTaskName, sName, oWebPackConfig) {
             "\t});" + crlf +
             "});" + crlf
         ))
-		.pipe(gulp.dest(path.resolve(sPath)))
-		//.pipe(gulpWebpack(oWebPackConfig, webpack, compileCallback))
-		//.pipe(plumber.stop())
-        //.pipe(gulp.dest(sPath))
+		.pipe(gulp.dest(sPath))
+		.pipe(gulpWebpack(oWebPackConfig, webpack, compileCallback))
+		.pipe(plumber.stop())
+        .pipe(gulp.dest(sPath))
 	;
-	console.log(path.resolve(sPath));
-	console.log(sPath);
 }
 
 gulp.task('js:build', function () {
@@ -185,7 +181,12 @@ gulp.task('js:build', function () {
 			'pathinfo': true
 		},
 		'plugins': [
-			new webpack.optimize.DedupePlugin()
+			new webpack.optimize.DedupePlugin(),
+			new webpack.ProvidePlugin({
+				$: "jquery",
+				jQuery: "jquery",
+				"window.jQuery": "jquery"
+			})
 		]
 	}, oWebPackConfig));
 });
@@ -199,7 +200,14 @@ gulp.task('js:watch', function () {
 			'filename': sOutputName + '.js',
 			'chunkFilename': '[name].' + sOutputName + '.js',
 			'publicPath': sPath
-		}
+		},
+		'plugins': [
+			new webpack.ProvidePlugin({
+				$: "jquery",
+				jQuery: "jquery",
+				"window.jQuery": "jquery"
+			})
+		]
 	}, oWebPackConfig));
 });
 
@@ -212,6 +220,11 @@ gulp.task('js:min', function () {
 					drop_console: true,
 					unsafe: true
 				}
+			}),
+			new webpack.ProvidePlugin({
+				$: "jquery",
+				jQuery: "jquery",
+				"window.jQuery": "jquery"
 			})
 		],
 		'output':  {
