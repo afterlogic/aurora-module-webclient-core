@@ -79,7 +79,6 @@ function CApp()
 	this.iUserId = window.auroraAppData.User ? Types.pInt(window.auroraAppData.User.Id) : 0;
 	this.bPublic = false;
 	this.bNewTab = false;
-	this.bMobile = false;
 	this.userPublicId = ko.observable('');
 	
 	this.koUserAccountsCount = ko.observableArray([]);
@@ -146,14 +145,9 @@ CApp.prototype.isNewTab = function ()
 	return this.bNewTab;
 };
 
-CApp.prototype.setMobile = function ()
-{
-	this.bMobile = true;
-};
-
 CApp.prototype.isMobile = function ()
 {
-	return this.bMobile;
+	return UserSettings.IsMobile === 1;
 };
 
 CApp.prototype.init = function ()
@@ -203,7 +197,7 @@ CApp.prototype.init = function ()
 		}
 	}
 	
-	if (!this.bMobile)
+	if (!this.isMobile())
 	{
 		InitNotMobileRequires();
 	}
@@ -219,7 +213,7 @@ CApp.prototype.init = function ()
 
 	this.useGoogleAnalytics();
 
-	if (!this.bMobile)
+	if (!this.isMobile())
 	{
 		$(window).unload(function() {
 			WindowOpener.closeAll();
