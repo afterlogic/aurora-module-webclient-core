@@ -39,9 +39,19 @@ CStorage.prototype.hasData = function (sKey)
  */
 CStorage.prototype.getData = function (sKey)
 {
-	var sValue = this.bHtml5 ? localStorage.getItem(sKey) : $.cookie(sKey);
+	var
+		sValue = this.bHtml5 ? localStorage.getItem(sKey) : $.cookie(sKey),
+		oResult = ''
+	;
 	
-	return Types.isNonEmptyString(sValue) ? $.parseJSON(sValue) : '';
+	try
+	{
+		oResult = $.parseJSON(sValue);
+	}
+	catch (oException)
+	{
+	}
+	return oResult;
 };
 
 /**
