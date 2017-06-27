@@ -51,9 +51,22 @@ TextUtils.htmlStartsWithBlockquote = function (sHtml)
 TextUtils.i18n = function (sKey, oValueList, sDefaultValue, iPluralCount) {
 	var
 		sValueName = '',
-		sResult = Types.isNonEmptyString(I18n[sKey]) ? I18n[sKey] : (Types.isNonEmptyString(sDefaultValue) ? sDefaultValue : sKey)
+		sResult = Types.isNonEmptyString(sDefaultValue) ? sDefaultValue : sKey
 	;
-
+	
+	if (Types.isNonEmptyString(I18n[sKey]))
+	{
+		sResult = I18n[sKey];
+	}
+	else
+	{
+		sKey = sKey.replace(('MobileWebclient').toUpperCase(), ('Webclient').toUpperCase());
+		if (Types.isNonEmptyString(I18n[sKey]))
+		{
+			sResult = I18n[sKey];
+		}
+	}
+	
 	if (Types.isPositiveNumber(iPluralCount))
 	{
 		sResult = (function (iPluralCount, sResult) {
