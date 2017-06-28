@@ -54,16 +54,19 @@ TextUtils.i18n = function (sKey, oValueList, sDefaultValue, iPluralCount) {
 		sResult = Types.isNonEmptyString(sDefaultValue) ? sDefaultValue : sKey
 	;
 	
-	if (Types.isNonEmptyString(I18n[sKey]))
+	if (Types.isNonEmptyString(sKey))
 	{
-		sResult = I18n[sKey];
-	}
-	else
-	{
-		sKey = sKey.replace(('MobileWebclient').toUpperCase(), ('Webclient').toUpperCase());
 		if (Types.isNonEmptyString(I18n[sKey]))
 		{
 			sResult = I18n[sKey];
+		}
+		else
+		{
+			sKey = sKey.replace(('MobileWebclient').toUpperCase(), ('Webclient').toUpperCase());
+			if (Types.isNonEmptyString(I18n[sKey]))
+			{
+				sResult = I18n[sKey];
+			}
 		}
 	}
 	
