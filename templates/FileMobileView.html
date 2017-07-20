@@ -1,0 +1,58 @@
+<div class="card" data-bind="css: cssClasses">
+	<div class="card-header" data-bind="text: sHeaderText, visible: sHeaderText.length > 0"></div>
+	<div class="card-header" data-bind="customTooltip: fileName(), text: displayName"></div>
+	<div class="card-content">
+		<div class="card-content-inner">
+			<span class="color-gray size" data-bind="text: friendlySize()"></span>
+			
+			<span class="cancel" data-bind="click: function () { $parent.onFileRemove( uploadUid(), $data); }, customTooltip: '%MODULENAME%/ACTION_CANCEL'"></span>
+
+			
+			
+			<span class="image" data-bind="customTooltip: getTooltip(iconAction()), click: function () { executeAction(iconAction()); }, 
+					css: {'has_action': iconAction() !== ''}, clickBubble: iconAction() === ''">
+				<!-- ko if: thumbnailSrc() !== '' -->
+				<img data-bind="attr: {'src': thumbnailSrc()}" />
+				<span class="icon play" data-bind="click: viewFile, visible: bHasHtmlEmbed"></span>
+				<!-- /ko -->
+				<!-- ko if: thumbnailSrc() === '' -->
+				<span class="icon" data-bind="css: extension().toLowerCase() + (bHasHtmlEmbed ? ' ' + sLinkType.toLowerCase() : '')"></span>
+				<!-- /ko -->
+			</span>
+
+			<!-- ko if: (allowSharing()) -->
+			<span class="shared_icon" data-bind="css: {'with_thumb': thumbnailSrc() !== ''}, click: function (oItem) { $root.onShareIconClick(oItem); }"></span>
+			<!-- /ko -->
+			<!-- ko if: (bIsSecure()) -->
+			<span class="secure-image"></span>
+			<!-- /ko -->
+
+			
+			<div data-bind="visible: uploaded() && !uploadError() && statusText().length === 0 && !downloading()">
+				
+				<span class="progress" data-bind="visible: visibleProgress()">
+					<span data-bind="style: {'width': progressPercent() + '%'}"></span>
+					<span class="progress-percent" data-bind="text: progressPercent() + '%'"></span>
+				</span>
+
+				<span class="status_text" data-bind="text: statusText(), css: {'error': uploadError()}, customTooltip: statusTooltip, visible: statusText().length > 0"></span>
+			</div>
+		</div>
+	</div>
+	<div class="card-footer" data-bind="visible: allowActions()">
+		<a class="link" href="javascript: void(0)" data-bind="visible: firstAction().length > 0, 
+				click: function () { executeAction(firstAction()); }, text: getActionText(firstAction()), clickBubble: false"></a>
+		<a class="link" href="javascript: void(0)" data-bind="visible: secondAction().length > 0, 
+				click: function () { executeAction(secondAction()); }, text: getActionText(secondAction()), clickBubble: false"></a>
+	</div>
+</div>
+
+	<div class="children" data-bind="visible: subFilesExpanded">
+		<!-- ko template: {name: 'CoreWebclient_FileMobileView', foreach: subFiles} --><!-- /ko -->
+	</div>
+
+<!-- ko foreach: otherTemplates -->
+	<!-- ko if: $data.data() !== null -->
+		<!-- ko template: $data --><!-- /ko -->
+	<!-- /ko -->
+<!-- /ko -->

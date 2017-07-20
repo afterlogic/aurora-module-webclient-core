@@ -1,16 +1,31 @@
-<div id="apps-list" class="panel panel-left panel-reveal">
+<div id="apps-list" class="panel panel-right panel-cover">
 	<div class="content-block">
-		<!-- ko foreach: tabs -->
-			<!-- ko template: {name: ViewTemplate, data: $data} --><!-- /ko -->
-		<!-- /ko -->
-		
-		<span class="link tab-link full_version" data-bind="click: switchToFullVersion">
-			<!--<i class="icon email"></i>-->
-			<span class="tabbar-label" data-bind="i18n: {'key': '%MODULENAME%/ACTION_SHOW_FULL_VERSION'}"></span>
-		</span>
-		<span class="link tab-link logout" data-bind="click: logout">
-			<!--<i class="icon logout"></i>-->
-			<span class="tabbar-label" data-bind="i18n: {'key': '%MODULENAME%/ACTION_LOGOUT'}"></span>
-		</span>
+		<div class="list-block">
+			<ul>
+				<!-- ko foreach: tabs -->
+					<!-- ko template: {name: ViewTemplate, data: $data} --><!-- /ko -->
+				<!-- /ko -->
+				<li>
+					<div class="item-content" data-bind="click: switchToFullVersion">
+						<div class="item-media aurora-icons email full_version">
+							<i class="icon"></i>
+						</div>
+						<div class="item-inner">
+							<div class="item-title" data-bind="i18n: {'key': '%MODULENAME%/ACTION_SHOW_FULL_VERSION'}"></div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content" data-bind="click: logout">
+						<div class="item-media aurora-icons logout">
+							<i class="icon"></i>
+						</div>
+						<div class="item-inner">
+							<div class="item-title" data-bind="i18n: {'key': '%MODULENAME%/ACTION_LOGOUT'}"></div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
 	</div>
 </div>

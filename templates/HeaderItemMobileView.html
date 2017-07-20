@@ -1,5 +1,10 @@
-
-
-<a class="tab-link" data-bind="attr: {'class': 'item ' + sName.toLowerCase() + (isCurrent() ? ' current' : ''), href: hash}">
-	<span class="tabbar-label" data-bind="text: linkText">Label 1</span>
-</a>
+<li>
+	<a class="item-content" href="javascript:void(0)" data-bind="attr: {'class': 'item-content ' + sName.toLowerCase() + (isCurrent() ? ' current' : ''), href: hash}">
+		<div class="item-media aurora-icons">
+			<i class="icon"></i>
+		</div>
+		<div class="item-inner">
+			<div class="item-title" data-bind="text: linkText"></div>
+		</div>
+	</a>
+</li>
