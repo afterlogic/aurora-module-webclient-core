@@ -468,7 +468,7 @@ AjaxDriver.prototype.regTaskUid = function (sUid)
  * @param {?} oFileInfo
  * @param {Function} fCallback
  */
-AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCompleteFunction, bUseResponce)
+AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCompleteFunction, bUseResponce, iProgressOffset)
 {
 	if (false === this.oUids[sUid] || !oFileInfo || !oFileInfo['File'])
 	{
@@ -497,9 +497,16 @@ AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCom
 		if (fProgressFunction && oXhr.upload)
 		{
 			oXhr.upload.onprogress = function (oEvent) {
-				if (oEvent && oEvent.lengthComputable && !isUndefined(oEvent.loaded) && !isUndefined(oEvent.total) && !bSkipCompleteFunction)
+				if (oEvent && oEvent.lengthComputable && !isUndefined(oEvent.loaded) && !isUndefined(oEvent.total))
 				{
-					fProgressFunction(sUid, oEvent.loaded, oEvent.total);
+					if (typeof iProgressOffset === 'undefined')
+					{
+						fProgressFunction(sUid, oEvent.loaded, oEvent.total);
+					}
+					else
+					{
+						fProgressFunction(sUid, (iProgressOffset + oEvent.loaded) > oFileInfo.Size ? oFileInfo.Size : iProgressOffset + oEvent.loaded, oFileInfo.Size);
+					}
 				}
 			};
 		}
@@ -707,7 +714,7 @@ IframeDriver.prototype.regTaskUid = function (sUid)
  * @param {?} oFileInfo
  * @param {Function} fCallback
  */
-IframeDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCompleteFunction)
+IframeDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCompleteFunction, bUseResponce, iProgressOffset)
 {
 	if (false === this.oUids[sUid])
 	{
@@ -1259,7 +1266,7 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 	if (oFileInfo && (!fOnSelect || (false !== fOnSelect(sUid, oFileInfo))))
 	{
 		// fOnChunkReadyCallback runs when chunk ready for uploading
-		fOnChunkReadyCallback = _.bind(function (sUid, oFileInfo, fProcessNextChunkCallback, iCurrChunk, iChunkNumber) {
+		fOnChunkReadyCallback = _.bind(function (sUid, oFileInfo, fProcessNextChunkCallback, iCurrChunk, iChunkNumber, iProgressOffset) {
 			var fOnUploadCallback = null;
 			// fOnUploadCallback runs when server have responded for upload
 			fOnUploadCallback = function (sResponse, sFileUploadUid)
@@ -1296,8 +1303,7 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 			};
 			
 			this.oDriver.regTaskUid(sUid);
-			this.oDriver.uploadTask(sUid, oFileInfo, fOnUploadCallback, iCurrChunk < iChunkNumber, true);
-			fProgressFunction(sUid, iCurrChunk, iChunkNumber);
+			this.oDriver.uploadTask(sUid, oFileInfo, fOnUploadCallback, iCurrChunk < iChunkNumber, true, iProgressOffset);
 		}, this);
 		bBreakUpload = App.broadcastEvent('Jua::FileUpload::before', {
 			sUid: sUid,
