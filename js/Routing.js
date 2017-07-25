@@ -245,6 +245,7 @@ module.exports = {
 	currentHash: Routing.currentHash,
 	replaceHashDirectly: _.bind(Routing.replaceHashDirectly, Routing),
 	setPreviousHash: _.bind(Routing.setPreviousHash, Routing),
+	goDirectly: _.bind(Routing.goDirectly, Routing),
 	getCurrentHashArray: function () {
 		return Routing.currentHash().split('/');
 	},
