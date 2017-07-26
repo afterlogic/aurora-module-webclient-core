@@ -61,8 +61,7 @@ Utils.isTextFieldFocused = function ()
 		mTagType = mTag && mTag.type ? mTag.type.toLowerCase() : null,
 		mContentEditable = mTag ? mTag.contentEditable : null
 	;
-	
-	return ('INPUT' === mTagName && (mTagType === 'text' || mTagType === 'password' || mTagType === 'email')) ||
+	return ('INPUT' === mTagName && (mTagType === 'text' || mTagType === 'password' || mTagType === 'email' || mTagType === 'search')) ||
 		'TEXTAREA' === mTagName || 'IFRAME' === mTagName || mContentEditable === 'true';
 };
 

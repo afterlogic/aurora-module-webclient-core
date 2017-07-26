@@ -110,7 +110,10 @@ function CPageSwitcherView(iCount, iPerPage)
 		return aPages;
 	}, this);
 	
-	this.hotKeysBind();
+	if (!App.isMobile())
+	{
+		this.hotKeysBind();
+	}
 }
 
 CPageSwitcherView.prototype.ViewTemplate = 'CoreWebclient_PageSwitcherView';
