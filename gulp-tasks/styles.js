@@ -21,7 +21,7 @@ var
 ;
 
 aModulesNames.forEach(function (sModuleName) {
-	if (fs.existsSync('./modules/' + sModuleName + '/styles/styles.less'))
+	if (fs.existsSync('./modules/' + sModuleName + '/styles/styles.less') || fs.existsSync('./modules/' + sModuleName + '/styles/styles-mobile.less'))
 	{
 		aModulesWatchPaths.push('./modules/' + sModuleName + '/styles/**/*.less');
 	}
