@@ -39,7 +39,7 @@ function CInformationView()
 
 _.extendOwn(CInformationView.prototype, CAbstractScreenView.prototype);
 
-CInformationView.prototype.ViewTemplate = App.isMobile() ? 'CoreWebclient_InformationMobileView' : 'CoreWebclient_InformationView';
+CInformationView.prototype.ViewTemplate = '%ModuleName%_InformationView';
 CInformationView.prototype.ViewConstructorName = 'CInformationView';
 
 /**

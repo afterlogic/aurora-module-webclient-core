@@ -22,7 +22,7 @@ function CHeaderItemView(sLinkText)
 	this.inactiveTitle = ko.observable('');
 }
 
-CHeaderItemView.prototype.ViewTemplate = App.isMobile() ? 'CoreWebclient_HeaderItemMobileView' : 'CoreWebclient_HeaderItemView';
+CHeaderItemView.prototype.ViewTemplate = '%ModuleName%_HeaderItemView';
 
 CHeaderItemView.prototype.setName = function (sName)
 {

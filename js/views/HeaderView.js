@@ -54,7 +54,7 @@ function CHeaderView()
 
 _.extendOwn(CHeaderView.prototype, CAbstractScreenView.prototype);
 
-CHeaderView.prototype.ViewTemplate = App.isMobile() ? 'CoreWebclient_HeaderMobileView' : 'CoreWebclient_HeaderView';
+CHeaderView.prototype.ViewTemplate = '%ModuleName%_HeaderView';
 CHeaderView.prototype.ViewConstructorName = 'CHeaderView';
 
 CHeaderView.prototype.logout = function ()
