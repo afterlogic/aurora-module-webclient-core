@@ -42,3 +42,25 @@
 	height: 100%;
 }
 
+.notifications {
+	.notification-item {
+		opacity: 1;
+		position: relative;
+		.transition(opacity 200ms ease 0s);
+		.transition(~"visibility 0ms linear 0ms, position 0ms linear 0ms");
+		
+		&.hide {
+			.transition(~"visibility 0ms linear 500ms, position 0ms linear 500ms");
+			position: absolute;
+			opacity: 0;
+		}
+	}
+}
+
+.list_notification {
+	text-align: center;
+	color: #999;
+	display: block;
+	padding: 20px 10px;
+}
+
