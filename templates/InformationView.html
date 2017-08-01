@@ -1,52 +1,22 @@
-<div class="notifications list-block media-list">
-    <ul>
-		<!-- Single notification item -->
-		<li class="notification-item report_panel loading" data-bind="css: {'hide': loadingHidden()}">
-			<div class="item-content">
-				<!--<div class="item-media"></div>-->
-				<div class="item-inner">
-					<div class="item-title-row">
-						<!--<div class="item-title"></div>-->
-						<div class="item-after">
-							<a href="#" class="close-notification"></a>
-						</div>
-					</div>
-					<!--<div class="item-subtitle"></div>-->
-					<div class="item-text" data-bind="text: loadingMessage"></div>
-				</div>
-			</div>
-		</li>
-		
-		<li class="notification-item report" data-bind="css: {'hide': reportHidden()}">
-			<div class="item-content">
-				<!--<div class="item-media"></div>-->
-				<div class="item-inner">
-					<div class="item-title-row">
-						<!--<div class="item-title"></div>-->
-						<div class="item-after">
-							<a href="#" class="close-notification" data-bind="visible: closeReportButtonVisible, click: hideReport"></a>
-						</div>
-					</div>
-					<!--<div class="item-subtitle"></div>-->
-					<div class="item-text" data-bind="text: reportMessage"></div>
-				</div>
-			</div>
-		</li>
-		
-		<li class="notification-item report" data-bind="css: {'hide': errorHidden(), 'gray': gray()}">
-			<div class="item-content">
-				<!--<div class="item-media"></div>-->
-				<div class="item-inner">
-					<div class="item-title-row">
-						<!--<div class="item-title"></div>-->
-						<div class="item-after">
-							<a href="#" class="close-notification" data-bind="click: selfHideError"></a>
-						</div>
-					</div>
-					<!--<div class="item-subtitle"></div>-->
-					<div class="item-text" data-bind="text: errorMessage"></div>
-				</div>
-			</div>
-		</li>
-	</ul>
+<div>
+	<div class="report_panel loading" data-bind="css: {'hide': loadingHidden()}">
+		<span class="content">
+			<span class="icon"></span>
+			<span class="text" data-bind="text: loadingMessage"></span>
+		</span>
+	</div>
+	<div class="report_panel report" data-bind="css: {'hide': reportHidden()}" id="selenium_report">
+		<span class="content" >
+			<span class="icon"></span>
+			<span class="text" data-bind="html: reportMessage"></span>
+			<span class="close" data-bind="visible: closeReportButtonVisible, click: hideReport"></span>
+		</span>
+	</div>
+	<div class="report_panel error" data-bind="css: {'hide': errorHidden(), 'gray': gray()}" id="selenium_error_info">
+		<span class="content">
+			<span class="icon"></span>
+			<span class="text" data-bind="html: errorMessage"></span>
+			<span class="close" data-bind="click: selfHideError"></span>
+		</span>
+	</div>
 </div>
