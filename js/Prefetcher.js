@@ -65,8 +65,8 @@ Prefetcher.doServerInitializations = function ()
 				else if (oResponse.Result.Timezone && Storage.getData('showNewTimezone') !== timezone)
 				{
 					Screens.showReport(TextUtils.i18n('%MODULENAME%/CONFIRM_TIMEZONE_CHANGES', {
-						OLDTIME: newTime.clone().tz(oResponse.Result.Timezone).format('HH:mm'),
-						NEWTIME: newTime.format('HH:mm')
+						OLDTIME: newTime.clone().tz(oResponse.Result.Timezone).format('HH:mm') + ' (' + oResponse.Result.Timezone + ')',
+						NEWTIME: newTime.format('HH:mm') + ' (' + timezone + ')'
 					}), 0);
 					$('.report_panel.report a').on('click', function () {
 						Storage.removeData('showNewTimezone');
