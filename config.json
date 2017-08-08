@@ -1,6 +1,6 @@
 {
     "AllowChangeSettings": [
-		false,
+		true,
 		"bool"
 	],
     "AllowClientDebug": [
