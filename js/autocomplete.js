@@ -8,12 +8,7 @@ var jQuery = require('jquery');
 
 	// styling results
 	$.ui.autocomplete.prototype._renderItem = function (ul, item) {
-
-		var aEmail = item.label.match(/[a-zA-Z0-9.\-_]+@[a-zA-Z0-9.\-]+/g);
-		if (aEmail) {
-			item.label = item.label.replace('<' + aEmail[0] + '>', "<span style='opacity: 0.5'>" + '&lt;' + aEmail[0] + '&gt' + "</span>"); //highlight <email>
-		}
-
+		item.label = item.label.replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
 		return $('<li>')
 			.append('<a>' + item.label + (item.team ? '' : '<span class="del"></span>') + '</a>')
 			.appendTo(ul);
