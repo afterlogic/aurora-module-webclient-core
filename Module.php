@@ -135,6 +135,15 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			$oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
 			$oCoreDecorator->UpdateUserObject($oUser);
 		}
+		
+		if ($oUser && $oUser->Role === \Aurora\System\Enums\UserRole::SuperAdmin)
+		{
+			if (isset($Args['Theme']))
+			{
+				$this->setConfig('Theme', $Args['Theme']);
+			}
+			$this->saveModuleConfig();
+		}
 	}
 	
 	/**

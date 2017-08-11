@@ -24,6 +24,7 @@ var Settings = {
 	AllowMobile: false,
 	AllowPrefetch: false,
 	AttachmentSizeLimit: 0,
+	AutodetectLanguage: false,
 	AutoRefreshIntervalMinutes: 1,
 	CustomLogoutUrl: '',
 	DateFormat: 'DD/MM/YYYY',
@@ -58,6 +59,7 @@ var Settings = {
 			this.AllowMobile = !!oAppDataSection.AllowMobile;
 			this.AllowPrefetch = !!oAppDataSection.AllowPrefetch;
 			this.AttachmentSizeLimit = Types.pInt(oAppDataSection.AttachmentSizeLimit);
+			this.AutodetectLanguage = !!oAppDataSection.AutodetectLanguage;
 			this.AutoRefreshIntervalMinutes = Types.pInt(oAppDataSection.AutoRefreshIntervalMinutes);
 			this.CustomLogoutUrl = Types.pString(oAppDataSection.CustomLogoutUrl);
 			this.DateFormat = Types.pString(oAppDataSection.DateFormat);
@@ -89,6 +91,7 @@ var Settings = {
 			this.DbLogin = Types.pString(oAppDataSection.DBLogin);
 			this.AdminLogin = Types.pString(oAppDataSection.AdminLogin);
 			this.AdminHasPassword = !!oAppDataSection.AdminHasPassword;
+			this.AdminLanguage = Types.pString(oAppDataSection.AdminLanguage);
 			this.SaltNotEmpty = !!oAppDataSection.SaltNotEmpty;
 			this.DataExistAndWritable = !!oAppDataSection.DataExistAndWritable;
 		}

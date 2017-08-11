@@ -7,6 +7,7 @@ var
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
+	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	
@@ -20,12 +21,19 @@ function CCommonSettingsPaneView()
 {
 	CAbstractSettingsFormView.call(this);
 	
+	this.bAdmin = App.getUserRole() === Enums.UserRole.SuperAdmin;
+	
 	this.aThemes = UserSettings.ThemeList;
-	this.aLanguages = UserSettings.LanguageList;
+	this.aLanguages = _.clone(UserSettings.LanguageList);
+	
+	if (this.bAdmin)
+	{
+		this.aLanguages.unshift({value: 'autodetect', name: TextUtils.i18n('%MODULENAME%/LABEL_AUTODETECT')});
+	}
 	
 	/* Editable fields */
 	this.selectedTheme = ko.observable(UserSettings.Theme);
-	this.selectedLanguage = ko.observable(UserSettings.Language);
+	this.selectedLanguage = ko.observable(this.bAdmin && UserSettings.AutodetectLanguage ? 'autodetect' : UserSettings.Language);
 	this.autoRefreshInterval = ko.observable(UserSettings.AutoRefreshIntervalMinutes);
 	this.aRefreshIntervals = [
 		{name: TextUtils.i18n('%MODULENAME%/LABEL_REFRESH_OFF'), value: 0},
@@ -83,7 +91,7 @@ CCommonSettingsPaneView.prototype.getCurrentValues = function ()
 CCommonSettingsPaneView.prototype.revertGlobalValues = function ()
 {
 	this.selectedTheme(UserSettings.Theme);
-	this.selectedLanguage(UserSettings.Language);
+	this.selectedLanguage(this.bAdmin && UserSettings.AutodetectLanguage ? 'autodetect' : UserSettings.Language);
 	this.autoRefreshInterval(UserSettings.AutoRefreshIntervalMinutes);
 	this.timeFormat(UserSettings.timeFormat());
 	this.desktopNotifications(UserSettings.AllowDesktopNotifications);
@@ -96,13 +104,31 @@ CCommonSettingsPaneView.prototype.revertGlobalValues = function ()
  */
 CCommonSettingsPaneView.prototype.getParametersForSave = function ()
 {
-	return {
-		'AutoRefreshIntervalMinutes': Types.pInt(this.autoRefreshInterval()),
+	var oParameters = {
 		'Theme': this.selectedTheme(),
-		'Language': this.selectedLanguage(),
-		'TimeFormat': this.timeFormat(),
-		'AllowDesktopNotifications': this.desktopNotifications()
+		'TimeFormat': this.timeFormat()
 	};
+	
+	if (this.bAdmin)
+	{
+		if (this.selectedLanguage() === 'autodetect')
+		{
+			oParameters['AutodetectLanguage'] = true;
+		}
+		else
+		{
+			oParameters['AutodetectLanguage'] = false;
+			oParameters['Language'] = this.selectedLanguage();
+		}
+	}
+	else
+	{
+		oParameters['AutoRefreshIntervalMinutes'] = Types.pInt(this.autoRefreshInterval());
+		oParameters['AllowDesktopNotifications'] = this.desktopNotifications();
+		oParameters['Language'] = this.selectedLanguage();
+	}
+	
+	return oParameters;
 };
 
 /**
@@ -112,7 +138,7 @@ CCommonSettingsPaneView.prototype.getParametersForSave = function ()
  */
 CCommonSettingsPaneView.prototype.applySavedValues = function (oParameters)
 {
-	if (oParameters.Theme !== UserSettings.Theme || oParameters.Language !== UserSettings.Language)
+	if (oParameters.Theme !== UserSettings.Theme || oParameters.Language !== UserSettings.Language && !this.bAdmin)
 	{
 		window.location.reload();
 	}
@@ -122,6 +148,11 @@ CCommonSettingsPaneView.prototype.applySavedValues = function (oParameters)
 			oParameters.Theme, oParameters.Language,
 			oParameters.TimeFormat, oParameters.AllowDesktopNotifications);
 	}
+};
+
+CCommonSettingsPaneView.prototype.setAccessLevel = function (sEntityType, iEntityId)
+{
+	this.visible(sEntityType === '');
 };
 
 module.exports = new CCommonSettingsPaneView();

@@ -154,6 +154,23 @@ CApp.prototype.init = function ()
 {
 	ModulesManager.run('StandardLoginFormWebclient', 'beforeAppRunning', [this.iUserRole !== Enums.UserRole.Anonymous]);
 	
+	if (App.getUserRole() === Enums.UserRole.SuperAdmin)
+	{
+		ModulesManager.run('AdminPanelWebclient', 'registerAdminPanelTab', [
+			function(resolve) {
+				require.ensure(
+					['%PathToCoreWebclientModule%/js/views/CommonSettingsPaneView.js'],
+					function() {
+						resolve(require('%PathToCoreWebclientModule%/js/views/CommonSettingsPaneView.js'));
+					},
+					"admin-bundle"
+				);
+			},
+			'system',
+			TextUtils.i18n('%MODULENAME%/LABEL_COMMON_SETTINGS_TABNAME')
+		]);
+	}
+		
 	if (this.iUserId > 0)
 	{
 		var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');

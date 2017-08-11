@@ -12,7 +12,7 @@
 				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_LANGUAGE'}"></span>
 				<select class="value input" data-bind="value: selectedLanguage, options: aLanguages, optionsText: 'name', optionsValue: 'value'"></select>
 			</div>
-			<div class="row">
+			<div class="row" data-bind="visible: !bAdmin">
 				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_REFRESH_EVERY'}"></span>
 				<select class="value input" data-bind="value: autoRefreshInterval, options: aRefreshIntervals, optionsText: 'name', optionsValue: 'value'"></select>
 			</div>
@@ -33,7 +33,7 @@
 					<label for="timeformat_24" data-bind="i18n: {'key': '%MODULENAME%/LABEL_TIME_FORMAT_24'}"></label>
 				</span>
 			</div>
-			<div class="row" data-bind="visible: window.Notification">
+			<div class="row" data-bind="visible: window.Notification && !bAdmin">
 				<span class="value offset" data-bind="css: {'disabled': !isDesktopNotificationsEnable()}">
 					<label class="custom_checkbox" data-bind="css: {'checked': desktopNotifications}">
 						<span class="icon"></span>
@@ -42,17 +42,9 @@
 					<label for="desktopNotifications" data-bind="i18n: {'key': '%MODULENAME%/LABEL_ENABLE_NOTIFICATION'}"></label>
 				</span>
 			</div>
-			<div class="hint row" data-bind="visible: window.Notification && !isDesktopNotificationsEnable()">
+			<div class="hint row" data-bind="visible: window.Notification && !isDesktopNotificationsEnable() && !bAdmin">
 				<span class="value offset" data-bind="i18n: {'key': '%MODULENAME%/INFO_NOTIFICATION_DISABLED'}"></span>
 			</div>
-			<!--<div class="row" data-bind="visible: defaultAccountCanBeRemoved">
-				<span class="value">
-					<a class="link" href="javascript:void(0);" data-bind="i18n: {'key': '%MODULENAME%/ACTION_REMOVE_ACCOUNT'}, click: removeDefaultAccount"></a>
-				</span>
-			</div>
-			<div class="hint row" data-bind="visible: defaultAccountCanBeRemoved">
-				<span class="value" data-bind="text: defaultAccountRemoveHint"></span>
-			</div>-->
 		</div>
 		<div class="buttons">
 			<span class="button" data-bind="click: save">
