@@ -120,9 +120,9 @@ module.exports = {
 		return oModules[sModuleName] && (!oModules[sModuleName].enableModule || oModules[sModuleName].enableModule());
 	},
 	
-	isServerModuleEnabled: function (sServerModuleName)
+	isModuleAvailable: function (sModuleName)
 	{
-		return window.aAvaliableBackendModules.indexOf(sServerModuleName) !== -1;
+		return window.aAvaliableBackendModules.indexOf(sModuleName) !== -1 || window.aAvaliableModules.indexOf(sModuleName) !== -1;
 	},
 	
 	/**
