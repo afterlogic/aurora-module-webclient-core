@@ -120,6 +120,11 @@ module.exports = {
 		return oModules[sModuleName] && (!oModules[sModuleName].enableModule || oModules[sModuleName].enableModule());
 	},
 	
+	isServerModuleEnabled: function (sServerModuleName)
+	{
+		return window.aAvaliableBackendModules.indexOf(sServerModuleName) !== -1;
+	},
+	
 	/**
 	 * Calls a specified function of a specified module if the module and the function exist and are available.
 	 * @param {string} sModuleName Name of the module.
