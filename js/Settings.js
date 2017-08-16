@@ -85,7 +85,6 @@ var Settings = {
 			this.HeaderModulesOrder = _.isArray(oAppDataSection.HeaderModulesOrder) ? oAppDataSection.HeaderModulesOrder : [],
 			
 			//only for admin
-			this.LicenseKey = Types.pString(oAppDataSection.LicenseKey);
 			this.DbHost = Types.pString(oAppDataSection.DBHost);
 			this.DbName = Types.pString(oAppDataSection.DBName);
 			this.DbLogin = Types.pString(oAppDataSection.DBLogin);
