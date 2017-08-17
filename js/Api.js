@@ -44,6 +44,9 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 			case Enums.Errors.LicenseProblem:
 				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_INVALID_LICENSE');
 				break;
+			case Enums.Errors.LicenseLimit:
+				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_LICENSE_USERS_LIMIT');
+				break;
 			case Enums.Errors.DemoLimitations:
 				sResultError = TextUtils.i18n('%MODULENAME%/INFO_DEMO_THIS_FEATURE_IS_DISABLED');
 				break;

@@ -70,6 +70,7 @@ Enums.Errors = {
 	'AccessDenied': 108,
 	'UserAlreadyExists': 111,
 	'SystemNotConfigured': 112,
+	'LicenseLimit': 115,
 	'CanNotGetMessage': 202,
 	'ImapQuota': 205,
 	'LibraryNoFound': 208,
