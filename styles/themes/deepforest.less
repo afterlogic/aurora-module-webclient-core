@@ -54,6 +54,55 @@
 .theme-panel() {
 	box-shadow: -1px 0 5px rgba(0, 0, 0, 0.2);
 	
+	&.center_panel {
+		background: rgba(0, 0, 0, 0.5);
+		padding: 5px 5px 0px;
+		border-radius: 5px 0px 0px 5px;
+		
+		.panel_content {
+			background: #fff;
+			border-radius: 5px;
+		}
+		
+		&:last-child {
+			padding-right: 0px;
+			
+			.panel_content {
+				border-radius: 5px 0px 0px 5px;
+			}
+		}
+	}
+	
+	&.item_viewer {
+		background: rgba(0, 0, 0, 0.5) !important;
+		border-radius: 0px !important;
+		border-bottom-left-radius: 5px !important;
+		
+		.panel_content {
+			margin-top: 5px !important;
+			background: #fff;
+			border-radius: 0 !important;
+			border-top-left-radius: 5px !important;
+			
+			.middle_bar {
+				border-radius: 0 !important;
+				border-top-left-radius: 5px !important;
+			}
+		}
+		
+		&:first-child {
+			border-bottom-left-radius: 0px !important;
+			
+			.panel_content {
+				border-top-left-radius: 0px !important;
+
+				.middle_bar {
+					border-top-left-radius: 0px !important;
+				}
+			}
+		}
+	}
+
 	.rtl & {
 		box-shadow: 1px 0 5px rgba(0, 0, 0, 0.2);
 	}
