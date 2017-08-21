@@ -17,6 +17,8 @@ var
 	
 	sTenanthash = argv.getParameter('--tenant'),
 	
+	sTenantPathPrefix = sTenanthash ? 'tenants/' + sTenanthash + '/' : '',
+	
 	sPathToCoreWebclient = 'modules/CoreWebclient'
 ;
 
@@ -116,8 +118,7 @@ function BuildThemeCss(sTheme, bMobile)
 			}
 		}))
 		.pipe(less())
-//		.pipe(gulp.dest('static/styles/themes/' + sTheme))
-		.pipe(sTenanthash ? gulp.dest('tenants/' + sTenanthash + '/static/styles/themes/' + sTheme) : gulp.dest('static/styles/themes/' + sTheme))
+		.pipe(gulp.dest(sTenantPathPrefix + 'static/styles/themes/' + sTheme))
 		.on('error', gutil.log);
 }
 
@@ -182,12 +183,14 @@ gulp.task('styles', function () {
 	{
 		BuildLibsCss();
 	}
+	
 	MoveFiles(sPathToCoreWebclient + '/styles/vendors/jquery/images', 'static/styles/libs/images');
-	MoveFiles(sPathToCoreWebclient + '/styles/fonts', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/fonts' : 'static/styles/fonts');
-	MoveFiles(sPathToCoreWebclient + '/styles/images', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/images' : 'static/styles/images');
+	MoveFiles(sPathToCoreWebclient + '/styles/fonts', sTenantPathPrefix + 'static/styles/fonts');
+	MoveFiles(sPathToCoreWebclient + '/styles/images', sTenantPathPrefix + 'static/styles/images');
 	MoveSharingCss();
+	
 	_.each(aThemes, function (sTheme) {
-		MoveFiles(sPathToCoreWebclient + '/styles/themes/' + sTheme.toLowerCase() + '-images', sTenanthash ? 'tenants/' + sTenanthash + '/static/styles/themes/' + sTheme + '/images' : 'static/styles/themes/' + sTheme + '/images');
+		MoveFiles(sPathToCoreWebclient + '/styles/themes/' + sTheme.toLowerCase() + '-images', sTenantPathPrefix + 'static/styles/themes/' + sTheme + '/images');
 		BuildThemeCss(sTheme, false);
 		BuildThemeCss(sTheme, true);
 	});
