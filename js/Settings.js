@@ -83,7 +83,8 @@ var Settings = {
 			this.timeFormat(Types.pString(oAppDataSection.TimeFormat));
 			this.UserId = Types.pInt(oAppDataSection.UserId);
 			this.HeaderModulesOrder = _.isArray(oAppDataSection.HeaderModulesOrder) ? oAppDataSection.HeaderModulesOrder : [],
-			
+			this.IsSystemConfigured = !!oAppDataSection.IsSystemConfigured;
+
 			//only for admin
 			this.DbHost = Types.pString(oAppDataSection.DBHost);
 			this.DbName = Types.pString(oAppDataSection.DBName);
@@ -92,7 +93,6 @@ var Settings = {
 			this.AdminHasPassword = !!oAppDataSection.AdminHasPassword;
 			this.AdminLanguage = Types.pString(oAppDataSection.AdminLanguage);
 			this.SaltNotEmpty = !!oAppDataSection.SaltNotEmpty;
-			this.DataExistAndWritable = !!oAppDataSection.DataExistAndWritable;
 		}
 	},
 	

@@ -245,6 +245,11 @@ CApp.prototype.init = function ()
 	this.checkCookies();
 	
 	this.showLastErrorOnLogin();
+	
+	if (UserSettings.IsSystemConfigured === false)
+	{
+		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_SYSTEM_NOT_CONFIGURED'), true);
+	}
 };
 
 CApp.prototype.showLastErrorOnLogin = function ()
