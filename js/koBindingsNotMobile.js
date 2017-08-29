@@ -8,7 +8,7 @@ var
 	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
 	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
 	Storage = require('%PathToCoreWebclientModule%/js/Storage.js'),
-	splitter = require('%PathToCoreWebclientModule%/js/vendors/split.js')
+	Splitter = require('%PathToCoreWebclientModule%/js/vendors/split.js')
 ;
 
 require('%PathToCoreWebclientModule%/js/vendors/customscroll.js');
@@ -19,31 +19,34 @@ ko.bindingHandlers.splitterFlex = {
 	'init': function (oElement, fValueAccessor) {
 		_.defer(function() {
 			//https://nathancahill.github.io/Split.js/
+			
 			var 
 				oCommand = _.defaults(fValueAccessor(), {
 					'minSize' : 200,
 					'name': ''
 				}),
-				aInitSizes = Storage.getData(oCommand['name'] + 'ResizerWidth') || oCommand['sizes']
+				aInitSizes = Storage.getData(oCommand['name'] + 'ResizerWidth') || oCommand['sizes'],
+				gutterCallback = function (i, gutterDirection) {
+					var elGutter = document.createElement('div');
+					elGutter.appendChild(document.createElement('div'));
+					elGutter.className = "gutter gutter-" + gutterDirection;
+					return elGutter;
+				},
+				oSplitter = null,
+				aElements = [].slice.call(oElement.children)
 			;
-
-			splitter($(oElement).children(), {
+			
+			console.log('Splitter', aElements);
+			
+			oSplitter = Splitter(aElements, {
 				sizes: aInitSizes,
 				minSize: oCommand['minSize'],
 				gutterSize: 0,
-				onDragEnd: function (split) {
-					var 
-						parentWidth = $(split.parent).width(),
-						aSizes = []
-					;
-
-					_.each($(oElement).children('.panel'), function (item) {
-						aSizes.push($(item).width() / parentWidth * 100);
-					});
-
+				gutter: gutterCallback,
+				onDragEnd: function () {
 					if (oCommand['name'])
 					{
-						Storage.setData(oCommand['name'] + 'ResizerWidth', aSizes);
+						Storage.setData(oCommand['name'] + 'ResizerWidth', oSplitter.getSizes());
 					}
 				}
 			});
