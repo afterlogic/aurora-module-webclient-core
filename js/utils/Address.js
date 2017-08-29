@@ -166,7 +166,7 @@ AddressUtils.getArrayRecipients = function (sRecipients, bIncludeLastIncorrectEm
 };
 
 /**
- * Obtains position number of first separator-symbol in string. Avaliable separator symbols are specified in array.
+ * Obtains position number of first separator-symbol in string. Available separator symbols are specified in array.
  * 
  * @param {string} sValue String for search separator-symbol in.
  * @param {Array} aSeparators List of separators.

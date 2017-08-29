@@ -95,7 +95,7 @@ CApp.prototype.registerUserAccountsCount = function (koUserAccountsCount)
 	this.koUserAccountsCount.push(koUserAccountsCount);
 };
 
-CApp.prototype.isAccountDeletingAvaliable = function ()
+CApp.prototype.isAccountDeletingAvailable = function ()
 {
 	if (this.userAccountsCount() <= 1)
 	{

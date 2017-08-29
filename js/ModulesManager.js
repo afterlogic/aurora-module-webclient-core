@@ -14,8 +14,8 @@ var
 ;
 
 module.exports = {
-	init: function (oAvaliableModules) {
-		_.each(oAvaliableModules, function (fModuleConstructor, sModuleName) {
+	init: function (oAvailableModules) {
+		_.each(oAvailableModules, function (fModuleConstructor, sModuleName) {
 			if (_.isFunction(fModuleConstructor))
 			{
 				var oModule = fModuleConstructor(AppData);
@@ -122,7 +122,7 @@ module.exports = {
 	
 	isModuleAvailable: function (sModuleName)
 	{
-		return window.aAvaliableBackendModules.indexOf(sModuleName) !== -1 || window.aAvaliableModules.indexOf(sModuleName) !== -1;
+		return window.aAvailableBackendModules.indexOf(sModuleName) !== -1 || window.aAvailableModules.indexOf(sModuleName) !== -1;
 	},
 	
 	/**

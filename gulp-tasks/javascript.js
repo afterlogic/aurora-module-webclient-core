@@ -129,8 +129,8 @@ function jsTask(sTaskName, sName, oWebPackConfig) {
             process: function (sSrc, sFilePath) {
                 var sModuleName = GetModuleName(sFilePath);
 			
-				return "\t\t"+"if (window.aAvaliableModules.indexOf('"+sModuleName+"') >= 0) {" + crlf +
-					"\t\t\t"+"oAvaliableModules['"+sModuleName+"'] = new Promise(function(resolve, reject) {" + crlf +
+				return "\t\t"+"if (window.aAvailableModules.indexOf('"+sModuleName+"') >= 0) {" + crlf +
+					"\t\t\t"+"oAvailableModules['"+sModuleName+"'] = new Promise(function(resolve, reject) {" + crlf +
 						"\t\t\t\t"+"require.ensure([], function(require) {var oModule = require('modules/"+sModuleName+"/js/manager.js'); resolve(oModule); }, '"+sModuleName+"');" + crlf +
 					"\t\t\t"+"});" + crlf +
 				"\t\t"+"}";
@@ -139,13 +139,13 @@ function jsTask(sTaskName, sName, oWebPackConfig) {
         .pipe(concat.header("'use strict';" + crlf +
             "var $ = require('jquery'), _ = require('underscore'), Promise = require('bluebird');" + crlf +
             "$('body').ready(function () {" + crlf +
-            "\t" + "var oAvaliableModules = {};" + crlf +
-            "\t" + "if (window.aAvaliableModules) {" + crlf
+            "\t" + "var oAvailableModules = {};" + crlf +
+            "\t" + "if (window.aAvailableModules) {" + crlf
         ))
         .pipe(concat.footer(
 			crlf + "\t}" + crlf +
 		
-			"\t" + "Promise.all(_.values(oAvaliableModules)).then(function(aModules){" + crlf +
+			"\t" + "Promise.all(_.values(oAvailableModules)).then(function(aModules){" + crlf +
 			"\t" + "var" + crlf +
             "\t\t" + "ModulesManager = require('modules/CoreWebclient/js/ModulesManager.js')," + crlf +
             "\t\t" + "App = require('modules/CoreWebclient/js/App.js')," + crlf +
@@ -159,7 +159,7 @@ function jsTask(sTaskName, sName, oWebPackConfig) {
 			"\t\t" + "if (window.isNewTab) {" + crlf +
 			"\t\t\t" + "App.setNewTab();" + crlf +
 			"\t\t" + "}" + crlf +
-            "\t\t" + "ModulesManager.init(_.object(_.keys(oAvaliableModules), aModules));" + crlf +
+            "\t\t" + "ModulesManager.init(_.object(_.keys(oAvailableModules), aModules));" + crlf +
             "\t\t" + "App.init();" + crlf +
             "\t" + "}" + crlf +
             "\t});" + crlf +
