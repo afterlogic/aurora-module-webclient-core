@@ -36,8 +36,6 @@ ko.bindingHandlers.splitterFlex = {
 				aElements = [].slice.call(oElement.children)
 			;
 			
-			console.log('Splitter', aElements);
-			
 			oSplitter = Splitter(aElements, {
 				sizes: aInitSizes,
 				minSize: oCommand['minSize'],
