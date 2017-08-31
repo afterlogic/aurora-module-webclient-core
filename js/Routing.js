@@ -48,7 +48,7 @@ CRouting.prototype.finalize = function ()
  */
 CRouting.prototype.setHashFromString = function (sNewHash)
 {
-	var bSame = (location.hash === decodeURIComponent(sNewHash));
+	var bSame = (location.hash === sNewHash);
 	
 	if (!bSame)
 	{
