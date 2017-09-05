@@ -189,7 +189,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 				);
 
 				$sResult = strtr($sResult, array(
-					'{{AppVersion}}' => AURORA_APP_VERSION,
+					'{{AppVersion}}' => AU_APP_VERSION,
 					'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
 					'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink(),
 					'{{IntegratorBody}}' => $oApiIntegrator->buildBody($aConfig)
