@@ -91,7 +91,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'AllowDesktopNotifications' => $oUser ? $oUser->{$this->GetName().'::AllowDesktopNotifications'} : $this->getConfig('AllowDesktopNotifications', false),
 			'AllowIosProfile' => $this->getConfig('AllowIosProfile', false),
 			'AllowMobile' => $this->getConfig('AllowMobile', false),
-			'AllowPrefetch' => $this->getConfig('AllowPrefetch', false),
+			'AllowPrefetch' => $this->getConfig('AllowPrefetch', true),
 			'AttachmentSizeLimit' => $this->getConfig('AttachmentSizeLimit', 0),
 			'AutoRefreshIntervalMinutes' => $oUser ? $oUser->{$this->GetName().'::AutoRefreshIntervalMinutes'} : $this->getConfig('AutoRefreshIntervalMinutes', 0),
 			'CustomLogoutUrl' => $this->getConfig('CustomLogoutUrl', ''),

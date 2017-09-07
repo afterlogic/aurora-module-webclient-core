@@ -20,7 +20,7 @@
 		"bool"
 	],
     "AllowPrefetch": [
-		false,
+		true,
 		"bool"
 	],
     "AttachmentSizeLimit": [

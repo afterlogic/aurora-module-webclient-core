@@ -22,7 +22,7 @@ var Settings = {
 	AllowDesktopNotifications: false,
 	AllowIosProfile: false,
 	AllowMobile: false,
-	AllowPrefetch: false,
+	AllowPrefetch: true,
 	AttachmentSizeLimit: 0,
 	AutodetectLanguage: false,
 	AutoRefreshIntervalMinutes: 1,
