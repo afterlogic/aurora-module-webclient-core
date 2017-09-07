@@ -28,7 +28,9 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'xdebug_session_start' => 'EntryDefault'
 		));
 		
-		$this->extendObject('Aurora\Modules\Core\Classes\User', array(
+		$this->extendObject(
+			'Aurora\Modules\Core\Classes\User', 
+			array(
 				'AllowDesktopNotifications'		=> array('bool', $this->getConfig('AllowDesktopNotifications', false)),
 				'AutoRefreshIntervalMinutes'	=> array('int', $this->getConfig('AutoRefreshIntervalMinutes', 0)),
 				'Theme'							=> array('string', $this->getConfig('Theme', 'Default')),
