@@ -28,7 +28,7 @@
 		"int"
 	],
 	"AutoRefreshIntervalMinutes": [
-		0,
+		1,
 		"int"
 	],
     "CustomLogoutUrl": [
