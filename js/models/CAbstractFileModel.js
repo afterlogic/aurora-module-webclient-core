@@ -509,7 +509,7 @@ CAbstractFileModel.prototype.onDownloadProgress = function (iDownloadedSize, iTo
 	if (iTotalSize > 0)
 	{
 		this.progressPercent(Math.ceil(iDownloadedSize / iTotalSize * 100));
-		this.visibleProgress(true);
+		this.visibleProgress(this.progressPercent() < 100);
 	}
 };
 
