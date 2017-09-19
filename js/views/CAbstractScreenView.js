@@ -46,6 +46,10 @@ CAbstractScreenView.prototype.onBind = function ()
 {
 };
 
+CAbstractScreenView.prototype.onBindCallback = function ()
+{
+};
+
 CAbstractScreenView.prototype.onShow = function ()
 {
 };
