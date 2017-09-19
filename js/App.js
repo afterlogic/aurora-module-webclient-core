@@ -324,6 +324,9 @@ CApp.prototype.checkMobile = function () {
 	 *	0 - mobile is switched off
 	 *	1 - mobile is switched on
 	 */
+	console.log(UserSettings.AllowMobile);
+	console.log(UserSettings.IsMobile);
+	
 	if (UserSettings.AllowMobile && UserSettings.IsMobile === -1)
 	{
 		var
@@ -338,7 +341,7 @@ CApp.prototype.checkMobile = function () {
 			}
 		}, this);
 		
-		return true;
+		return bMobile;
 	}
 	
 	return false;
