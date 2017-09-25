@@ -21,12 +21,12 @@ _.extendOwn(CEmbedHtmlPopup.prototype, CAbstractPopup.prototype);
 
 CEmbedHtmlPopup.prototype.PopupTemplate = 'CoreWebclient_EmbedHtmlPopup';
 
-CEmbedHtmlPopup.prototype.onShow = function (sHtmlEmbed)
+CEmbedHtmlPopup.prototype.onOpen = function (sHtmlEmbed)
 {
 	this.htmlEmbed(sHtmlEmbed);
 };
 
-CEmbedHtmlPopup.prototype.onClose = function ()
+CEmbedHtmlPopup.prototype.close = function ()
 {
 	this.closePopup();
 	this.htmlEmbed('');

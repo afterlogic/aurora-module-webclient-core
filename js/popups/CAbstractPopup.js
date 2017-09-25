@@ -19,21 +19,43 @@ CAbstractPopup.prototype.openPopup = function (aParameters)
 {
 	if (this.$popupDom && !this.opened())
 	{
-		this.$popupDom.show();
-		
-		this.opened(true);
-		
-		_.delay(_.bind(function() {
-			this.$popupDom.addClass('visible');
-		}, this), 50);
+		this.showPopup();
 
 		Popups.addPopup(this);
 	}
 		
-	this.onShow.apply(this, aParameters);
+	this.onOpen.apply(this, aParameters);
 };
 
 CAbstractPopup.prototype.closePopup = function ()
+{
+	if (this.$popupDom && this.opened())
+	{
+		this.hidePopup();
+		
+		Popups.removePopup(this);
+		
+		this.onClose();
+	}
+};
+
+CAbstractPopup.prototype.showPopup = function ()
+{
+	if (this.$popupDom && !this.opened())
+	{
+		this.$popupDom.show();
+
+		this.opened(true);
+
+		_.delay(_.bind(function() {
+			this.$popupDom.addClass('visible');
+		}, this), 50);
+		
+		this.onShow();
+	}
+};
+
+CAbstractPopup.prototype.hidePopup = function ()
 {
 	if (this.$popupDom && this.opened())
 	{
@@ -42,8 +64,6 @@ CAbstractPopup.prototype.closePopup = function ()
 		this.opened(false);
 		
 		this.$popupDom.removeClass('visible').hide();
-		
-		Popups.removePopup(this);
 		
 		this.onHide();
 	}
@@ -64,6 +84,14 @@ CAbstractPopup.prototype.onEnterHandler = function ()
 };
 
 CAbstractPopup.prototype.onBind = function ()
+{
+};
+
+CAbstractPopup.prototype.onOpen = function ()
+{
+};
+
+CAbstractPopup.prototype.onClose = function ()
 {
 };
 

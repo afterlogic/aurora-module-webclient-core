@@ -33,7 +33,7 @@ CAlertPopup.prototype.PopupTemplate = 'CoreWebclient_AlertPopup';
  * @param {string=} sHeading = ''
  * @param {string=} sOkButtonText = 'Ok'
  */
-CAlertPopup.prototype.onShow = function (sDesc, fCloseCallback, sHeading, sOkButtonText)
+CAlertPopup.prototype.onOpen = function (sDesc, fCloseCallback, sHeading, sOkButtonText)
 {
 	this.alertDesc(sDesc);
 	this.closeCallback = fCloseCallback || null;

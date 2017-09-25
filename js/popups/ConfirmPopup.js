@@ -36,7 +36,7 @@ CConfirmPopup.prototype.PopupTemplate = 'CoreWebclient_ConfirmPopup';
  * @param {string=} sOkButtonText = ''
  * @param {string=} sCancelButtonText = ''
  */
-CConfirmPopup.prototype.onShow = function (sDesc, fConfirmCallback, sHeading, sOkButtonText, sCancelButtonText)
+CConfirmPopup.prototype.onOpen = function (sDesc, fConfirmCallback, sHeading, sOkButtonText, sCancelButtonText)
 {
 	this.confirmDesc(sDesc);
 	this.popupHeading(sHeading || '');
