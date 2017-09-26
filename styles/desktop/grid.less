@@ -288,8 +288,7 @@ html.non-adjustable .panels {
 		white-space: nowrap;
 		
 		.from, .subject {
-			.fadeout-text-init();
-			.fadeout-text(#fdfdfd);
+			.fadeout();
 		}
 		
 		&.unseen {
@@ -297,7 +296,7 @@ html.non-adjustable .panels {
 			font-weight: bold;
 			
 			.from, .subject {
-				.fadeout-text(@theme-list-unseen-item-bg);
+				.fadeout();
 			}
 		}
 		
@@ -312,7 +311,7 @@ html.non-adjustable .panels {
 			background: @theme-list-checked-item-bg;
 			
 			.from, .subject {
-				.fadeout-text(@theme-list-checked-item-bg);
+				.fadeout();
 			}
 			
 			.custom_checkbox .icon {
@@ -326,7 +325,7 @@ html.non-adjustable .panels {
 			color: @theme-list-selected-item-color;
 			
 			.from, .subject {
-				.fadeout-text(@theme-list-selected-item-bg);
+				.fadeout();
 			}
 			
 			.custom_checkbox .icon {
@@ -506,7 +505,7 @@ html.non-adjustable .panels {
 				}
 				
 				&.droppableHover .name {
-					.fadeout-text(desaturate(darken(@theme-group-style-item-bg, 5%), 10%));
+					.fadeout();
 				}
 
 				.text {
@@ -552,11 +551,11 @@ html.non-adjustable .panels {
 					color: #ffffff !important;
 
 					.name {
-						.fadeout-text(@theme-group-style-selected-item-bg-color);
+						.fadeout();
 					}
 
 					&.droppableHover .name {
-						.fadeout-text(desaturate(darken(@theme-group-style-selected-item-bg-color, 5%), 10%));
+						.fadeout();
 					}
 					
 					.theme-group-style-selected-item();

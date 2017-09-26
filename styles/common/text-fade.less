@@ -1,43 +1,3 @@
-.fadeout {
-	display: block;
-	overflow: hidden;
-	position: relative;
-	white-space: nowrap;
-	
-	&:after {
-		content: "";
-		display: block;
-		height: 100%;
-		pointer-events: none;
-		position: absolute;
-		right: 0;
-		top: 0;
-		width: 10px;
-
-		html.rtl & {
-			left: 0;
-			right: auto;
-		}
-		
-		.recivedAnim & {
-			background: none !important;
-		}
-	}
-	
-	.faded {
-		display: block;
-		height: 100%;
-		position: absolute;
-		top: 0; right: 0;
-		width: 10px;
-		
-		html.rtl & {
-			left: 0;
-			right: auto;
-		}
-	}
-}
-
 .fadeout-text-init() {
 	overflow: hidden;
 
@@ -69,5 +29,19 @@
 		html.rtl & {
 			.fade-gradient(rtl, @color);
 		}
+	}
+}
+
+.fadeout() {
+	mask: url(../../images/filters.svg#masking);
+	-webkit-mask: url(../../images/mask.png) repeat-y top right;
+	-o-mask: url(../../images/mask.png?) repeat-y top right;
+	-ms-mask: url(../../images/mask.png) repeat-y top right;
+	
+	html.rtl & {
+		mask: url(../../images/filters.svg#masking_rtl);
+		-webkit-mask: url(../../images/mask_rtl.png) repeat-y top left;
+		-o-mask: url(../../images/mask_rtl.png) repeat-y top left;
+		-ms-mask: url(../../images/mask_rtl.png) repeat-y top left;
 	}
 }
