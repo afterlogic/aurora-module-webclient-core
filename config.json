@@ -114,5 +114,9 @@
     "ThemeList": [
 		["Default"],
 		"array"
+	],
+    "IncludeInMobile": [
+		true,
+		"bool"
 	]
 }

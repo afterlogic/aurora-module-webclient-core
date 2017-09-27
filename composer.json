@@ -6,8 +6,6 @@
 		"afterlogic/aurora-framework": "~0.6 || dev-master"
 	},
 	"extra": {
-		"installer-name": "CoreWebclient",
-		"include-in-mobile": true,
-		"include-in-desktop": true
+		"installer-name": "CoreWebclient"
 	}
 }
