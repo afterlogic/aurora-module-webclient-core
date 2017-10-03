@@ -824,14 +824,30 @@ CSelector.prototype.onEnter = function (oItem)
  */
 CSelector.prototype.selectionFunc = function (oItem)
 {
-	this.itemSelected(null);
-	if (this.bResetCheckedOnClick)
-	{
-		this.listChecked(false);
-	}
+	var
+		fProceedSelection = _.bind(function () {
+			this.itemSelected(null);
+			if (this.bResetCheckedOnClick)
+			{
+				this.listChecked(false);
+			}
 
-	this.itemSelected(oItem);
-	this.fSelectCallback.call(this, oItem);
+			this.itemSelected(oItem);
+			this.fSelectCallback.call(this, oItem);
+		}, this),
+		oParams = {
+			'Item': oItem,
+			'Cancel': false,
+			'ProceedSelectionHandler': fProceedSelection
+		}
+	;
+	
+	App.broadcastEvent('%ModuleName%::SelectListItem::before', oParams);
+	
+	if (!oParams.Cancel)
+	{
+		fProceedSelection();
+	}
 };
 
 /**
