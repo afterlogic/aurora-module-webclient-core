@@ -46,6 +46,7 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "webpack": "^1.13.2",
-    "webpack-stream": "jeroennoten/webpack-stream#patch-1"
+    "webpack-stream": "jeroennoten/webpack-stream#patch-1",
+	"newman": "^3.8.3"
   }
 }
