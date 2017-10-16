@@ -26,7 +26,7 @@ function CPageSwitcherView(iCount, iPerPage)
 	this.lastPage = ko.observable(1);
 
 	this.pagesCount = ko.computed(function () {
-		var iCount = Math.ceil(this.count() / this.perPage());
+		var iCount = this.perPage() > 0 ? Math.ceil(this.count() / this.perPage()) : 0;
 		return (iCount > 0) ? iCount : 1;
 	}, this);
 
