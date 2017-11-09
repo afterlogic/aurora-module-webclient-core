@@ -114,7 +114,7 @@ var CustomTooltip = {
 function InitCustomTooltip(oElement, oCommand)
 {
 	var
-		sTooltipText = TextUtils.i18n(oCommand),
+		sTooltipText = TextUtils.encodeHtml(_.isFunction(oCommand) ? oCommand() : TextUtils.i18n(oCommand)),
 		$Element = $(oElement),
 		$Dropdown = $Element.find('span.dropdown'),
 		bShown = false,
@@ -169,17 +169,12 @@ function InitCustomTooltip(oElement, oCommand)
 		fSubscribtion = null
 	;
 	
-	if (typeof sTooltipText === 'function')
-	{
-		sTooltipText = sTooltipText();
-	}
-
 	fBindEvents();
 
-	if (typeof oCommand.subscribe === 'function' && fSubscribtion === null)
+	if (_.isFunction(oCommand) && _.isFunction(oCommand.subscribe) && fSubscribtion === null)
 	{
 		fSubscribtion = oCommand.subscribe(function (sValue) {
-			sTooltipText = sValue;
+			sTooltipText = TextUtils.encodeHtml(sValue);
 			fBindEvents();
 		});
 	}
