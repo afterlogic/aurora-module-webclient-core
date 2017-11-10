@@ -55,6 +55,7 @@ function BuildThemeCss(sTheme, bMobile)
 	var
 		aModulesFiles = [],
 		aSkinSpecyficFiles = [],
+		aSkinSpecyficDefaultFiles = [],
 		sPostfix = bMobile ? '-mobile' : '',
 		iCoreModuleIndex = aModulesNames.indexOf('CoreWebclient')
 	;
@@ -83,16 +84,26 @@ function BuildThemeCss(sTheme, bMobile)
 		}
 	});
 	
+	//get skin specific files
 	aModulesFiles.forEach(function (sFilePath) {
-		var sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme.toLowerCase() + '.less');
+		var sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme + '/styles.less');
 				
-		if ( fs.existsSync(sThemePath))
+		if (fs.existsSync(sThemePath))
 		{
 			aSkinSpecyficFiles.push(sThemePath);
 		}
 	});
 	
-	aModulesFiles = aSkinSpecyficFiles.concat(aModulesFiles);
+	aModulesFiles.forEach(function (sFilePath) {
+		var sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/_default.less');
+				
+		if (fs.existsSync(sThemePath))
+		{
+			aSkinSpecyficDefaultFiles.push(sThemePath);
+		}
+	});
+	
+	aModulesFiles = aSkinSpecyficDefaultFiles.concat(aSkinSpecyficFiles.concat(aModulesFiles));
 
 	gulp.src(aModulesFiles)
 		.pipe(concat('styles' + sPostfix + '.css', {
@@ -146,8 +157,12 @@ function CheckFolderAndCallHandler(sDir, fHandler)
 function MoveFiles(sFromDir, sToDir)
 {
 	var
+		fFilter = function (name) {
+			console.log(name);
+			return true;
+		},
 		fCopyDir = function () {
-			ncp(sFromDir, sToDir, function (oErr) {
+			ncp(sFromDir, sToDir, fFilter, function (oErr) {
 				if (oErr)
 				{
 					console.log(sFromDir + ' directory copying was failed: ', oErr);
@@ -155,7 +170,7 @@ function MoveFiles(sFromDir, sToDir)
 			});	
 		}
 	;
-	
+//	console.log(sFromDir);
 	if (fs.existsSync(sFromDir))
 	{
 		CheckFolderAndCallHandler(sToDir, fCopyDir);
@@ -190,9 +205,9 @@ gulp.task('styles', function () {
 	MoveSharingCss();
 	
 	_.each(aThemes, function (sTheme) {
-		MoveFiles(sPathToCoreWebclient + '/styles/themes/' + sTheme.toLowerCase() + '-images', sTenantPathPrefix + 'static/styles/themes/' + sTheme + '/images');
 		BuildThemeCss(sTheme, false);
 		BuildThemeCss(sTheme, true);
+		MoveFiles(sPathToCoreWebclient + '/styles/themes/' + sTheme, sTenantPathPrefix + 'static/styles/themes/' + sTheme);
 	});
 });
 
