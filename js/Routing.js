@@ -229,7 +229,7 @@ CRouting.prototype.parseRouting = function (aAddParams)
 	this.currentHash(sHash);
 	
 	aAddParams = _.isArray(aAddParams) ? aAddParams : [];
-	
+
 	Screens.route(aParams.concat(aAddParams));
 };
 

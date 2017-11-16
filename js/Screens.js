@@ -106,7 +106,7 @@ CScreens.prototype.route = function (aParams)
 		self = this
 	;
 	
-	if (sCurrentScreen === '' && sNextScreen === '')
+	if (sNextScreen === '')
 	{
 		sNextScreen = this.sDefaultScreen;
 	}
