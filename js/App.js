@@ -159,9 +159,9 @@ CApp.prototype.init = function ()
 		ModulesManager.run('AdminPanelWebclient', 'registerAdminPanelTab', [
 			function(resolve) {
 				require.ensure(
-					['%PathToCoreWebclientModule%/js/views/CommonSettingsPaneView.js'],
+					['%PathToCoreWebclientModule%/js/views/CommonSettingsFormView.js'],
 					function() {
-						resolve(require('%PathToCoreWebclientModule%/js/views/CommonSettingsPaneView.js'));
+						resolve(require('%PathToCoreWebclientModule%/js/views/CommonSettingsFormView.js'));
 					},
 					"admin-bundle"
 				);

@@ -17,7 +17,7 @@ var
 /**
  * @constructor
  */
-function CCommonSettingsPaneView()
+function CCommonSettingsFormView()
 {
 	CAbstractSettingsFormView.call(this);
 	
@@ -65,16 +65,16 @@ function CCommonSettingsPaneView()
 	}, this);
 }
 
-_.extendOwn(CCommonSettingsPaneView.prototype, CAbstractSettingsFormView.prototype);
+_.extendOwn(CCommonSettingsFormView.prototype, CAbstractSettingsFormView.prototype);
 
-CCommonSettingsPaneView.prototype.ViewTemplate = 'CoreWebclient_CommonSettingsPaneView';
+CCommonSettingsFormView.prototype.ViewTemplate = 'CoreWebclient_CommonSettingsFormView';
 
 /**
  * Returns an array with the values of editable fields.
  * 
  * @returns {Array}
  */
-CCommonSettingsPaneView.prototype.getCurrentValues = function ()
+CCommonSettingsFormView.prototype.getCurrentValues = function ()
 {
 	return [
 		this.selectedTheme(),
@@ -88,7 +88,7 @@ CCommonSettingsPaneView.prototype.getCurrentValues = function ()
 /**
  * Puts values from the global settings object to the editable fields.
  */
-CCommonSettingsPaneView.prototype.revertGlobalValues = function ()
+CCommonSettingsFormView.prototype.revertGlobalValues = function ()
 {
 	this.selectedTheme(UserSettings.Theme);
 	this.selectedLanguage(this.bAdmin && UserSettings.AutodetectLanguage ? 'autodetect' : UserSettings.Language);
@@ -102,7 +102,7 @@ CCommonSettingsPaneView.prototype.revertGlobalValues = function ()
  * 
  * @returns {Object}
  */
-CCommonSettingsPaneView.prototype.getParametersForSave = function ()
+CCommonSettingsFormView.prototype.getParametersForSave = function ()
 {
 	var oParameters = {
 		'Theme': this.selectedTheme(),
@@ -136,7 +136,7 @@ CCommonSettingsPaneView.prototype.getParametersForSave = function ()
  * 
  * @param {Object} oParameters Object that have been obtained by getParameters function.
  */
-CCommonSettingsPaneView.prototype.applySavedValues = function (oParameters)
+CCommonSettingsFormView.prototype.applySavedValues = function (oParameters)
 {
 	if (oParameters.Theme !== UserSettings.Theme || oParameters.Language !== UserSettings.Language && !this.bAdmin)
 	{
@@ -150,9 +150,9 @@ CCommonSettingsPaneView.prototype.applySavedValues = function (oParameters)
 	}
 };
 
-CCommonSettingsPaneView.prototype.setAccessLevel = function (sEntityType, iEntityId)
+CCommonSettingsFormView.prototype.setAccessLevel = function (sEntityType, iEntityId)
 {
 	this.visible(sEntityType === '');
 };
 
-module.exports = new CCommonSettingsPaneView();
+module.exports = new CCommonSettingsFormView();
