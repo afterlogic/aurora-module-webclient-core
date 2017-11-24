@@ -2,7 +2,6 @@
 
 var
 	_ = require('underscore'),
-	$ = require('jquery'),
 	
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	
@@ -36,7 +35,7 @@ module.exports = {
 		}
 		
 		_.each(oModules, _.bind(function (oModule) {
-			if ($.isFunction(oModule.start))
+			if (_.isFunction(oModule.start))
 			{
 				oModule.start(this);
 			}
@@ -62,12 +61,12 @@ module.exports = {
 			this.aTabs = [];
 			this.aStandardTabs = [];
 			_.each(oModules, _.bind(function (oModule, sModuleName) {
-				if ($.isFunction(oModule.getHeaderItem))
+				if (_.isFunction(oModule.getHeaderItem))
 				{
 					var oHeaderItem = oModule.getHeaderItem();
 					if (oHeaderItem && oHeaderItem.item)
 					{
-						if ($.isFunction(oHeaderItem.item.setName))
+						if (_.isFunction(oHeaderItem.item.setName))
 						{
 							oHeaderItem.item.setName(oHeaderItem.name || sModuleName);
 							this.aStandardTabs.push(oHeaderItem.item);
@@ -105,7 +104,7 @@ module.exports = {
 		var aPrefetchers = [];
 
 		_.each(oModules, function (oModule, sModuleName) {
-			if ($.isFunction(oModule.getPrefetcher))
+			if (_.isFunction(oModule.getPrefetcher))
 			{
 				aPrefetchers.push(oModule.getPrefetcher());
 			}
@@ -142,7 +141,7 @@ module.exports = {
 		{
 			var oModule = oModules[sModuleName];
 
-			if (oModule && $.isFunction(oModule[sFunctionName]))
+			if (oModule && _.isFunction(oModule[sFunctionName]))
 			{
 				if (!_.isArray(aParams))
 				{
