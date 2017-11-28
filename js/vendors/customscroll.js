@@ -140,13 +140,17 @@ var jQuery = require('jquery');
 	};
 
 	Customscroll.prototype.scrollTo = function (sSelector) {
-		var aPosition = {
-			'top': $(sSelector).offset().top - this.el.offset().top,
-			'left': 0
-		};
-		if (this.vertical && aPosition.top !== undefined)
+		if (this.vertical)
 		{
-			this.vertical.set(this.vertical.get() + aPosition.top);
+			var oScrollElOffset = $(sSelector).offset();
+			if (oScrollElOffset)
+			{
+				this.vertical.set(this.vertical.get() + oScrollElOffset.top - this.el.offset().top);
+			}
+			else
+			{
+				this.vertical.set(0);
+			}
 		}
 		if (this.horizontal)
 		{
