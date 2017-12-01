@@ -17,6 +17,27 @@ var Settings = {
 	ServerModuleName: 'Core',
 	HashModuleName: 'core',
 	
+	AutodetectLanguage: false,
+	DateFormat: 'DD/MM/YYYY',
+	DateFormatList: ['DD/MM/YYYY'],
+	EUserRole: {},
+	IsSystemConfigured: false,
+	Language: 'English',
+	LastErrorCode: 0,
+	SiteName: 'Afterlogic Platform',
+	SocialName: '',
+	TenantName: '',
+	timeFormat: ko.observable('0'), // 0 - 24, 1 - 12
+	UserId: 0,
+	
+	AdminHasPassword: '',
+	AdminLanguage: '',
+	AdminLogin: '',
+	DbHost: '',
+	DbLogin: '',
+	DbName: '',
+	SaltNotEmpty: false,
+	
 	AllowChangeSettings: false,
 	AllowClientDebug: false,
 	AllowDesktopNotifications: false,
@@ -24,84 +45,101 @@ var Settings = {
 	AllowMobile: false,
 	AllowPrefetch: true,
 	AttachmentSizeLimit: 0,
-	AutodetectLanguage: false,
 	AutoRefreshIntervalMinutes: 1,
 	CustomLogoutUrl: '',
-	DateFormat: 'DD/MM/YYYY',
-	DateFormatList: ['DD/MM/YYYY'],
 	EntryModule: '',
 	GoogleAnalyticsAccount: '',
+	HeaderModulesOrder: [],
 	IsDemo: false,
 	IsMobile: -1,
-	IsRTL: bRtl,
-	Language: 'English',
 	LanguageList: [{name: 'English', text: 'English'}],
-	LastErrorCode: 0,
 	LogoUrl: '',
 	ShowQuotaBar: false,
-	SiteName: 'Afterlogic Platform',
-	SocialName: '',
 	SyncIosAfterLogin: false,
-	TenantName: '',
 	Theme: 'Default',
 	ThemeList: [],
-	timeFormat: ko.observable('0'), // 0 - 24, 1 - 12
-	UserId: 0,
-	HeaderModulesOrder: [],
 	
-	init: function (oAppDataSection) {
-		if (oAppDataSection)
+	IsRTL: bRtl,
+	
+	/**
+	 * Initializes settings from AppData object sections.
+	 * 
+	 * @param {Object} oAppData Object contained modules settings.
+	 */
+	init: function (oAppData)
+	{
+		var
+			oAppDataCoreSection = oAppData[Settings.ServerModuleName],
+			oAppDataCoreWebclientSection = oAppData['%ModuleName%']
+		;
+		
+		if (!_.isEmpty(oAppDataCoreSection))
 		{
-			this.AllowChangeSettings = !!oAppDataSection.AllowChangeSettings;
-			this.AllowClientDebug = !!oAppDataSection.AllowClientDebug;
-			this.AllowDesktopNotifications = !!oAppDataSection.AllowDesktopNotifications;
-			this.AllowIosProfile = !!oAppDataSection.AllowIosProfile;
-			this.AllowMobile = !!oAppDataSection.AllowMobile;
-			this.AllowPrefetch = !!oAppDataSection.AllowPrefetch;
-			this.AttachmentSizeLimit = Types.pInt(oAppDataSection.AttachmentSizeLimit);
-			this.AutodetectLanguage = !!oAppDataSection.AutodetectLanguage;
-			this.AutoRefreshIntervalMinutes = Types.pInt(oAppDataSection.AutoRefreshIntervalMinutes);
-			this.CustomLogoutUrl = Types.pString(oAppDataSection.CustomLogoutUrl);
-			this.DateFormat = Types.pString(oAppDataSection.DateFormat);
-			this.DateFormatList = _.isArray(oAppDataSection.DateFormatList) ? oAppDataSection.DateFormatList : ['DD/MM/YYYY'],
-			this.EntryModule = Types.pString(oAppDataSection.EntryModule);
-			this.EUserRole = oAppDataSection.EUserRole;
-			this.GoogleAnalyticsAccount = Types.pString(oAppDataSection.GoogleAnalyticsAccount);
-			this.IsDemo = !!oAppDataSection.IsDemo;
-			this.IsMobile = Types.pInt(oAppDataSection.IsMobile);
-			this.Language = Types.pString(oAppDataSection.Language);
-			this.LanguageList = _.isArray(oAppDataSection.LanguageListWithNames) ? oAppDataSection.LanguageListWithNames : [{name: 'English', text: 'English'}],
-			this.LastErrorCode = Types.pInt(oAppDataSection.LastErrorCode);
-			this.LogoUrl = Types.pString(oAppDataSection.LogoUrl);
-			this.ShowQuotaBar = !!oAppDataSection.ShowQuotaBar;
-			this.SiteName = Types.pString(oAppDataSection.SiteName);
-			this.SocialName = Types.pString(oAppDataSection.SocialName);
-			this.SyncIosAfterLogin = !!oAppDataSection.SyncIosAfterLogin;
-			this.TenantName = Types.pString(oAppDataSection.TenantName || UrlUtils.getRequestParam('tenant'));
-			this.Theme = Types.pString(oAppDataSection.Theme);
-			this.ThemeList = _.isArray(oAppDataSection.ThemeList) ? oAppDataSection.ThemeList : [],
-			this.timeFormat(Types.pString(oAppDataSection.TimeFormat));
-			this.UserId = Types.pInt(oAppDataSection.UserId);
-			this.HeaderModulesOrder = _.isArray(oAppDataSection.HeaderModulesOrder) ? oAppDataSection.HeaderModulesOrder : [],
-			this.IsSystemConfigured = !!oAppDataSection.IsSystemConfigured;
-
+			this.AutodetectLanguage = Types.pBool(oAppDataCoreSection.AutodetectLanguage, this.AutodetectLanguage);
+			this.DateFormat = Types.pString(oAppDataCoreSection.DateFormat, this.DateFormat);
+			this.DateFormatList = Types.pArray(oAppDataCoreSection.DateFormatList, this.DateFormatList);
+			this.EUserRole = Types.pObject(oAppDataCoreSection.EUserRole, this.EUserRole);
+			this.IsSystemConfigured = Types.pBool(oAppDataCoreSection.IsSystemConfigured, this.IsSystemConfigured);
+			this.Language = Types.pString(oAppDataCoreSection.Language, this.Language);
+			this.LastErrorCode = Types.pInt(oAppDataCoreSection.LastErrorCode, this.LastErrorCode);
+			this.SiteName = Types.pString(oAppDataCoreSection.SiteName, this.SiteName);
+			this.SocialName = Types.pString(oAppDataCoreSection.SocialName, this.SocialName);
+			this.TenantName = Types.pString(oAppDataCoreSection.TenantName || UrlUtils.getRequestParam('tenant'), this.TenantName);
+			this.timeFormat(Types.pString(oAppDataCoreSection.TimeFormat, this.timeFormat()));
+			this.UserId = Types.pInt(oAppDataCoreSection.UserId, this.UserId);
+			
 			//only for admin
-			this.DbHost = Types.pString(oAppDataSection.DBHost);
-			this.DbName = Types.pString(oAppDataSection.DBName);
-			this.DbLogin = Types.pString(oAppDataSection.DBLogin);
-			this.AdminLogin = Types.pString(oAppDataSection.AdminLogin);
-			this.AdminHasPassword = !!oAppDataSection.AdminHasPassword;
-			this.AdminLanguage = Types.pString(oAppDataSection.AdminLanguage);
-			this.SaltNotEmpty = !!oAppDataSection.SaltNotEmpty;
+			this.AdminHasPassword = Types.pBool(oAppDataCoreSection.AdminHasPassword, this.AdminHasPassword);
+			this.AdminLanguage = Types.pString(oAppDataCoreSection.AdminLanguage, this.AdminLanguage);
+			this.AdminLogin = Types.pString(oAppDataCoreSection.AdminLogin, this.AdminLogin);
+			this.DbHost = Types.pString(oAppDataCoreSection.DBHost, this.DbHost);
+			this.DbLogin = Types.pString(oAppDataCoreSection.DBLogin, this.DbLogin);
+			this.DbName = Types.pString(oAppDataCoreSection.DBName, this.DbName);
+			this.SaltNotEmpty = Types.pBool(oAppDataCoreSection.SaltNotEmpty, this.SaltNotEmpty);
+		}
+		
+		if (!_.isEmpty(oAppDataCoreWebclientSection))
+		{
+			this.AllowChangeSettings = Types.pBool(oAppDataCoreWebclientSection.AllowChangeSettings, this.AllowChangeSettings);
+			this.AllowClientDebug = Types.pBool(oAppDataCoreWebclientSection.AllowClientDebug, this.AllowClientDebug);
+			this.AllowDesktopNotifications = Types.pBool(oAppDataCoreWebclientSection.AllowDesktopNotifications, this.AllowDesktopNotifications);
+			this.AllowIosProfile = Types.pBool(oAppDataCoreWebclientSection.AllowIosProfile, this.AllowIosProfile);
+			this.AllowMobile = Types.pBool(oAppDataCoreWebclientSection.AllowMobile, this.AllowMobile);
+			this.AllowPrefetch = Types.pBool(oAppDataCoreWebclientSection.AllowPrefetch, this.AllowPrefetch);
+			this.AttachmentSizeLimit = Types.pNonNegativeInt(oAppDataCoreWebclientSection.AttachmentSizeLimit, this.AttachmentSizeLimit);
+			this.AutoRefreshIntervalMinutes = Types.pNonNegativeInt(oAppDataCoreWebclientSection.AutoRefreshIntervalMinutes, this.AutoRefreshIntervalMinutes);
+			this.CustomLogoutUrl = Types.pString(oAppDataCoreWebclientSection.CustomLogoutUrl, this.CustomLogoutUrl);
+			this.EntryModule = Types.pString(oAppDataCoreWebclientSection.EntryModule, this.EntryModule);
+			this.GoogleAnalyticsAccount = Types.pString(oAppDataCoreWebclientSection.GoogleAnalyticsAccount, this.GoogleAnalyticsAccount);
+			this.HeaderModulesOrder = Types.pArray(oAppDataCoreWebclientSection.HeaderModulesOrder, this.HeaderModulesOrder);
+			this.IsDemo = Types.pBool(oAppDataCoreWebclientSection.IsDemo, this.IsDemo);
+			this.IsMobile = Types.pInt(oAppDataCoreWebclientSection.IsMobile, this.IsMobile);
+			this.LanguageList = Types.pArray(oAppDataCoreWebclientSection.LanguageListWithNames, this.LanguageList);
+			this.LogoUrl = Types.pString(oAppDataCoreWebclientSection.LogoUrl, this.LogoUrl);
+			this.ShowQuotaBar = Types.pBool(oAppDataCoreWebclientSection.ShowQuotaBar, this.ShowQuotaBar);
+			this.SyncIosAfterLogin = Types.pBool(oAppDataCoreWebclientSection.SyncIosAfterLogin, this.SyncIosAfterLogin);
+			this.Theme = Types.pString(oAppDataCoreWebclientSection.Theme, this.Theme);
+			this.ThemeList = Types.pArray(oAppDataCoreWebclientSection.ThemeList, this.ThemeList);
 		}
 	},
 	
-	update: function (iAutoRefreshIntervalMinutes, sDefaultTheme, sLanguage, sTimeFormat, bAllowDesktopNotifications) {
-		this.AutoRefreshIntervalMinutes = iAutoRefreshIntervalMinutes;
-		this.Theme = sDefaultTheme;
+	/**
+	 * Updates new settings values after saving on server.
+	 * 
+	 * @param {number} iAutoRefreshIntervalMinutes
+	 * @param {string} sDefaultTheme
+	 * @param {string} sLanguage
+	 * @param {string} sTimeFormat
+	 * @param {boolean} bAllowDesktopNotifications
+	 */
+	update: function (iAutoRefreshIntervalMinutes, sDefaultTheme, sLanguage, sTimeFormat, bAllowDesktopNotifications)
+	{
 		this.Language = sLanguage;
 		this.timeFormat(sTimeFormat);
+		
 		this.AllowDesktopNotifications = bAllowDesktopNotifications;
+		this.AutoRefreshIntervalMinutes = iAutoRefreshIntervalMinutes;
+		this.Theme = sDefaultTheme;
 	},
 	
 	/**
@@ -112,8 +150,8 @@ var Settings = {
 	 */
 	updateSecurity: function (sAdminLogin, bAdminHasPassword)
 	{
-		this.AdminLogin = sAdminLogin;
 		this.AdminHasPassword = bAdminHasPassword;
+		this.AdminLogin = sAdminLogin;
 	},
 	
 	/**
@@ -126,13 +164,11 @@ var Settings = {
 	updateDb: function (sDbLogin, sDbName, sDbHost)
 	{
 		this.DbHost = sDbHost;
-		this.DbName = sDbName;
 		this.DbLogin = sDbLogin;
+		this.DbName = sDbName;
 	}
 };
 
-var oAppDataSection = _.extend({}, AppData[Settings.ServerModuleName] || {}, AppData['%ModuleName%'] || {});
-
-Settings.init(oAppDataSection);
+Settings.init(AppData);
 
 module.exports = Settings;

@@ -30,12 +30,20 @@ Types.isNonEmptyString = function (mValue)
 
 /**
  * @param {*} mValue
- * 
+ * @param {string} sDefault
  * @return {string}
  */
-Types.pString = function (mValue)
+Types.pString = function (mValue, sDefault)
 {
-	return (mValue !== undefined && mValue !== null) ? mValue.toString() : '';
+	if (mValue !== undefined && mValue !== null)
+	{
+		return mValue.toString();
+	}
+	if (typeof sDefault === 'string')
+	{
+		return sDefault;
+	}
+	return '';
 };
 
 /**
@@ -72,6 +80,86 @@ Types.pInt = function (mValue, iDefault)
 		iValue = !isNaN(iDefault) ? iDefault : 0;
 	}
 	return iValue;
+};
+
+Types.pArray = function (mValue, aDefault)
+{
+	if (_.isArray(mValue))
+	{
+		return mValue;
+	}
+	if (_.isArray(aDefault))
+	{
+		return aDefault;
+	}
+	return [];
+};
+
+Types.pObject = function (mValue, oDefault)
+{
+	if (typeof mValue === 'object' && !_.isEmpty(mValue))
+	{
+		return mValue;
+	}
+	if (typeof oDefault === 'object' && !_.isEmpty(oDefault))
+	{
+		return oDefault;
+	}
+	return {};
+};
+
+Types.pPositiveInt = function (mValue, iDefault)
+{
+	var iValue = window.parseInt(mValue, 10);
+	if (!isNaN(iValue) && iValue >= 1)
+	{
+		return iValue;
+	}
+	if (!isNaN(iDefault) && iDefault >= 1)
+	{
+		return iDefault;
+	}
+	return 1;
+};
+
+Types.pNonNegativeInt = function (mValue, iDefault)
+{
+	var iValue = window.parseInt(mValue, 10);
+	if (!isNaN(iValue) && iValue >= 0)
+	{
+		return iValue;
+	}
+	if (!isNaN(iDefault) && iDefault >= 0)
+	{
+		return iDefault;
+	}
+	return 0;
+};
+
+Types.pBool = function (mValue, bDefault)
+{
+	if (typeof mValue === 'boolean')
+	{
+		return mValue;
+	}
+	if (typeof bDefault === 'boolean')
+	{
+		return bDefault;
+	}
+	return false;
+};
+
+Types.pEnum = function (mValue, oEnum, mDefault)
+{
+	if (mValue === _.find(oEnum, function(mEnumValue){ return mEnumValue === mValue; }))
+	{
+		return mValue;
+	}
+	if (mDefault === _.find(oEnum, function(mEnumValue){ return mEnumValue === mDefault; }))
+	{
+		return mDefault;
+	}
+	return _.find(oEnum, function(mEnumValue){ return true; });
 };
 
 /**
