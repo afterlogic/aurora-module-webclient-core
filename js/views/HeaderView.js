@@ -2,10 +2,8 @@
 
 var
 	_ = require('underscore'),
-	ko = require('knockout'),
 	$ = require('jquery'),
-	
-	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
+	ko = require('knockout'),
 	
 	Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
@@ -30,16 +28,24 @@ function CHeaderView()
 		_.each(this.tabs, function (oTab) {
 			if (oTab.isCurrent)
 			{
-				oTab.isCurrent(Screens.currentScreen() === oTab.sName);
-				if (oTab.isCurrent() && Types.isNonEmptyString(Routing.currentHash()))
+				var
+					sCurrHash = '#' + Routing.currentHash(),
+					aExcludedHashes = _.isFunction(oTab.excludedHashes) && _.isArray(oTab.excludedHashes()) ? oTab.excludedHashes() : [],
+					bExcludedHashFound = !!_.find(aExcludedHashes, function (sExcludedHash) {
+						return sCurrHash.indexOf(sExcludedHash) === 0;
+					})
+				;
+				
+				oTab.isCurrent(!bExcludedHashFound && (Screens.currentScreen() === oTab.sName || sCurrHash.indexOf(oTab.baseHash()) === 0));
+				if (oTab.isCurrent() && sCurrHash !== '#')
 				{
-					oTab.hash('#' + Routing.currentHash());
+					oTab.hash(sCurrHash);
 				}
 			}
 		});
 	}, this).extend({ rateLimit: 50 });
 	
-	this.showLogout = App.getUserRole() !== Enums.UserRole.Anonymous && !App.isPublic();
+	this.showLogout = App.getUserRole() !== window.Enums.UserRole.Anonymous && !App.isPublic();
 
 	this.sLogoUrl = Settings.LogoUrl;
 	
