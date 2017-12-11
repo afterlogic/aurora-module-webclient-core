@@ -2,7 +2,6 @@
 var
 	ko = require('knockout'),
 	
-	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	Routing = require('%PathToCoreWebclientModule%/js/Routing.js')
 ;
 
