@@ -211,6 +211,8 @@ ko.bindingHandlers.dropdown = {
 				fControlClick(oEv);
 			}
 		});
+		
+		fFitToScreen(0);
 	}
 };
 
