@@ -33,6 +33,10 @@
 					<label for="timeformat_24" data-bind="i18n: {'key': '%MODULENAME%/LABEL_TIME_FORMAT_24'}"></label>
 				</span>
 			</div>
+			<div class="row" data-bind="visible: allowChangeDateFormat">
+				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_DATEFORMAT'}"></span>
+				<select class="value input" data-bind="value: selectedDateFormat, options: aDateFormats, optionsText: 'name', optionsValue: 'value'"></select>
+			</div>
 			<div class="row" data-bind="visible: window.Notification && !bAdmin">
 				<span class="value offset" data-bind="css: {'disabled': !isDesktopNotificationsEnable()}">
 					<label class="custom_checkbox" data-bind="css: {'checked': desktopNotifications}">

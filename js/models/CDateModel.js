@@ -42,8 +42,7 @@ CDateModel.prototype.setDate = function (iYear, iMonth, iDay)
  */
 CDateModel.prototype.getTimeFormat = function ()
 {
-	return (UserSettings.timeFormat() === Enums.TimeFormat.F24) ?
-		'HH:mm' : 'hh:mm A';
+	return (UserSettings.timeFormat() === window.Enums.TimeFormat.F24) ? 'HH:mm' : 'hh:mm A';
 };
 
 /**
@@ -51,7 +50,7 @@ CDateModel.prototype.getTimeFormat = function ()
  */
 CDateModel.prototype.getFullDate = function ()
 {
-	return (this.oMoment) ? this.oMoment.format('ddd, MMM D, YYYY, ' + this.getTimeFormat()) : '';
+	return this.getDate() + ' ' + this.getTime();	
 };
 
 /**
@@ -88,13 +87,23 @@ CDateModel.prototype.getShortDate = function (bTime)
 			{
 				sResult = TextUtils.i18n('%MODULENAME%/LABEL_YESTERDAY');
 			}
-			else if (oMomentNow.year() === this.oMoment.year())
-			{
-				sResult = this.oMoment.format('MMM D');
-			}
 			else
 			{
-				sResult = this.oMoment.format('MMM D, YYYY');
+				if (UserSettings.UserSelectsDateFormat)
+				{
+					sResult = this.oMoment.format(Utils.getDateFormatForMoment(UserSettings.dateFormat()));
+				}
+				else
+				{
+					if (oMomentNow.year() === this.oMoment.year())
+					{
+						sResult = this.oMoment.format('MMM D');
+					}
+					else
+					{
+						sResult = this.oMoment.format('MMM D, YYYY');
+					}
+				}
 			}
 
 			if (!!bTime)
@@ -112,7 +121,14 @@ CDateModel.prototype.getShortDate = function (bTime)
  */
 CDateModel.prototype.getDate = function ()
 {
-	return (this.oMoment) ? this.oMoment.format('ddd, MMM D, YYYY') : '';
+	var sFormat = 'ddd, MMM D, YYYY';
+	
+	if (UserSettings.UserSelectsDateFormat)
+	{
+		sFormat = 'ddd, ' + Utils.getDateFormatForMoment(UserSettings.dateFormat());
+	}
+	
+	return (this.oMoment) ? this.oMoment.format(sFormat) : '';
 };
 
 /**
@@ -121,18 +137,6 @@ CDateModel.prototype.getDate = function ()
 CDateModel.prototype.getTime = function ()
 {
 	return (this.oMoment) ? this.oMoment.format(this.getTimeFormat()): '';
-};
-
-/**
- * @param {string} iDate
- * 
- * @return {string}
- */
-CDateModel.prototype.convertDate = function (iDate)
-{
-	var sFormat = Utils.getDateFormatForMoment(UserSettings.DateFormat) + ' ' + this.getTimeFormat();
-	
-	return moment(iDate * 1000).format(sFormat);
 };
 
 /**

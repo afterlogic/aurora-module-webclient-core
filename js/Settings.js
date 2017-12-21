@@ -18,7 +18,8 @@ var Settings = {
 	HashModuleName: 'core',
 	
 	AutodetectLanguage: false,
-	DateFormat: 'DD/MM/YYYY',
+	UserSelectsDateFormat: false,
+	dateFormat: ko.observable('DD/MM/YYYY'),
 	DateFormatList: ['DD/MM/YYYY'],
 	EUserRole: {},
 	IsSystemConfigured: false,
@@ -76,7 +77,8 @@ var Settings = {
 		if (!_.isEmpty(oAppDataCoreSection))
 		{
 			this.AutodetectLanguage = Types.pBool(oAppDataCoreSection.AutodetectLanguage, this.AutodetectLanguage);
-			this.DateFormat = Types.pString(oAppDataCoreSection.DateFormat, this.DateFormat);
+			this.UserSelectsDateFormat = Types.pBool(oAppDataCoreSection.UserSelectsDateFormat, this.UserSelectsDateFormat);
+			this.dateFormat(Types.pString(oAppDataCoreSection.DateFormat, this.dateFormat()));
 			this.DateFormatList = Types.pArray(oAppDataCoreSection.DateFormatList, this.DateFormatList);
 			this.EUserRole = Types.pObject(oAppDataCoreSection.EUserRole, this.EUserRole);
 			this.IsSystemConfigured = Types.pBool(oAppDataCoreSection.IsSystemConfigured, this.IsSystemConfigured);
@@ -130,12 +132,14 @@ var Settings = {
 	 * @param {string} sDefaultTheme
 	 * @param {string} sLanguage
 	 * @param {string} sTimeFormat
+	 * @param {string} sDateFormat
 	 * @param {boolean} bAllowDesktopNotifications
 	 */
-	update: function (iAutoRefreshIntervalMinutes, sDefaultTheme, sLanguage, sTimeFormat, bAllowDesktopNotifications)
+	update: function (iAutoRefreshIntervalMinutes, sDefaultTheme, sLanguage, sTimeFormat, sDateFormat, bAllowDesktopNotifications)
 	{
 		this.Language = sLanguage;
 		this.timeFormat(sTimeFormat);
+		this.dateFormat(sDateFormat);
 		
 		this.AllowDesktopNotifications = bAllowDesktopNotifications;
 		this.AutoRefreshIntervalMinutes = iAutoRefreshIntervalMinutes;

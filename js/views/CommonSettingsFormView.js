@@ -4,6 +4,7 @@ var
 	_ = require('underscore'),
 	ko = require('knockout'),
 	
+	SettingsUtils = require('%PathToCoreWebclientModule%/js/utils/Settings.js'),
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
@@ -11,6 +12,7 @@ var
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	
+	Enums = window.Enums,
 	CAbstractSettingsFormView
 ;
 
@@ -34,6 +36,7 @@ function CCommonSettingsFormView()
 	
 	this.aThemes = UserSettings.ThemeList;
 	this.aLanguages = _.clone(UserSettings.LanguageList);
+	this.aDateFormats = SettingsUtils.getDateFormatsForSelector();
 	
 	if (this.bAdmin)
 	{
@@ -55,9 +58,13 @@ function CCommonSettingsFormView()
 		{name: TextUtils.i18n('%MODULENAME%/LABEL_MINUTES_PLURAL', {'COUNT': 30}, null, 30), value: 30}
 	];
 	this.timeFormat = ko.observable(UserSettings.timeFormat());
+	this.selectedDateFormat = ko.observable(UserSettings.dateFormat());
 	this.desktopNotifications = ko.observable(UserSettings.AllowDesktopNotifications);
 	/*-- Editable fields */
 	
+	this.allowChangeDateFormat = ko.computed(function () {
+		return !this.bAdmin && UserSettings.UserSelectsDateFormat;
+	}, this);
 	this.isDesktopNotificationsEnable = ko.observable((window.Notification && window.Notification.permission !== 'denied'));
 	this.desktopNotifications.subscribe(function (bChecked) {
 		var self = this;
@@ -90,6 +97,7 @@ CCommonSettingsFormView.prototype.getCurrentValues = function ()
 		this.selectedLanguage(),
 		this.autoRefreshInterval(),
 		this.timeFormat(),
+		this.selectedDateFormat(),
 		this.desktopNotifications()
 	];
 };
@@ -103,6 +111,7 @@ CCommonSettingsFormView.prototype.revertGlobalValues = function ()
 	this.selectedLanguage(this.bAdmin && UserSettings.AutodetectLanguage ? 'autodetect' : UserSettings.Language);
 	this.autoRefreshInterval(UserSettings.AutoRefreshIntervalMinutes);
 	this.timeFormat(UserSettings.timeFormat());
+	this.selectedDateFormat(UserSettings.dateFormat());
 	this.desktopNotifications(UserSettings.AllowDesktopNotifications);
 };
 
@@ -135,6 +144,10 @@ CCommonSettingsFormView.prototype.getParametersForSave = function ()
 		oParameters['AutoRefreshIntervalMinutes'] = Types.pInt(this.autoRefreshInterval());
 		oParameters['AllowDesktopNotifications'] = this.desktopNotifications();
 		oParameters['Language'] = this.selectedLanguage();
+		if (this.allowChangeDateFormat())
+		{
+			oParameters['DateFormat'] = this.selectedDateFormat();
+		}
 	}
 	
 	return oParameters;
@@ -155,7 +168,7 @@ CCommonSettingsFormView.prototype.applySavedValues = function (oParameters)
 	{
 		UserSettings.update(oParameters.AutoRefreshIntervalMinutes,
 			oParameters.Theme, oParameters.Language,
-			oParameters.TimeFormat, oParameters.AllowDesktopNotifications);
+			oParameters.TimeFormat, oParameters.DateFormat, oParameters.AllowDesktopNotifications);
 	}
 };
 
