@@ -518,13 +518,13 @@ CAbstractFileModel.prototype.onDownloadProgress = function (iDownloadedSize, iTo
  *
  * @param {string} sFileUid
  * @param {boolean} bResponseReceived
- * @param {Object} oResult
+ * @param {Object} oResponse
  */
-CAbstractFileModel.prototype.onUploadComplete = function (sFileUid, bResponseReceived, oResult)
+CAbstractFileModel.prototype.onUploadComplete = function (sFileUid, bResponseReceived, oResponse)
 {
 	var
-		bError = !bResponseReceived || !oResult || !!oResult.ErrorCode || false,
-		sError = (oResult && oResult.Error === 'size') ?
+		bError = !bResponseReceived || !oResponse || !!oResponse.ErrorCode || !oResponse.Result || !!oResponse.Result.Error || false,
+		sError = (oResponse && oResponse.Result && oResponse.Result.Error === 'size') ?
 			TextUtils.i18n('%MODULENAME%/ERROR_UPLOAD_SIZE') :
 			TextUtils.i18n('%MODULENAME%/ERROR_UPLOAD_UNKNOWN')
 	;
@@ -538,7 +538,7 @@ CAbstractFileModel.prototype.onUploadComplete = function (sFileUid, bResponseRec
 
 	if (!bError)
 	{
-		this.fillDataAfterUploadComplete(oResult, sFileUid);
+		this.fillDataAfterUploadComplete(oResponse, sFileUid);
 		
 		setTimeout((function (self) {
 			return function () {
