@@ -25,7 +25,8 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		$this->AddEntries(array(
 			'default' => 'EntryDefault',
 			'error' => 'EntryDefault',
-			'xdebug_session_start' => 'EntryDefault'
+			'xdebug_session_start' => 'EntryDefault',
+			'compatibility' => 'EntryCompatibility'
 		));
 		
 		$this->extendObject(
@@ -183,22 +184,107 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 				{
 					@\header('X-Frame-Options: '.$sFrameOptions);
 				}
-				
-				$aConfig = array(
-//					'modules_list' => array(),
-//					'public_app' => false,
-//					'new_tab' => false
-				);
 
 				$sResult = strtr($sResult, array(
 					'{{AppVersion}}' => AU_APP_VERSION,
 					'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
 					'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink(),
-					'{{IntegratorBody}}' => $oApiIntegrator->buildBody($aConfig)
+					'{{IntegratorBody}}' => $oApiIntegrator->buildBody()
 				));
 			}
 		}
 
 		return $sResult;
 	}		
+	
+	/**
+	 * @ignore
+	 */
+	public function EntryCompatibility()
+	{
+		$mResult = '';
+		
+		$aCompatibilities = \Aurora\System\Api::GetModuleDecorator('Core')->GetCompatibilities();
+		$sContent = '';
+		$bResult = true;
+		foreach ($aCompatibilities as $sModule => $aItems)
+		{
+			$sContent .= "<div class=\"row\">
+					<h2>Module: " . $sModule . "</h2>
+				</div><br />";
+			foreach ($aItems as $aItem)
+			{
+				$sValue = '';
+				if ($aItem['Result'])
+				{
+					$sValue = $this->getSuccessHtmlValue($aItem['Value']);
+				}
+				else
+				{
+					if (is_array($aItem['Value']) && count($aItem['Value']) > 0)
+					{
+						$sValue = $this->getErrorHtmlValue($aItem['Value'][0], isset($aItem['Value'][1]) ? $aItem['Value'][1] : '');
+					}
+				}
+				$sContent .= "<div class=\"row\">
+					<span class=\"field_label\"><b>" . $aItem['Name'] . ":</b> </span>
+					<span class=\"field_value_limit\">" . $sValue . "</span>
+				</div>";
+				$bResult &= $aItem['Result'];
+			}
+		}
+		$sContent .= "<br />";		
+
+		$sPath = $this->GetPath().'/templates/Compatibility.html';
+		if (\file_exists($sPath))
+		{
+			$sResult = \file_get_contents($sPath);
+			if (\is_string($sResult)) 
+			{
+				$sResult = strtr($sResult, array(
+					'{{Compatibilities}}' => $sContent,
+					'{{Result}}' => $bResult ?
+					'The current server environment meets all the requirements. Click Next to proceed.' :
+					'Please make sure that all the requirements are met and click Retry.',
+
+					'{{NextButtonHref}}' => ($bResult) ? './' : './?compatibility',
+					'{{ResultClassSuffix}}' => ($bResult) ? '_ok' : '_error',
+					'{{NextButtonName}}' => ($bResult) ? 'next_btn' : 'retry_btn',
+					'{{NextButtonValue}}' => ($bResult) ? 'Next' : 'Retry'
+					
+				));
+				
+				$mResult = $sResult;
+			}
+		}
+		
+		return $mResult;
+	}	
+	
+	protected function getSuccessHtmlValue($sValue)
+	{
+		return '<span class="state_ok">'.$sValue.'</span>';
+	}
+
+	protected function getErrorHtmlValue($sError, $sErrorHelp = '')
+	{
+		$sResult = '<span class="state_error">'.$sError.'</span>';
+		if (!empty($sErrorHelp))
+		{
+			$sResult .= '<span class="field_description">'.$sErrorHelp.'</span>';
+		}
+		return $sResult;
+	}
+
+	protected function getWarningHtmlValue($sVarning, $sVarningHelp = '')
+	{
+		$sResult = '<span class="state_warning"><img src="./images/alarm.png"> Not detected. <br />'.$sVarning.'</span>';
+		if (!empty($sVarningHelp))
+		{
+			$sResult .= '<span class="field_description">'.$sVarningHelp.'</span>';
+		}
+		return $sResult;
+	}
+	
+	
 }
