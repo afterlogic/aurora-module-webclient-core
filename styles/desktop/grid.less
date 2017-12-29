@@ -497,6 +497,7 @@ html.non-adjustable .panels {
 					display: block;
 					margin-right: 10px;
 					overflow: hidden;
+					.fadeout();
 
 					html.rtl & {
 						margin-left: 10px;
@@ -550,13 +551,13 @@ html.non-adjustable .panels {
 					background: @theme-group-style-selected-item-bg; 
 					color: #ffffff !important;
 
-					.name {
-						.fadeout();
-					}
+					//.name {
+					//	.fadeout();
+					//}
 
-					&.droppableHover .name {
-						.fadeout();
-					}
+					//&.droppableHover .name {
+					//	.fadeout();
+					//}
 					
 					.theme-group-style-selected-item();
 				}
