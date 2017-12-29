@@ -26,7 +26,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'default' => 'EntryDefault',
 			'error' => 'EntryDefault',
 			'xdebug_session_start' => 'EntryDefault',
-			'compatibility' => 'EntryCompatibility'
+			'install' => 'EntryCompatibility'
 		));
 		
 		$this->extendObject(
