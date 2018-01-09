@@ -1,4 +1,5 @@
 var jQuery = require('jquery');
+require("jquery-ui/ui/widgets/autocomplete");
 
 (function ($) {
 
