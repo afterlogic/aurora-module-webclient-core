@@ -5,7 +5,7 @@ var
 	
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
-	oSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
+	Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	
 	I18n = window.auroraI18n,
 	
@@ -74,7 +74,7 @@ TextUtils.i18n = function (sKey, oValueList, sDefaultValue, iPluralCount) {
 	{
 		sResult = (function (iPluralCount, sResult) {
 			var
-				nPlural = TextUtils.getPlural(oSettings.Language, iPluralCount),
+				nPlural = TextUtils.getPlural(Settings.Language, iPluralCount),
 				aPluralParts = sResult.split('|')
 			;
 

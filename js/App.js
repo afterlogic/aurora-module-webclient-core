@@ -81,18 +81,40 @@ function CApp()
 	this.bNewTab = false;
 	this.userPublicId = ko.observable('');
 	
-	this.koUserAccountsCount = ko.observableArray([]);
+	this.userAuthAccountsCountsArray = ko.observableArray([]);
 	this.userAccountsCount = ko.computed(function () {
-		var iCount = _.reduce(this.koUserAccountsCount(), function(iSum, koUserAccountsCount){
+		var iCount = _.reduce(this.userAuthAccountsCountsArray(), function (iSum, koUserAccountsCount) {
 			return iSum + koUserAccountsCount();
 		}, 0);
 		return iCount;
+	}, this);
+	
+	this.userAccountsWithPass = ko.observableArray([]);
+	this.firstAccountWithPassLogin = ko.computed(function () {
+		var sLogin = '';
+		_.each(this.userAccountsWithPass(), function (koAccountsWithPass) {
+			var aAccountsLogins = koAccountsWithPass();
+			if (!Types.isNonEmptyString(sLogin) && aAccountsLogins.length > 0 && Types.isNonEmptyString(aAccountsLogins[0]))
+			{
+				sLogin = aAccountsLogins[0];
+			}
+		});
+		return sLogin;
+	}, this);
+	this.mobileCredentialsHintText = ko.computed(function () {
+		var sLogin = this.firstAccountWithPassLogin() || this.userPublicId();
+		return TextUtils.i18n('COREWEBCLIENT/INFO_MOBILE_CREDENTIALS', {'LOGIN': sLogin});
 	}, this);
 }
 
 CApp.prototype.registerUserAccountsCount = function (koUserAccountsCount)
 {
-	this.koUserAccountsCount.push(koUserAccountsCount);
+	this.userAuthAccountsCountsArray.push(koUserAccountsCount);
+};
+
+CApp.prototype.registerAccountsWithPass = function (koAccountsWithPass)
+{
+	this.userAccountsWithPass.push(koAccountsWithPass);
 };
 
 CApp.prototype.isAccountDeletingAvailable = function ()
