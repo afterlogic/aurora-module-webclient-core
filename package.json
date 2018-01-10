@@ -32,6 +32,7 @@
     "iniparser": "^1.0.5",
     "jquery": "^2.0.0",
     "jquery-ui": "^1.10.5",
+	"jquery.easing": "^1.4.1",
     "json-loader": "^0.5.4",
     "knockout": "~3.4.0",
     "less": "^2.7.1",

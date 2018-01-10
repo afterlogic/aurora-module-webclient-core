@@ -13,6 +13,9 @@ var
 	Utils = {}
 ;
 
+require('jquery.easing');
+
+
 /**
  * @param {(Object|null|undefined)} oContext
  * @param {Function} fExecute
