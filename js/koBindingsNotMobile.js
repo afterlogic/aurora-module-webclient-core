@@ -11,8 +11,10 @@ var
 	Splitter = require('%PathToCoreWebclientModule%/js/vendors/split.js')
 ;
 
+require('jquery-ui/ui/widgets/droppable');
+require('jquery-ui/ui/widgets/draggable');
+require('jquery-ui/ui/widgets/autocomplete');
 require('%PathToCoreWebclientModule%/js/vendors/customscroll.js');
-require('jquery-ui');
 require('%PathToCoreWebclientModule%/js/autocomplete.js');
 
 ko.bindingHandlers.splitterFlex = {
