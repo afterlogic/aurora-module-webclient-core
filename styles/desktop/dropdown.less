@@ -113,7 +113,9 @@
 		z-index: 1;
 
 		html.rtl & {
-			margin: 0px 10px 0px 0px;
+			margin-left: 0px;
+			margin-right: 7px;
+			float: left;
 		}
 		
 		span {
@@ -251,7 +253,7 @@
 			visibility: visible;
 		}
 		
-		.arrow {
+		.dropdown_arrow {
 			border-bottom: 6px solid #cbc8c0;
 			border-left: 6px solid transparent;
 			border-right: 6px solid transparent;
@@ -264,7 +266,14 @@
 			
 			.right& {
 				float: right;
-				margin: 0px 10px -1px 0px;
+				margin-left: 0px;
+				margin-right: 10px;
+				
+				html.rtl & {
+					float: left;
+					margin-left: 10px;
+					margin-right: 0px;
+				}
 			}
 			
 			span {
@@ -282,13 +291,18 @@
 	}
 	
 	.dropdown_helper {
-		left: 0px;
 		position: absolute;
+		left: 0px;
 		top: 0px;
 		
 		.right& {
 			left: auto;
 			right: 0px;
+			
+			html.rtl & {
+				right: auto;
+				left: 0px;
+			}
 		}
 	}
 	

@@ -60,6 +60,7 @@ ko.bindingHandlers.dropdown = {
 			jqDropHelper = jqElement.find('.dropdown_helper'),
 			jqDropArrow = jqElement.find('.dropdown_arrow'),
 			jqDropBottomArrow = jqElement.find('.dropdown_arrow.bottom_arrow'),
+			bRightAligned = jqElement.hasClass('right'),
 			oDocument = $(document),
 			bScrollBar = false,
 			oOffset,
@@ -113,13 +114,18 @@ ko.bindingHandlers.dropdown = {
 					iLeft = oOffset.left + 10;
 					iFitToScreenOffset = $(window).width() - (iLeft + jqDropHelper.outerWidth(true));
 
+					console.log(bRightAligned);
 					if (iFitToScreenOffset > 0)
 					{
 						iFitToScreenOffset = 0;
+						
+					} 
+					if (!bRightAligned)
+					{
+						jqDropHelper.css('left', iOffsetLeft || iFitToScreenOffset + 'px');
+						jqDropArrow.css('left', iOffsetLeft || Math.abs(iFitToScreenOffset ? iFitToScreenOffset + Types.pInt(jqDropArrow.css('margin-left')) : 0) + 'px');
 					}
 
-					jqDropHelper.css('left', iOffsetLeft || iFitToScreenOffset + 'px');
-					jqDropArrow.css('left', iOffsetLeft || Math.abs(iFitToScreenOffset ? iFitToScreenOffset + Types.pInt(jqDropArrow.css('margin-left')) : 0) + 'px');
 				}
 			},
 			fControlClick = function (oEv) {
