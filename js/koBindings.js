@@ -114,7 +114,6 @@ ko.bindingHandlers.dropdown = {
 					iLeft = oOffset.left + 10;
 					iFitToScreenOffset = $(window).width() - (iLeft + jqDropHelper.outerWidth(true));
 
-					console.log(bRightAligned);
 					if (iFitToScreenOffset > 0)
 					{
 						iFitToScreenOffset = 0;
