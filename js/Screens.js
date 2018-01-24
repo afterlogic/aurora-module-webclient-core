@@ -22,14 +22,14 @@ function CScreens()
 	}, 100);
 	
 	this.oGetScreenFunctions = {};
-	this.oScreens = {};
+	this.screens = ko.observable({});
 	this.oModulesNames = {};
 
 	this.currentScreen = ko.observable('');
 	this.sDefaultScreen = '';
 	
 	this.browserTitle = ko.computed(function () {
-		var oCurrScreen = this.oScreens[this.currentScreen()];
+		var oCurrScreen = this.screens()[this.currentScreen()];
 		return oCurrScreen && _.isFunction(oCurrScreen.browserTitle) ? oCurrScreen.browserTitle() : '';
 	}, this);
 
@@ -91,7 +91,7 @@ CScreens.prototype.addToScreenList = function (sModuleName, oScreenList)
  */
 CScreens.prototype.hasScreenData = function (sScreen)
 {
-	return !!(this.oScreens[sScreen] || this.oGetScreenFunctions[sScreen]);
+	return !!(this.screens()[sScreen] || this.oGetScreenFunctions[sScreen]);
 };
 
 /**
@@ -101,7 +101,7 @@ CScreens.prototype.route = function (aParams)
 {
 	var
 		sCurrentScreen = this.currentScreen(),
-		oCurrentScreen = this.oScreens[sCurrentScreen],
+		oCurrentScreen = this.screens()[sCurrentScreen],
 		sNextScreen = aParams.shift(),
 		self = this
 	;
@@ -161,7 +161,7 @@ CScreens.prototype.showView = function (sScreen, fCallback)
 	var
 		sScreenId = sScreen,
 		fGetScreen = this.oGetScreenFunctions[sScreenId],
-		oScreen = this.oScreens[sScreenId],
+		oScreen = this.screens()[sScreenId],
 		self = this
 	;
 	
@@ -240,7 +240,8 @@ CScreens.prototype.initViewCallback = function (sScreenId, oScreen)
 		}
 	}
 	
-	this.oScreens[sScreenId] = oScreen;
+	this.screens()[sScreenId] = oScreen;
+	this.screens.valueHasMutated();
 	delete this.oGetScreenFunctions[sScreenId];
 };
 
