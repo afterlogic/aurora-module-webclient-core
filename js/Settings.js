@@ -4,6 +4,7 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	ko = require('knockout'),
+	moment = require('moment'),
 	
 	UrlUtils = require('%PathToCoreWebclientModule%/js/utils/Url.js'),
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
@@ -25,6 +26,7 @@ var Settings = {
 	IsSystemConfigured: false,
 	Language: 'English',
 	LastErrorCode: 0,
+	ShortLanguage: 'en',
 	SiteName: 'Afterlogic Platform',
 	SocialName: '',
 	TenantName: '',
@@ -84,6 +86,7 @@ var Settings = {
 			this.IsSystemConfigured = Types.pBool(oAppDataCoreSection.IsSystemConfigured, this.IsSystemConfigured);
 			this.Language = Types.pString(oAppDataCoreSection.Language, this.Language);
 			this.LastErrorCode = Types.pInt(oAppDataCoreSection.LastErrorCode, this.LastErrorCode);
+			this.ShortLanguage = Types.pString(oAppDataCoreSection.ShortLanguage, this.ShortLanguage);
 			this.SiteName = Types.pString(oAppDataCoreSection.SiteName, this.SiteName);
 			this.SocialName = Types.pString(oAppDataCoreSection.SocialName, this.SocialName);
 			this.TenantName = Types.pString(oAppDataCoreSection.TenantName || UrlUtils.getRequestParam('tenant'), this.TenantName);
@@ -122,6 +125,11 @@ var Settings = {
 			this.SyncIosAfterLogin = Types.pBool(oAppDataCoreWebclientSection.SyncIosAfterLogin, this.SyncIosAfterLogin);
 			this.Theme = Types.pString(oAppDataCoreWebclientSection.Theme, this.Theme);
 			this.ThemeList = Types.pArray(oAppDataCoreWebclientSection.ThemeList, this.ThemeList);
+		}
+		
+		if (moment.locale() !== this.ShortLanguage && this.Language !== 'Arabic' && this.Language !== 'Persian')
+		{
+			moment.locale(this.ShortLanguage);
 		}
 	},
 	
