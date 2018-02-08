@@ -69,7 +69,10 @@ CPopups.prototype.showPopup = function (oPopup, aParameters)
 			oPopup.onBind();
 		}
 
-		oPopup.openPopup(aParameters);
+		if (_.isFunction(oPopup.openPopup))
+		{
+			oPopup.openPopup(aParameters);
+		}
 	}
 };
 

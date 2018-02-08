@@ -25,7 +25,7 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 	
 	if (sErrorModule !== '')
 	{
-		sResultError = ModulesManager.run(sErrorModule, 'getErrorMessageByCode', [oResponse]);
+		sResultError = ModulesManager.run(sErrorModule, 'getErrorMessageByCode', [oResponse]) || '';
 	}
 	
 	if (sResultError === '')
