@@ -4,7 +4,7 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	ko = require('knockout'),
-	moment = require('moment'),
+	moment = require('moment-timezone'),
 	
 	UrlUtils = require('%PathToCoreWebclientModule%/js/utils/Url.js'),
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
@@ -31,6 +31,7 @@ var Settings = {
 	SocialName: '',
 	TenantName: '',
 	timeFormat: ko.observable('0'), // 0 - 24, 1 - 12
+	timezone: ko.observable(''),
 	UserId: 0,
 	
 	AdminHasPassword: '',
@@ -91,6 +92,7 @@ var Settings = {
 			this.SocialName = Types.pString(oAppDataCoreSection.SocialName, this.SocialName);
 			this.TenantName = Types.pString(oAppDataCoreSection.TenantName || UrlUtils.getRequestParam('tenant'), this.TenantName);
 			this.timeFormat(Types.pString(oAppDataCoreSection.TimeFormat, this.timeFormat()));
+			this.timezone(Types.pString(oAppDataCoreSection.Timezone, this.timezone()));
 			this.UserId = Types.pInt(oAppDataCoreSection.UserId, this.UserId);
 			
 			//only for admin
@@ -130,6 +132,55 @@ var Settings = {
 		if (moment.locale() !== this.ShortLanguage && this.Language !== 'Arabic' && this.Language !== 'Persian')
 		{
 			moment.locale(this.ShortLanguage);
+		}
+		
+		setTimeout(_.bind(this.initTimezone, this), 1000);
+	},
+	
+	initTimezone: function ()
+	{
+		var
+			TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
+			
+			Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
+			Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
+			Storage = require('%PathToCoreWebclientModule%/js/Storage.js'),
+			
+			oNowMoment = moment(),
+			sBrowserTimezone = moment.tz.guess(),
+			sServerTimezone = this.timezone()
+		;
+		
+		if (sServerTimezone === '')
+		{
+			Ajax.send('Core', 'UpdateUserTimezone', {Timezone: sBrowserTimezone});
+		}
+		else
+		{
+			if (Storage.getData('showNewTimezone') !== sBrowserTimezone)
+			{
+				Screens.showReport(TextUtils.i18n('%MODULENAME%/CONFIRM_TIMEZONE_CHANGES', {
+					OLDTIME: oNowMoment.clone().tz(sServerTimezone).format('HH:mm') + ' (' + sServerTimezone + ')',
+					NEWTIME: oNowMoment.format('HH:mm') + ' (' + sBrowserTimezone + ')'
+				}), 0);
+
+				$('.report_panel.report a').on('click', _.bind(function () {
+					Storage.removeData('showNewTimezone');
+					Ajax.send('Core', 'UpdateUserTimezone', {Timezone: sBrowserTimezone}, _.bind(function (oUpdateResponse) {
+						Screens.hideReport();
+						if (oUpdateResponse.Result === true)
+						{
+							Storage.setData('showNewTimezone', sBrowserTimezone);
+							this.timezone(sBrowserTimezone);
+						}
+						else
+						{
+							Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_TIMEZONE_CHANGES'));
+						}
+					}, this));
+				}, this));
+				Storage.setData('showNewTimezone', sBrowserTimezone);
+			}
 		}
 	},
 	

@@ -52,48 +52,7 @@ Prefetcher.doServerInitializations = function ()
 {
 	if (App.getUserRole() !== Enums.UserRole.Anonymous && !App.isNewTab() && !App.isPublic() && !bServerInitializationsDone)
 	{
-		var
-			oNowMoment = moment(),
-			sBrowserTimezone = moment.tz.guess()
-		;
-		
-		Ajax.send('Core', 'DoServerInitializations', {Timezone: sBrowserTimezone}, function (oResponse) {
-			var sServerTimezone = oResponse.Result && oResponse.Result.Timezone;
-			
-			if (Types.isString(sServerTimezone))
-			{
-				if (sServerTimezone === '')
-				{
-					Ajax.send('Core', 'UpdateUserTimezone', {Timezone: sBrowserTimezone});
-				}
-				else
-				{
-					if (Storage.getData('showNewTimezone') !== sBrowserTimezone)
-					{
-						Screens.showReport(TextUtils.i18n('%MODULENAME%/CONFIRM_TIMEZONE_CHANGES', {
-							OLDTIME: oNowMoment.clone().tz(sServerTimezone).format('HH:mm') + ' (' + sServerTimezone + ')',
-							NEWTIME: oNowMoment.format('HH:mm') + ' (' + sBrowserTimezone + ')'
-						}), 0);
-
-						$('.report_panel.report a').on('click', function () {
-							Storage.removeData('showNewTimezone');
-							Ajax.send('Core', 'UpdateUserTimezone', {Timezone: sBrowserTimezone}, function (oUpdateResponse) {
-								Screens.hideReport();
-								if (oUpdateResponse.Result === true)
-								{
-									moment.tz.setDefault(sBrowserTimezone);
-								}
-								else
-								{
-									Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_TIMEZONE_CHANGES'));
-								}
-							});
-						});
-						Storage.setData('showNewTimezone', sBrowserTimezone);
-					}
-				}
-			}
-		});
+		Ajax.send('Core', 'DoServerInitializations', {});
 		
 		bServerInitializationsDone = true;
 		
