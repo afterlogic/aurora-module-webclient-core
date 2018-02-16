@@ -50,6 +50,7 @@ function CHeaderView()
 	this.sLogoUrl = Settings.LogoUrl;
 	
 	this.mobileDevice = Browser.mobileDevice;
+	this.bShowMobileSwitcher = Browser.mobileDevice && Settings.AllowMobile;
 	
 	App.broadcastEvent('%ModuleName%::ConstructView::after', {'Name': this.ViewConstructorName, 'View': this});
 	
