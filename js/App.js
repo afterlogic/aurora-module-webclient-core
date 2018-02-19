@@ -79,7 +79,6 @@ function CApp()
 	this.iUserId = window.auroraAppData.User ? Types.pInt(window.auroraAppData.User.Id) : 0;
 	this.bPublic = false;
 	this.bNewTab = false;
-	this.userPublicId = ko.observable('');
 	
 	this.userAuthAccountsCountsArray = ko.observableArray([]);
 	this.userAccountsCount = ko.computed(function () {
@@ -102,7 +101,7 @@ function CApp()
 		return sLogin;
 	}, this);
 	this.mobileCredentialsHintText = ko.computed(function () {
-		var sLogin = this.firstAccountWithPassLogin() || this.userPublicId();
+		var sLogin = this.firstAccountWithPassLogin() || this.getUserPublicId();
 		return TextUtils.i18n('COREWEBCLIENT/INFO_MOBILE_CREDENTIALS', {'LOGIN': sLogin});
 	}, this);
 }
@@ -193,17 +192,6 @@ CApp.prototype.init = function ()
 		]);
 	}
 		
-	if (this.iUserId > 0)
-	{
-		var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
-		Ajax.send('Core', 'GetUser', {'UserId': this.iUserId}, _.bind(function (oResponse, oRequest) {
-			if (oResponse.Result && oRequest.Parameters.UserId === this.iUserId)
-			{
-				this.userPublicId(oResponse.Result.PublicId);
-			}
-		}, this));
-	}
-
 	if (Browser.iosDevice && this.iUserRole !== Enums.UserRole.Anonymous && UserSettings.SyncIosAfterLogin && UserSettings.AllowIosProfile)
 	{
 		window.location.href = '?ios';
