@@ -15,6 +15,7 @@ namespace Aurora\Modules\CoreWebclient;
  */
 class Module extends \Aurora\System\Module\AbstractWebclientModule
 {
+	/***** private functions *****/
 	/**
 	 * Initializes CoreWebclient Module.
 	 * 
@@ -69,7 +70,9 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		}
 		return $aResultList;
 	}
+	/***** private functions *****/
 	
+	/***** public functions *****/
 	/**
 	 * 
 	 * @return array
