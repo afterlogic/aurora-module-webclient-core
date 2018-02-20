@@ -201,4 +201,20 @@ Types.getAdaptedPerPageList = function (iValue)
 	return aStandardPerPageList;
 };
 
+/**
+ * @param {*} mValue
+ * @param {float} dDefault
+ * 
+ * @return {number}
+ */
+Types.pDouble = function (mValue, dDefault)
+{
+	var dValue = window.parseFloat(mValue);
+	if (isNaN(dValue))
+	{
+		dValue = !isNaN(dDefault) ? dDefault : 0;
+	}
+	return dValue;
+};
+
 module.exports = Types;
