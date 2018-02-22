@@ -82,7 +82,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		\Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::Anonymous);
 		
 		$oUser = \Aurora\System\Api::getAuthenticatedUser();
-		$oApiIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
+		$oApiIntegrator = \Aurora\Modules\Core\Managers\Integrator::getInstance();
 		$bSyncIosAfterLogin = $this->getConfig('SyncIosAfterLogin', false);
 		if ($bSyncIosAfterLogin)
 		{
@@ -159,7 +159,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	{
 		$sResult = '';
 		
-		$oApiIntegrator = new \Aurora\Modules\Core\Managers\Integrator();
+		$oApiIntegrator = \Aurora\Modules\Core\Managers\Integrator::getInstance();
 		
 		if ($oApiIntegrator) 
 		{
