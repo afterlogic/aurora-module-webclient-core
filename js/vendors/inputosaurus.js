@@ -312,8 +312,11 @@ var inputosaurustext = {
 	},
 
 	_inputKeypress : function(ev) {
-		var widget = ev.data.widget || this,
-			pasteValue = '';
+		var
+			oData = ev.data,
+			widget = ev.data.widget || this,
+			pasteValue = ''
+		;
 
 		ev.type === 'keyup' && widget._trigger('keyup', ev, widget);
 
@@ -339,7 +342,11 @@ var inputosaurustext = {
 			default :
 				if (ev.type === 'keydown')
 				{
-					widget.parseInput(ev);
+					// press enter handling should be done after autocomplete is finished
+					setTimeout(function () {
+						ev.data = oData;
+						widget.parseInput(ev);
+					}, 0);
 				}
 		}
 
