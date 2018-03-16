@@ -89,17 +89,18 @@ var
 			]
 		}
 	},
-	updateVersion = function (stats) {
+	updateVersion = function () {
 		var sVersionFilesName = './VERSION';
 		
 		if (fs.existsSync(sVersionFilesName))
 		{
 			var 
+				// sBuildPrefix = aParsedVersion[2] ? sRawVersions.replace(/^([\d\.]+)(?:-build-)([a-z]+)(\d+)$/, ''), : 'o',
 				sRawVersions = fs.readFileSync(sVersionFilesName, {'encoding':'utf8'}),
-				aParsedVersion = sRawVersions.match(/^([\d\.]+)(?:-build-)([a-z]+)(\d+)$/)
-				sVersion = aParsedVersion[1] || '1.0.0',
-				sBuildPrefix = aParsedVersion[2] || 'o',
-				iBuild = aParsedVersion[3] || 1
+				aParsedVersion = sRawVersions.split('-'),
+				sVersion = aParsedVersion[0] ? aParsedVersion[0] : '1.0.0',
+				sBuildPrefix = aParsedVersion[2] ? aParsedVersion[2].replace(/^([a-z]+)(\d+)$/, '$1') : 'o',
+				iBuild = aParsedVersion[2] ? aParsedVersion[2].replace(/^([a-z]+)(\d+)$/, '$2') : 1
 			;
 			
 			if (sBuild !== '')
@@ -115,9 +116,12 @@ var
 	removeObsoleteChanks = function (stats) {
 		const newlyCreatedAssets = stats.compilation.assets;
 		const unlinked = [];
+		const bMin = stats.compilation.outputOptions.chunkFilename.substr(-6) === 'min.js';
+		
 		fs.readdir(path.resolve(stats.compilation.outputOptions.publicPath), (err, files) => {
 			files
 				.filter(function(file) { return file.substr(0, 1) !== '_'; })
+				.filter(function(file) { return bMin ? file.substr(-6) === 'min.js' : file.substr(-6) !== 'min.js'; })
 				.forEach(file => {
 				if (!newlyCreatedAssets[file]) {
 					fs.unlink(path.resolve(stats.compilation.outputOptions.publicPath + file));
@@ -152,7 +156,7 @@ var
 			chunkOrigins: false
 		}));
 		
-		updateVersion(stats);
+		updateVersion();
 		removeObsoleteChanks(stats);
 	}
 ;
