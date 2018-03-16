@@ -13,6 +13,7 @@ var
     sTenantName = argv.getParameter('--tenant'),
     sOutputName = argv.getParameter('--output'), /* app, app-mobile, app-message-newtab, app-adminpanel, app-files-pub, app-calendar-pub, app-helpdesk*/
     aModulesNames = argv.getModules(),
+	sBuild = argv.getParameter('--build'),
     sPath = sTenantName ? './tenants/' + sTenantName + '/static/js/' : './static/js/',
     crlf = '\n'
 ;
@@ -25,7 +26,7 @@ if (sOutputName === '')
 function GetModuleName(sFilePath) {
     return sFilePath.replace(/.*modules[\\/](.*?)[\\/]js.*/, "$1");
 }
-console.log(path.resolve('./'));
+
 var 
 	aModules = _.compact(_.map(aModulesNames, function (sModuleName) {
 		var
@@ -46,6 +47,9 @@ var
 		return sFoundedFilePath;
 	})),
 	oWebPackConfig = {
+		stats: {
+			source: false
+		},
 		resolveLoader: {
 			alias: {
 				"replace-module-names-loader": path.join(__dirname, "replace-module-names-loader.js")
@@ -85,10 +89,51 @@ var
 			]
 		}
 	},
+	updateVersion = function (stats) {
+		var sVersionFilesName = './VERSION';
+		
+		if (fs.existsSync(sVersionFilesName))
+		{
+			var 
+				sRawVersions = fs.readFileSync(sVersionFilesName, {'encoding':'utf8'}),
+				aParsedVersion = sRawVersions.match(/^([\d\.]+)(?:-build-)([a-z]+)(\d+)$/)
+				sVersion = aParsedVersion[1] || '1.0.0',
+				sBuildPrefix = aParsedVersion[2] || 'o',
+				iBuild = aParsedVersion[3] || 1
+			;
+			
+			if (sBuild !== '')
+			{
+				sBuildPrefix = sBuild;
+			}
+			
+			iBuild++;
+			
+			fs.writeFileSync(sVersionFilesName, sVersion+'-build-'+sBuildPrefix+iBuild);
+		}
+	},
+	removeObsoleteChanks = function (stats) {
+		const newlyCreatedAssets = stats.compilation.assets;
+		const unlinked = [];
+		fs.readdir(path.resolve(stats.compilation.outputOptions.publicPath), (err, files) => {
+			files
+				.filter(function(file) { return file.substr(0, 1) !== '_'; })
+				.forEach(file => {
+				if (!newlyCreatedAssets[file]) {
+					fs.unlink(path.resolve(stats.compilation.outputOptions.publicPath + file));
+					unlinked.push(file);
+				}
+			});
+			if (unlinked.length > 0) {
+				console.log('Removed old assets: ', unlinked);
+			}
+		})
+	},
 	compileCallback = function (err, stats) {
 		if (err) {
 			throw new gutil.PluginError(err);
 		}
+
 		gutil.log(stats.toString({
 			colors: true,
 			//context: true,
@@ -106,9 +151,11 @@ var
 			errorDetails: false,
 			chunkOrigins: false
 		}));
+		
+		updateVersion(stats);
+		removeObsoleteChanks(stats);
 	}
 ;
-
 
 function jsTask(sTaskName, sName, oWebPackConfig) {
 	var
@@ -176,7 +223,7 @@ gulp.task('js:build', function () {
 	jsTask('js:build', sOutputName, _.defaults({
 		'output':  {
 			'filename': sOutputName + '.js',
-			'chunkFilename': '[name].' + sOutputName + '.js',
+			'chunkFilename': '[name].' + sOutputName + '.[chunkhash].js',
 			'publicPath': sPath,
 			'pathinfo': true
 		},
@@ -198,7 +245,7 @@ gulp.task('js:watch', function () {
 		'poll': true,
 		'output':  {
 			'filename': sOutputName + '.js',
-			'chunkFilename': '[name].' + sOutputName + '.js',
+			'chunkFilename': '[name].' + sOutputName + '.[chunkhash].js',
 			'publicPath': sPath
 		},
 		'plugins': [
@@ -229,7 +276,7 @@ gulp.task('js:min', function () {
 		],
 		'output':  {
 			'filename': sOutputName + '.min.js',
-			'chunkFilename': '[name].' + sOutputName + '.min.js',
+			'chunkFilename': '[name].' + sOutputName + '.[chunkhash].min.js',
 			'publicPath': sPath
 		}
 	}, oWebPackConfig));
