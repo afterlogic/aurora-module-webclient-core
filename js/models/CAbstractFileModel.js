@@ -359,20 +359,25 @@ CAbstractFileModel.prototype.downloadFile = function ()
 	//todo: UrlUtils.downloadByUrl in nessesary context in new window
 	var 
 		sDownloadLink = this.getActionUrl('download'),
-		bBreakDownload = false,
-		fRegularDownloadFileCallback = function (sDownloadLink) {
-			if (sDownloadLink.length > 0 && sDownloadLink !== '#')
+		oParams = {
+			'File': this,
+			'CancelDownload': false
+		}
+	;
+	if (sDownloadLink.length > 0 && sDownloadLink !== '#')
+	{
+		App.broadcastEvent('AbstractFileModel::FileDownload::before', oParams);
+		if (!oParams.CancelDownload)
+		{
+			if (_.isFunction(oParams.CustomDownloadHandler))
+			{
+				oParams.CustomDownloadHandler();
+			}
+			else
 			{
 				UrlUtils.downloadByUrl(sDownloadLink);
 			}
 		}
-	;
-
-	bBreakDownload = App.broadcastEvent('AbstractFileModel::FileDownload::before', {oFile: this, fRegularDownloadFileCallback: fRegularDownloadFileCallback});
-
-	if (sDownloadLink.length > 0 && sDownloadLink !== '#' && bBreakDownload === false)
-	{
-		UrlUtils.downloadByUrl(sDownloadLink);
 	}
 };
 
