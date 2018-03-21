@@ -1255,7 +1255,6 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 		fOnChunkReadyCallback = null,
 		bBreakUpload = false,
 		aHidden = getValue(this.oOptions, 'hidden', {}),
-		fProgressFunction = this.getEvent('onProgress'),
 		fCompleteFunction = this.getEvent('onComplete'),
 		fRegularUploadFileCallback = _.bind(function (sUid, oFileInfo) {
 			this.oDriver.regTaskUid(sUid);
@@ -1281,24 +1280,24 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 				{
 				}
 
-				if (oResponse && oResponse.Result.Error && oResponse.Result.Error === Enums.Errors.FileAlreadyExists)
+				if (oResponse && oResponse.Result && !oResponse.Result.Error && !oResponse.ErrorCode)
+				{//if response contains result and have no errors
+					fProcessNextChunkCallback(sUid, fOnChunkReadyCallback);
+				}
+				else if (oResponse && oResponse.Result && oResponse.Result.Error)
 				{
 					App.broadcastEvent('Jua::FileUploadingError');
 					fCompleteFunction(sFileUploadUid, false, {ErrorCode: oResponse.Result.Error});
 				}
-				else if (oResponse && oResponse.Result.Error && oResponse.Result.Error === Enums.Errors.FileNotFound)
+				else if (oResponse && oResponse.ErrorCode)
 				{
 					App.broadcastEvent('Jua::FileUploadingError');
-					fCompleteFunction(sFileUploadUid, false, {ErrorCode: oResponse.Result.Error});
+					fCompleteFunction(sFileUploadUid, false, {ErrorCode: oResponse.ErrorCode});
 				}
-				else if (oResponse === null)
-				{ // if server return non JSON response
+				else
+				{
 					App.broadcastEvent('Jua::FileUploadingError');
 					fCompleteFunction(sFileUploadUid, false);
-				}
-				else if (fProcessNextChunkCallback)
-				{
-					fProcessNextChunkCallback(sUid, fOnChunkReadyCallback);
 				}
 			};
 			
