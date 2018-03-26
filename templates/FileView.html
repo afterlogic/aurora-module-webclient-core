@@ -49,10 +49,10 @@
 	<span class="size" data-bind="text: friendlySize()"></span>
 
 	<span class="title" data-bind="customTooltip: fileName(), css: {entire_line: friendlySize() === ''}">
-		<span class="name" data-bind="text: displayName"></span>
+		<span class="name" data-bind="text: displayName()"></span>
 	</span>
 	
-	<div class="children" data-bind="visible: subFilesExpanded">
+	<div class="children" data-bind="visible: subFilesExpanded()">
 		<!-- ko template: {name: 'CoreWebclient_FileView', foreach: subFiles} --><!-- /ko -->
 	</div>
 </div>
