@@ -18,15 +18,37 @@
 	
 	.dropdown_content {
 		border-radius: 4px;
+		background:fade(#000, 60%) !important;
+		border-width: 0px !important;
+
+		.item {
+			color:#fff !important;
+		}
+
+		.item:hover {
+			background:#444 !important;
+		}
 	}
 	
 	.theme-tabsbar-item() {
 		padding: 4px 10px;
 		line-height: 120%;
+
+		//&.expand {
+		//	text-shadow: none;
+
+		//	.link {
+		//		color: #000;
+		//	}
+		//}
 	}
 	
 	.theme-tabsbar-item-hover() {
 		color: @tabsbar-item-font-color-hover;
+
+	//	&.expand .link {
+	//		color: #000;
+	//	}
 	}
 	
 	.theme-current() {
