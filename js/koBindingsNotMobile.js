@@ -18,16 +18,22 @@ require('%PathToCoreWebclientModule%/js/vendors/customscroll.js');
 require('%PathToCoreWebclientModule%/js/autocomplete.js');
 
 ko.bindingHandlers.splitterFlex = {
+	'valiateStorageData': function (aData, aDefaultValue) {
+		if ((!_.isArray(aData) || _.contains(aData, 0) || _.contains(aData, null) ||  _.contains(aData, NaN)) && _.isArray(aDefaultValue))
+		{
+			aData = aDefaultValue;
+		}
+		return aData;
+	},
 	'init': function (oElement, fValueAccessor) {
 		_.defer(function() {
 			//https://nathancahill.github.io/Split.js/
-			
 			var 
 				oCommand = _.defaults(fValueAccessor(), {
 					'minSize' : 200,
 					'name': ''
 				}),
-				aInitSizes = Storage.getData(oCommand['name'] + 'ResizerWidth') || oCommand['sizes'],
+				aInitSizes = ko.bindingHandlers.splitterFlex.valiateStorageData(Storage.getData(oCommand['name'] + 'ResizerWidth'), oCommand['sizes']),
 				gutterCallback = function (i, gutterDirection) {
 					var elGutter = document.createElement('div');
 					elGutter.appendChild(document.createElement('div'));
@@ -35,21 +41,26 @@ ko.bindingHandlers.splitterFlex = {
 					return elGutter;
 				},
 				oSplitter = null,
-				aElements = [].slice.call(oElement.children)
-			;
-			
-			oSplitter = Splitter(aElements, {
-				sizes: aInitSizes,
-				minSize: oCommand['minSize'],
-				gutterSize: 0,
-				gutter: gutterCallback,
-				onDragEnd: function () {
-					if (oCommand['name'])
-					{
-						Storage.setData(oCommand['name'] + 'ResizerWidth', oSplitter.getSizes());
+				aElements = [].slice.call(oElement.children),
+				oSplitterParams = {
+					minSize: oCommand['minSize'],
+					gutterSize: 0,
+					gutter: gutterCallback,
+					onDragEnd: function () {
+						if (oCommand['name'])
+						{
+							Storage.setData(oCommand['name'] + 'ResizerWidth', oSplitter.getSizes());
+						}
 					}
 				}
-			});
+			;
+			
+			if (_.isArray(aInitSizes))
+			{
+				oSplitterParams['sizes'] = aInitSizes;
+			}
+
+			oSplitter = Splitter(aElements, oSplitterParams);
 		});
 	}
 };
