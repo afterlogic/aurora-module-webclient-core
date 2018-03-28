@@ -133,7 +133,7 @@ var inputosaurustext = {
 		o.width && els.ul.css('width', o.width);
 
 		ulParent = els.ul.parent();
-		if (!widget.options.mobileDevice)
+		if (!widget.options.mobileDevice && ulParent.droppable)
 		{
 			ulParent.droppable({
 				drop: function(event, ui) {
