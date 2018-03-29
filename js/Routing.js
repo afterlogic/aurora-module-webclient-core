@@ -121,6 +121,16 @@ CRouting.prototype.setPreviousHash = function ()
 	location.hash = this.previousHash();
 };
 
+CRouting.prototype.stopListening = function ()
+{
+	hasher.stop();
+};
+
+CRouting.prototype.startListening = function ()
+{
+	hasher.init();
+};
+
 /**
  * Makes a hash of a string array.
  *
@@ -245,6 +255,8 @@ module.exports = {
 	currentHash: Routing.currentHash,
 	replaceHashDirectly: _.bind(Routing.replaceHashDirectly, Routing),
 	setPreviousHash: _.bind(Routing.setPreviousHash, Routing),
+	stopListening: _.bind(Routing.stopListening, Routing),
+	startListening: _.bind(Routing.startListening, Routing),
 	goDirectly: _.bind(Routing.goDirectly, Routing),
 	getCurrentHashArray: function () {
 		return Routing.currentHash().split('/');
