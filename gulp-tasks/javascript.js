@@ -97,7 +97,7 @@ var
 			var 
 				// sBuildPrefix = aParsedVersion[2] ? sRawVersions.replace(/^([\d\.]+)(?:-build-)([a-z]+)(\d+)$/, ''), : 'o',
 				sRawVersions = fs.readFileSync(sVersionFilesName, {'encoding':'utf8'}),
-				aParsedVersion = sRawVersions.split('-'),
+				aParsedVersion = sRawVersions.trim().split('-'),
 				sVersion = aParsedVersion[0] ? aParsedVersion[0] : '1.0.0',
 				sBuildPrefix = aParsedVersion[2] ? aParsedVersion[2].replace(/^([a-z]+)(\d+)$/, '$1') : 'o',
 				iBuild = aParsedVersion[2] ? aParsedVersion[2].replace(/^([a-z]+)(\d+)$/, '$2') : 1
