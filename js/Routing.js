@@ -118,7 +118,15 @@ CRouting.prototype.replaceHashDirectly = function (aRoutingParts)
 
 CRouting.prototype.setPreviousHash = function ()
 {
-	location.hash = this.previousHash();
+	var
+		sPrevHash = this.previousHash(),
+		aPrevHash = sPrevHash.split(/[-|\/]/)
+	;
+	if (this.currentHash() === sPrevHash)
+	{
+		sPrevHash = aPrevHash.length > 0 && aPrevHash[0] !== sPrevHash ? aPrevHash[0] : '';
+	}
+	location.hash = sPrevHash;
 };
 
 CRouting.prototype.stopListening = function ()
