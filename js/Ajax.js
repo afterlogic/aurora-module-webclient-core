@@ -186,13 +186,16 @@ CAjax.prototype.abortRequests = function (oRequest)
 	if ($.isFunction(fHandler) && this.requests().length > 0)
 	{
 		_.each(this.requests(), _.bind(function (oReqData, iIndex) {
-			var oOpenedRequest = oReqData.Request;
-			if (oRequest.Module === oOpenedRequest.Module)
+			if (oReqData)
 			{
-				if (fHandler(oRequest, oOpenedRequest))
+				var oOpenedRequest = oReqData.Request;
+				if (oRequest.Module === oOpenedRequest.Module)
 				{
-					oReqData.Xhr.abort();
-					this.requests()[iIndex] = undefined;
+					if (fHandler(oRequest, oOpenedRequest))
+					{
+						oReqData.Xhr.abort();
+						this.requests()[iIndex] = undefined;
+					}
 				}
 			}
 		}, this));
