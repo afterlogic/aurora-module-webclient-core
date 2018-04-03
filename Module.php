@@ -250,7 +250,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 					'The current server environment meets all the requirements. Click Next to proceed.' :
 					'Please make sure that all the requirements are met and click Retry.',
 
-					'{{NextButtonHref}}' => ($bResult) ? './' : './?compatibility',
+					'{{NextButtonHref}}' => ($bResult) ? './' : './?install',
 					'{{ResultClassSuffix}}' => ($bResult) ? '_ok' : '_error',
 					'{{NextButtonName}}' => ($bResult) ? 'next_btn' : 'retry_btn',
 					'{{NextButtonValue}}' => ($bResult) ? 'Next' : 'Retry'
