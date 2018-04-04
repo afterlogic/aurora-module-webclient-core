@@ -105,7 +105,6 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'IsDemo' => $this->getConfig('IsDemo', false),
 			'IsMobile' => $oApiIntegrator->isMobile(),
 			'LanguageListWithNames' => $this->getLanguageList($oApiIntegrator->getLanguageList()),
-			'LogoUrl' => $this->getConfig('LogoUrl'),
 			'ShowQuotaBar' => $this->getConfig('ShowQuotaBar', false),
 			'SyncIosAfterLogin' => $bSyncIosAfterLogin,
 			'Theme' => $oUser ? $oUser->{$this->GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),

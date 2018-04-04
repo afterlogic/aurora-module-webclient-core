@@ -1,9 +1,9 @@
 {
-    "AllowChangeSettings": [
+	"AllowChangeSettings": [
 		true,
 		"bool"
 	],
-    "AllowClientDebug": [
+	"AllowClientDebug": [
 		false,
 		"bool"
 	],
@@ -11,19 +11,19 @@
 		false,
 		"bool"
 	],
-    "AllowIosProfile": [
+	"AllowIosProfile": [
 		false,
 		"bool"
 	],
-    "AllowMobile": [
+	"AllowMobile": [
 		false,
 		"bool"
 	],
-    "AllowPrefetch": [
+	"AllowPrefetch": [
 		true,
 		"bool"
 	],
-    "AttachmentSizeLimit": [
+	"AttachmentSizeLimit": [
 		0,
 		"int"
 	],
@@ -31,7 +31,7 @@
 		1,
 		"int"
 	],
-    "CustomLogoutUrl": [
+	"CustomLogoutUrl": [
 		"",
 		"string"
 	],
@@ -39,19 +39,19 @@
 		false,
 		"bool"
 	],
-    "EntryModule": [
+	"EntryModule": [
 		"",
 		"string"
 	],
-    "GoogleAnalyticsAccount": [
+	"GoogleAnalyticsAccount": [
 		"",
 		"string"
 	],
-    "HeaderModulesOrder": [
+	"HeaderModulesOrder": [
 		[],
 		"array"
 	],
-    "IsDemo": [
+	"IsDemo": [
 		false,
 		"bool"
 	],
@@ -95,15 +95,11 @@
 		},
 		"array"
 	],
-    "LogoUrl": [
-		"",
-		"string"
-	],
-    "ShowQuotaBar": [
+	"ShowQuotaBar": [
 		true,
 		"bool"
 	],
-    "SyncIosAfterLogin": [
+	"SyncIosAfterLogin": [
 		false,
 		"bool"
 	],
@@ -111,11 +107,11 @@
 		"Default",
 		"string"
 	],
-    "ThemeList": [
+	"ThemeList": [
 		["Default"],
 		"array"
 	],
-    "IncludeInMobile": [
+	"IncludeInMobile": [
 		true,
 		"bool"
 	]

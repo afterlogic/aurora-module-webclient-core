@@ -74,7 +74,8 @@ var Settings = {
 	{
 		var
 			oAppDataCoreSection = oAppData[Settings.ServerModuleName],
-			oAppDataCoreWebclientSection = oAppData['%ModuleName%']
+			oAppDataCoreWebclientSection = oAppData['%ModuleName%'],
+			oAppDataBrandingWebclientSection = oAppData['BrandingWebclient']
 		;
 		
 		if (!_.isEmpty(oAppDataCoreSection))
@@ -122,11 +123,15 @@ var Settings = {
 			this.IsDemo = Types.pBool(oAppDataCoreWebclientSection.IsDemo, this.IsDemo);
 			this.IsMobile = Types.pInt(oAppDataCoreWebclientSection.IsMobile, this.IsMobile);
 			this.LanguageList = Types.pArray(oAppDataCoreWebclientSection.LanguageListWithNames, this.LanguageList);
-			this.LogoUrl = Types.pString(oAppDataCoreWebclientSection.LogoUrl, this.LogoUrl);
 			this.ShowQuotaBar = Types.pBool(oAppDataCoreWebclientSection.ShowQuotaBar, this.ShowQuotaBar);
 			this.SyncIosAfterLogin = Types.pBool(oAppDataCoreWebclientSection.SyncIosAfterLogin, this.SyncIosAfterLogin);
 			this.Theme = Types.pString(oAppDataCoreWebclientSection.Theme, this.Theme);
 			this.ThemeList = Types.pArray(oAppDataCoreWebclientSection.ThemeList, this.ThemeList);
+		}
+
+		if (!_.isEmpty(oAppDataBrandingWebclientSection))
+		{
+			this.LogoUrl = Types.pString(oAppDataBrandingWebclientSection.TabsbarLogo, this.LogoUrl);
 		}
 		
 		if (moment.locale() !== this.ShortLanguage && this.Language !== 'Arabic' && this.Language !== 'Persian')
