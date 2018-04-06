@@ -62,6 +62,8 @@ var Settings = {
 	SyncIosAfterLogin: false,
 	Theme: 'Default',
 	ThemeList: [],
+	Version: '',
+	ProductName: '',
 	
 	IsRTL: bRtl,
 	
@@ -104,6 +106,8 @@ var Settings = {
 			this.DbLogin = Types.pString(oAppDataCoreSection.DBLogin, this.DbLogin);
 			this.DbName = Types.pString(oAppDataCoreSection.DBName, this.DbName);
 			this.SaltNotEmpty = Types.pBool(oAppDataCoreSection.SaltNotEmpty, this.SaltNotEmpty);
+			this.Version = oAppDataCoreSection.Version;
+			this.ProductName = oAppDataCoreSection.ProductName;
 		}
 		
 		if (!_.isEmpty(oAppDataCoreWebclientSection))
