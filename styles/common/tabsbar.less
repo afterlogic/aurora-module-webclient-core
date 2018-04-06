@@ -1,13 +1,13 @@
 /*=== Tabsbar CSS ===*/
 .tabsbar {
     .theme-tabsbar();
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
+	//display: flex;
+	//flex-direction: row;
+	//flex-wrap: wrap;
 	//align-content: center;
-	align-items: center;
+	//align-items: center;
 	
-	min-height: @theme-tabs-height;
+	height: @theme-tabs-height;
 	
 	padding: 0px 5px;
 	position: relative;
@@ -30,9 +30,9 @@
 		line-height: 120%;
 		position: relative;
 		text-shadow: @tabsbar-item-font-shadow;
-		//vertical-align: middle;
+		vertical-align: middle;
 		
-		align-self: center;
+		//align-self: center;
 		
 		.cssanimations &.recivedAnim {
 			border-radius: 4px;
@@ -140,7 +140,8 @@
 		height: auto;
 		margin-left: 6px;
 		margin-right: 0px;
-		//margin-top: @tabsbar-item-top-offset;
+		margin-top: @tabsbar-item-top-offset;
+		
 		
 		//align-self: flex-end;
 		
