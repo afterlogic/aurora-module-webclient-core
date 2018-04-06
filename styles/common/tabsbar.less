@@ -18,7 +18,15 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 		align-content: center;*/
+		height: 100%;
+
 		width: 100%;
+		&::before {
+			content: "";
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+		}
 	}
 	
 	.item {
