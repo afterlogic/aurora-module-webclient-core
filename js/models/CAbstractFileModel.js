@@ -217,7 +217,7 @@ CAbstractFileModel.prototype.getActionText = function (sAction)
 {
 	if (this.hasAction(sAction) && this.oActionsData[sAction] && (typeof this.oActionsData[sAction].Text === 'string' || _.isFunction(this.oActionsData[sAction].Text)))
 	{
-		return this.oActionsData[sAction].Text;
+		return _.isFunction(this.oActionsData[sAction].Text) ? this.oActionsData[sAction].Text() : this.oActionsData[sAction].Text;
 	}
 	return '';
 };
