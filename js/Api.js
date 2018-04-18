@@ -3,9 +3,10 @@
 var
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	
+	ModuleErrors = require('%PathToCoreWebclientModule%/js/ModuleErrors.js'),
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
-			
+	
 	Api = {}
 ;
 
@@ -20,10 +21,10 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 		iErrorCode = oResponse.ErrorCode,
 		sResponseError = oResponse.ErrorMessage || '',
 		sErrorModule = oResponse.ErrorModule || '',
-		sResultError = ''
+		sResultError = ModuleErrors.getErrorMessage(oResponse) || ''
 	;
 	
-	if (sErrorModule !== '')
+	if (sResultError === '' && sErrorModule !== '')
 	{
 		sResultError = ModulesManager.run(sErrorModule, 'getErrorMessageByCode', [oResponse]) || '';
 	}
@@ -56,15 +57,6 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 			case Enums.Errors.UserAlreadyExists:
 				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_USER_ALREADY_EXISTS');
 				break;
-			case Enums.Errors.CanNotGetMessage:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_MESSAGE_DELETED');
-				break;
-			case Enums.Errors.UnableSendToRecipients:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_UNABLE_SEND_TO_RECIPIENTS', {'ADDRESS': (oResponse.Mailbox || '')});
-				break;
-			case Enums.Errors.ExternalRecipientsBlocked:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_UNABLE_SEND_TO_RECIPIENTS', {'ADDRESS': (oResponse.Mailbox || '')}) + ' ' + TextUtils.i18n('%MODULENAME%/ERROR_EXTERNAL_RECIPIENTS_BLOCKED');
-				break;
 			case Enums.Errors.CanNotChangePassword:
 				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_UNABLE_CHANGE_PASSWORD');
 				break;
@@ -80,9 +72,6 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 				break;
 			case Enums.Errors.HelpdeskUserNotExists:
 				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_FORGOT_NO_HELPDESK_ACCOUNT');
-				break;
-			case Enums.Errors.MailServerError:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_CANT_CONNECT_TO_SERVER');
 				break;
 			case Enums.Errors.DataTransferFailed:
 				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_DATA_TRANSFER_FAILED');

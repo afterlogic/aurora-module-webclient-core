@@ -71,12 +71,6 @@ Enums.Errors = {
 	'UserAlreadyExists': 111,
 	'SystemNotConfigured': 112,
 	'LicenseLimit': 115,
-	'CanNotGetMessage': 202,
-	'ImapQuota': 205,
-	'LibraryNoFound': 208,
-	'NotSavedInSentItems': 304,
-	'UnableSendToRecipients': 305,
-	'ExternalRecipientsBlocked': 306,
 	'CanNotChangePassword': 502,
 	'AccountOldPasswordNotCorrect': 1020,
 	'FetcherIncServerNotAvailable': 702,
@@ -89,7 +83,6 @@ Enums.Errors = {
 	'CanNotUploadFileQuota': 812,
 	'FileAlreadyExists': 813,
 	'FileNotFound': 814,
-	'MailServerError': 901,
 	'DataTransferFailed': 1100,
 	'NotDisplayedError': 1155
 };

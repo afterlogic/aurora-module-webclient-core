@@ -2,31 +2,42 @@
 
 var
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
-	AppData = window.auroraAppData
+	
+	oErrors = Types.pObject(window.auroraAppData && Types.pObject(window.auroraAppData.module_errors), {})
 ;
-var ModuleErrors = {
-	Errors: {},
-	init: function (oAppData)
-	{
-		this.Errors = Types.pObject(oAppData.module_errors, {});
-	},
+
+module.exports = {
 	getErrorMessage: function (oResponse)
 	{
 		var
 			mResult = false,
+			sMedResult = '',
 			iErrorCode = typeof oResponse.ErrorCode !== 'undefined' ? oResponse.ErrorCode : null,
 			sModuleName = typeof oResponse.Module !== 'undefined' ? oResponse.Module : null
 		;
+		
 		if (iErrorCode !== null && sModuleName !== null
-			&& typeof this.Errors[sModuleName] !== 'undefined' 
-			&& typeof this.Errors[sModuleName][iErrorCode] !== 'undefined')
+			&& typeof oErrors[sModuleName] !== 'undefined' 
+			&& typeof oErrors[sModuleName][iErrorCode] !== 'undefined')
 		{
-			mResult = this.Errors[sModuleName][iErrorCode];
+			mResult = oErrors[sModuleName][iErrorCode];
 		}
+		
+		if (Types.isNonEmptyString(mResult))
+		{
+			sMedResult = mResult.replace(/[^%]*%(\w+)%[^%]*/g, function(sMatch, sFound, iIndex, sStr) {
+				if (Types.isNonEmptyString(oResponse[sFound]))
+				{
+					return sMatch.replace('%' + sFound + '%', oResponse[sFound]);
+				}
+				return sMatch;
+			});
+			if (Types.isNonEmptyString(sMedResult))
+			{
+				mResult = sMedResult;
+			}
+		}
+		
 		return mResult;
 	}
 };
-
-ModuleErrors.init(AppData);
-
-module.exports = ModuleErrors;
