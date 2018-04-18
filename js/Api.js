@@ -4,7 +4,6 @@ var
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	
 	ModuleErrors = require('%PathToCoreWebclientModule%/js/ModuleErrors.js'),
-	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
 	
 	Api = {}
@@ -20,14 +19,8 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 	var
 		iErrorCode = oResponse.ErrorCode,
 		sResponseError = oResponse.ErrorMessage || '',
-		sErrorModule = oResponse.ErrorModule || '',
 		sResultError = ModuleErrors.getErrorMessage(oResponse) || ''
 	;
-	
-	if (sResultError === '' && sErrorModule !== '')
-	{
-		sResultError = ModulesManager.run(sErrorModule, 'getErrorMessageByCode', [oResponse]) || '';
-	}
 	
 	if (sResultError === '')
 	{

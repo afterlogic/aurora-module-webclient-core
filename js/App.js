@@ -273,7 +273,7 @@ CApp.prototype.showLastErrorOnLogin = function ()
 		
 		if (iError !== 0)
 		{
-			Api.showErrorByCode({'ErrorCode': iError, 'ErrorMessage': '', 'ErrorModule': sErrorModule}, '', true);
+			Api.showErrorByCode({'ErrorCode': iError, 'Module': sErrorModule}, '', true);
 		}
 		
 		if (UserSettings.LastErrorCode === Enums.Errors.AuthError)
