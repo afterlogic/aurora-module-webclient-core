@@ -13,6 +13,7 @@ var
 	Api = require('%PathToCoreWebclientModule%/js/Api.js'),
 	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
+	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
 	Routing = require('%PathToCoreWebclientModule%/js/Routing.js'),
 	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
 	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
@@ -246,6 +247,13 @@ CApp.prototype.init = function ()
 			WindowOpener.closeAll();
 		});
 	}
+	
+	window.onbeforeunload = _.bind(function () {
+		if (Screens.hasUnsavedChanges() || Popups.hasUnsavedChanges())
+		{
+			return '';
+		}
+	}, this);
 	
 	if (Browser.ie8AndBelow)
 	{

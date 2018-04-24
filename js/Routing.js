@@ -237,6 +237,28 @@ CRouting.prototype.getScreenFromHash = function ()
 CRouting.prototype.parseRouting = function (aAddParams)
 {
 	var
+		fContinueScreenChange = _.bind(this.chooseScreen, this, aAddParams),
+		fRevertScreenChange = _.bind(this.historyBackWithoutParsing, this, aAddParams)
+	;
+	
+	if (_.isFunction(Screens.continueOrRevertScreenChange))
+	{
+		Screens.continueOrRevertScreenChange(fContinueScreenChange, fRevertScreenChange);
+	}
+	else
+	{
+		fContinueScreenChange();
+	}
+};
+
+/**
+ * Parses the hash string and opens the corresponding routing screen.
+ * 
+ * @param {Array} aAddParams
+ */
+CRouting.prototype.chooseScreen = function (aAddParams)
+{
+	var
 		sHash = this.getHashFromHref(),
 		aParams = _.map(sHash.split('/'), function (sHashPart) {
 			return decodeURIComponent(sHashPart);

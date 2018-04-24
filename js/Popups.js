@@ -50,6 +50,24 @@ CPopups.prototype.hasOpenedMaximizedPopups = function ()
 	return bOpenedMaximizedPopups;
 };
 
+CPopups.prototype.hasUnsavedChanges = function ()
+{
+	var bHasUnsavedChanges = false;
+	
+	_.each(this.popups, function (oPopup) {
+		if (!bHasUnsavedChanges && oPopup && _.isFunction(oPopup.hasUnsavedChanges) && oPopup.hasUnsavedChanges())
+		{
+			bHasUnsavedChanges = true;
+			if (_.isFunction(oPopup.minimized) && oPopup.minimized() && _.isFunction(oPopup.maximize))
+			{
+				oPopup.maximize();
+			}
+		}
+	});
+	
+	return bHasUnsavedChanges;
+};
+
 /**
  * @param {?} oPopup
  * @param {Array=} aParameters
