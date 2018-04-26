@@ -23,12 +23,12 @@ var
  * @param {boolean=} bCheckOnSelect = false
  * @param {boolean=} bUnselectOnCtrl = false
  * @param {boolean=} bDisableMultiplySelection = false
+ * @param {boolean=} bChangeOnSelect = true
  * @constructor
  */
 function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fEnterCallback, multiplyLineFactor,
-	bResetCheckedOnClick, bCheckOnSelect, bUnselectOnCtrl, bDisableMultiplySelection)
+	bResetCheckedOnClick, bCheckOnSelect, bUnselectOnCtrl, bDisableMultiplySelection, bChangeOnSelect)
 {
-	this.fBeforeSelectCallback = null;
 	this.fSelectCallback = fSelectCallback || function() {};
 	this.fDeleteCallback = fDeleteCallback || function() {};
 	this.fDblClickCallback = (!App.isMobile() && fDblClickCallback) ? fDblClickCallback : function() {};
@@ -37,7 +37,8 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 	this.bCheckOnSelect = !!bCheckOnSelect;
 	this.bUnselectOnCtrl = !!bUnselectOnCtrl;
 	this.bDisableMultiplySelection = !!bDisableMultiplySelection;
-
+	this.bChangeOnSelect = (typeof bChangeOnSelect === undefined) ? true : !!bChangeOnSelect;
+	
 	this.useKeyboardKeys = ko.observable(false);
 
 	this.list = ko.observableArray([]);
@@ -157,7 +158,7 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 
 			if (oItemToSelect)
 			{
-//				self.scrollToSelected();
+				self.scrollToSelected();
 				this.oLast = oItemToSelect;
 			}
 		},
@@ -256,14 +257,6 @@ CSelector.prototype.bResetCheckedOnClick = false;
 CSelector.prototype.bCheckOnSelect = false;
 CSelector.prototype.bUnselectOnCtrl = false;
 CSelector.prototype.bDisableMultiplySelection = false;
-
-/**
- * @param {Function} fBeforeSelectCallback
- */
-CSelector.prototype.setBeforeSelectCallback = function (fBeforeSelectCallback)
-{
-	this.fBeforeSelectCallback = fBeforeSelectCallback || null;
-};
 
 CSelector.prototype.getLastOrSelected = function ()
 {
@@ -671,13 +664,9 @@ CSelector.prototype.shiftClickResult = function (oResult, oSelected, iEventKeyCo
 CSelector.prototype.clickNewSelectPosition = function (iEventKeyCode, bShiftKey)
 {
 	var
-		self = this,
-		iTimeout = 0,
-		oResult = null,
-		oSelected = this.itemSelected()
+		oSelected = this.itemSelected(),
+		oResult = this.getResultSelection(oSelected, iEventKeyCode)
 	;
-
-	oResult = this.getResultSelection(oSelected, iEventKeyCode);
 
 	if (oResult)
 	{
@@ -685,56 +674,7 @@ CSelector.prototype.clickNewSelectPosition = function (iEventKeyCode, bShiftKey)
 		{
 			this.shiftClickResult(oResult, oSelected, iEventKeyCode);
 		}
-
-		if (oResult && this.fBeforeSelectCallback)
-		{
-			this.fBeforeSelectCallback(oResult, function (bResult) {
-				if (bResult)
-				{
-					self.itemSelected(oResult);
-
-					iTimeout = 0 === self.iTimer ? 50 : 150;
-					if (0 !== self.iTimer)
-					{
-						window.clearTimeout(self.iTimer);
-					}
-
-					self.iTimer = window.setTimeout(function () {
-						self.iTimer = 0;
-						self.onSelect(oResult, false);
-					}, iTimeout);
-
-					this.scrollToSelected();
-				}
-			});
-
-			this.scrollToSelected();
-		}
-		else
-		{
-			this.itemSelected(oResult);
-
-			iTimeout = 0 === this.iTimer ? 50 : 150;
-			if (0 !== this.iTimer)
-			{
-				window.clearTimeout(this.iTimer);
-			}
-
-			this.iTimer = window.setTimeout(function () {
-				self.iTimer = 0;
-				self.onSelect(oResult, true);
-			}, iTimeout);
-
-			this.scrollToSelected();
-		}
-	}
-	else if (oSelected)
-	{
-		if (bShiftKey && (-1 < $.inArray(iEventKeyCode, [this.KeyUp, this.KeyDown, this.KeyLeft, this.KeyRight,
-			Enums.Key.PageUp, Enums.Key.PageDown, Enums.Key.Home, Enums.Key.End])))
-		{
-			oSelected.checked(!oSelected.checked());
-		}
+		this.selectionFunc(oResult);
 	}
 };
 
@@ -801,22 +741,7 @@ CSelector.prototype.onDelete = function ()
  */
 CSelector.prototype.onEnter = function (oItem)
 {
-	var self = this;
-	if (oItem && this.fBeforeSelectCallback)
-	{
-		this.fBeforeSelectCallback(oItem, function (bResult) {
-			if (bResult)
-			{
-				self.itemSelected(oItem);
-				self.fEnterCallback.call(this, oItem);
-			}
-		});
-	}
-	else
-	{
-		this.itemSelected(oItem);
-		this.fEnterCallback.call(this, oItem);
-	}
+	this.fEnterCallback.call(this, oItem);
 };
 
 /**
@@ -826,13 +751,18 @@ CSelector.prototype.selectionFunc = function (oItem)
 {
 	var
 		fProceedSelection = _.bind(function () {
-			this.itemSelected(null);
+			if (this.bChangeOnSelect)
+			{
+				this.itemSelected(null);
+			}
 			if (this.bResetCheckedOnClick)
 			{
 				this.listChecked(false);
 			}
-
-			this.itemSelected(oItem);
+			if (this.bChangeOnSelect)
+			{
+				this.itemSelected(oItem);
+			}
 			this.fSelectCallback.call(this, oItem);
 		}, this),
 		oParams = {
@@ -841,8 +771,6 @@ CSelector.prototype.selectionFunc = function (oItem)
 			'ProceedSelectionHandler': fProceedSelection
 		}
 	;
-	
-	App.broadcastEvent('%ModuleName%::SelectListItem::before', oParams);
 	
 	if (!oParams.Cancel)
 	{
@@ -856,20 +784,7 @@ CSelector.prototype.selectionFunc = function (oItem)
  */
 CSelector.prototype.onSelect = function (oItem, bCheckBefore)
 {
-	if (this.fBeforeSelectCallback && bCheckBefore)
-	{
-		var self = this;
-		this.fBeforeSelectCallback(oItem, function (bResult) {
-			if (bResult)
-			{
-				self.selectionFunc(oItem);
-			}
-		});
-	}
-	else
-	{
-		this.selectionFunc(oItem);
-	}
+	this.selectionFunc(oItem);
 };
 
 /**

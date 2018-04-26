@@ -13,11 +13,13 @@ var
 	Api = require('%PathToCoreWebclientModule%/js/Api.js'),
 	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
-	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
 	Routing = require('%PathToCoreWebclientModule%/js/Routing.js'),
 	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
 	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
-	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js')
+	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js'),
+	
+	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
+	ConfirmPopup = require('%PathToCoreWebclientModule%/js/popups/ConfirmPopup.js')
 ;
 
 require('%PathToCoreWebclientModule%/js/enums.js');
@@ -292,17 +294,56 @@ CApp.prototype.showLastErrorOnLogin = function ()
 };
 
 /**
+ * Makes user logout if there are no changes in current screen or popup or user chose to discard them.
  * @param {number=} iLastErrorCode
  */
 CApp.prototype.logout = function (iLastErrorCode)
 {
-	var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
-	
-	Ajax.send('Core', 'Logout', iLastErrorCode ? {'LastErrorCode': iLastErrorCode} : null, this.onLogout, this);
+	var fContinueLogout = _.bind(function () {
+		var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
 
-	$.removeCookie('AuthToken');
+		Ajax.send('Core', 'Logout', iLastErrorCode ? {'LastErrorCode': iLastErrorCode} : null, this.onLogout, this);
+
+		$.removeCookie('AuthToken');
+
+		window.onbeforeunload = null;
+
+		this.iUserRole = Enums.UserRole.Anonymous;
+	}, this);
 	
-	this.iUserRole = Enums.UserRole.Anonymous;
+	if (Screens.hasUnsavedChanges() || Popups.hasUnsavedChanges())
+	{
+		this.askDiscardChanges(fContinueLogout);
+	}
+};
+
+/**
+ * Asks user if he prefer discard changes or stay on current screen/popup.
+ * @param {function} fOnDiscard Function to execute if user prefer to discard changes.
+ * @param {function} fOnNotDiscard Function to execute if user prefer to stay on current screen/popup.
+ * @param {object} oCurrentScreen Current screen object.
+ */
+CApp.prototype.askDiscardChanges = function (fOnDiscard, fOnNotDiscard, oCurrentScreen)
+{
+	var
+		sConfirm = TextUtils.i18n('COREWEBCLIENT/CONFIRM_DISCARD_CHANGES'),
+		fOnConfirm = _.bind(function (bOk) {
+			if (bOk && _.isFunction(fOnDiscard))
+			{
+				if (oCurrentScreen && _.isFunction(oCurrentScreen.discardChanges))
+				{
+					oCurrentScreen.discardChanges();
+				}
+				fOnDiscard();
+			}
+			else if (_.isFunction(fOnNotDiscard))
+			{
+				fOnNotDiscard();
+			}
+		}, this)
+	;
+
+	Popups.showPopup(ConfirmPopup, [sConfirm, fOnConfirm]);
 };
 
 CApp.prototype.authProblem = function ()

@@ -5,14 +5,10 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	
-	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
-	Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
-	
-	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
-	ConfirmPopup = require('%PathToCoreWebclientModule%/js/popups/ConfirmPopup.js')
+	Settings = require('%PathToCoreWebclientModule%/js/Settings.js')
 ;
 
 /**
@@ -348,31 +344,13 @@ CScreens.prototype.hasUnsavedChanges = function ()
 	return _.isFunction(oCurrentScreen.hasUnsavedChanges) && oCurrentScreen.hasUnsavedChanges();
 };
 
-CScreens.prototype.continueOrRevertScreenChange = function (fContinueScreenChange, fRevertScreenChange)
+/**
+ * Returns current screen object.
+ * @returns {object}
+ */
+CScreens.prototype.getCurrentScreen = function ()
 {
-	var
-		sConfirm = TextUtils.i18n('COREWEBCLIENT/CONFIRM_DISCARD_CHANGES'),
-		fOnConfirm = _.bind(function (bOk) {
-			if (bOk && _.isFunction(fContinueScreenChange))
-			{
-				fContinueScreenChange();
-			}
-			else if (_.isFunction(fRevertScreenChange))
-			{
-				fRevertScreenChange();
-			}
-		}, this),
-		oCurrentScreen = this.screens()[this.currentScreen()]
-	;
-
-	if (oCurrentScreen && _.isFunction(oCurrentScreen.hasUnsavedChanges) && oCurrentScreen.hasUnsavedChanges())
-	{
-		Popups.showPopup(ConfirmPopup, [sConfirm, fOnConfirm]);
-	}
-	else if (_.isFunction(fContinueScreenChange))
-	{
-		fContinueScreenChange();
-	}
+	return this.screens()[this.currentScreen()];
 };
 
 var Screens = new CScreens();

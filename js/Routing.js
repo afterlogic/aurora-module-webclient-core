@@ -232,20 +232,23 @@ CRouting.prototype.getScreenFromHash = function ()
 };
 
 /**
+ * Checks if there are changes in current screen and continues screen change or discards changes.
  * @param {Array} aAddParams
  */
 CRouting.prototype.parseRouting = function (aAddParams)
 {
 	var
+		App = require('%PathToCoreWebclientModule%/js/App.js'),
 		fContinueScreenChange = _.bind(this.chooseScreen, this, aAddParams),
-		fRevertScreenChange = _.bind(this.historyBackWithoutParsing, this, aAddParams)
+		fRevertScreenChange = _.bind(this.historyBackWithoutParsing, this, aAddParams),
+		oCurrentScreen = _.isFunction(Screens.getCurrentScreen) ? Screens.getCurrentScreen() : null
 	;
 	
-	if (_.isFunction(Screens.continueOrRevertScreenChange))
+	if (oCurrentScreen && _.isFunction(oCurrentScreen.hasUnsavedChanges) && oCurrentScreen.hasUnsavedChanges())
 	{
-		Screens.continueOrRevertScreenChange(fContinueScreenChange, fRevertScreenChange);
+		App.askDiscardChanges(fContinueScreenChange, fRevertScreenChange, oCurrentScreen);
 	}
-	else
+	else if (_.isFunction(fContinueScreenChange))
 	{
 		fContinueScreenChange();
 	}
