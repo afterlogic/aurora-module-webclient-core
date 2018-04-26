@@ -315,6 +315,10 @@ CApp.prototype.logout = function (iLastErrorCode)
 	{
 		this.askDiscardChanges(fContinueLogout);
 	}
+	else
+	{
+		fContinueLogout();
+	}
 };
 
 /**
