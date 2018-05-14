@@ -117,17 +117,17 @@ var
 		const newlyCreatedAssets = stats.compilation.assets;
 		const unlinked = [];
 		const bMin = stats.compilation.outputOptions.chunkFilename.substr(-6) === 'min.js';
-		
-		fs.readdir(path.resolve(stats.compilation.outputOptions.publicPath), (err, files) => {
+
+		fs.readdir(path.resolve(stats.compilation.outputOptions.publicPath), function(err, files) {
 			files
 				.filter(function(file) { return file.substr(0, 1) !== '_'; })
 				.filter(function(file) { return bMin ? file.substr(-6) === 'min.js' : file.substr(-6) !== 'min.js'; })
-				.forEach(file => {
-				if (!newlyCreatedAssets[file]) {
-					fs.unlink(path.resolve(stats.compilation.outputOptions.publicPath + file));
-					unlinked.push(file);
-				}
-			});
+				.forEach(function(file) {
+					if (!newlyCreatedAssets[file]) {
+						fs.unlinkSync(path.resolve(stats.compilation.outputOptions.publicPath + file));
+						unlinked.push(file);
+					}
+				});
 			if (unlinked.length > 0) {
 				console.log('Removed old assets: ', unlinked);
 			}
