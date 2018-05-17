@@ -202,7 +202,7 @@ CApp.prototype.init = function ()
 	
 	if (this.iUserRole !== Enums.UserRole.Anonymous && !this.bPublic)
 	{
-		var AccountList = ModulesManager.run('Mail', 'getAccountList');
+		var AccountList = ModulesManager.run('MailWebclient', 'getAccountList');
 		if (AccountList)
 		{
 			this.currentAccountId = AccountList.currentId;

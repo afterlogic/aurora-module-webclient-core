@@ -376,6 +376,7 @@ ko.bindingHandlers.autocompleteSimple = {
 			jqEl = $(oElement),
 			oOptions = fValueAccessor(),
 			fCallback = oOptions['callback'],
+			fDataAccessor = oOptions.dataAccessor ? oOptions.dataAccessor : Utils.emptyFunction(),
 			fDelete = function () {
 				fDeleteAccessor(oSelectedItem);
 				var oAutocomplete = jqEl.data('customAutocomplete') || jqEl.data('uiAutocomplete') || jqEl.data('autocomplete') || jqEl.data('ui-autocomplete');
