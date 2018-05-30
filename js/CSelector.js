@@ -37,7 +37,7 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 	this.bCheckOnSelect = !!bCheckOnSelect;
 	this.bUnselectOnCtrl = !!bUnselectOnCtrl;
 	this.bDisableMultiplySelection = !!bDisableMultiplySelection;
-	this.bChangeOnSelect = (typeof bChangeOnSelect === undefined) ? true : !!bChangeOnSelect;
+	this.bChangeOnSelect = (typeof bChangeOnSelect === 'undefined') ? true : !!bChangeOnSelect;
 	
 	this.useKeyboardKeys = ko.observable(false);
 
