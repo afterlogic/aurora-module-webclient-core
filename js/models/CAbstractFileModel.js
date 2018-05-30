@@ -318,7 +318,7 @@ CAbstractFileModel.prototype.parseActions = function (oData)
 
 CAbstractFileModel.prototype.commonParseActions = function (oData)
 {
-	this.thumbUrlInQueue(Types.pString(oData.ThumbnailUrl));
+	this.thumbUrlInQueue(Types.pString(oData.ThumbnailUrl) !== '' ? Types.pString(oData.ThumbnailUrl) + '/' + Math.random() : '');
 	_.each (oData.Actions, function (oData, sAction) {
 		if (!this.oActionsData[sAction])
 		{
