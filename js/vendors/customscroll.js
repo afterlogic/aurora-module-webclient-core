@@ -33,7 +33,7 @@ var jQuery = require('jquery');
 		if (this.x)
 		{
 			css['padding-bottom'] = scrollWidth;
-			css['overflow-x'] = 'auto';
+			css['overflow-x'] = 'scroll';
 		}
 		else
 		{
