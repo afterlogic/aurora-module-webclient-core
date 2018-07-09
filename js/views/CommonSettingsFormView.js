@@ -42,11 +42,6 @@ function CCommonSettingsFormView()
 	{
 		this.aLanguages.unshift({value: 'autodetect', name: TextUtils.i18n('%MODULENAME%/LABEL_AUTODETECT')});
 	}
-	
-	/* Editable fields */
-	this.selectedTheme = ko.observable(UserSettings.Theme);
-	this.selectedLanguage = ko.observable(this.bAdmin && UserSettings.AutodetectLanguage ? 'autodetect' : UserSettings.Language);
-	this.autoRefreshInterval = ko.observable(UserSettings.AutoRefreshIntervalMinutes);
 	this.aRefreshIntervals = [
 		{name: TextUtils.i18n('%MODULENAME%/LABEL_REFRESH_OFF'), value: 0},
 		{name: TextUtils.i18n('%MODULENAME%/LABEL_MINUTES_PLURAL', {'COUNT': 1}, null, 1), value: 1},
@@ -57,6 +52,11 @@ function CCommonSettingsFormView()
 		{name: TextUtils.i18n('%MODULENAME%/LABEL_MINUTES_PLURAL', {'COUNT': 20}, null, 20), value: 20},
 		{name: TextUtils.i18n('%MODULENAME%/LABEL_MINUTES_PLURAL', {'COUNT': 30}, null, 30), value: 30}
 	];
+	
+	/* Editable fields */
+	this.selectedTheme = ko.observable(this.getGlobalTheme());
+	this.selectedLanguage = ko.observable(this.getGlobalLanguage());
+	this.autoRefreshInterval = ko.observable(this.getGlobalAutoRefreshIntervalMinutes());
 	this.timeFormat = ko.observable(UserSettings.timeFormat());
 	this.selectedDateFormat = ko.observable(UserSettings.dateFormat());
 	this.desktopNotifications = ko.observable(UserSettings.AllowDesktopNotifications);
@@ -102,14 +102,66 @@ CCommonSettingsFormView.prototype.getCurrentValues = function ()
 	];
 };
 
+CCommonSettingsFormView.prototype.getGlobalLanguage = function ()
+{
+	var
+		sLang = this.bAdmin && UserSettings.AutodetectLanguage ? 'autodetect' : UserSettings.Language,
+		oFoundLang = _.find(this.aLanguages, function (oLangItem) {
+			return oLangItem.value === sLang;
+		})
+	;
+	if (!oFoundLang)
+	{
+		oFoundLang = _.find(this.aLanguages, function (oLangItem) {
+			return oLangItem.value === 'English';
+		});
+	}
+	
+	return oFoundLang ? oFoundLang.value : (this.aLanguages.length > 0 ? this.aLanguages[0].value : '');
+};
+
+CCommonSettingsFormView.prototype.getGlobalTheme = function ()
+{
+	var
+		sFoundTheme = _.find(this.aThemes, function (sThemeItem) {
+			return sThemeItem === UserSettings.Theme;
+		})
+	;
+	if (!sFoundTheme)
+	{
+		sFoundTheme = _.find(this.aThemes, function (sThemeItem) {
+			return sThemeItem === 'Default';
+		});
+	}
+	
+	return sFoundTheme ? sFoundTheme : (this.aThemes.length > 0 ? this.aThemes[0] : '');
+};
+
+CCommonSettingsFormView.prototype.getGlobalAutoRefreshIntervalMinutes = function ()
+{
+	var
+		oFoundInterval = _.find(this.aRefreshIntervals, function (oIntervalItem) {
+			return oIntervalItem.value === UserSettings.AutoRefreshIntervalMinutes;
+		})
+	;
+	if (!oFoundInterval)
+	{
+		oFoundInterval = _.find(this.aRefreshIntervals, function (oIntervalItem) {
+			return oIntervalItem.value === 0;
+		});
+	}
+	
+	return oFoundInterval ? oFoundInterval.value : (this.aRefreshIntervals.length > 0 ? this.aRefreshIntervals[0].value : 0);
+};
+
 /**
  * Puts values from the global settings object to the editable fields.
  */
 CCommonSettingsFormView.prototype.revertGlobalValues = function ()
 {
-	this.selectedTheme(UserSettings.Theme);
-	this.selectedLanguage(this.bAdmin && UserSettings.AutodetectLanguage ? 'autodetect' : UserSettings.Language);
-	this.autoRefreshInterval(UserSettings.AutoRefreshIntervalMinutes);
+	this.selectedTheme(this.getGlobalTheme());
+	this.selectedLanguage(this.getGlobalLanguage());
+	this.autoRefreshInterval(this.getGlobalAutoRefreshIntervalMinutes());
 	this.timeFormat(UserSettings.timeFormat());
 	this.selectedDateFormat(UserSettings.dateFormat());
 	this.desktopNotifications(UserSettings.AllowDesktopNotifications);
