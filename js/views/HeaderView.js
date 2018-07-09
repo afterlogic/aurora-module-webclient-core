@@ -33,11 +33,12 @@ function CHeaderView()
 					aExcludedHashes = _.isFunction(oTab.excludedHashes) && _.isArray(oTab.excludedHashes()) ? oTab.excludedHashes() : [],
 					bExcludedHashFound = !!_.find(aExcludedHashes, function (sExcludedHash) {
 						return sCurrHash.indexOf(sExcludedHash) === 0;
-					})
+					}),
+					bProperHash = sCurrHash.indexOf(oTab.baseHash() + '/') === 0 || sCurrHash === oTab.baseHash()
 				;
 				
-				oTab.isCurrent(!bExcludedHashFound && (Screens.currentScreen() === oTab.sName || sCurrHash.indexOf(oTab.baseHash()) === 0));
-				if (oTab.isCurrent() && sCurrHash !== '#')
+				oTab.isCurrent(!bExcludedHashFound && (Screens.currentScreen() === oTab.sName || bProperHash));
+				if (oTab.isCurrent() && bProperHash)
 				{
 					oTab.hash(sCurrHash);
 				}
