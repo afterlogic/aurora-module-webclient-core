@@ -56,10 +56,6 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 			case Enums.Errors.AccountOldPasswordNotCorrect:
 				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_CURRENT_PASSWORD_NOT_CORRECT');
 				break;
-			case Enums.Errors.FetcherIncServerNotAvailable:
-			case Enums.Errors.FetcherLoginNotCorrect:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_FETCHER_NOT_SAVED');
-				break;
 			case Enums.Errors.AccountAlreadyExists:
 				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_ACCOUNT_ALREADY_EXISTS');
 				break;

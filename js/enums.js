@@ -73,8 +73,6 @@ Enums.Errors = {
 	'LicenseLimit': 115,
 	'CanNotChangePassword': 502,
 	'AccountOldPasswordNotCorrect': 1020,
-	'FetcherIncServerNotAvailable': 702,
-	'FetcherLoginNotCorrect': 703,
 	'AccountAlreadyExists': 704,
 	'HelpdeskThrowInWebmail': 805,
 	'HelpdeskUserNotExists': 807,
