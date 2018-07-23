@@ -105,7 +105,7 @@ CCommonSettingsFormView.prototype.getCurrentValues = function ()
 CCommonSettingsFormView.prototype.getGlobalLanguage = function ()
 {
 	var
-		sLang = this.bAdmin && UserSettings.AutodetectLanguage ? 'autodetect' : UserSettings.Language,
+		sLang = this.bAdmin ? (UserSettings.AutodetectLanguage ? 'autodetect' : UserSettings.CommonLanguage) : UserSettings.Language,
 		oFoundLang = _.find(this.aLanguages, function (oLangItem) {
 			return oLangItem.value === sLang;
 		})

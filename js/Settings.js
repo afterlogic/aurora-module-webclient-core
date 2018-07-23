@@ -37,6 +37,7 @@ var Settings = {
 	AdminHasPassword: '',
 	AdminLanguage: '',
 	AdminLogin: '',
+	CommonLanguage: '',
 	DbHost: '',
 	DbLogin: '',
 	DbName: '',
@@ -102,6 +103,7 @@ var Settings = {
 			this.AdminHasPassword = Types.pBool(oAppDataCoreSection.AdminHasPassword, this.AdminHasPassword);
 			this.AdminLanguage = Types.pString(oAppDataCoreSection.AdminLanguage, this.AdminLanguage);
 			this.AdminLogin = Types.pString(oAppDataCoreSection.AdminLogin, this.AdminLogin);
+			this.CommonLanguage = Types.pString(oAppDataCoreSection.CommonLanguage, this.CommonLanguage);
 			this.DbHost = Types.pString(oAppDataCoreSection.DBHost, this.DbHost);
 			this.DbLogin = Types.pString(oAppDataCoreSection.DBLogin, this.DbLogin);
 			this.DbName = Types.pString(oAppDataCoreSection.DBName, this.DbName);
