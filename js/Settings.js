@@ -27,6 +27,7 @@ var Settings = {
 	Language: 'English',
 	LastErrorCode: 0,
 	ShortLanguage: 'en',
+	SingleTenantId: 0, // identifier os single tenant if multiple tenants and channels are not allowed
 	SiteName: 'Afterlogic Platform',
 	SocialName: '',
 	TenantName: '',
@@ -92,6 +93,7 @@ var Settings = {
 			this.Language = Types.pString(oAppDataCoreSection.Language, this.Language);
 			this.LastErrorCode = Types.pInt(oAppDataCoreSection.LastErrorCode, this.LastErrorCode);
 			this.ShortLanguage = Types.pString(oAppDataCoreSection.ShortLanguage, this.ShortLanguage);
+			this.SingleTenantId = Types.pPositiveInt(oAppDataCoreSection.SingleTenantId, this.SingleTenantId);
 			this.SiteName = Types.pString(oAppDataCoreSection.SiteName, this.SiteName);
 			this.SocialName = Types.pString(oAppDataCoreSection.SocialName, this.SocialName);
 			this.TenantName = Types.pString(oAppDataCoreSection.TenantName || UrlUtils.getRequestParam('tenant'), this.TenantName);
