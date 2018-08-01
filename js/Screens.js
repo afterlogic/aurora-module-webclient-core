@@ -133,10 +133,8 @@ CScreens.prototype.route = function (aParams)
 				self.onRouteCallback(oScreen, aParams);
 			});
 		}
-		
-		if (oCurrentScreen)
+		else if (oCurrentScreen)
 		{
-			//call callback for sync code
 			this.onRouteCallback(oCurrentScreen, aParams);
 		}
 	}
