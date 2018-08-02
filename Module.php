@@ -84,11 +84,6 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		
 		$oUser = \Aurora\System\Api::getAuthenticatedUser();
 		$oApiIntegrator = \Aurora\Modules\Core\Managers\Integrator::getInstance();
-		$bSyncIosAfterLogin = $this->getConfig('SyncIosAfterLogin', false);
-		if ($bSyncIosAfterLogin)
-		{
-			$bSyncIosAfterLogin = isset($_COOKIE['skip_ios']) && '1' === (string) $_COOKIE['skip_ios'] ? false : true;
-		}
 		
 		return array(
 			'AllowChangeSettings' => $this->getConfig('AllowChangeSettings', false),
@@ -107,7 +102,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'IsMobile' => $oApiIntegrator->isMobile(),
 			'LanguageListWithNames' => $this->getLanguageList($oApiIntegrator->getLanguageList()),
 			'ShowQuotaBar' => $this->getConfig('ShowQuotaBar', false),
-			'SyncIosAfterLogin' => $bSyncIosAfterLogin,
+			'SyncIosAfterLogin' => $this->getConfig('SyncIosAfterLogin', false),
 			'Theme' => $oUser ? $oUser->{$this->GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),
 			'ThemeList' => $this->getConfig('ThemeList', ['Default']),
 		);
