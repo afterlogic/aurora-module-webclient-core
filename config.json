@@ -100,7 +100,7 @@
 		"bool"
 	],
 	"SyncIosAfterLogin": [
-		false,
+		true,
 		"bool"
 	],
 	"Theme": [
