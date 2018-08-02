@@ -195,8 +195,9 @@ CApp.prototype.init = function ()
 		]);
 	}
 		
-	if (Browser.iosDevice && this.iUserRole !== Enums.UserRole.Anonymous && UserSettings.SyncIosAfterLogin && UserSettings.AllowIosProfile)
+	if (Browser.iosDevice && this.iUserRole !== Enums.UserRole.Anonymous && UserSettings.SyncIosAfterLogin && UserSettings.AllowIosProfile && $.cookie('skip_ios') === '1')
 	{
+		$.cookie('skip_ios', '1');
 		window.location.href = '?ios';
 	}
 	
