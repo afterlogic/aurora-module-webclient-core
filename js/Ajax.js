@@ -216,6 +216,12 @@ CAjax.prototype.abortAllRequests = function ()
 	this.requests([]);
 };
 
+CAjax.prototype.abortAndStopSendRequests = function ()
+{
+	this.bAllowRequests = false;
+	this.abortAllRequests();
+};
+
 /**
  * @param {Object} oRequest
  * @param {Function} fResponseHandler
@@ -226,10 +232,10 @@ CAjax.prototype.abortAllRequests = function ()
  */
 CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse, sType, oXhr)
 {
-	if (App.getUserRole() !== Enums.UserRole.Anonymous && oResponse && oResponse.AuthenticatedUserId !== App.getUserId())
+	if (App.getUserRole() !== Enums.UserRole.Anonymous && oResponse && Types.isNumber(oResponse.AuthenticatedUserId) && oResponse.AuthenticatedUserId !== App.getUserId())
 	{
 		Popups.showPopup(AlertPopup, [TextUtils.i18n('%MODULENAME%/ERROR_AUTHENTICATED_USER_CONFLICT'), function () {
-			App.logout();
+			App.logoutAndGotoLogin();
 		}, '', TextUtils.i18n('%MODULENAME%/ACTION_LOGOUT')]);
 	}
 	
@@ -238,15 +244,13 @@ CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse
 		switch (oResponse.ErrorCode)
 		{
 			case Enums.Errors.InvalidToken:
-				this.bAllowRequests = false;
+				this.abortAndStopSendRequests();
 				App.tokenProblem();
 				break;
 			case Enums.Errors.AuthError:
 				if (App.getUserRole() !== Enums.UserRole.Anonymous)
 				{
-					App.authProblem();
-					this.bAllowRequests = false;
-					this.abortAllRequests();
+					App.logoutAndGotoLogin(Enums.Errors.AuthError);
 				}
 				break;
 		}
@@ -369,7 +373,7 @@ CAjax.prototype.checkConnection = (function () {
 				Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_NO_INTERNET_CONNECTION'), true, true);
 				iTimer = setTimeout(function () {
 					Ajax.doSend({ Module: 'Core', Method: 'Ping' });
-				}, 60000);
+				}, 10000);
 			}
 			else
 			{
@@ -387,5 +391,6 @@ module.exports = {
 	hasOpenedRequests: _.bind(Ajax.hasOpenedRequests, Ajax),
 	registerAbortRequestHandler: _.bind(Ajax.registerAbortRequestHandler, Ajax),
 	registerOnAllRequestsClosedHandler: _.bind(Ajax.registerOnAllRequestsClosedHandler, Ajax),
+	abortAndStopSendRequests: _.bind(Ajax.abortAndStopSendRequests, Ajax),
 	send: _.bind(Ajax.send, Ajax)
 };

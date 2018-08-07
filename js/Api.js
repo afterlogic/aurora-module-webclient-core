@@ -47,6 +47,8 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 			case Enums.Errors.Captcha:
 				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_CAPTCHA_IS_INCORRECT');
 				break;
+			case Enums.Errors.AccessDenied:
+				break;
 			case Enums.Errors.UserAlreadyExists:
 				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_USER_ALREADY_EXISTS');
 				break;

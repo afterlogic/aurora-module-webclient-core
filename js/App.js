@@ -296,29 +296,46 @@ CApp.prototype.showLastErrorOnLogin = function ()
 
 /**
  * Makes user logout if there are no changes in current screen or popup or user chose to discard them.
- * @param {number=} iLastErrorCode
  */
-CApp.prototype.logout = function (iLastErrorCode)
+CApp.prototype.logout = function ()
 {
-	var fContinueLogout = _.bind(function () {
-		var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
-
-		Ajax.send('Core', 'Logout', iLastErrorCode ? {'LastErrorCode': iLastErrorCode} : null, this.onLogout, this);
-
-		$.removeCookie('AuthToken');
-
-		window.onbeforeunload = null;
-
-		this.iUserRole = Enums.UserRole.Anonymous;
-	}, this);
-	
 	if (Screens.hasUnsavedChanges() || Popups.hasUnsavedChanges())
 	{
-		this.askDiscardChanges(fContinueLogout);
+		this.askDiscardChanges(this.logoutAndGotoLogin.bind(this));
 	}
 	else
 	{
-		fContinueLogout();
+		this.logoutAndGotoLogin();
+	}
+};
+
+/**
+ * Makes user logout and relocate to login screen after that.
+ * @param {number=} iLastErrorCode
+ */
+CApp.prototype.logoutAndGotoLogin = function (iLastErrorCode)
+{
+	var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
+
+	Ajax.send('Core', 'Logout', iLastErrorCode ? {'LastErrorCode': iLastErrorCode} : null);
+
+	Ajax.abortAndStopSendRequests();
+
+	$.removeCookie('AuthToken');
+
+	window.onbeforeunload = null;
+	
+	WindowOpener.closeAll();
+	
+	Routing.finalize();
+	
+	if (Types.isNonEmptyString(UserSettings.CustomLogoutUrl))
+	{
+		window.location.href = UserSettings.CustomLogoutUrl;
+	}
+	else
+	{
+		UrlUtils.clearAndReloadLocation(Browser.ie8AndBelow, true);
 	}
 };
 
@@ -351,11 +368,6 @@ CApp.prototype.askDiscardChanges = function (fOnDiscard, fOnNotDiscard, oCurrent
 	Popups.showPopup(ConfirmPopup, [sConfirm, fOnConfirm]);
 };
 
-CApp.prototype.authProblem = function ()
-{
-	this.logout(Enums.Errors.AuthError);
-};
-
 CApp.prototype.tokenProblem = function ()
 {
 	var
@@ -363,22 +375,6 @@ CApp.prototype.tokenProblem = function ()
 		sHtmlError = TextUtils.i18n('%MODULENAME%/ERROR_TOKEN_PROBLEM_HTML', {'RELOAD_FUNC': sReloadFunc})
 	;
 	Screens.showError(sHtmlError, true);
-};
-
-CApp.prototype.onLogout = function ()
-{
-	WindowOpener.closeAll();
-	
-	Routing.finalize();
-	
-	if (Types.isNonEmptyString(UserSettings.CustomLogoutUrl))
-	{
-		window.location.href = UserSettings.CustomLogoutUrl;
-	}
-	else
-	{
-		UrlUtils.clearAndReloadLocation(Browser.ie8AndBelow, true);
-	}
 };
 
 CApp.prototype.checkMobile = function () {
