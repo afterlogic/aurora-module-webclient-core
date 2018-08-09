@@ -128,13 +128,24 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 		
 		oParameters = oParameters || {};
 		
-		App.broadcastEvent('SendAjaxRequest::before', {'Module': sModule, 'Method': sMethod, 'Parameters': oParameters});
-
-		oRequest.Parameters = oParameters;
+		var oEventParams = {
+			'Module': sModule,
+			'Method': sMethod,
+			'Parameters': oParameters,
+			'ResponseHandler': fResponseHandler,
+			'Context': oContext,
+			'Continue': true
+		};
+		App.broadcastEvent('SendAjaxRequest::before', oEventParams);
 		
-		this.abortRequests(oRequest);
-	
-		this.doSend(oRequest, fResponseHandler, oContext, iTimeout);
+		if (oEventParams.Continue)
+		{
+			oRequest.Parameters = oParameters;
+
+			this.abortRequests(oRequest);
+
+			this.doSend(oRequest, fResponseHandler, oContext, iTimeout);
+		}
 	}
 };
 
