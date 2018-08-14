@@ -243,7 +243,7 @@ CAjax.prototype.abortAndStopSendRequests = function ()
  */
 CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse, sType, oXhr)
 {
-	if (App.getUserRole() !== Enums.UserRole.Anonymous && oResponse && Types.isNumber(oResponse.AuthenticatedUserId) && oResponse.AuthenticatedUserId !== App.getUserId())
+	if (App.getUserRole() !== Enums.UserRole.Anonymous && oResponse && Types.isNumber(oResponse.AuthenticatedUserId) && oResponse.AuthenticatedUserId !== 0 && oResponse.AuthenticatedUserId !== App.getUserId())
 	{
 		Popups.showPopup(AlertPopup, [TextUtils.i18n('%MODULENAME%/ERROR_AUTHENTICATED_USER_CONFLICT'), function () {
 			App.logoutAndGotoLogin();
