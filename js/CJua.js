@@ -465,10 +465,15 @@ AjaxDriver.prototype.regTaskUid = function (sUid)
 
 /**
  * @param {string} sUid
- * @param {?} oFileInfo
- * @param {Function} fCallback
+ * @param {object} oFileInfo
+ * @param {object} oParsedHiddenParameters
+ * @param {function} fCallback
+ * @param {boolean} bSkipCompleteFunction
+ * @param {boolean} bUseResponce
+ * @param {number} iProgressOffset
+ * @returns {Boolean}
  */
-AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCompleteFunction, bUseResponce, iProgressOffset)
+AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, oParsedHiddenParameters, fCallback, bSkipCompleteFunction, bUseResponce, iProgressOffset)
 {
 	if (false === this.oUids[sUid] || !oFileInfo || !oFileInfo['File'])
 	{
@@ -483,12 +488,10 @@ AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCom
 			oXhr = new XMLHttpRequest(),
 			oFormData = new FormData(),
 			sAction = getValue(this.oOptions, 'action', ''),
-			aHidden = getValue(this.oOptions, 'hidden', {}),
+			aHidden = _.clone(getValue(this.oOptions, 'hidden', {})),
 			fStartFunction = this.oJua.getEvent('onStart'),
 			fCompleteFunction = this.oJua.getEvent('onComplete'),
-			fProgressFunction = this.oJua.getEvent('onProgress'),
-			oParsedHiddenParameters = null,
-			oHiddenParametersOld = aHidden.Parameters
+			fProgressFunction = this.oJua.getEvent('onProgress')
 		;
 
 		oXhr.open('POST', sAction, true);
@@ -565,16 +568,13 @@ AjaxDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCom
 
 		oFormData.append('jua-post-type', 'ajax');
 		oFormData.append(getValue(this.oOptions, 'name', 'juaFile'), oFileInfo['File'], oFileInfo['FileName']);
+		
 		//extending jua hidden parameters with file hidden parameters
-		oParsedHiddenParameters = JSON.parse(getStringOrCallFunction(aHidden.Parameters, [oFileInfo]));
 		oParsedHiddenParameters =  _.extend(oParsedHiddenParameters, oFileInfo.Hidden || {});
 		aHidden.Parameters = JSON.stringify(oParsedHiddenParameters);
-		
 		$.each(aHidden, function (sKey, mValue) {
 			oFormData.append(sKey, getStringOrCallFunction(mValue, [oFileInfo]));
 		});
-		//restore jua hidden parameters
-		aHidden.Parameters = oHiddenParametersOld;
 
 		oXhr.send(oFormData);
 
@@ -711,10 +711,15 @@ IframeDriver.prototype.regTaskUid = function (sUid)
 
 /**
  * @param {string} sUid
- * @param {?} oFileInfo
- * @param {Function} fCallback
+ * @param {object} oFileInfo
+ * @param {object} oParsedHiddenParameters
+ * @param {function} fCallback
+ * @param {boolean} bSkipCompleteFunction
+ * @param {boolean} bUseResponce
+ * @param {number} iProgressOffset
+ * @returns {Boolean}
  */
-IframeDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipCompleteFunction, bUseResponce, iProgressOffset)
+IframeDriver.prototype.uploadTask = function (sUid, oFileInfo, oParsedHiddenParameters, fCallback, bSkipCompleteFunction, bUseResponce, iProgressOffset)
 {
 	if (false === this.oUids[sUid])
 	{
@@ -724,7 +729,7 @@ IframeDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipC
 
 	var
 		oForm = this.oForms[sUid],
-		aHidden = getValue(this.oOptions, 'hidden', {}),
+		aHidden = _.clone(getValue(this.oOptions, 'hidden', {})),
 		fStartFunction = this.oJua.getEvent('onStart'),
 		fCompleteFunction = this.oJua.getEvent('onComplete')
 	;
@@ -732,6 +737,10 @@ IframeDriver.prototype.uploadTask = function (sUid, oFileInfo, fCallback, bSkipC
 	if (oForm)
 	{
 		oForm.append($('<input type="hidden" />').attr('name', 'jua-post-type').val('iframe'));
+		
+		//extending jua hidden parameters with file hidden parameters
+		oParsedHiddenParameters =  _.extend(oParsedHiddenParameters, oFileInfo.Hidden || {});
+		aHidden.Parameters = JSON.stringify(oParsedHiddenParameters);
 		$.each(aHidden, function (sKey, sValue) {
 			oForm.append($('<input type="hidden" />').attr('name', sKey).val(getStringOrCallFunction(sValue, [oFileInfo])));
 		});
@@ -1257,8 +1266,12 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 		aHidden = getValue(this.oOptions, 'hidden', {}),
 		fCompleteFunction = this.getEvent('onComplete'),
 		fRegularUploadFileCallback = _.bind(function (sUid, oFileInfo) {
+			var
+				aHidden = getValue(this.oOptions, 'hidden', {}),
+				oParsedHiddenParameters = JSON.parse(getStringOrCallFunction(aHidden.Parameters, [oFileInfo]))
+			;
 			this.oDriver.regTaskUid(sUid);
-			this.oQueue.defer(scopeBind(this.oDriver.uploadTask, this.oDriver), sUid, oFileInfo);
+			this.oQueue.defer(scopeBind(this.oDriver.uploadTask, this.oDriver), sUid, oFileInfo, oParsedHiddenParameters);
 		}, this),
 		fCancelFunction = this.getEvent('onCancel')
 	;
@@ -1301,8 +1314,12 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 				}
 			};
 			
+			var
+				aHidden = getValue(this.oOptions, 'hidden', {}),
+				oParsedHiddenParameters = JSON.parse(getStringOrCallFunction(aHidden.Parameters, [oFileInfo]))
+			;
 			this.oDriver.regTaskUid(sUid);
-			this.oDriver.uploadTask(sUid, oFileInfo, fOnUploadCallback, iCurrChunk < iChunkNumber, true, iProgressOffset);
+			this.oDriver.uploadTask(sUid, oFileInfo, oParsedHiddenParameters, fOnUploadCallback, iCurrChunk < iChunkNumber, true, iProgressOffset);
 		}, this);
 		bBreakUpload = App.broadcastEvent('Jua::FileUpload::before', {
 			sUid: sUid,
