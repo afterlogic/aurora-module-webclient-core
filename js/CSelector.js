@@ -9,7 +9,8 @@ var
 	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
 	
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
-	Browser = require('%PathToCoreWebclientModule%/js/Browser.js')
+	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
+	Popups = require('%PathToCoreWebclientModule%/js/Popups.js')
 ;
 
 /**
@@ -690,7 +691,7 @@ CSelector.prototype.onKeydown = function (oEvent)
 		iCode = 0
 	;
 
-	if (this.useKeyboardKeys() && oEvent && !Utils.isTextFieldFocused())// && !App.Screens.hasOpenedMaximizedPopups())
+	if (this.useKeyboardKeys() && oEvent && !Utils.isTextFieldFocused() && !Popups.hasOpenedMaximizedPopups())
 	{
 		iCode = oEvent.keyCode;
 		if (!oEvent.ctrlKey &&
