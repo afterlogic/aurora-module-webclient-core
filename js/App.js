@@ -432,19 +432,31 @@ CApp.prototype.useGoogleAnalytics = function ()
  */
 CApp.prototype.checkCookies = function ()
 {
-	$.cookie('checkCookie', '1', { path: '/' });
-	var bResult = $.cookie('checkCookie') === '1';
+	var sCookiePath = window.location.pathname;
+	if (sCookiePath.substr(sCookiePath.length - 1, 1) !== '/')
+	{
+		sCookiePath += '/';
+	}
+	$.cookie.defaults = { path: sCookiePath };
 	
-	if (!bResult)
+	$.cookie('checkCookie', '1');
+	var bCookieWorks = $.cookie('checkCookie') === '1';
+	$.removeCookie('checkCookie');
+	
+	if (!bCookieWorks)
 	{
 		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_COOKIES_DISABLED'), true);
 	}
 	else
 	{
-		$.cookie('AuthToken', $.cookie('AuthToken'), { expires: 30 });
+		var sAuthToken = $.cookie('AuthToken');
+		if (sAuthToken)
+		{
+			$.cookie('AuthToken', sAuthToken, { expires: 30 });
+		}
 	}
-
-	return bResult;
+	
+	return bCookieWorks;
 };
 
 CApp.prototype.getCommonRequestParameters = function ()
