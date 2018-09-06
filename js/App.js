@@ -401,6 +401,17 @@ CApp.prototype.checkMobile = function () {
 		
 		return bMobile;
 	}
+	else if (this.iUserRole === Enums.UserRole.SuperAdmin && UserSettings.AllowMobile && UserSettings.IsMobile === 1)
+	{
+		// There is no admin panel for mobile version so go to full version
+		var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
+
+		Ajax.send('Core', 'SetMobile', {'Mobile': false}, function (oResponse) {
+			window.location.reload();
+		}, this);
+		
+		return false;
+	}
 	
 	return false;
 };
