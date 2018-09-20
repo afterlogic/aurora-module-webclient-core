@@ -339,7 +339,7 @@ CScreens.prototype.initInformation = function ()
 CScreens.prototype.hasUnsavedChanges = function ()
 {
 	var oCurrentScreen = this.screens()[this.currentScreen()];
-	return _.isFunction(oCurrentScreen.hasUnsavedChanges) && oCurrentScreen.hasUnsavedChanges();
+	return oCurrentScreen && _.isFunction(oCurrentScreen.hasUnsavedChanges) && oCurrentScreen.hasUnsavedChanges();
 };
 
 /**
