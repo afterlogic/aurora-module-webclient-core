@@ -250,7 +250,8 @@ CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse
 		}, '', TextUtils.i18n('%MODULENAME%/ACTION_LOGOUT')]);
 	}
 	
-	if (oResponse && !oResponse.Result)
+	// if oResponse.Result === 0 or oResponse.Result === '' this is not an error
+	if (oResponse && (oResponse.Result === false || oResponse.Result === null || oResponse.Result === undefined))
 	{
 		switch (oResponse.ErrorCode)
 		{
