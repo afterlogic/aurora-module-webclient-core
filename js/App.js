@@ -73,10 +73,6 @@ function InitModernizr()
 function CApp()
 {
 	this.iUserRole = window.auroraAppData.User ? Types.pInt(window.auroraAppData.User.Role) : Enums.UserRole.Anonymous;
-	if (this.iUserRole === Enums.UserRole.Anonymous)
-	{
-		$.removeCookie('AuthToken');
-	}
 	this.sUserName = window.auroraAppData.User ? Types.pString(window.auroraAppData.User.Name) : '';
 	this.sUserPublicId = window.auroraAppData.User ? Types.pString(window.auroraAppData.User.PublicId) : '';
 	this.iUserId = window.auroraAppData.User ? Types.pInt(window.auroraAppData.User.Id) : 0;
@@ -460,10 +456,17 @@ CApp.prototype.checkCookies = function ()
 	}
 	else
 	{
-		var sAuthToken = $.cookie('AuthToken');
-		if (sAuthToken)
+		if (this.iUserRole === Enums.UserRole.Anonymous)
 		{
-			$.cookie('AuthToken', sAuthToken, { expires: 30 });
+			$.removeCookie('AuthToken');
+		}
+		else
+		{
+			var sAuthToken = $.cookie('AuthToken');
+			if (sAuthToken)
+			{
+				$.cookie('AuthToken', sAuthToken, { expires: 30 });
+			}
 		}
 	}
 	
