@@ -529,11 +529,11 @@ CAbstractFileModel.prototype.onUploadComplete = function (sFileUid, bResponseRec
 {
 	var
 		bError = !bResponseReceived || !oResponse || !!oResponse.ErrorCode || !oResponse.Result || !!oResponse.Result.Error || false,
-		sError = (oResponse && oResponse.Result && oResponse.Result.Error === 'size') ?
+		sError = (oResponse && oResponse.ErrorCode && oResponse.ErrorCode === Enums.Errors.CanNotUploadFileLimit) ?
 			TextUtils.i18n('%MODULENAME%/ERROR_UPLOAD_SIZE') :
 			TextUtils.i18n('%MODULENAME%/ERROR_UPLOAD_UNKNOWN')
 	;
-	
+
 	this.progressPercent(0);
 	this.visibleProgress(false);
 	
