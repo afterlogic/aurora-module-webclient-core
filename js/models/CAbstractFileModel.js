@@ -313,12 +313,21 @@ CAbstractFileModel.prototype.parse = function (oData)
 
 CAbstractFileModel.prototype.parseActions = function (oData)
 {
+	this.thumbUrlInQueue(Types.pString(oData.ThumbnailUrl) !== '' ? Types.pString(oData.ThumbnailUrl) + '/' + Math.random() : '');
 	this.commonParseActions(oData);
+	this.commonExcludeActions();
+};
+
+CAbstractFileModel.prototype.commonExcludeActions = function ()
+{
+	if (!this.isViewSupported())
+	{
+		this.actions(_.without(this.actions(), 'view'));
+	}
 };
 
 CAbstractFileModel.prototype.commonParseActions = function (oData)
 {
-	this.thumbUrlInQueue(Types.pString(oData.ThumbnailUrl) !== '' ? Types.pString(oData.ThumbnailUrl) + '/' + Math.random() : '');
 	_.each (oData.Actions, function (oData, sAction) {
 		if (!this.oActionsData[sAction])
 		{
