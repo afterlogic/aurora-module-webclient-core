@@ -438,8 +438,7 @@ CSelector.prototype.initOnApplyBindings = function (sActionSelector, sSelectabel
 
 			if (bClick)
 			{
-				self.onSelect(oItem, true);
-				self.scrollToSelected();
+				self.selectionFunc(oItem);
 			}
 		}
 	});
@@ -750,42 +749,19 @@ CSelector.prototype.onEnter = function (oItem)
  */
 CSelector.prototype.selectionFunc = function (oItem)
 {
-	var
-		fProceedSelection = _.bind(function () {
-			if (this.bChangeOnSelect)
-			{
-				this.itemSelected(null);
-			}
-			if (this.bResetCheckedOnClick)
-			{
-				this.listChecked(false);
-			}
-			if (this.bChangeOnSelect)
-			{
-				this.itemSelected(oItem);
-			}
-			this.fSelectCallback.call(this, oItem);
-		}, this),
-		oParams = {
-			'Item': oItem,
-			'Cancel': false,
-			'ProceedSelectionHandler': fProceedSelection
-		}
-	;
-	
-	if (!oParams.Cancel)
+	if (this.bChangeOnSelect)
 	{
-		fProceedSelection();
+		this.itemSelected(null);
 	}
-};
-
-/**
- * @param {Object} oItem
- * @param {boolean} bCheckBefore
- */
-CSelector.prototype.onSelect = function (oItem, bCheckBefore)
-{
-	this.selectionFunc(oItem);
+	if (this.bResetCheckedOnClick)
+	{
+		this.listChecked(false);
+	}
+	if (this.bChangeOnSelect)
+	{
+		this.itemSelected(oItem);
+	}
+	this.fSelectCallback.call(this, oItem);
 };
 
 /**
