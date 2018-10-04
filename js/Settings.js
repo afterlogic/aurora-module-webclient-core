@@ -33,6 +33,8 @@ var Settings = {
 	timeFormat: ko.observable('0'), // 0 - 24, 1 - 12
 	timezone: ko.observable(''),
 	UserId: 0,
+	PasswordMinLength: 0,
+	PasswordMustBeComplex: false,
 	
 	AdminHasPassword: '',
 	AdminLanguage: '',
@@ -98,6 +100,8 @@ var Settings = {
 			this.timeFormat(Types.pString(oAppDataCoreSection.TimeFormat, this.timeFormat()));
 			this.timezone(Types.pString(oAppDataCoreSection.Timezone, this.timezone()));
 			this.UserId = Types.pInt(oAppDataCoreSection.UserId, this.UserId);
+			this.PasswordMinLength = Types.pNonNegativeInt(oAppDataCoreSection.PasswordMinLength, this.PasswordMinLength);
+			this.PasswordMustBeComplex = Types.pBool(oAppDataCoreSection.PasswordMustBeComplex, this.PasswordMustBeComplex);
 			
 			//only for admin
 			this.AdminHasPassword = Types.pBool(oAppDataCoreSection.AdminHasPassword, this.AdminHasPassword);
