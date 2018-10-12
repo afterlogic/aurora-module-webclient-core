@@ -76,6 +76,9 @@ function CAbstractFileModel()
 	
 	this.otherTemplates = ko.observableArray([]);
 
+	// Some modules can override this field if it is necessary to manage it.
+	this.visibleCancelButton = ko.observable(true);
+	
 	this.statusText = ko.observable('');
 	this.statusTooltip = ko.computed(function () {
 		return this.uploadError() ? this.statusText() : '';

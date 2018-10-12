@@ -12,7 +12,7 @@
 
 	<span class="item_content ui-droppable dragHandle">
 
-		<span class="cancel" data-bind="visible: visibleProgress() && progressPercent() !== 100, click: function () { $parent.onFileRemove( uploadUid(), $data); }, customTooltip: '%MODULENAME%/ACTION_CANCEL'"></span>
+		<span class="cancel" data-bind="visible: visibleCancelButton, click: function () { $parent.onFileRemove( uploadUid(), $data); }, customTooltip: '%MODULENAME%/ACTION_CANCEL'"></span>
 
 		<span class="image" data-bind="customTooltip: getTooltip(iconAction()), click: function () { executeAction(iconAction()); }, 
 				css: {'has_action': iconAction() !== ''}, clickBubble: iconAction() === ''">
