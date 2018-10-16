@@ -80,4 +80,17 @@ CHeaderView.prototype.switchToFullVersion = function ()
 	}, this);
 };
 
+/**
+ * "?mobile" link sometimes doesn't work, maybe because of browser cache, so Ajax request is sent and page is reloaded using JS.
+ */
+CHeaderView.prototype.switchToMobileVersion = function ()
+{
+	Ajax.send('Core', 'SetMobile', {'Mobile': true}, function (oResponse) {
+		if (oResponse.Result)
+		{
+			window.location.reload();
+		}
+	}, this);
+};
+
 module.exports = new CHeaderView();

@@ -16,8 +16,8 @@
 			<!-- /ko -->
 		<!-- /ko -->
 
-		<span class="item settings" data-bind="visible: bShowMobileSwitcher">
-			<a class="link" href="?mobile" data-bind="i18n: {'key': '%MODULENAME%/ACTION_SHOW_MOBILE_VERSION'}"></a>
+		<span class="item settings" data-bind="visible: bShowMobileSwitcher, click: switchToMobileVersion">
+			<span class="link" data-bind="i18n: {'key': '%MODULENAME%/ACTION_SHOW_MOBILE_VERSION'}"></span>
 		</span>
 	</div>
 </div>
