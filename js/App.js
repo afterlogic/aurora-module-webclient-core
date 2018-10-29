@@ -49,7 +49,7 @@ function InitModernizr()
 		modernizr.addTest('pdf', function() {
 			return !!_.find(navigator.mimeTypes, function (oMimeType) {
 				return 'application/pdf' === oMimeType.type;
-			});
+			}) || Browser.firefox; // FireFox have stopped supporting of 'application/pdf' mime type in navigator since 2016
 		});
 
 		modernizr.addTest('newtab', function() {
