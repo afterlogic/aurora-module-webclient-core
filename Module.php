@@ -143,7 +143,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			{
 				$this->setConfig('Theme', $Args['Theme']);
 			}
-			$this->saveModuleConfig();
+			$Result = $this->saveModuleConfig();
 		}
 	}
 	
