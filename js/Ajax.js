@@ -215,10 +215,20 @@ CAjax.prototype.abortRequests = function (oRequest)
 	}
 };
 
-CAjax.prototype.abortAllRequests = function ()
+/**
+ * @param {object} oExcept
+ */
+CAjax.prototype.abortAllRequests = function (oExcept)
 {
+	if (typeof oExcept !== 'object')
+	{
+		oExcept = {
+			Module: '',
+			Method: ''
+		};
+	}
 	_.each(this.requests(), function (oReqData) {
-		if (oReqData)
+		if (oReqData && (oReqData.Request.Module !== oExcept.Module || oReqData.Request.Method !== oExcept.Method))
 		{
 			oReqData.Xhr.abort();
 		}
@@ -227,10 +237,18 @@ CAjax.prototype.abortAllRequests = function ()
 	this.requests([]);
 };
 
-CAjax.prototype.abortAndStopSendRequests = function ()
+/**
+ * @param {object} oExcept
+ */
+CAjax.prototype.abortAndStopSendRequests = function (oExcept)
 {
 	this.bAllowRequests = false;
-	this.abortAllRequests();
+	this.abortAllRequests(oExcept);
+};
+
+CAjax.prototype.startSendRequests = function ()
+{
+	this.bAllowRequests = true;
 };
 
 /**
@@ -404,5 +422,6 @@ module.exports = {
 	registerAbortRequestHandler: _.bind(Ajax.registerAbortRequestHandler, Ajax),
 	registerOnAllRequestsClosedHandler: _.bind(Ajax.registerOnAllRequestsClosedHandler, Ajax),
 	abortAndStopSendRequests: _.bind(Ajax.abortAndStopSendRequests, Ajax),
+	startSendRequests: _.bind(Ajax.startSendRequests, Ajax),
 	send: _.bind(Ajax.send, Ajax)
 };
