@@ -18,6 +18,7 @@ var Settings = {
 	ServerModuleName: 'Core',
 	HashModuleName: 'core',
 	
+	// Settings from Core module
 	AutodetectLanguage: false,
 	UserSelectsDateFormat: false,
 	dateFormat: ko.observable('DD/MM/YYYY'),
@@ -35,7 +36,9 @@ var Settings = {
 	UserId: 0,
 	PasswordMinLength: 0,
 	PasswordMustBeComplex: false,
+	CookiePath: '/',
 	
+	// Settings from Core module only for super admin
 	AdminHasPassword: '',
 	AdminLanguage: '',
 	AdminLogin: '',
@@ -45,6 +48,7 @@ var Settings = {
 	DbName: '',
 	SaltNotEmpty: false,
 	
+	// Settings from CoreWebclient module
 	AllowChangeSettings: false,
 	AllowClientDebug: false,
 	AllowDesktopNotifications: false,
@@ -60,7 +64,6 @@ var Settings = {
 	IsDemo: false,
 	IsMobile: -1,
 	LanguageList: [{name: 'English', text: 'English'}],
-	LogoUrl: '',
 	ShowQuotaBar: false,
 	SyncIosAfterLogin: false,
 	Theme: 'Default',
@@ -68,6 +71,10 @@ var Settings = {
 	Version: '',
 	ProductName: '',
 	
+	// Settings from BrandingWebclient module
+	LogoUrl: '',
+	
+	// Settings from HTML
 	IsRTL: bRtl,
 	
 	/**
@@ -102,6 +109,11 @@ var Settings = {
 			this.UserId = Types.pInt(oAppDataCoreSection.UserId, this.UserId);
 			this.PasswordMinLength = Types.pNonNegativeInt(oAppDataCoreSection.PasswordMinLength, this.PasswordMinLength);
 			this.PasswordMustBeComplex = Types.pBool(oAppDataCoreSection.PasswordMustBeComplex, this.PasswordMustBeComplex);
+			this.CookiePath = Types.pString(oAppDataCoreSection.CookiePath, this.CookiePath);
+			if (this.CookiePath === '')
+			{
+				this.CookiePath = '/';
+			}
 			
 			//only for admin
 			this.AdminHasPassword = Types.pBool(oAppDataCoreSection.AdminHasPassword, this.AdminHasPassword);
