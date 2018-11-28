@@ -39,7 +39,11 @@
 		false,
 		"bool"
 	],
-	"EntryModule": [
+	"DefaultAnonymScreenHash": [
+		"login",
+		"string"
+	],
+	"DefaultUserScreenHash": [
 		"",
 		"string"
 	],

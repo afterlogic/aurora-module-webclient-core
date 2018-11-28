@@ -36,12 +36,13 @@ function CScreens()
 	this.informationScreen = ko.observable(null);
 }
 
-CScreens.prototype.init = function ()
+CScreens.prototype.init = function (bAnonymUser)
 {
 	var
 		oModulesScreens = ModulesManager.getModulesScreens(),
 		oModulesTabs = ModulesManager.getModulesTabs(false),
-		aKeys = []
+		aKeys = [],
+		sDefaultScreenHash = bAnonymUser ? Settings.DefaultAnonymScreenHash.toLowerCase() : Settings.DefaultUserScreenHash.toLowerCase()
 	;
 	
 	_.each(oModulesScreens, _.bind(function (oScreenList, sModuleName) {
@@ -50,9 +51,9 @@ CScreens.prototype.init = function ()
 	
 	this.addToScreenList('', require('%PathToCoreWebclientModule%/js/screenList.js'));
 	
-	if (this.oGetScreenFunctions[Settings.EntryModule.toLowerCase()])
+	if (this.oGetScreenFunctions[sDefaultScreenHash])
 	{
-		this.sDefaultScreen = Settings.EntryModule.toLowerCase();
+		this.sDefaultScreen = sDefaultScreenHash;
 	}
 	
 	if (this.sDefaultScreen === '')

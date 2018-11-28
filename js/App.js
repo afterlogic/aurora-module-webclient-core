@@ -229,7 +229,7 @@ CApp.prototype.init = function ()
 		InitNotMobileRequires();
 	}
 	
-	Screens.init();
+	Screens.init(this.iUserRole === Enums.UserRole.Anonymous);
 	Routing.init();
 	
 	require('%PathToCoreWebclientModule%/js/AppTab.js');

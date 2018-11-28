@@ -58,7 +58,8 @@ var Settings = {
 	AttachmentSizeLimit: 0,
 	AutoRefreshIntervalMinutes: 1,
 	CustomLogoutUrl: '',
-	EntryModule: '',
+	DefaultAnonymScreenHash: '',
+	DefaultUserScreenHash: '',
 	GoogleAnalyticsAccount: '',
 	HeaderModulesOrder: [],
 	IsDemo: false,
@@ -139,7 +140,8 @@ var Settings = {
 			this.AttachmentSizeLimit = Types.pNonNegativeInt(oAppDataCoreWebclientSection.AttachmentSizeLimit, this.AttachmentSizeLimit);
 			this.AutoRefreshIntervalMinutes = Types.pNonNegativeInt(oAppDataCoreWebclientSection.AutoRefreshIntervalMinutes, this.AutoRefreshIntervalMinutes);
 			this.CustomLogoutUrl = Types.pString(oAppDataCoreWebclientSection.CustomLogoutUrl, this.CustomLogoutUrl);
-			this.EntryModule = Types.pString(oAppDataCoreWebclientSection.EntryModule, this.EntryModule);
+			this.DefaultAnonymScreenHash = Types.pString(oAppDataCoreWebclientSection.DefaultAnonymScreenHash, this.DefaultAnonymScreenHash);
+			this.DefaultUserScreenHash = Types.pString(oAppDataCoreWebclientSection.DefaultUserScreenHash, this.DefaultUserScreenHash);
 			this.GoogleAnalyticsAccount = Types.pString(oAppDataCoreWebclientSection.GoogleAnalyticsAccount, this.GoogleAnalyticsAccount);
 			this.HeaderModulesOrder = Types.pArray(oAppDataCoreWebclientSection.HeaderModulesOrder, this.HeaderModulesOrder);
 			this.IsDemo = Types.pBool(oAppDataCoreWebclientSection.IsDemo, this.IsDemo);
