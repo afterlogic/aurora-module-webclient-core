@@ -24,12 +24,15 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	 */
 	public function init() 
 	{
-		$this->AddEntries(array(
-			'default' => 'EntryDefault',
-			'error' => 'EntryDefault',
-			'xdebug_session_start' => 'EntryDefault',
-			'install' => 'EntryCompatibility'
-		));
+		\Aurora\System\Router::getInstance()->registerArray(
+			self::GetName(),
+			[
+				'default' => [$this, 'EntryDefault'],
+				'error' => [$this, 'EntryDefault'],
+				'xdebug_session_start' => [$this, 'EntryDefault'],
+				'install' => [$this, 'EntryCompatibility']
+			]
+		);
 		
 		\Aurora\Modules\Core\Classes\User::extend(
 			self::GetName(),
