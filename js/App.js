@@ -73,6 +73,7 @@ function InitModernizr()
 function CApp()
 {
 	this.iUserRole = window.auroraAppData.User ? Types.pInt(window.auroraAppData.User.Role) : Enums.UserRole.Anonymous;
+	this.iTenantId = window.auroraAppData.User ? Types.pInt(window.auroraAppData.User.TenantId) : 0;
 	this.sUserName = window.auroraAppData.User ? Types.pString(window.auroraAppData.User.Name) : '';
 	this.sUserPublicId = window.auroraAppData.User ? Types.pString(window.auroraAppData.User.PublicId) : '';
 	this.iUserId = window.auroraAppData.User ? Types.pInt(window.auroraAppData.User.Id) : 0;
@@ -128,6 +129,11 @@ CApp.prototype.isAccountDeletingAvailable = function ()
 CApp.prototype.getUserRole = function ()
 {
 	return this.iUserRole;
+};
+
+CApp.prototype.getTenantId = function ()
+{
+	return this.iTenantId;
 };
 
 CApp.prototype.getUserName = function ()
