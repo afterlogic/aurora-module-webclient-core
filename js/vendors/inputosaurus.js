@@ -704,25 +704,28 @@ var inputosaurustext = {
 			if (!widget.options.mobileDevice)
 			{
 				li.data('full', fullValue);
-				li.draggable({
-					revert: 'invalid',
-					helper: function () {
-						var
-							oLiDraggable = $(this),
-							oParent = oLiDraggable.parent().parent().parent().parent(),
-							oLiClone = oLiDraggable.clone()
-						;
-						oLiDraggable.css('visibility', 'hidden');
-						return $('<div class="inputosaurus-moving-container"><div>').appendTo(oParent).append(oLiClone);
-					},
-					start: function (event, ui) {
-						ui.helper.__widget = widget;
-					},
-					stop: function (event, ui) {
-						var oLiDraggable = $(this);
-						oLiDraggable.css('visibility', 'visible');
-					}
-				});
+				if (li.draggable)
+				{
+					li.draggable({
+						revert: 'invalid',
+						helper: function () {
+							var
+								oLiDraggable = $(this),
+								oParent = oLiDraggable.parent().parent().parent().parent(),
+								oLiClone = oLiDraggable.clone()
+							;
+							oLiDraggable.css('visibility', 'hidden');
+							return $('<div class="inputosaurus-moving-container"><div>').appendTo(oParent).append(oLiClone);
+						},
+						start: function (event, ui) {
+							ui.helper.__widget = widget;
+						},
+						stop: function (event, ui) {
+							var oLiDraggable = $(this);
+							oLiDraggable.css('visibility', 'visible');
+						}
+					});
+				}
 			}
 		}
 
