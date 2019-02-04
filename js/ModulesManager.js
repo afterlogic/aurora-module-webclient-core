@@ -3,9 +3,7 @@
 var
 	_ = require('underscore'),
 	
-	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
-	
-	Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
+	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	
 	AppData = window.auroraAppData,
 	
@@ -24,15 +22,6 @@ module.exports = {
 				}
 			}
 		});
-		
-		if (Settings.AllowChangeSettings)
-		{
-			this.run('SettingsWebclient', 'registerSettingsTab', [
-				function () { return require('%PathToCoreWebclientModule%/js/views/CommonSettingsFormView.js'); },
-				'common',
-				TextUtils.i18n('%MODULENAME%/LABEL_COMMON_SETTINGS_TABNAME')
-			]);
-		}
 		
 		_.each(oModules, _.bind(function (oModule) {
 			if (_.isFunction(oModule.start))
@@ -85,13 +74,13 @@ module.exports = {
 			}, this));
 			
 			this.aStandardTabs = _.sortBy(this.aStandardTabs, function (oTab) {
-				var iIndex = _.indexOf(Settings.HeaderModulesOrder, oTab.sName);
-				return iIndex !== -1 ? iIndex : Settings.HeaderModulesOrder.length;
+				var iIndex = _.indexOf(UserSettings.HeaderModulesOrder, oTab.sName);
+				return iIndex !== -1 ? iIndex : UserSettings.HeaderModulesOrder.length;
 			});
 			
 			this.aTabs = _.sortBy(this.aTabs, function (oTab) {
-				var iIndex = _.indexOf(Settings.HeaderModulesOrder, oTab.sName);
-				return iIndex !== -1 ? iIndex : Settings.HeaderModulesOrder.length;
+				var iIndex = _.indexOf(UserSettings.HeaderModulesOrder, oTab.sName);
+				return iIndex !== -1 ? iIndex : UserSettings.HeaderModulesOrder.length;
 			});
 		}
 		
