@@ -59,6 +59,9 @@ ko.bindingHandlers.splitterFlex = {
 			{
 				oSplitterParams['sizes'] = aInitSizes;
 			}
+			if (oCommand['direction'] && oCommand['direction'] === 'vertical') {
+				oSplitterParams['direction'] = 'vertical';
+			}
 
 			oSplitter = Splitter(aElements, oSplitterParams);
 		});
