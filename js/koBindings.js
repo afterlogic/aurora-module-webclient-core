@@ -436,18 +436,20 @@ ko.bindingHandlers.listWithMoreButton = {
 					$Item = $(oItem),
 					iItemWidth = $Item.width()
 				;
-
-				if (bHideMoreHints && iMoreWidth + iItemWidth < iElementWidth)
+				if ($Item && !$Item.hasClass('not-display'))
 				{
-					$Item.show();
-					$($ItemsHidden[index]).hide();
-					iMoreWidth += iItemWidth;
-				}
-				else
-				{
-					bHideMoreHints = false;
-					$Item.hide();
-					$($ItemsHidden[index]).show();
+					if (bHideMoreHints && iMoreWidth + iItemWidth < iElementWidth)
+					{
+						$Item.show();
+						$($ItemsHidden[index]).hide();
+						iMoreWidth += iItemWidth;
+					}
+					else
+					{
+						bHideMoreHints = false;
+						$Item.hide();
+						$($ItemsHidden[index]).show();
+					}
 				}
 			});
 
