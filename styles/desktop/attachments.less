@@ -105,13 +105,12 @@
 		}
 		
 		.footer {
-			height: 22px;
+			min-height: 22px;
 		}
 		
 		.progress {
 			display: block;
 			height: 3px;
-			margin-bottom: -3px;
 			padding: 8px 0px;
 			width: 100%;
 			
@@ -216,7 +215,7 @@
 		.status_text {
 			display: block;
 			margin: 0;
-			padding: 6px 0px;
+			padding: 6px 0px 0px;
 			white-space: normal;
 		}
 		
@@ -233,7 +232,7 @@
 
 			display: block;
 			margin: 0;
-			padding: 6px 0px;
+			padding: 6px 0px 0px;
 			text-align: left;
 			
 			.button {
@@ -245,17 +244,21 @@
 				padding: 0px;
 				text-shadow: none;
 				float: left;
+				text-align: left;
 
 				html.rtl & {
 					float: right;
+					text-align: right;
 				}
 
 				&.open,
 				&.download {
 					float: right;
+					text-align: right;
 
 					html.rtl & {
 						float: left;
+						text-align: left;
 					}
 				}
 			}
