@@ -3,6 +3,7 @@
 var
 	$ = require('jquery'),
 	_ = require('underscore'),
+	ko = require('knockout'),
 
 	queue = require('%PathToCoreWebclientModule%/js/vendors/queue.js'),
 	
@@ -1321,18 +1322,29 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 			this.oDriver.regTaskUid(sUid);
 			this.oDriver.uploadTask(sUid, oFileInfo, oParsedHiddenParameters, fOnUploadCallback, iCurrChunk < iChunkNumber, true, iProgressOffset);
 		}, this);
-		bBreakUpload = App.broadcastEvent('Jua::FileUpload::before', {
-			sUid: sUid,
-			oFileInfo: oFileInfo,
-			fOnChunkReadyCallback: fOnChunkReadyCallback,
-			sModuleName: aHidden.Module,
-			fRegularUploadFileCallback: fRegularUploadFileCallback,
-			fCancelFunction: fCancelFunction
+		var isUploadAvailable = ko.observable(true);
+		App.broadcastEvent('Jua::FileUpload::isUploadAvailable', {
+			isUploadAvailable: isUploadAvailable
 		});
-
-		if (bBreakUpload === false)
+		if (isUploadAvailable())
 		{
-			fRegularUploadFileCallback(sUid, oFileInfo);
+			bBreakUpload = App.broadcastEvent('Jua::FileUpload::before', {
+				sUid: sUid,
+				oFileInfo: oFileInfo,
+				fOnChunkReadyCallback: fOnChunkReadyCallback,
+				sModuleName: aHidden.Module,
+				fRegularUploadFileCallback: fRegularUploadFileCallback,
+				fCancelFunction: fCancelFunction
+			});
+
+			if (bBreakUpload === false)
+			{
+				fRegularUploadFileCallback(sUid, oFileInfo);
+			}
+		}
+		else
+		{
+			fCancelFunction(sUid);
 		}
 	}
 	else
