@@ -31,6 +31,9 @@
 		<!-- ko if: (bIsSecure()) -->
 		<span class="secure-image"></span>
 		<!-- /ko -->
+		<!-- ko if: (bIsShared()) -->
+		<span class="shared-image" data-bind="css: {'with_thumb': thumbnailSrc() !== ''}"></span>
+		<!-- /ko -->
 		<div class="footer">
 			<span class="progress" data-bind="visible: visibleProgress()">
 				<span data-bind="style: {'width': progressPercent() + '%'}"></span>
