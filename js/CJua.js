@@ -1324,7 +1324,10 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 		}, this);
 		var isUploadAvailable = ko.observable(true);
 		App.broadcastEvent('Jua::FileUpload::isUploadAvailable', {
-			isUploadAvailable: isUploadAvailable
+			isUploadAvailable: isUploadAvailable,
+			sModuleName: aHidden.Module,
+			sUid: sUid,
+			oFileInfo: oFileInfo
 		});
 		if (isUploadAvailable())
 		{
@@ -1342,7 +1345,7 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 				fRegularUploadFileCallback(sUid, oFileInfo);
 			}
 		}
-		else
+		else if(_.isFunction(fCancelFunction))
 		{
 			fCancelFunction(sUid);
 		}

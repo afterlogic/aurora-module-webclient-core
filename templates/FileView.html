@@ -31,7 +31,7 @@
 		<!-- ko if: (bIsSecure()) -->
 		<span class="secure-image"></span>
 		<!-- /ko -->
-		<!-- ko if: (bIsShared()) -->
+		<!-- ko if: (isShared()) -->
 		<span class="shared-image" data-bind="css: {'with_thumb': thumbnailSrc() !== ''}"></span>
 		<!-- /ko -->
 		<div class="footer">
