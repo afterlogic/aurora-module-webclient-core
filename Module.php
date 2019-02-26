@@ -87,7 +87,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		\Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::Anonymous);
 		
 		$oUser = \Aurora\System\Api::getAuthenticatedUser();
-		$oApiIntegrator = \Aurora\Modules\Core\Managers\Integrator::getInstance();
+		$oIntegrator = \Aurora\System\Api::GetModule('Core')->getIntegratorManager();
 		
 		return array(
 			'AllowChangeSettings' => $this->getConfig('AllowChangeSettings', false),
@@ -104,8 +104,8 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'GoogleAnalyticsAccount' => $this->getConfig('GoogleAnalyticsAccount', ''),
 			'HeaderModulesOrder' => $this->getConfig('HeaderModulesOrder', []),
 			'IsDemo' => $this->getConfig('IsDemo', false),
-			'IsMobile' => $oApiIntegrator->isMobile(),
-			'LanguageListWithNames' => $this->getLanguageList($oApiIntegrator->getLanguageList()),
+			'IsMobile' => $oIntegrator->isMobile(),
+			'LanguageListWithNames' => $this->getLanguageList($oIntegrator->getLanguageList()),
 			'ShowQuotaBar' => $this->getConfig('ShowQuotaBar', false),
 			'SyncIosAfterLogin' => $this->getConfig('SyncIosAfterLogin', false),
 			'Theme' => $oUser ? $oUser->{self::GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),
@@ -159,42 +159,39 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	{
 		$sResult = '';
 		
-		$oApiIntegrator = \Aurora\Modules\Core\Managers\Integrator::getInstance();
+		$oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
 		
-		if ($oApiIntegrator) 
+		@\header('Content-Type: text/html; charset=utf-8', true);
+		
+		$sUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+		if (!\strpos(\strtolower($sUserAgent), 'firefox')) 
 		{
-			@\header('Content-Type: text/html; charset=utf-8', true);
-			
-			$sUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-			if (!\strpos(\strtolower($sUserAgent), 'firefox')) 
+			@\header('Last-Modified: '.\gmdate('D, d M Y H:i:s').' GMT');
+		}
+		
+		$oSettings =& \Aurora\System\Api::GetSettings();
+		if (($oSettings->GetValue('CacheCtrl', true) && isset($_COOKIE['aft-cache-ctrl']))) 
+		{
+			@\setcookie('aft-cache-ctrl', '', \strtotime('-1 hour'), \Aurora\System\Api::getCookiePath());
+			\MailSo\Base\Http::SingletonInstance()->StatusHeader(304);
+			exit();
+		}
+		
+		$sResult = \file_get_contents($this->GetPath().'/templates/Index.html');
+		if (\is_string($sResult)) 
+		{
+			$sFrameOptions = $oSettings->GetValue('XFrameOptions', '');
+			if (0 < \strlen($sFrameOptions)) 
 			{
-				@\header('Last-Modified: '.\gmdate('D, d M Y H:i:s').' GMT');
+				@\header('X-Frame-Options: '.$sFrameOptions);
 			}
-			
-			$oSettings =& \Aurora\System\Api::GetSettings();
-			if (($oSettings->GetValue('CacheCtrl', true) && isset($_COOKIE['aft-cache-ctrl']))) 
-			{
-				@\setcookie('aft-cache-ctrl', '', \strtotime('-1 hour'), \Aurora\System\Api::getCookiePath());
-				\MailSo\Base\Http::SingletonInstance()->StatusHeader(304);
-				exit();
-			}
-			
-			$sResult = \file_get_contents($this->GetPath().'/templates/Index.html');
-			if (\is_string($sResult)) 
-			{
-				$sFrameOptions = $oSettings->GetValue('XFrameOptions', '');
-				if (0 < \strlen($sFrameOptions)) 
-				{
-					@\header('X-Frame-Options: '.$sFrameOptions);
-				}
 
-				$sResult = strtr($sResult, array(
-					'{{AppVersion}}' => AU_APP_VERSION,
-					'{{IntegratorDir}}' => $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
-					'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink(),
-					'{{IntegratorBody}}' => $oApiIntegrator->buildBody()
-				));
-			}
+			$sResult = strtr($sResult, array(
+				'{{AppVersion}}' => AU_APP_VERSION,
+				'{{IntegratorDir}}' => $oIntegrator->isRtl() ? 'rtl' : 'ltr',
+				'{{IntegratorLinks}}' => $oIntegrator->buildHeadersLink(),
+				'{{IntegratorBody}}' => $oIntegrator->buildBody()
+			));
 		}
 
 		return $sResult;
