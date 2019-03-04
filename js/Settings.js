@@ -225,6 +225,7 @@ var Settings = {
 	/**
 	 * Updates new settings values after saving on server.
 	 * 
+	 * @param {string} sSiteName
 	 * @param {number} iAutoRefreshIntervalMinutes
 	 * @param {string} sDefaultTheme
 	 * @param {string} sLanguage
@@ -232,15 +233,37 @@ var Settings = {
 	 * @param {string} sDateFormat
 	 * @param {boolean} bAllowDesktopNotifications
 	 */
-	update: function (iAutoRefreshIntervalMinutes, sDefaultTheme, sLanguage, sTimeFormat, sDateFormat, bAllowDesktopNotifications)
+	update: function (sSiteName, iAutoRefreshIntervalMinutes, sDefaultTheme, sLanguage, sTimeFormat, sDateFormat, bAllowDesktopNotifications)
 	{
-		this.Language = sLanguage;
-		this.timeFormat(sTimeFormat);
-		this.dateFormat(sDateFormat);
+		if (typeof(sSiteName) === 'string')
+		{
+			this.SiteName = sSiteName;
+		}
+		if (typeof(sLanguage) === 'string')
+		{
+			this.Language = sLanguage;
+		}
+		if (typeof(sTimeFormat) === 'string')
+		{
+			this.timeFormat(sTimeFormat);
+		}
+		if (typeof(sDateFormat) === 'string')
+		{
+			this.dateFormat(sDateFormat);
+		}
 		
-		this.AllowDesktopNotifications = bAllowDesktopNotifications;
-		this.AutoRefreshIntervalMinutes = iAutoRefreshIntervalMinutes;
-		this.Theme = sDefaultTheme;
+		if (typeof(bAllowDesktopNotifications) === 'boolean')
+		{
+			this.AllowDesktopNotifications = bAllowDesktopNotifications;
+		}
+		if (typeof(iAutoRefreshIntervalMinutes) === 'number')
+		{
+			this.AutoRefreshIntervalMinutes = iAutoRefreshIntervalMinutes;
+		}
+		if (typeof(sDefaultTheme) === 'string')
+		{
+			this.Theme = sDefaultTheme;
+		}
 	},
 	
 	/**

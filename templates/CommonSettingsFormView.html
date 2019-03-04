@@ -4,6 +4,10 @@
 <div class="panel_center">
 	<div class="fields">
 		<div class="fieldset">
+			<div class="row" data-bind="visible: bAdmin">
+				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SITENAME'}"></span>
+				<input class="value input" data-bind="value: siteName" />
+			</div>
 			<div class="row" data-bind="visible: aThemes.length > 1">
 				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_THEME'}"></span>
 				<select class="value input" data-bind="value: selectedTheme, options: aThemes"></select>

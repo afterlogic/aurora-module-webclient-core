@@ -54,6 +54,7 @@ function CCommonSettingsFormView()
 	];
 	
 	/* Editable fields */
+	this.siteName = ko.observable(UserSettings.SiteName);
 	this.selectedTheme = ko.observable(this.getGlobalTheme());
 	this.selectedLanguage = ko.observable(this.getGlobalLanguage());
 	this.autoRefreshInterval = ko.observable(this.getGlobalAutoRefreshIntervalMinutes());
@@ -93,6 +94,7 @@ CCommonSettingsFormView.prototype.ViewTemplate = 'CoreWebclient_CommonSettingsFo
 CCommonSettingsFormView.prototype.getCurrentValues = function ()
 {
 	return [
+		this.siteName(),
 		this.selectedTheme(),
 		this.selectedLanguage(),
 		this.autoRefreshInterval(),
@@ -159,6 +161,7 @@ CCommonSettingsFormView.prototype.getGlobalAutoRefreshIntervalMinutes = function
  */
 CCommonSettingsFormView.prototype.revertGlobalValues = function ()
 {
+	this.siteName(UserSettings.SiteName);
 	this.selectedTheme(this.getGlobalTheme());
 	this.selectedLanguage(this.getGlobalLanguage());
 	this.autoRefreshInterval(this.getGlobalAutoRefreshIntervalMinutes());
@@ -181,6 +184,7 @@ CCommonSettingsFormView.prototype.getParametersForSave = function ()
 	
 	if (this.bAdmin)
 	{
+		oParameters['SiteName'] = this.siteName();
 		if (this.selectedLanguage() === 'autodetect')
 		{
 			oParameters['AutodetectLanguage'] = true;
@@ -218,7 +222,7 @@ CCommonSettingsFormView.prototype.applySavedValues = function (oParameters)
 	}
 	else
 	{
-		UserSettings.update(oParameters.AutoRefreshIntervalMinutes,
+		UserSettings.update(oParameters.SiteName, oParameters.AutoRefreshIntervalMinutes,
 			oParameters.Theme, oParameters.Language,
 			oParameters.TimeFormat, oParameters.DateFormat, oParameters.AllowDesktopNotifications);
 	}
