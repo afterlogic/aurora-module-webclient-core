@@ -66,6 +66,7 @@ var Settings = {
 	IsMobile: -1,
 	LanguageList: [{name: 'English', text: 'English'}],
 	ShowQuotaBar: false,
+	QuotaWarningPerc: 0,
 	SyncIosAfterLogin: false,
 	Theme: 'Default',
 	ThemeList: [],
@@ -148,6 +149,7 @@ var Settings = {
 			this.IsMobile = Types.pInt(oAppDataCoreWebclientSection.IsMobile, this.IsMobile);
 			this.LanguageList = Types.pArray(oAppDataCoreWebclientSection.LanguageListWithNames, this.LanguageList);
 			this.ShowQuotaBar = Types.pBool(oAppDataCoreWebclientSection.ShowQuotaBar, this.ShowQuotaBar);
+			this.QuotaWarningPerc = Types.pInt(oAppDataCoreWebclientSection.QuotaWarningPerc, this.QuotaWarningPerc);
 			this.SyncIosAfterLogin = Types.pBool(oAppDataCoreWebclientSection.SyncIosAfterLogin, this.SyncIosAfterLogin);
 			this.Theme = Types.pString(oAppDataCoreWebclientSection.Theme, this.Theme);
 			this.ThemeList = Types.pArray(oAppDataCoreWebclientSection.ThemeList, this.ThemeList);

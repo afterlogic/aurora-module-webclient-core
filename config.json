@@ -103,6 +103,10 @@
 		true,
 		"bool"
 	],
+    "QuotaWarningPerc": [
+        0,
+        "int"
+    ],
 	"SyncIosAfterLogin": [
 		true,
 		"bool"

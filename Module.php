@@ -107,6 +107,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'IsMobile' => $oIntegrator->isMobile(),
 			'LanguageListWithNames' => $this->getLanguageList($oIntegrator->getLanguageList()),
 			'ShowQuotaBar' => $this->getConfig('ShowQuotaBar', false),
+			'QuotaWarningPerc' => $this->getConfig('QuotaWarningPerc', 0),
 			'SyncIosAfterLogin' => $this->getConfig('SyncIosAfterLogin', false),
 			'Theme' => $oUser ? $oUser->{self::GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),
 			'ThemeList' => $this->getConfig('ThemeList', ['Default']),
