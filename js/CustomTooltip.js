@@ -59,7 +59,8 @@ var CustomTooltip = {
 			iItemWidth = $ItemToAlign.width(),
 			iItemHalfWidth = (iItemWidth < 70) ? iItemWidth/2 : iItemWidth/4,
 			iItemPaddingLeft = Types.pInt($ItemToAlign.css('padding-left')),
-			jqBody = $('body')
+			jqBody = $('body'),
+			iTop = oItemOffset.top + $ItemToAlign.outerHeight() - $('html').scrollTop();
 		;
 		
 		this._$Text.html(sText);
@@ -70,7 +71,7 @@ var CustomTooltip = {
 				this._$Region.hide();
 			}
 		}, this)).css({
-			'top': oItemOffset.top + $ItemToAlign.outerHeight() + 1,
+			'top': iTop,
 			'left': oItemOffset.left + iItemPaddingLeft + iItemHalfWidth - this._iLeftShift,
 			'right': 'auto'
 		});
@@ -80,7 +81,7 @@ var CustomTooltip = {
 			this._$ArrowTop.hide();
 			this._$ArrowBottom.show();
 			this._$Region.css({
-				'top': oItemOffset.top - this._$Region.outerHeight()
+				'top': iTop - this._$Region.outerHeight() - $ItemToAlign.outerHeight()
 			});
 		}
 
