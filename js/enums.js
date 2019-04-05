@@ -23,6 +23,7 @@ Enums.Key = {
 	'Enter': 13,
 	'Shift': 16,
 	'Ctrl': 17,
+	'Alt': 18,
 	'Esc': 27,
 	'Space': 32,
 	'PageUp': 33,
