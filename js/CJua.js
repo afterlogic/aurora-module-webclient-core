@@ -1322,7 +1322,10 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 			this.oDriver.regTaskUid(sUid);
 			this.oDriver.uploadTask(sUid, oFileInfo, oParsedHiddenParameters, fOnUploadCallback, iCurrChunk < iChunkNumber, true, iProgressOffset);
 		}, this);
-		var isUploadAvailable = ko.observable(true);
+		var
+			isUploadAvailable = ko.observable(true),
+			oParsedHiddenParameters = JSON.parse(getStringOrCallFunction(aHidden.Parameters, [oFileInfo]))
+		;
 		App.broadcastEvent('Jua::FileUpload::isUploadAvailable', {
 			isUploadAvailable: isUploadAvailable,
 			sModuleName: aHidden.Module,
@@ -1337,7 +1340,8 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 				fOnChunkReadyCallback: fOnChunkReadyCallback,
 				sModuleName: aHidden.Module,
 				fRegularUploadFileCallback: fRegularUploadFileCallback,
-				fCancelFunction: fCancelFunction
+				fCancelFunction: fCancelFunction,
+				sStorageType: oParsedHiddenParameters.Type
 			});
 
 			if (bBreakUpload === false)
