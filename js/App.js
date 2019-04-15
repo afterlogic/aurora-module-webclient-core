@@ -1,5 +1,8 @@
 'use strict';
 
+// UserSettings use koExtendings
+require('%PathToCoreWebclientModule%/js/koExtendings.js');
+
 var
 	_ = require('underscore'),
 	$ = require('jquery'),
@@ -25,7 +28,6 @@ var
 require('%PathToCoreWebclientModule%/js/enums.js');
 
 require('%PathToCoreWebclientModule%/js/koBindings.js');
-require('%PathToCoreWebclientModule%/js/koExtendings.js');
 
 require('%PathToCoreWebclientModule%/js/vendors/inputosaurus.js');
 

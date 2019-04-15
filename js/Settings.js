@@ -47,6 +47,7 @@ var Settings = {
 	DbLogin: '',
 	DbName: '',
 	SaltNotEmpty: false,
+	dbSettingsChanged: ko.observable(false).extend({'autoResetToFalse': 100}),
 	
 	// Settings from CoreWebclient module
 	AllowChangeSettings: false,
@@ -290,6 +291,7 @@ var Settings = {
 		this.DbHost = sDbHost;
 		this.DbLogin = sDbLogin;
 		this.DbName = sDbName;
+		this.dbSettingsChanged(true);
 	}
 };
 
