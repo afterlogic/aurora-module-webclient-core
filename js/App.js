@@ -328,20 +328,23 @@ CApp.prototype.logout = function ()
  */
 CApp.prototype.logoutAndGotoLogin = function (iLastErrorCode)
 {
-	var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
+	if ($.cookie('AuthToken'))
+	{
+		var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
 
-	Ajax.send('Core', 'Logout', iLastErrorCode ? {'LastErrorCode': iLastErrorCode} : null);
+		Ajax.send('Core', 'Logout', iLastErrorCode ? {'LastErrorCode': iLastErrorCode} : null);
 
-	Ajax.abortAndStopSendRequests();
+		Ajax.abortAndStopSendRequests();
 
-	$.removeCookie('AuthToken');
+		$.removeCookie('AuthToken');
 
+		Routing.finalize();
+	}
+	
 	window.onbeforeunload = null;
-	
+
 	WindowOpener.closeAll();
-	
-	Routing.finalize();
-	
+
 	if (Types.isNonEmptyString(UserSettings.CustomLogoutUrl))
 	{
 		window.location.href = UserSettings.CustomLogoutUrl;
