@@ -579,9 +579,13 @@ html.non-adjustable .panels {
 					margin-left: 10px;
 					margin-right: 0px;
 				}
+				
+				.theme-left-panel-item-count();
 			}
 			.count.total {
 				color: #ececec;
+				
+				.theme-left-panel-item-count-total();
 			}
 			.count:first-child {
 				margin-right: 10px;
@@ -589,17 +593,17 @@ html.non-adjustable .panels {
 			.count.unseen:hover {
 				border-radius: ~"11px/10px";
 
-				.theme-clear-panel-list-item-unseen-count-hover();
+				.theme-left-panel-item-unseen-count-hover();
 			}
 
 			&.selected > .title .count.unseen {
 				border-radius: ~"11px/10px";
 
-				.theme-clear-panel-list-item-count();
+				.theme-left-panel-item-selected-count();
 			}
 
 			&.selected > .title .count.unseen:hover {
-				.theme-clear-panel-list-item-count-hover();
+				.theme-left-panel-item-count-hover();
 			}
 		}
 		
