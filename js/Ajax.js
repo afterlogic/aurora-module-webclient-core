@@ -280,7 +280,7 @@ CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse
 			case Enums.Errors.AuthError:
 				if (App.getUserRole() !== Enums.UserRole.Anonymous)
 				{
-					App.logoutAndGotoLogin(Enums.Errors.AuthError);
+					App.logoutAndGotoLogin();
 				}
 				break;
 		}

@@ -324,15 +324,14 @@ CApp.prototype.logout = function ()
 
 /**
  * Makes user logout and relocate to login screen after that.
- * @param {number=} iLastErrorCode
  */
-CApp.prototype.logoutAndGotoLogin = function (iLastErrorCode)
+CApp.prototype.logoutAndGotoLogin = function ()
 {
 	if ($.cookie('AuthToken'))
 	{
 		var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
 
-		Ajax.send('Core', 'Logout', iLastErrorCode ? {'LastErrorCode': iLastErrorCode} : null);
+		Ajax.send('Core', 'Logout', null);
 
 		Ajax.abortAndStopSendRequests();
 
@@ -341,10 +340,6 @@ CApp.prototype.logoutAndGotoLogin = function (iLastErrorCode)
 		Routing.finalize();
 	}
 	
-	window.onbeforeunload = null;
-
-	WindowOpener.closeAll();
-
 	if (Types.isNonEmptyString(UserSettings.CustomLogoutUrl))
 	{
 		window.location.href = UserSettings.CustomLogoutUrl;
