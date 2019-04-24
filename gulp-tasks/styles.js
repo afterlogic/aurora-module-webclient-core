@@ -53,13 +53,19 @@ function BuildLibsCss()
 function BuildThemeCss(sTheme, bMobile)
 {
 	var
+		sCoreModule = bMobile ? 'CoreMobileWebclient' : 'CoreWebclient',
 		aModulesFiles = [],
-		aSkinSpecyficFiles = [],
-		aSkinSpecyficDefaultFiles = [],
+		aThemeSpecyficFiles = [],
+		aThemeSpecyficDefaultFiles = [],
 		sPostfix = bMobile ? '-mobile' : '',
-		iCoreModuleIndex = aModulesNames.indexOf('CoreWebclient')
+		iCoreModuleIndex = aModulesNames.indexOf(sCoreModule)
 	;
 
+	if (!fs.existsSync('modules/' + sCoreModule + '/styles/themes/' + sTheme + '/styles' + sPostfix + '.less'))
+	{
+		return;
+	}
+	
 	if (iCoreModuleIndex >= 0)
 	{
 		aModulesNames.unshift(aModulesNames.splice(iCoreModuleIndex, 1)[0]);
@@ -78,32 +84,32 @@ function BuildThemeCss(sTheme, bMobile)
 				aModulesFiles.push('modules/' + sModuleName + '/styles/styles' + sPostfix + '.less');
 			}
 		}
-		if (sModuleName !== 'CoreWebclient' && fs.existsSync('modules/' + sModuleName + '/styles/images'))
+		if (sModuleName !== sCoreModule && fs.existsSync('modules/' + sModuleName + '/styles/images'))
 		{
 			MoveFiles('modules/' + sModuleName + '/styles/images', 'static/styles/images/modules/' + sModuleName);
 		}
 	});
 	
-	//get skin specific files
+	//get theme specific files
 	aModulesFiles.forEach(function (sFilePath) {
-		var sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme + '/styles.less');
+		var sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme + '/styles' + sPostfix + '.less');
 				
 		if (fs.existsSync(sThemePath))
 		{
-			aSkinSpecyficFiles.push(sThemePath);
+			aThemeSpecyficFiles.push(sThemePath);
 		}
 	});
 	
 	aModulesFiles.forEach(function (sFilePath) {
-		var sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/_default.less');
+		var sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/_default' + sPostfix + '.less');
 				
 		if (fs.existsSync(sThemePath))
 		{
-			aSkinSpecyficDefaultFiles.push(sThemePath);
+			aThemeSpecyficDefaultFiles.push(sThemePath);
 		}
 	});
 	
-	aModulesFiles = aSkinSpecyficDefaultFiles.concat(aSkinSpecyficFiles.concat(aModulesFiles));
+	aModulesFiles = aThemeSpecyficDefaultFiles.concat(aThemeSpecyficFiles.concat(aModulesFiles));
 
 	gulp.src(aModulesFiles)
 		.pipe(concat('styles' + sPostfix + '.css', {
@@ -113,7 +119,7 @@ function BuildThemeCss(sTheme, bMobile)
 //				;
 //				
 //				if ( fs.existsSync(sThemePath)) {
-//					aSkinSpecyficFiles.push('@import "' + sThemePath + '";\r\n');
+//					aThemeSpecyficFiles.push('@import "' + sThemePath + '";\r\n');
 //				}
 		
 				return '@import "' + sFilePath + '";\r\n'; 

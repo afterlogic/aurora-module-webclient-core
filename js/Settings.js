@@ -70,9 +70,13 @@ var Settings = {
 	QuotaWarningPerc: 0,
 	SyncIosAfterLogin: false,
 	Theme: 'Default',
-	ThemeList: [],
+	ThemeList: ['Default'],
 	Version: '',
 	ProductName: '',
+	
+	// Settings from CoreMobileWebclient module
+	MobileTheme: 'Default',
+	MobileThemeList: ['Default'],
 	
 	// Settings from BrandingWebclient module
 	LogoUrl: '',
@@ -90,6 +94,7 @@ var Settings = {
 		var
 			oAppDataCoreSection = oAppData[Settings.ServerModuleName],
 			oAppDataCoreWebclientSection = oAppData['%ModuleName%'],
+			oAppDataCoreMobileWebclientSection = oAppData['CoreMobileWebclient'],
 			oAppDataBrandingWebclientSection = oAppData['BrandingWebclient']
 		;
 		
@@ -154,6 +159,12 @@ var Settings = {
 			this.SyncIosAfterLogin = Types.pBool(oAppDataCoreWebclientSection.SyncIosAfterLogin, this.SyncIosAfterLogin);
 			this.Theme = Types.pString(oAppDataCoreWebclientSection.Theme, this.Theme);
 			this.ThemeList = Types.pArray(oAppDataCoreWebclientSection.ThemeList, this.ThemeList);
+		}
+
+		if (!_.isEmpty(oAppDataCoreMobileWebclientSection))
+		{
+			this.MobileTheme = Types.pString(oAppDataCoreMobileWebclientSection.Theme, this.MobileTheme);
+			this.MobileThemeList = Types.pArray(oAppDataCoreMobileWebclientSection.ThemeList, this.MobileThemeList);
 		}
 
 		if (!_.isEmpty(oAppDataBrandingWebclientSection))
@@ -229,12 +240,13 @@ var Settings = {
 	 * @param {string} sSiteName
 	 * @param {number} iAutoRefreshIntervalMinutes
 	 * @param {string} sDefaultTheme
+	 * @param {string} sDefaultMobileTheme
 	 * @param {string} sLanguage
 	 * @param {string} sTimeFormat
 	 * @param {string} sDateFormat
 	 * @param {boolean} bAllowDesktopNotifications
 	 */
-	update: function (sSiteName, iAutoRefreshIntervalMinutes, sDefaultTheme, sLanguage, sTimeFormat, sDateFormat, bAllowDesktopNotifications)
+	update: function (sSiteName, iAutoRefreshIntervalMinutes, sDefaultTheme, sDefaultMobileTheme, sLanguage, sTimeFormat, sDateFormat, bAllowDesktopNotifications)
 	{
 		if (typeof(sSiteName) === 'string')
 		{
@@ -264,6 +276,10 @@ var Settings = {
 		if (typeof(sDefaultTheme) === 'string')
 		{
 			this.Theme = sDefaultTheme;
+		}
+		if (typeof(sDefaultMobileTheme) === 'string')
+		{
+			this.MobileTheme = sDefaultMobileTheme;
 		}
 	},
 	
