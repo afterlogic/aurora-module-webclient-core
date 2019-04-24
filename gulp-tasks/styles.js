@@ -19,7 +19,8 @@ var
 	
 	sTenantPathPrefix = sTenanthash ? 'tenants/' + sTenanthash + '/' : '',
 	
-	sPathToCoreWebclient = 'modules/CoreWebclient'
+	sPathToCoreWebclient = 'modules/CoreWebclient',
+	sPathToCoreMobileWebclient = 'modules/CoreMobileWebclient'
 ;
 
 aModulesNames.forEach(function (sModuleName) {
@@ -176,7 +177,7 @@ function MoveFiles(sFromDir, sToDir)
 			});	
 		}
 	;
-//	console.log(sFromDir);
+	
 	if (fs.existsSync(sFromDir))
 	{
 		CheckFolderAndCallHandler(sToDir, fCopyDir);
@@ -214,6 +215,7 @@ gulp.task('styles', function () {
 		BuildThemeCss(sTheme, false);
 		BuildThemeCss(sTheme, true);
 		MoveFiles(sPathToCoreWebclient + '/styles/themes/' + sTheme, sTenantPathPrefix + 'static/styles/themes/' + sTheme);
+		MoveFiles(sPathToCoreMobileWebclient + '/styles/themes/' + sTheme + '/images-mobile', sTenantPathPrefix + 'static/styles/themes/' + sTheme + '/images-mobile');
 	});
 });
 
