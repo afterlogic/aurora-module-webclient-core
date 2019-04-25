@@ -1,5 +1,8 @@
 <div class="tabsbar">
 	<div class="content">
+		<!-- ko if: sLogoUrl === '' -->
+		<span class="item logo"></span>
+		<!-- /ko -->
 		<!-- ko if: sLogoUrl !== '' -->
 			<a href="#" class="item logo">
 				<img class="img_logo" data-bind="attr: {'src': sLogoUrl}"/>
