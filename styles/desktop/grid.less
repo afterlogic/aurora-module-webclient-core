@@ -17,15 +17,8 @@ html.non-adjustable .panels {
 	}
 }
 
-// .panels .panel_helper {
-	// display: inline-block;
-	// vertical-align: top;
-	// .box-sizing;
-// }
-
 .panel {
 	border-radius: 5px;
-	box-shadow: -1px 0 2px rgba(0,0,0,0.11);
 	font-size: 9pt;
 	height: 100%;
 	position: relative;
@@ -34,6 +27,10 @@ html.non-adjustable .panels {
 	flex-basis: auto;
 	flex-grow: 1;
 	background: #fff;
+	
+	&.center_panel, &.item_viewer, &.data {
+		box-shadow: -1px 0 2px rgba(0, 0, 0, 0.11);
+	}
 
 	.box-sizing;
 	
@@ -74,8 +71,13 @@ html.non-adjustable .panels {
 		}
 	}
 	
-	&.center_panel .panel_top {
-		background: #f1f1f1;
+	&.center_panel {
+		.panel_top {
+			background: @theme-center-top-panel-bg;
+		}
+		.panel_bottom {
+			background: @theme-center-bottom-panel-bg;
+		}
 	}
 
 	.panel_top {
@@ -107,10 +109,8 @@ html.non-adjustable .panels {
 	}
 	
 	.panel_bottom {
-		background-color: #ffffff;
 		border-radius: 0 0 4px 4px;
 		border-top: 1px solid #E2E2E2;
-		//height: 26px;
 		line-height: 26px;
 		padding: 10px 20px;
 	}
@@ -222,12 +222,12 @@ html.non-adjustable .panels {
 
 .items_list {
 	.section_title {
-		color: #fff;
+		color: @theme-section-title-color;
 		cursor: default;
 		display: block;
 		font-weight: bold;
 		padding: 10px 17px 10px 17px;
-		//text-shadow: 0px 1px 0px #fff;
+		text-shadow: @theme-section-title-text-shadow;
 		text-transform: uppercase;
 		white-space: nowrap;
 		
@@ -478,14 +478,13 @@ html.non-adjustable .panels {
 	.items_list {
 		.item {
 			background: none;
-			font-size: 10pt;
 			max-height: inherit;
 			
 			& > .title {
 				color: lighten(@group-item-font-color, 20%);
 				cursor: default;
 				display: block;
-				font-size: 11pt;
+				font-size: @theme-group-style-item-font-size;
 				font-weight: normal;
 				line-height: normal;
 				margin-bottom: 0px;
@@ -586,6 +585,9 @@ html.non-adjustable .panels {
 				color: #ececec;
 				
 				.theme-left-panel-item-count-total();
+			}
+			&.selected > .title .count.total {
+				.theme-left-panel-item-selected-count-total();
 			}
 			.count:first-child {
 				margin-right: 10px;
