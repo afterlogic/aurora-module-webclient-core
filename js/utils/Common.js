@@ -399,4 +399,26 @@ Utils.getHash = function (sUniqVal)
 	return Types.pString(iHash);
 };
 
+/**
+ * Disposes all observable properties of the object and destroys them along with all others.
+ * After that, deletes the object reference from its parent so that the GC will free up memory.
+ * @param {object} oParent
+ * @param {mixed} mObjectKey
+ */
+Utils.destroyObjectWithObservables = function (oParent, mObjectKey)
+{
+	var oObject = oParent[mObjectKey];
+	
+	for (var mKey in oObject)
+	{
+		if (oObject[mKey] && _.isFunction(oObject[mKey].dispose))
+		{
+			oObject[mKey].dispose();
+		}
+		delete oObject[mKey];
+	}
+
+	delete oParent[mObjectKey];
+};
+
 module.exports = Utils;
