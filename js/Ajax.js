@@ -166,8 +166,13 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeou
 		oXhr = null,
 		oCloneRequest = _.clone(oRequest),
 		sAuthToken = $.cookie('AuthToken') || '',
-		oHeader = (sAuthToken !== '') ? { 'Authorization': 'Bearer ' + sAuthToken } : {}
+		oHeader = { 'X-Client': 'WebClient' }
 	;
+	
+	if (sAuthToken !== '')
+	{
+		oHeader['Authorization'] = 'Bearer ' + sAuthToken;
+	}
 	
 	oCloneRequest.Parameters = JSON.stringify(oCloneRequest.Parameters);
 	
