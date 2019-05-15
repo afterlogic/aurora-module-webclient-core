@@ -126,7 +126,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		\Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::NormalUser);
 		
 		$oUser = \Aurora\System\Api::getAuthenticatedUser();
-		if ($oUser && $oUser->Role === \Aurora\System\Enums\UserRole::NormalUser)
+		if ($oUser && $oUser->isNormalOrTenant())
 		{
 			if (isset($Args['AllowDesktopNotifications']))
 			{

@@ -182,11 +182,8 @@ var Settings = {
 	
 	initTimezone: function ()
 	{
-		var
-			Enums = window.Enums,
-			App = require('%PathToCoreWebclientModule%/js/App.js')
-		;
-		if (App.getUserRole() === Enums.UserRole.NormalUser)
+		var App = require('%PathToCoreWebclientModule%/js/App.js');
+		if (App.isUserNormalOrTenant())
 		{
 			var
 				TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),

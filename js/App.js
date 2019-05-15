@@ -133,6 +133,11 @@ CApp.prototype.getUserRole = function ()
 	return this.iUserRole;
 };
 
+CApp.prototype.isUserNormalOrTenant = function ()
+{
+	return this.iUserRole === Enums.UserRole.NormalUser || this.iUserRole === Enums.UserRole.TenantAdmin;
+};
+
 CApp.prototype.getTenantId = function ()
 {
 	return this.iTenantId;
@@ -182,7 +187,7 @@ CApp.prototype.init = function ()
 {
 	ModulesManager.run('StandardLoginFormWebclient', 'beforeAppRunning', [this.iUserRole !== Enums.UserRole.Anonymous]);
 	
-	if (App.getUserRole() === Enums.UserRole.NormalUser && UserSettings.AllowChangeSettings)
+	if (App.isUserNormalOrTenant() && UserSettings.AllowChangeSettings)
 	{
 		ModulesManager.run('SettingsWebclient', 'registerSettingsTab', [
 			function () { return require('%PathToCoreWebclientModule%/js/views/CommonSettingsFormView.js'); },
