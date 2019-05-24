@@ -223,7 +223,7 @@ function jsTask(sTaskName, sName, oWebPackConfig) {
 	;
 }
 
-gulp.task('js:build', function () {
+gulp.task('js:build', function (done) {
 	jsTask('js:build', sOutputName, _.defaults({
 		'output':  {
 			'filename': sOutputName + '.js',
@@ -240,9 +240,10 @@ gulp.task('js:build', function () {
 			})
 		]
 	}, oWebPackConfig));
+	done();
 });
 
-gulp.task('js:watch', function () {
+gulp.task('js:watch', function (done) {
 	jsTask('js:watch', sOutputName, _.defaults({
 		'watch': true,
 		'aggregateTimeout': 300,
@@ -260,9 +261,10 @@ gulp.task('js:watch', function () {
 			})
 		]
 	}, oWebPackConfig));
+	done();
 });
 
-gulp.task('js:min', function () {
+gulp.task('js:min', function (done) {
 	jsTask('js:min', sOutputName, _.defaults({
 		'plugins': [
 			new webpack.optimize.UglifyJsPlugin({
@@ -284,6 +286,7 @@ gulp.task('js:min', function () {
 			'publicPath': sPath
 		}
 	}, oWebPackConfig));
+	done();
 });
 
 module.exports = {};

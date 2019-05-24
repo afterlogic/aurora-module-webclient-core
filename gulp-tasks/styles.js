@@ -200,7 +200,7 @@ function MoveSharingCss()
 	CheckFolderAndCallHandler('static/styles', fCopySharing);
 }
 
-gulp.task('styles', function () {
+gulp.task('styles', function (done) {
 	if (!sTenanthash)
 	{
 		BuildLibsCss();
@@ -217,17 +217,21 @@ gulp.task('styles', function () {
 		MoveFiles(sPathToCoreWebclient + '/styles/themes/' + sTheme, sTenantPathPrefix + 'static/styles/themes/' + sTheme);
 		MoveFiles(sPathToCoreMobileWebclient + '/styles/themes/' + sTheme + '/images-mobile', sTenantPathPrefix + 'static/styles/themes/' + sTheme + '/images-mobile');
 	});
+	
+	done();
 });
 
-gulp.task('cssonly', function () {
+gulp.task('cssonly', function (done) {
 	_.each(aThemes, function (sTheme) {
 		BuildThemeCss(sTheme, false);
 		BuildThemeCss(sTheme, true);
 	});
+	done();
 });
 
-gulp.task('styles:watch', ['styles'], function () {
+gulp.task('styles:watch',  gulp.series('styles', function (done) {
 	gulp.watch(aModulesWatchPaths, {interval: 500}, ['cssonly']);
-});
+	done();
+}));
 
 module.exports = {};
