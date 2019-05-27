@@ -36,7 +36,7 @@ function BuildLibsCss()
 		aLibsFiles = [
 			sPathToCoreWebclient + '/styles/vendors/normalize.css',
 			sPathToCoreWebclient + '/styles/vendors/jquery/jquery-ui-1.10.4.custom.min.css',
-			sPathToCoreWebclient + '/styles/vendors/fullcalendar-2.2.3.min.css',
+			//sPathToCoreWebclient + '/styles/vendors/fullcalendar-2.2.3.min.css',
 			sPathToCoreWebclient + '/styles/vendors/inputosaurus.css'
 		],
 		sDestPath = 'static/styles/libs/',
@@ -230,7 +230,13 @@ gulp.task('cssonly', function (done) {
 });
 
 gulp.task('styles:watch',  gulp.series('styles', function (done) {
-	gulp.watch(aModulesWatchPaths, {interval: 500}, ['cssonly']);
+	gulp.watch(aModulesWatchPaths, {interval: 500}, function (done) {
+		_.each(aThemes, function (sTheme) {
+			BuildThemeCss(sTheme, false);
+			BuildThemeCss(sTheme, true);
+		});
+		done();
+	});
 	done();
 }));
 
