@@ -3,7 +3,7 @@ var
 	argv = require('./argv.js'),
 	gulp = require('gulp'),
 	less = require('gulp-less'),
-	gutil = require('gulp-util'),
+	log = require('fancy-log'),
 	concat = require('gulp-concat-util'),
 	plumber = require('gulp-plumber'),
 	fs = require('fs'),
@@ -44,7 +44,7 @@ function BuildLibsCss()
 			gulp.src(aLibsFiles)
 				.pipe(concat('libs.css'))
 				.pipe(gulp.dest(sDestPath))
-				.on('error', gutil.log);
+				.on('error', log);
 		}
 	;
 	
@@ -131,13 +131,12 @@ function BuildThemeCss(sTheme, bMobile)
 		.pipe(plumber({
 			errorHandler: function (err) {
 				console.log(err.toString());
-				gutil.beep();
 				this.emit('end');
 			}
 		}))
 		.pipe(less())
 		.pipe(gulp.dest(sTenantPathPrefix + 'static/styles/themes/' + sTheme))
-		.on('error', gutil.log);
+		.on('error', log);
 }
 
 function CheckFolderAndCallHandler(sDir, fHandler)
