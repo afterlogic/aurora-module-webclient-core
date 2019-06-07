@@ -60,13 +60,6 @@ var
 			}
 		},
 		resolve: {
-			// root: [
-				// path.resolve('./')
-			// ]
-			// modules: [
-				// path.resolve(__dirname, '../../../node_modules'),
-				// path.resolve(__dirname, '../../../'),
-			// ],
 			modules: [
 				path.resolve(__dirname, '../../../'),
 				"node_modules"
@@ -74,12 +67,6 @@ var
 		},
 		module: {
 			rules: [
-				// {
-					// include: /\.json$/,
-					// use: [
-						// 'json-loader'
-					// ]
-				// },
 				{
 					test: /[\\\/]modernizr\.js$/,
 					use: [
@@ -269,20 +256,8 @@ $('body').ready(function () {
 	;
 }
 
-// function template (modules) {
-// 	var aStr = [];
-	
-// 	_.each(modules, function (sModulePath) {
-// 		aStr.push(`aModules['${GetModuleName(sModulePath)}'] = require('${sModulePath.replace('./', '')}');`);
-// 	})
-	
-// 	return aStr.join(" \r\n");
-// }
-
-
 gulp.task('js:build', function (done) {
 	jsTask('js:build', sOutputName, _.defaults({
-		mode: 'development',
 		'output': {
 			'filename': sOutputName + '.js',
 			'chunkFilename': '[name].' + sOutputName + '.[chunkhash].js',
