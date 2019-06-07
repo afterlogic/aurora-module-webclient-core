@@ -209,61 +209,60 @@ function jsTask(sTaskName, sName, oWebPackConfig) {
 		sPublicInit = bPublic ? "\t\t" + "App.setPublic();" + crlf : ''
 	;
 
-		// gulp.src(aModules)
-		gulp.src('static/js/_app-entry.js')
-// 			.pipe(plumber({
-// 				errorHandler: function (err) {
-// 					console.log(err.toString());
-// 					this.emit('end');
-// 				}
-// 			}))
-// 			.pipe(concat('_' + sName + '-entry.js', {
-// 				sep: crlf,
-// 				process: function (sSrc, sFilePath) {
-// 					var sModuleName = GetModuleName(sFilePath);
-// return `
-// 		if (window.aAvailableModules.indexOf('${sModuleName}') >= 0) {
-// 			oAvailableModules['${sModuleName}'] = import(/* webpackChunkName: "${sModuleName}" */ 'modules/${sModuleName}/js/manager.js').then(({ default: module }) => {console.log('loaded: ', '${sModuleName}');return module;});
-// 		}`;
-// 				}
-// 			}))
-// 		.pipe(concat.header(
-// `'use strict';
-// console.log('start');
+		gulp.src(aModules)
+		// gulp.src('static/js/_app-entry.js')
+			.pipe(plumber({
+				errorHandler: function (err) {
+					console.log(err.toString());
+					this.emit('end');
+				}
+			}))
+			.pipe(concat('_' + sName + '-entry.js', {
+				sep: crlf,
+				process: function (sSrc, sFilePath) {
+					var sModuleName = GetModuleName(sFilePath);
+return `
+		if (window.aAvailableModules.indexOf('${sModuleName}') >= 0) {
+			oAvailableModules['${sModuleName}'] = import(/* webpackChunkName: "${sModuleName}" */ 'modules/${sModuleName}/js/manager.js').then(({ default: module }) => {return module;});
+		}`;
+				}
+			}))
+		.pipe(concat.header(
+`'use strict';
+import $ from 'jquery';
+import _ from 'underscore';
+import Promise from 'bluebird';
 
-// import $ from 'jquery';
-// 	import _ from 'underscore';
-// $('body').ready(function () {
-// 	var oAvailableModules = {};
-// 	if (window.aAvailableModules) {
-// `
-// 		))
-// 		.pipe(concat.footer(
-// 	`
-// 	}
-// 	Promise.all(_.values(oAvailableModules)).then(function(aModules){
-// 		console.log('resolved',oAvailableModules, _.object(_.keys(oAvailableModules), aModules));
-// 		var
-// 			ModulesManager = require('modules/CoreWebclient/js/ModulesManager.js'),
-// 			App = require('modules/CoreWebclient/js/App.js'),
-// 			bSwitchingToMobile = App.checkMobile()
-// 		;
-// 		if (!bSwitchingToMobile) {
-// 			if (window.isPublic) {
-// 				App.setPublic();
-// 			}
-// 			if (window.isNewTab) {
-// 				App.setNewTab();
-// 			}
-// 			ModulesManager.init(_.object(_.keys(oAvailableModules), aModules));
-// 			App.init();
-// 		}
-// 	}).catch(error => 'An error occurred while loading the component');
-// });
+$('body').ready(function () {
+	var oAvailableModules = {};
+	if (window.aAvailableModules) {
+`
+		))
+		.pipe(concat.footer(
+	`
+	}
+	Promise.all(_.values(oAvailableModules)).then(function(aModules){
+		var
+			ModulesManager = require('modules/CoreWebclient/js/ModulesManager.js'),
+			App = require('modules/CoreWebclient/js/App.js'),
+			bSwitchingToMobile = App.checkMobile()
+		;
+		if (!bSwitchingToMobile) {
+			if (window.isPublic) {
+				App.setPublic();
+			}
+			if (window.isNewTab) {
+				App.setNewTab();
+			}
+			ModulesManager.init(_.object(_.keys(oAvailableModules), aModules));
+			App.init();
+		}
+	}).catch(error => 'An error occurred while loading the component');
+});
 
-// `
-// 				))
-// 		.pipe(gulp.dest(sPath))
+`
+				))
+		.pipe(gulp.dest(sPath))
 		.pipe(gulpWebpack(oWebPackConfig, webpack, compileCallback))
 		.pipe(plumber.stop())
 		.pipe(gulp.dest(sPath))
