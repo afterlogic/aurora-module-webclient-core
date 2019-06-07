@@ -1,22 +1,23 @@
-var
-    _ = require('underscore'),
-    argv = require('./argv.js'),
+'use strict';
+
+var _ = require('underscore'),
+	argv = require('./argv.js'),
 	fs = require('fs'),
-    gulp = require('gulp'),
+	gulp = require('gulp'),
 	log = require('fancy-log'),
-    concat = require('gulp-concat-util'),
-    plumber = require('gulp-plumber'),
+	concat = require('gulp-concat-util'),
+	plumber = require('gulp-plumber'),
 	webpack = require('webpack'),
-    gulpWebpack = require('webpack-stream'),
-    path = require('path'),
+	gulpWebpack = require('webpack-stream'),
+	path = require('path'),
 	TerserPlugin = require('terser-webpack-plugin'),
 
-    sTenantName = argv.getParameter('--tenant'),
-    sOutputName = argv.getParameter('--output'), /* app, app-mobile, app-message-newtab, app-adminpanel, app-files-pub, app-calendar-pub, app-helpdesk*/
-    aModulesNames = argv.getModules(),
+	sTenantName = argv.getParameter('--tenant'),
+	sOutputName = argv.getParameter('--output'), /* app, app-mobile, app-message-newtab, app-adminpanel, app-files-pub, app-calendar-pub, app-helpdesk*/
+	aModulesNames = argv.getModules(),
 	sBuild = argv.getParameter('--build'),
-    sPath = sTenantName ? './tenants/' + sTenantName + '/static/js/' : './static/js/',
-    crlf = '\n'
+	sPath = sTenantName ? './tenants/' + sTenantName + '/static/js/' : './static/js/',
+	crlf = '\n'
 ;
 
 if (sOutputName === '')
@@ -25,7 +26,7 @@ if (sOutputName === '')
 }
 
 function GetModuleName(sFilePath) {
-    return sFilePath.replace(/.*modules[\\/](.*?)[\\/]js.*/, "$1");
+	return sFilePath.replace(/.*modules[\\/](.*?)[\\/]js.*/, "$1");
 }
 
 var 
@@ -114,19 +115,20 @@ var
 		},
 		optimization: {
 			splitChunks: {
-				chunks: 'all',
+				// chunks: 'all',
 				cacheGroups: {
 					'default': false
 				}
 			}
 		},
-		'plugins': [
+		plugins: [
+			new webpack.HashedModuleIdsPlugin(), // so that file hashes don't change unexpectedly
 			new webpack.ProvidePlugin({
 				$: "jquery",
 				jQuery: "jquery",
 				"window.jQuery": "jquery"
 			})
-		],
+		]
 	},
 	updateVersion = function () {
 		var sVersionFilesName = './VERSION';
@@ -207,68 +209,86 @@ function jsTask(sTaskName, sName, oWebPackConfig) {
 		sPublicInit = bPublic ? "\t\t" + "App.setPublic();" + crlf : ''
 	;
 
-    gulp.src(aModules)
-		.pipe(plumber({
-            errorHandler: function (err) {
-                console.log(err.toString());
-                this.emit('end');
-            }
-        }))
-        .pipe(concat('_' + sName + '-entry.js', {
-            sep: crlf,
-            process: function (sSrc, sFilePath) {
-                var sModuleName = GetModuleName(sFilePath);
-			
-				return "\t\t"+"if (window.aAvailableModules.indexOf('"+sModuleName+"') >= 0) {" + crlf +
-					"\t\t\t"+"oAvailableModules['"+sModuleName+"'] = new Promise(function(resolve, reject) {" + crlf +
-						"\t\t\t\t"+"require.ensure([], function(require) {var oModule = require('modules/"+sModuleName+"/js/manager.js'); resolve(oModule); }, '"+sModuleName+"');" + crlf +
-					"\t\t\t"+"});" + crlf +
-				"\t\t"+"}";
-            }
-        }))
-        .pipe(concat.header("'use strict';" + crlf +
-            "var $ = require('jquery'), _ = require('underscore'), Promise = require('bluebird');" + crlf +
-            "$('body').ready(function () {" + crlf +
-            "\t" + "var oAvailableModules = {};" + crlf +
-            "\t" + "if (window.aAvailableModules) {" + crlf
-        ))
-        .pipe(concat.footer(
-			crlf + "\t}" + crlf +
-		
-			"\t" + "Promise.all(_.values(oAvailableModules)).then(function(aModules){" + crlf +
-			"\t\t" + "var" + crlf +
-            "\t\t\t" + "ModulesManager = require('modules/CoreWebclient/js/ModulesManager.js')," + crlf +
-            "\t\t\t" + "App = require('modules/CoreWebclient/js/App.js')," + crlf +
-            "\t\t\t" + "bSwitchingToMobile = App.checkMobile()" + crlf +
-            "\t\t" + ";" + crlf +
-            "\t\t" + "if (!bSwitchingToMobile)" + crlf +
-            "\t\t" + "{" + crlf +
-			"\t\t\t" + "if (window.isPublic) {" + crlf +
-			"\t\t\t\t" + "App.setPublic();" + crlf +
-			"\t\t\t" + "}" + crlf +
-			"\t\t\t" + "if (window.isNewTab) {" + crlf +
-			"\t\t\t\t" + "App.setNewTab();" + crlf +
-			"\t\t\t" + "}" + crlf +
-            "\t\t\t" + "ModulesManager.init(_.object(_.keys(oAvailableModules), aModules));" + crlf +
-            "\t\t\t" + "App.init();" + crlf +
-            "\t\t" + "}" + crlf +
-            "\t});" + crlf +
-            "});" + crlf
-        ))
-		.pipe(gulp.dest(sPath))
+		// gulp.src(aModules)
+		gulp.src('static/js/_app-entry.js')
+// 			.pipe(plumber({
+// 				errorHandler: function (err) {
+// 					console.log(err.toString());
+// 					this.emit('end');
+// 				}
+// 			}))
+// 			.pipe(concat('_' + sName + '-entry.js', {
+// 				sep: crlf,
+// 				process: function (sSrc, sFilePath) {
+// 					var sModuleName = GetModuleName(sFilePath);
+// return `
+// 		if (window.aAvailableModules.indexOf('${sModuleName}') >= 0) {
+// 			oAvailableModules['${sModuleName}'] = import(/* webpackChunkName: "${sModuleName}" */ 'modules/${sModuleName}/js/manager.js').then(({ default: module }) => {console.log('loaded: ', '${sModuleName}');return module;});
+// 		}`;
+// 				}
+// 			}))
+// 		.pipe(concat.header(
+// `'use strict';
+// console.log('start');
+
+// import $ from 'jquery';
+// 	import _ from 'underscore';
+// $('body').ready(function () {
+// 	var oAvailableModules = {};
+// 	if (window.aAvailableModules) {
+// `
+// 		))
+// 		.pipe(concat.footer(
+// 	`
+// 	}
+// 	Promise.all(_.values(oAvailableModules)).then(function(aModules){
+// 		console.log('resolved',oAvailableModules, _.object(_.keys(oAvailableModules), aModules));
+// 		var
+// 			ModulesManager = require('modules/CoreWebclient/js/ModulesManager.js'),
+// 			App = require('modules/CoreWebclient/js/App.js'),
+// 			bSwitchingToMobile = App.checkMobile()
+// 		;
+// 		if (!bSwitchingToMobile) {
+// 			if (window.isPublic) {
+// 				App.setPublic();
+// 			}
+// 			if (window.isNewTab) {
+// 				App.setNewTab();
+// 			}
+// 			ModulesManager.init(_.object(_.keys(oAvailableModules), aModules));
+// 			App.init();
+// 		}
+// 	}).catch(error => 'An error occurred while loading the component');
+// });
+
+// `
+// 				))
+// 		.pipe(gulp.dest(sPath))
 		.pipe(gulpWebpack(oWebPackConfig, webpack, compileCallback))
 		.pipe(plumber.stop())
-        .pipe(gulp.dest(sPath))
+		.pipe(gulp.dest(sPath))
 	;
 }
 
+// function template (modules) {
+// 	var aStr = [];
+	
+// 	_.each(modules, function (sModulePath) {
+// 		aStr.push(`aModules['${GetModuleName(sModulePath)}'] = require('${sModulePath.replace('./', '')}');`);
+// 	})
+	
+// 	return aStr.join(" \r\n");
+// }
+
+
 gulp.task('js:build', function (done) {
 	jsTask('js:build', sOutputName, _.defaults({
-		'output':  {
+		mode: 'development',
+		'output': {
 			'filename': sOutputName + '.js',
 			'chunkFilename': '[name].' + sOutputName + '.[chunkhash].js',
 			'publicPath': sPath,
-			'pathinfo': true
+			'pathinfo': true,
 		}
 	}, oWebPackConfig));
 	done();
