@@ -287,7 +287,7 @@ gulp.task('js:min', function (done) {
 		'mode': 'production',
 		optimization: {
 			splitChunks: {
-				chunks: 'all',
+				// chunks: 'all',
 				cacheGroups: {
 					'default': false
 				}
