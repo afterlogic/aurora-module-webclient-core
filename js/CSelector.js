@@ -136,7 +136,7 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 
 	this.selectorHook.subscribe(function () {
 		var oPrev = this.selectorHook();
-		if (oPrev)
+		if (oPrev && _.isFunction(oPrev.selected))
 		{
 			oPrev.selected(false);
 		}
