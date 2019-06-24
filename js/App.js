@@ -28,6 +28,7 @@ var
 require('%PathToCoreWebclientModule%/js/enums.js');
 
 require('%PathToCoreWebclientModule%/js/koBindings.js');
+require('%PathToCoreWebclientModule%/js/koOtherBindings.js');
 
 require('%PathToCoreWebclientModule%/js/vendors/inputosaurus.js');
 
