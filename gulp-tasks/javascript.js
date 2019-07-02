@@ -244,7 +244,7 @@ $('body').ready(function () {
 			ModulesManager.init(_.object(_.keys(oAvailableModules), aModules));
 			App.init();
 		}
-	}).catch(error => 'An error occurred while loading the component');
+	}).catch(function (oError) { console.error('An error occurred while loading the component:'); console.error(oError); });
 });
 
 `
