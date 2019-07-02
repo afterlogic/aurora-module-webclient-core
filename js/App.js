@@ -265,7 +265,7 @@ CApp.prototype.init = function ()
 
 	if (!this.isMobile())
 	{
-		$(window).unload(function() {
+		$(window).on('unload', function() {
 			WindowOpener.closeAll();
 		});
 	}
