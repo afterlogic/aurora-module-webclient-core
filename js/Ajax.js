@@ -169,6 +169,11 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeou
 		oHeader = { 'X-Client': 'WebClient' }
 	;
 	
+	if (sAuthToken === '' && App.getUserRole() !== Enums.UserRole.Anonymous)
+	{
+		App.logoutAndGotoLogin();
+	}
+	
 	if (sAuthToken !== '')
 	{
 		oHeader['Authorization'] = 'Bearer ' + sAuthToken;
