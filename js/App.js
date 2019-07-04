@@ -481,12 +481,25 @@ CApp.prototype.checkCookies = function ()
 			var sAuthToken = $.cookie('AuthToken');
 			if (sAuthToken)
 			{
-				$.cookie('AuthToken', sAuthToken, { expires: 30 });
+				this.setAuthToken(sAuthToken);
 			}
 		}
 	}
 	
 	return bCookieWorks;
+};
+
+/**
+ * @param {string} sAuthToken
+ */
+CApp.prototype.setAuthToken = function (sAuthToken)
+{
+	var oParams = {};
+	if (UserSettings.AuthTokenCookieExpireTime > 0)
+	{
+		oParams['expires'] = UserSettings.AuthTokenCookieExpireTime;
+	}
+	$.cookie('AuthToken', sAuthToken, oParams);
 };
 
 CApp.prototype.getCommonRequestParameters = function ()

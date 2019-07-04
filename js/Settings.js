@@ -19,6 +19,7 @@ var Settings = {
 	HashModuleName: 'core',
 	
 	// Settings from Core module
+	AuthTokenCookieExpireTime: 30,
 	AutodetectLanguage: false,
 	UserSelectsDateFormat: false,
 	dateFormat: ko.observable('DD/MM/YYYY'),
@@ -101,6 +102,7 @@ var Settings = {
 		
 		if (!_.isEmpty(oAppDataCoreSection))
 		{
+			this.AuthTokenCookieExpireTime = Types.pInt(oAppDataCoreSection.AuthTokenCookieExpireTime, this.AuthTokenCookieExpireTime);
 			this.AutodetectLanguage = Types.pBool(oAppDataCoreSection.AutodetectLanguage, this.AutodetectLanguage);
 			this.UserSelectsDateFormat = Types.pBool(oAppDataCoreSection.UserSelectsDateFormat, this.UserSelectsDateFormat);
 			this.dateFormat(Types.pString(oAppDataCoreSection.DateFormat, this.dateFormat()));
