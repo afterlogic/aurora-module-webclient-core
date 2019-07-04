@@ -37,6 +37,8 @@ var Settings = {
 	PasswordMinLength: 0,
 	PasswordMustBeComplex: false,
 	CookiePath: '/',
+	Version: '',
+	ProductName: '',
 	
 	// Settings from Core module only for super admin
 	AdminHasPassword: '',
@@ -47,6 +49,7 @@ var Settings = {
 	DbLogin: '',
 	DbName: '',
 	SaltNotEmpty: false,
+	StoreAuthTokenInDB: false,
 	dbSettingsChanged: ko.observable(false).extend({'autoResetToFalse': 100}),
 	
 	// Settings from CoreWebclient module
@@ -71,8 +74,6 @@ var Settings = {
 	SyncIosAfterLogin: false,
 	Theme: 'Default',
 	ThemeList: ['Default'],
-	Version: '',
-	ProductName: '',
 	
 	// Settings from CoreMobileWebclient module
 	MobileTheme: 'Default',
@@ -122,6 +123,8 @@ var Settings = {
 			{
 				this.CookiePath = '/';
 			}
+			this.Version = Types.pString(oAppDataCoreSection.Version, this.Version);
+			this.ProductName = Types.pString(oAppDataCoreSection.ProductName, this.ProductName);
 			
 			//only for admin
 			this.AdminHasPassword = Types.pBool(oAppDataCoreSection.AdminHasPassword, this.AdminHasPassword);
@@ -132,8 +135,7 @@ var Settings = {
 			this.DbLogin = Types.pString(oAppDataCoreSection.DBLogin, this.DbLogin);
 			this.DbName = Types.pString(oAppDataCoreSection.DBName, this.DbName);
 			this.SaltNotEmpty = Types.pBool(oAppDataCoreSection.SaltNotEmpty, this.SaltNotEmpty);
-			this.Version = oAppDataCoreSection.Version;
-			this.ProductName = oAppDataCoreSection.ProductName;
+			this.StoreAuthTokenInDB = Types.pBool(oAppDataCoreSection.StoreAuthTokenInDB, this.StoreAuthTokenInDB);
 		}
 		
 		if (!_.isEmpty(oAppDataCoreWebclientSection))
