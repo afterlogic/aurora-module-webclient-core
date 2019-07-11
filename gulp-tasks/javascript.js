@@ -212,6 +212,11 @@ return `
 		.pipe(concat.header(
 `'use strict';
 import Promise from 'bluebird';
+Promise.config({
+    warnings: {
+        wForgottenReturn: false
+    }
+});
 if (!window.Promise) { window.Promise = Promise; }
 import $ from 'jquery';
 import _ from 'underscore';
