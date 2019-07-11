@@ -191,11 +191,6 @@ var
 ;
 
 function jsTask(sTaskName, sName, oWebPackConfig) {
-	var
-		bPublic = sName.indexOf('-pub') !== -1,
-		sPublicInit = bPublic ? "\t\t" + "App.setPublic();" + crlf : ''
-	;
-
 		gulp.src(aModules)
 		// gulp.src('static/js/_app-entry.js')
 			.pipe(plumber({
@@ -210,15 +205,16 @@ function jsTask(sTaskName, sName, oWebPackConfig) {
 					var sModuleName = GetModuleName(sFilePath);
 return `
 		if (window.aAvailableModules.indexOf('${sModuleName}') >= 0) {
-			oAvailableModules['${sModuleName}'] = import(/* webpackChunkName: "${sModuleName}" */ 'modules/${sModuleName}/js/manager.js').then(({ default: module }) => {return module;});
+			oAvailableModules['${sModuleName}'] = import(/* webpackChunkName: "${sModuleName}" */ 'modules/${sModuleName}/js/manager.js').then(function (module) { return module.default});
 		}`;
 				}
 			}))
 		.pipe(concat.header(
 `'use strict';
+import Promise from 'bluebird';
+if (!window.Promise) { window.Promise = Promise; }
 import $ from 'jquery';
 import _ from 'underscore';
-import Promise from 'bluebird';
 
 $('body').ready(function () {
 	var oAvailableModules = {};
