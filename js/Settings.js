@@ -38,6 +38,7 @@ var Settings = {
 	PasswordMinLength: 0,
 	PasswordMustBeComplex: false,
 	CookiePath: '/',
+	CookieSecure: false,
 	Version: '',
 	ProductName: '',
 	
@@ -125,6 +126,7 @@ var Settings = {
 			{
 				this.CookiePath = '/';
 			}
+			this.CookieSecure = Types.pBool(oAppDataCoreSection.CookieSecure, this.CookieSecure);
 			this.Version = Types.pString(oAppDataCoreSection.Version, this.Version);
 			this.ProductName = Types.pString(oAppDataCoreSection.ProductName, this.ProductName);
 			

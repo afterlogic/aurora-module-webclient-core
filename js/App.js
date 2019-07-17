@@ -461,7 +461,7 @@ CApp.prototype.useGoogleAnalytics = function ()
  */
 CApp.prototype.checkCookies = function ()
 {
-	$.cookie.defaults = { path: UserSettings.CookiePath };
+	$.cookie.defaults = { path: UserSettings.CookiePath, secure: UserSettings.CookieSecure };
 	
 	$.cookie('checkCookie', '1');
 	var bCookieWorks = $.cookie('checkCookie') === '1';
