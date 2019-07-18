@@ -3,10 +3,12 @@
 var
 	_ = require('underscore'),
 	$ = require('jquery'),
+	moment = require('moment'),
 	ko = require('knockout'),
 	
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
+	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
 	
 	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
 	AlertPopup = require('%PathToCoreWebclientModule%/js/popups/AlertPopup.js'),
@@ -194,7 +196,7 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeou
 		timeout: iTimeout === undefined ? 50000 : iTimeout
 	});
 	
-	this.requests().push({ Request: oRequest, Xhr: oXhr });
+	this.requests().push({ Request: oRequest, Xhr: oXhr, Time: moment() });
 };
 
 /**
@@ -366,9 +368,17 @@ CAjax.prototype.always = function (oRequest, oXhr, sType)
 	if (sType !== 'abort')
 	{
 		_.each(this.requests(), function (oReqData, iIndex) {
-			if (oReqData && _.isEqual(oReqData.Request, oRequest))
+			if (oReqData)
 			{
-				this.requests()[iIndex] = undefined;
+				if (_.isEqual(oReqData.Request, oRequest))
+				{
+					this.requests()[iIndex] = undefined;
+				}
+				else if (moment().diff(oReqData.Time) > 1000 * 60 * 5) // 5 minutes
+				{
+					Utils.log('always, request is in the list more than 5 minutes', oReqData);
+					this.requests()[iIndex] = undefined;
+				}
 			}
 		}, this);
 

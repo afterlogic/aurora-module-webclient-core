@@ -326,58 +326,30 @@ Utils.getDateFormatForMoment = function (sDateFormat)
 };
 
 Utils.log = (function () {
+	if (UserSettings.AllowClientDebug)
+	{
+		window.auroraLogs = [];
 
-	var
-		$log = null,
-		aLog = []
-	;
+		return function () {
+			var aNewRow = [];
 
-	return function () {
-		var
-			TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
-			Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
-			aNewRow = []
-		;
-		
-		if (!UserSettings.AllowClientDebug || Browser.ie9AndBelow)
-		{
-			return;
-		}
+			aNewRow.unshift(moment().format('DD.MM, HH:mm:ss'));
+			_.each(arguments, function (mArg) {
+				aNewRow.push(mArg);
+			});
 
-		function fCensor(mKey, mValue) {
-			if (typeof(mValue) === 'string' && mValue.length > 50)
+			if (window.auroraLogs.length > 100)
 			{
-				return mValue.substring(0, 50);
+				window.auroraLogs.shift();
 			}
 
-			return mValue;
-		}
-
-		if (!$log)
-		{
-			$log = $('<div style="display: none;"></div>').appendTo('body');
-		}
-		
-		_.each(arguments, function (mArg) {
-			var sRowPart = typeof(mArg) === 'string' ? mArg : JSON.stringify(mArg, fCensor);
-			if (aNewRow.length === 0)
-			{
-				sRowPart = ' *** ' + sRowPart + ' *** ';
-			}
-			aNewRow.push(sRowPart);
-		});
-
-		aNewRow.push(moment().format(' *** D MMMM, YYYY, HH:mm:ss *** '));
-
-		if (aLog.length > 200)
-		{
-			aLog.shift();
-		}
-
-		aLog.push(TextUtils.encodeHtml(aNewRow.join(', ')));
-
-		$log.html(aLog.join('<br /><br />'));
-	};
+			window.auroraLogs.push(aNewRow);
+		};
+	}
+	else
+	{
+		return function () {};
+	}
 }());
 
 /**
