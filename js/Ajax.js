@@ -300,7 +300,7 @@ CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse
 		oResponse.Result = false;
 	}
 	
-	this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest);
+	this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest, sType);
 };
 
 /**
@@ -334,7 +334,7 @@ CAjax.prototype.fail = function (oRequest, fResponseHandler, oContext, oXhr, sTy
 			break;
 	}
 	
-	this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest);
+	this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest, sType);
 };
 
 /**
@@ -342,13 +342,18 @@ CAjax.prototype.fail = function (oRequest, fResponseHandler, oContext, oXhr, sTy
  * @param {Object} oContext
  * @param {Object} oResponse
  * @param {Object} oRequest
+ * @param {string} sType
  */
-CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, oResponse, oRequest)
+CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, oResponse, oRequest, sType)
 {
 	if (!oResponse)
 	{
 		oResponse = { Result: false, ErrorCode: 0 };
 	}
+	
+	// Check the Internet connection before passing control to the modules.
+	// It forbids or allows further AJAX requests.
+	this.checkConnection(oRequest.Module, oRequest.Method, sType);
 	
 	if ($.isFunction(fResponseHandler) && !oResponse.StopExecuteResponse)
 	{
@@ -383,29 +388,12 @@ CAjax.prototype.always = function (oRequest, oXhr, sType)
 		}, this);
 
 		this.requests(_.compact(this.requests()));
-
-		this.checkConnection(oRequest.Module, oRequest.Method, sType);
 	}
 };
 
 CAjax.prototype.checkConnection = (function () {
 
-	var
-		iTimer = -1,
-		iLastWakeTime = new Date().getTime(),
-		iCurrentTime = 0,
-		bAwoke = false
-	;
-
-	setInterval(function() { //fix for sleep mode
-		iCurrentTime = new Date().getTime();
-		bAwoke = iCurrentTime > (iLastWakeTime + 5000 + 1000);
-		iLastWakeTime = iCurrentTime;
-		if (bAwoke)
-		{
-			Screens.hideError(true);
-		}
-	}, 5000);
+	var iTimer = -1;
 
 	return function (sModule, sMethod, sStatus)
 	{
