@@ -321,7 +321,8 @@ CApp.prototype.logout = function ()
 {
 	if (Screens.hasUnsavedChanges() || Popups.hasUnsavedChanges())
 	{
-		this.askDiscardChanges(this.logoutAndGotoLogin.bind(this));
+		var oCurrentScreen = _.isFunction(Screens.getCurrentScreen) ? Screens.getCurrentScreen() : null;
+		this.askDiscardChanges(this.logoutAndGotoLogin.bind(this), null, oCurrentScreen);
 	}
 	else
 	{
