@@ -116,24 +116,25 @@ CAjax.prototype.registerOnAllRequestsClosedHandler = function (fHandler)
  */
 CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler, oContext, iTimeout, oMainParams)
 {
+	oParameters = oParameters || {};
+	
+	var oRequest = _.extendOwn({
+		Module: sModule,
+		Method: sMethod,
+		Parameters: oParameters
+	}, App.getCommonRequestParameters());
+
+	if (oMainParams)
+	{
+		oRequest = _.extendOwn(oRequest, oMainParams);
+	}
+	
 	if (this.bAllowRequests && !this.bInternetConnectionProblem)
 	{
-		var oRequest = _.extendOwn({
-			Module: sModule,
-			Method: sMethod
-		}, App.getCommonRequestParameters());
-		
-		if (oMainParams)
-		{
-			oRequest = _.extendOwn(oRequest, oMainParams);
-		}
-		
-		oParameters = oParameters || {};
-		
 		var oEventParams = {
 			'Module': sModule,
 			'Method': sMethod,
-			'Parameters': oParameters,
+			'Parameters': oParameters, // can be changed by reference
 			'ResponseHandler': fResponseHandler,
 			'Context': oContext,
 			'Continue': true
@@ -142,12 +143,15 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 		
 		if (oEventParams.Continue)
 		{
-			oRequest.Parameters = oParameters;
-
 			this.abortRequests(oRequest);
 
 			this.doSend(oRequest, fResponseHandler, oContext, iTimeout);
 		}
+	}
+	else
+	{
+		var oResponse = { Result: false, ErrorCode: Enums.Errors.NotDisplayedError };
+		this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest, 'error');
 	}
 };
 
