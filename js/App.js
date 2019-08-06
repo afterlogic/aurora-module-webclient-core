@@ -346,6 +346,11 @@ CApp.prototype.logoutAndGotoLogin = function ()
 		$.removeCookie('AuthToken');
 
 		Routing.finalize();
+		
+		this.iUserRole = Enums.UserRole.Anonymous;
+		this.sUserName = '';
+		this.sUserPublicId = '';
+		this.iUserId = 0;
 	}
 	
 	if (Types.isNonEmptyString(UserSettings.CustomLogoutUrl))
