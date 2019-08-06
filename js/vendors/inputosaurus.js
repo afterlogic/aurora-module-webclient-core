@@ -688,7 +688,7 @@ var inputosaurustext = {
 	_createTag: function (key, fullValue) {
 		var
 			oEmail = AddressUtils.getEmailParts(fullValue, true),
-			name = oEmail.name ? oEmail.name : oEmail.email,
+			name = TextUtils.encodeHtml(oEmail.name ? oEmail.name : oEmail.email),
 			title = fullValue ?
 				' title="' + TextUtils.i18n('%MODULENAME%/ACTION_EDIT_ADDRESS', {'EMAIL': fullValue.replace(/"/g, '&quot;')}) + '"' :
 				'',
