@@ -41,6 +41,16 @@ function CAjax()
 	
 	this.bAllowRequests = true;
 	this.bInternetConnectionProblem = false;
+	
+	App.subscribeEvent('%ModuleName%::GetDebugInfo', _.bind(function (oParams) {
+		var aInfo = [];
+
+		_.each(this.requests(), function (oReqData) {
+			aInfo.push(oReqData.Request.Module + ':' + oReqData.Request.Method + ':' + oReqData.Xhr.readyState + (Types.isString(oReqData.Xhr.statusText) ? ':' + oReqData.Xhr.statusText : ''));
+		});
+	
+		oParams.Info.push(aInfo.join(', '));
+	}, this));
 }
 
 /**

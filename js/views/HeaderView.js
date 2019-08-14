@@ -13,6 +13,9 @@ var
 	Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
 	
+	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
+	AlertPopup = require('%PathToCoreWebclientModule%/js/popups/AlertPopup.js'),
+	
 	CAbstractScreenView = require('%PathToCoreWebclientModule%/js/views/CAbstractScreenView.js')
 ;
 
@@ -49,6 +52,7 @@ function CHeaderView()
 	this.showLogout = App.getUserRole() !== window.Enums.UserRole.Anonymous && !App.isPublic();
 
 	this.sLogoUrl = Settings.LogoUrl;
+	this.bDebugMode = Settings.DebugMode;
 	
 	this.mobileDevice = Browser.mobileDevice;
 	this.bShowMobileSwitcher = Browser.mobileDevice && Settings.AllowMobile;
@@ -68,6 +72,15 @@ CHeaderView.prototype.ViewConstructorName = 'CHeaderView';
 CHeaderView.prototype.logout = function ()
 {
 	App.logout();
+};
+
+CHeaderView.prototype.debug = function ()
+{
+	var oParams = {
+		'Info': []
+	};
+	App.broadcastEvent('%ModuleName%::GetDebugInfo', oParams);
+	Popups.showPopup(AlertPopup, [oParams.Info.join('<br />')]);
 };
 
 CHeaderView.prototype.switchToFullVersion = function ()

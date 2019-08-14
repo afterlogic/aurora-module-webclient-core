@@ -18,6 +18,8 @@ var Settings = {
 	ServerModuleName: 'Core',
 	HashModuleName: 'core',
 	
+	DebugMode: Types.isString(UrlUtils.getRequestParam('debugmode')),
+	
 	// Settings from Core module
 	AuthTokenCookieExpireTime: 30,
 	AutodetectLanguage: false,

@@ -31,6 +31,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			[
 				'default' => [$this, 'EntryDefault'],
 				'error' => [$this, 'EntryDefault'],
+				'debugmode' => [$this, 'EntryDefault'],
 				'xdebug_session_start' => [$this, 'EntryDefault'],
 				'install' => [$this, 'EntryCompatibility']
 			]
