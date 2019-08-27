@@ -77,9 +77,31 @@ var
 				{
 					test: /\.js$/,
 					use: [
-						'replace-module-names-loader'
-					]
-					
+						{
+							loader: 'replace-module-names-loader'
+						}
+					],
+				},
+				{
+					test: /(OpenPgpWebclient).*\.js$/,
+					exclude: /node_modules/,
+					use: [
+						{
+							loader: 'babel-loader',
+							options: {
+								presets: [
+									[
+										'@babel/preset-env',
+										{
+											useBuiltIns: 'entry',
+											corejs: 'core-js@3'
+										}
+									]
+								],
+								compact: false
+							}
+						}
+					],
 				},
 				// {
 					// test: /\.less$/,
@@ -213,13 +235,15 @@ return `
 `'use strict';
 import Promise from 'bluebird';
 Promise.config({
-    warnings: {
-        wForgottenReturn: false
-    }
+	warnings: {
+		wForgottenReturn: false
+	}
 });
 if (!window.Promise) { window.Promise = Promise; }
 import $ from 'jquery';
 import _ from 'underscore';
+import "core-js";
+import "regenerator-runtime/runtime";
 
 $('body').ready(function () {
 	var oAvailableModules = {};
