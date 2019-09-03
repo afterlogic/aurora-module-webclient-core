@@ -214,12 +214,8 @@ CApp.prototype.init = function ()
 		]);
 	}
 		
-	if (Browser.iosDevice && this.iUserRole !== Enums.UserRole.Anonymous && UserSettings.SyncIosAfterLogin && UserSettings.AllowIosProfile && $.cookie('skip-ios') !== '1')
-	{
-		$.cookie('skip-ios', '1');
-		window.location.href = '?ios';
-	}
-	
+	ModulesManager.run('Ios', 'routeToIos');
+
 	if (this.iUserRole !== Enums.UserRole.Anonymous && !this.bPublic)
 	{
 		var AccountList = ModulesManager.run('MailWebclient', 'getAccountList');

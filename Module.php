@@ -96,7 +96,6 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'AllowChangeSettings' => $this->getConfig('AllowChangeSettings', false),
 			'AllowClientDebug' => $this->getConfig('AllowClientDebug', false),
 			'AllowDesktopNotifications' => $oUser ? $oUser->{self::GetName().'::AllowDesktopNotifications'} : $this->getConfig('AllowDesktopNotifications', false),
-			'AllowIosProfile' => $this->getConfig('AllowIosProfile', false),
 			'AllowMobile' => $this->getConfig('AllowMobile', false),
 			'AllowPrefetch' => $this->getConfig('AllowPrefetch', true),
 			'AttachmentSizeLimit' => $this->getConfig('AttachmentSizeLimit', 0),
@@ -111,7 +110,6 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'LanguageListWithNames' => $this->getLanguageList($oIntegrator->getLanguageList()),
 			'ShowQuotaBar' => $this->getConfig('ShowQuotaBar', false),
 			'QuotaWarningPerc' => $this->getConfig('QuotaWarningPerc', 0),
-			'SyncIosAfterLogin' => $this->getConfig('SyncIosAfterLogin', false),
 			'Theme' => $oUser ? $oUser->{self::GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),
 			'ThemeList' => $this->getConfig('ThemeList', ['Default']),
 		);

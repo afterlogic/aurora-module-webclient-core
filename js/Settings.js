@@ -60,7 +60,6 @@ var Settings = {
 	AllowChangeSettings: false,
 	AllowClientDebug: false,
 	AllowDesktopNotifications: false,
-	AllowIosProfile: false,
 	AllowMobile: false,
 	AllowPrefetch: true,
 	AttachmentSizeLimit: 0,
@@ -75,7 +74,6 @@ var Settings = {
 	LanguageList: [{name: 'English', text: 'English'}],
 	ShowQuotaBar: false,
 	QuotaWarningPerc: 0,
-	SyncIosAfterLogin: false,
 	Theme: 'Default',
 	ThemeList: ['Default'],
 	
@@ -149,7 +147,6 @@ var Settings = {
 			this.AllowChangeSettings = Types.pBool(oAppDataCoreWebclientSection.AllowChangeSettings, this.AllowChangeSettings);
 			this.AllowClientDebug = Types.pBool(oAppDataCoreWebclientSection.AllowClientDebug, this.AllowClientDebug);
 			this.AllowDesktopNotifications = Types.pBool(oAppDataCoreWebclientSection.AllowDesktopNotifications, this.AllowDesktopNotifications);
-			this.AllowIosProfile = Types.pBool(oAppDataCoreWebclientSection.AllowIosProfile, this.AllowIosProfile);
 			this.AllowMobile = Types.pBool(oAppDataCoreWebclientSection.AllowMobile, this.AllowMobile);
 			this.AllowPrefetch = Types.pBool(oAppDataCoreWebclientSection.AllowPrefetch, this.AllowPrefetch);
 			this.AttachmentSizeLimit = Types.pNonNegativeInt(oAppDataCoreWebclientSection.AttachmentSizeLimit, this.AttachmentSizeLimit);
@@ -164,7 +161,6 @@ var Settings = {
 			this.LanguageList = Types.pArray(oAppDataCoreWebclientSection.LanguageListWithNames, this.LanguageList);
 			this.ShowQuotaBar = Types.pBool(oAppDataCoreWebclientSection.ShowQuotaBar, this.ShowQuotaBar);
 			this.QuotaWarningPerc = Types.pInt(oAppDataCoreWebclientSection.QuotaWarningPerc, this.QuotaWarningPerc);
-			this.SyncIosAfterLogin = Types.pBool(oAppDataCoreWebclientSection.SyncIosAfterLogin, this.SyncIosAfterLogin);
 			this.Theme = Types.pString(oAppDataCoreWebclientSection.Theme, this.Theme);
 			this.ThemeList = Types.pArray(oAppDataCoreWebclientSection.ThemeList, this.ThemeList);
 		}
