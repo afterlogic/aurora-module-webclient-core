@@ -83,7 +83,7 @@ var
 					],
 				},
 				{
-					test: /(OpenPgpWebclient).*\.js$/,
+					test: /(OpenPgpWebclient|OpenPgpFilesWebclient).*\.js$/,
 					exclude: /node_modules/,
 					use: [
 						{
