@@ -411,6 +411,7 @@ ko.bindingHandlers.autocompleteSimple = {
 						Utils.calmEvent(oEvent);
 						fDelete();
 					});
+					jqEl.autocomplete('widget').css('max-height', 200);
 				},
 				'select': function (oEvent, oItem) {
 					_.delay(function () {
