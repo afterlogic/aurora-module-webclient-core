@@ -1,5 +1,5 @@
 <div class="tabsbar">
-	<div class="content">
+	<div class="content" style="display: flex; align-items: center; justify-content: space-between;">
 		<!-- ko if: sLogoUrl === '' -->
 			<a href="#" class="item logo"></a>
 		<!-- /ko -->
@@ -9,18 +9,18 @@
 			</a>
 		<!-- /ko -->
 
-		<span class="item logout" data-bind="visible: showLogout">
-			<span class="link" data-bind="i18n: {'key': '%MODULENAME%/ACTION_LOGOUT'}, click: logout"></span>
-		</span>
-
 		<!-- ko foreach: tabs -->
-			<!-- ko if: $data.visible -->
-				<!-- ko template: {name: ViewTemplate, data: $data} --><!-- /ko -->
-			<!-- /ko -->
+			<!-- ko template: {name: ViewTemplate, data: $data, if: $data.visible} --><!-- /ko -->
 		<!-- /ko -->
 
-		<span class="item settings" data-bind="visible: bShowMobileSwitcher, click: switchToMobileVersion">
+		<div class="spacer"></div>
+
+		<span class="item mobile" data-bind="visible: bShowMobileSwitcher, click: switchToMobileVersion">
 			<span class="link" data-bind="i18n: {'key': '%MODULENAME%/ACTION_SHOW_MOBILE_VERSION'}"></span>
+		</span>
+
+		<span class="item logout" data-bind="visible: showLogout">
+			<span class="link" data-bind="i18n: {'key': '%MODULENAME%/ACTION_LOGOUT'}, click: logout"></span>
 		</span>
 	</div>
 </div>
