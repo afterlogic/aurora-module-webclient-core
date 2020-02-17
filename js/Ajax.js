@@ -417,7 +417,7 @@ CAjax.prototype.checkConnection = (function () {
 			Ajax.bInternetConnectionProblem = false;
 			Screens.hideError(true);
 		}
-		else
+		else if (this.bAllowRequests)
 		{
 			if (sModule === 'Core' && sMethod === 'Ping')
 			{

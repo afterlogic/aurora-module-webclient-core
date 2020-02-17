@@ -335,22 +335,24 @@ CApp.prototype.logoutAndGotoLogin = function ()
 	{
 		var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
 
-		Ajax.send('Core', 'Logout', null, function (oResponse) {
-			if (oResponse.Result)
-			{
-				Ajax.abortAndStopSendRequests();
-			}
-		}, this);
+		Ajax.send('Core', 'Logout', null);
+
+		var oExcept = {
+			Module: 'Core',
+			Method: 'Logout'
+		};
+		Ajax.abortAndStopSendRequests(oExcept);
+
+		$.removeCookie('AuthToken');
+
+		Routing.finalize();
+		
+		this.iUserRole = Enums.UserRole.Anonymous;
+		this.sUserName = '';
+		this.sUserPublicId = '';
+		this.iUserId = 0;
 	}
-	$.removeCookie('AuthToken');
-
-	Routing.finalize();
 	
-	this.iUserRole = Enums.UserRole.Anonymous;
-	this.sUserName = '';
-	this.sUserPublicId = '';
-	this.iUserId = 0;
-
 	if (Types.isNonEmptyString(UserSettings.CustomLogoutUrl))
 	{
 		window.location.href = UserSettings.CustomLogoutUrl;
