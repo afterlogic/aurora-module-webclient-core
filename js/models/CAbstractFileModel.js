@@ -125,11 +125,11 @@ function CAbstractFileModel()
 	this.oActionsData = {
 		'view': {
 			'Text': TextUtils.i18n('COREWEBCLIENT/ACTION_VIEW_FILE'),
-			'Handler': _.bind(function () { this.viewFile(); }, this)
+			'HandlerName': 'viewFile'
 		},
 		'download': {
 			'Text': TextUtils.i18n('COREWEBCLIENT/ACTION_DOWNLOAD_FILE'),
-			'Handler': _.bind(function () { this.downloadFile(); }, this),
+			'HandlerName': 'downloadFile',
 			'Tooltip': ko.computed(function () {
 				var sTitle = TextUtils.i18n('%MODULENAME%/INFO_CLICK_TO_DOWNLOAD_FILE', {
 					'FILENAME': this.fileName(),
@@ -237,9 +237,16 @@ CAbstractFileModel.prototype.getActionUrl = function (sAction)
  */
 CAbstractFileModel.prototype.executeAction = function (sAction)
 {
-	if (this.hasAction(sAction) && this.oActionsData[sAction] && _.isFunction(this.oActionsData[sAction].Handler))
+	var oData = this.hasAction(sAction) && this.oActionsData[sAction];
+	if (oData)
 	{
-		this.oActionsData[sAction].Handler();
+		if (_.isFunction(oData.Handler)) {
+			oData.Handler();
+		}
+		else if (typeof oData.HandlerName === 'string' && _.isFunction(this[oData.HandlerName]))
+		{
+			this[oData.HandlerName]();
+		}
 	}
 };
 
