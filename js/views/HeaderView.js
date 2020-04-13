@@ -80,6 +80,8 @@ CHeaderView.prototype.debug = function ()
 		'Info': []
 	};
 	App.broadcastEvent('%ModuleName%::GetDebugInfo', oParams);
+	var aLogs = _.isArray(window.auroraLogs) ? (window.auroraLogs.length > 3 ? window.auroraLogs.slice(window.auroraLogs.length - 4, 3) : window.auroraLogs) : [];
+	oParams.Info = oParams.Info.concat(aLogs);
 	Popups.showPopup(AlertPopup, [oParams.Info.join('<br />')]);
 };
 
