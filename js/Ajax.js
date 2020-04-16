@@ -14,6 +14,7 @@ var
 	AlertPopup = require('%PathToCoreWebclientModule%/js/popups/AlertPopup.js'),
 	
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
+	Pulse = require('%PathToCoreWebclientModule%/js/Pulse.js'),
 	Screens = require('%PathToCoreWebclientModule%/js/Screens.js')
 ;
 
@@ -29,7 +30,7 @@ function CAjax()
 		if (this.requests().length === 0)
 		{
 			_.each(this.aOnAllRequestsClosedHandlers, function (fHandler) {
-				if ($.isFunction(fHandler))
+				if (_.isFunction(fHandler))
 				{
 					fHandler();
 				}
@@ -74,6 +75,8 @@ CAjax.prototype.getOpenedRequest = function (sModule, sMethod)
  */
 CAjax.prototype.hasOpenedRequests = function (sModule, sMethod)
 {
+	// Do not change requests here. It calls hasOpenedRequests and we get a loop.
+	
 	sModule = Types.pString(sModule);
 	sMethod = Types.pString(sMethod);
 	
@@ -84,16 +87,7 @@ CAjax.prototype.hasOpenedRequests = function (sModule, sMethod)
 	else
 	{
 		return !!_.find(this.requests(), function (oReqData) {
-			if (oReqData)
-			{
-				var
-					bComplete = oReqData.Xhr.readyState === 4,
-					bAbort = oReqData.Xhr.readyState === 0 && oReqData.Xhr.statusText === 'abort',
-					bSameMethod = oReqData.Request.Module === sModule && oReqData.Request.Method === sMethod
-				;
-				return !bComplete && !bAbort && bSameMethod;
-			}
-			return false;
+			return oReqData && oReqData.Request.Module === sModule && oReqData.Request.Method === sMethod;
 		});
 	}
 };
@@ -153,7 +147,7 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 		
 		if (oEventParams.Continue)
 		{
-			this.abortRequests(oRequest);
+			this.abortSameRequests(oRequest);
 
 			this.doSend(oRequest, fResponseHandler, oContext, iTimeout);
 		}
@@ -216,13 +210,13 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeou
 /**
  * @param {Object} oRequest
  */
-CAjax.prototype.abortRequests = function (oRequest)
+CAjax.prototype.abortSameRequests = function (oRequest)
 {
 	var fHandler = this.aAbortRequestHandlers[oRequest.Module];
 	
-	if ($.isFunction(fHandler) && this.requests().length > 0)
+	if (_.isFunction(fHandler) && this.requests().length > 0)
 	{
-		_.each(this.requests(), _.bind(function (oReqData, iIndex) {
+		_.each(this.requests(), _.bind(function (oReqData) {
 			if (oReqData)
 			{
 				var oOpenedRequest = oReqData.Request;
@@ -231,13 +225,10 @@ CAjax.prototype.abortRequests = function (oRequest)
 					if (fHandler(oRequest, oOpenedRequest))
 					{
 						oReqData.Xhr.abort();
-						this.requests()[iIndex] = undefined;
 					}
 				}
 			}
 		}, this));
-		
-		this.requests(_.compact(this.requests()));
 	}
 };
 
@@ -259,8 +250,6 @@ CAjax.prototype.abortAllRequests = function (oExcept)
 			oReqData.Xhr.abort();
 		}
 	}, this);
-	
-	this.requests([]);
 };
 
 /**
@@ -369,7 +358,7 @@ CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, o
 	// It forbids or allows further AJAX requests.
 	this.checkConnection(oRequest.Module, oRequest.Method, sType);
 	
-	if ($.isFunction(fResponseHandler) && !oResponse.StopExecuteResponse)
+	if (_.isFunction(fResponseHandler) && !oResponse.StopExecuteResponse)
 	{
 		fResponseHandler.apply(oContext, [oResponse, oRequest]);
 	}
@@ -384,25 +373,26 @@ CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, o
  */
 CAjax.prototype.always = function (oRequest, oXhr, sType)
 {
-	if (sType !== 'abort')
-	{
-		_.each(this.requests(), function (oReqData, iIndex) {
-			if (oReqData)
-			{
-				if (_.isEqual(oReqData.Request, oRequest))
-				{
-					this.requests()[iIndex] = undefined;
-				}
-				else if (moment().diff(oReqData.Time) > 1000 * 60 * 5) // 5 minutes
-				{
-					Utils.log('always, request is in the list more than 5 minutes', oReqData);
-					this.requests()[iIndex] = undefined;
-				}
-			}
-		}, this);
+	this.filterRequests();
+};
 
-		this.requests(_.compact(this.requests()));
-	}
+CAjax.prototype.filterRequests = function ()
+{
+	this.requests(_.filter(this.requests(), function (oReqData, iIndex) {
+		if (oReqData)
+		{
+			var
+				bComplete = oReqData.Xhr.readyState === 4,
+				bAbort = oReqData.Xhr.readyState === 0 && oReqData.Xhr.statusText === 'abort',
+				bTooLong = moment().diff(oReqData.Time) > 1000 * 60 * 5 // 5 minutes
+			;
+			if (bTooLong)
+			{
+				Utils.log('always, request is in the list more than 5 minutes', oReqData);
+			}
+			return !bComplete && !bAbort && !bTooLong;
+		}
+	}, this));
 };
 
 CAjax.prototype.checkConnection = (function () {
@@ -447,3 +437,5 @@ module.exports = {
 	startSendRequests: _.bind(Ajax.startSendRequests, Ajax),
 	send: _.bind(Ajax.send, Ajax)
 };
+
+Pulse.registerEveryMinuteFunction(Ajax.filterRequests.bind(Ajax));
