@@ -373,24 +373,28 @@ CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, o
  */
 CAjax.prototype.always = function (oRequest, oXhr, sType)
 {
-	this.filterRequests();
+	this.filterRequests(oRequest);
 };
 
-CAjax.prototype.filterRequests = function ()
+CAjax.prototype.filterRequests = function (oRequest)
 {
 	this.requests(_.filter(this.requests(), function (oReqData, iIndex) {
 		if (oReqData)
 		{
+			if (_.isEqual(oReqData.Request, oRequest))
+			{
+				return false;
+			}
 			var
 				bComplete = oReqData.Xhr.readyState === 4,
-				bAbort = oReqData.Xhr.readyState === 0 && oReqData.Xhr.statusText === 'abort',
+				bFail = oReqData.Xhr.readyState === 0 && (oReqData.Xhr.statusText === 'abort' || oReqData.Xhr.statusText === 'error'),
 				bTooLong = moment().diff(oReqData.Time) > 1000 * 60 * 5 // 5 minutes
 			;
 			if (bTooLong)
 			{
 				Utils.log('always, request is in the list more than 5 minutes', oReqData);
 			}
-			return !bComplete && !bAbort && !bTooLong;
+			return !bComplete && !bFail && !bTooLong;
 		}
 	}, this));
 };
