@@ -15,7 +15,9 @@ var
 	
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	Pulse = require('%PathToCoreWebclientModule%/js/Pulse.js'),
-	Screens = require('%PathToCoreWebclientModule%/js/Screens.js')
+	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
+	
+	sLastPulseTime = ''
 ;
 
 /**
@@ -49,8 +51,11 @@ function CAjax()
 		_.each(this.requests(), function (oReqData) {
 			aInfo.push(oReqData.Request.Module + ':' + oReqData.Request.Method + ':' + oReqData.Xhr.readyState + (Types.isString(oReqData.Xhr.statusText) ? ':' + oReqData.Xhr.statusText : ''));
 		});
+		
+		aInfo.push('Last pulse time: ' + sLastPulseTime);
+		aInfo.push('Now time: ' + moment().format('DD.MM, HH:mm:ss'));
 	
-		oParams.Info.push(aInfo.join(', '));
+		oParams.Info.push(aInfo.join('<br />'));
 	}, this));
 }
 
@@ -442,4 +447,7 @@ module.exports = {
 	send: _.bind(Ajax.send, Ajax)
 };
 
-Pulse.registerEveryMinuteFunction(Ajax.filterRequests.bind(Ajax));
+Pulse.registerEveryMinuteFunction(function () {
+	sLastPulseTime = moment().format('DD.MM, HH:mm:ss');
+	Ajax.filterRequests();
+});
