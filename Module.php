@@ -9,7 +9,7 @@ namespace Aurora\Modules\CoreWebclient;
 
 /**
  * System module that provides Web application core functionality and UI framework.
- * 
+ *
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
  * @copyright Copyright (c) 2019, Afterlogic Corp.
@@ -21,10 +21,10 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	/***** private functions *****/
 	/**
 	 * Initializes CoreWebclient Module.
-	 * 
+	 *
 	 * @ignore
 	 */
-	public function init() 
+	public function init()
 	{
 		\Aurora\System\Router::getInstance()->registerArray(
 			self::GetName(),
@@ -36,7 +36,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 				'install' => [$this, 'EntryCompatibility']
 			]
 		);
-		
+
 		\Aurora\Modules\Core\Classes\User::extend(
 			self::GetName(),
 			[
@@ -46,12 +46,12 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			]
 
 		);
-		
+
 		$this->subscribeEvent('Core::UpdateSettings::after', array($this, 'onAfterUpdateSettings'));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param array $aSystemList
 	 * @return array
 	 */
@@ -59,7 +59,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	{
 		$aResultList = [];
 		$aLanguageNames = $this->getConfig('LanguageNames', false);
-		foreach ($aSystemList as $sLanguage) 
+		foreach ($aSystemList as $sLanguage)
 		{
 			if (isset($aLanguageNames[$sLanguage]))
 			{
@@ -79,19 +79,19 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		return $aResultList;
 	}
 	/***** private functions *****/
-	
+
 	/***** public functions *****/
 	/**
-	 * 
+	 *
 	 * @return array
 	 */
 	public function GetSettings()
 	{
 		\Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::Anonymous);
-		
+
 		$oUser = \Aurora\System\Api::getAuthenticatedUser();
 		$oIntegrator = \Aurora\System\Api::GetModule('Core')->getIntegratorManager();
-		
+
 		return array(
 			'AllowChangeSettings' => $this->getConfig('AllowChangeSettings', false),
 			'AllowClientDebug' => $this->getConfig('AllowClientDebug', false),
@@ -114,16 +114,16 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'ThemeList' => $this->getConfig('ThemeList', ['Default']),
 		);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param array $Args
 	 * @param mixed $Result
 	 */
 	public function onAfterUpdateSettings($Args, &$Result)
 	{
 		\Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::NormalUser);
-		
+
 		$oUser = \Aurora\System\Api::getAuthenticatedUser();
 		if ($oUser && $oUser->isNormalOrTenant())
 		{
@@ -139,11 +139,11 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			{
 				$oUser->{self::GetName().'::Theme'} = $Args['Theme'];
 			}
-			
+
 			$oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
 			$oCoreDecorator->UpdateUserObject($oUser);
 		}
-		
+
 		if ($oUser && $oUser->Role === \Aurora\System\Enums\UserRole::SuperAdmin)
 		{
 			if (isset($Args['Theme']))
@@ -153,40 +153,46 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			$Result = $this->saveModuleConfig();
 		}
 	}
-	
+
 	/**
 	 * @ignore
 	 */
 	public function EntryDefault()
 	{
 		$sResult = '';
-		
+
 		$oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
-		
+
 		@\header('Content-Type: text/html; charset=utf-8', true);
-		
+
 		$sUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-		if (!\strpos(\strtolower($sUserAgent), 'firefox')) 
+		if (!\strpos(\strtolower($sUserAgent), 'firefox'))
 		{
 			@\header('Last-Modified: '.\gmdate('D, d M Y H:i:s').' GMT');
 		}
-		
+
 		$oSettings =& \Aurora\System\Api::GetSettings();
-		if (($oSettings->GetValue('CacheCtrl', true) && isset($_COOKIE['aft-cache-ctrl']))) 
+		if ($oSettings)
 		{
-			@\setcookie('aft-cache-ctrl', '', \strtotime('-1 hour'), \Aurora\System\Api::getCookiePath(), 
-					null, \Aurora\System\Api::getCookieSecure());
-			\MailSo\Base\Http::SingletonInstance()->StatusHeader(304);
-			exit();
-		}
-		
-		$sResult = \file_get_contents($this->GetPath().'/templates/Index.html');
-		if (\is_string($sResult)) 
-		{
-			$sFrameOptions = $oSettings->GetValue('XFrameOptions', '');
-			if (0 < \strlen($sFrameOptions)) 
+			if (($oSettings->GetValue('CacheCtrl', true) && isset($_COOKIE['aft-cache-ctrl'])))
 			{
-				@\header('X-Frame-Options: '.$sFrameOptions);
+				@\setcookie('aft-cache-ctrl', '', \strtotime('-1 hour'), \Aurora\System\Api::getCookiePath(),
+						null, \Aurora\System\Api::getCookieSecure());
+				\MailSo\Base\Http::SingletonInstance()->StatusHeader(304);
+				exit();
+			}
+		}
+
+		$sResult = \file_get_contents($this->GetPath().'/templates/Index.html');
+		if (\is_string($sResult))
+		{
+			if ($oSettings)
+			{
+				$sFrameOptions = $oSettings->GetValue('XFrameOptions', '');
+				if (0 < \strlen($sFrameOptions))
+				{
+					@\header('X-Frame-Options: '.$sFrameOptions);
+				}
 			}
 
 			$sResult = strtr($sResult, array(
@@ -197,16 +203,17 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			));
 		}
 
+
 		return $sResult;
-	}		
-	
+	}
+
 	/**
 	 * @ignore
 	 */
 	public function EntryCompatibility()
 	{
 		$mResult = '';
-		
+
 		$aCompatibilities = \Aurora\System\Api::GetModuleDecorator('Core')->GetCompatibilities();
 		$sContent = '';
 		$bResult = true;
@@ -236,13 +243,13 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 				$bResult &= $aItem['Result'];
 			}
 		}
-		$sContent .= "<br />";		
+		$sContent .= "<br />";
 
 		$sPath = $this->GetPath().'/templates/Compatibility.html';
 		if (\file_exists($sPath))
 		{
 			$sResult = \file_get_contents($sPath);
-			if (\is_string($sResult)) 
+			if (\is_string($sResult))
 			{
 				$sResult = strtr($sResult, array(
 					'{{Compatibilities}}' => $sContent,
@@ -254,16 +261,16 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 					'{{ResultClassSuffix}}' => ($bResult) ? '_ok' : '_error',
 					'{{NextButtonName}}' => ($bResult) ? 'next_btn' : 'retry_btn',
 					'{{NextButtonValue}}' => ($bResult) ? 'Next' : 'Retry'
-					
+
 				));
-				
+
 				$mResult = $sResult;
 			}
 		}
-		
+
 		return $mResult;
-	}	
-	
+	}
+
 	protected function getSuccessHtmlValue($sValue)
 	{
 		return '<span class="state_ok">'.$sValue.'</span>';
@@ -288,6 +295,6 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		}
 		return $sResult;
 	}
-	
-	
+
+
 }
