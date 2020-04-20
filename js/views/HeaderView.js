@@ -3,6 +3,7 @@
 var
 	_ = require('underscore'),
 	$ = require('jquery'),
+	moment = require('moment'),
 	ko = require('knockout'),
 	
 	Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
@@ -76,13 +77,33 @@ CHeaderView.prototype.logout = function ()
 
 CHeaderView.prototype.debug = function ()
 {
-	var oParams = {
-		'Info': []
-	};
-	App.broadcastEvent('%ModuleName%::GetDebugInfo', oParams);
-	var aLogs = _.isArray(window.auroraLogs) ? (window.auroraLogs.length > 3 ? window.auroraLogs.slice(window.auroraLogs.length - 4, 3) : window.auroraLogs) : [];
-	oParams.Info = oParams.Info.concat(aLogs);
-	Popups.showPopup(AlertPopup, [oParams.Info.join('<br />')]);
+	if (Settings.AllowClientDebug)
+	{
+		var oParams = {
+			'Info': []
+		};
+		App.broadcastEvent('%ModuleName%::GetDebugInfo', oParams);
+
+		var aLogs = _.isArray(window.auroraLogs) ? window.auroraLogs : [];
+		if (aLogs.length > 0)
+		{
+			aLogs.unshift('<b>Logs:</b>');
+			aLogs.unshift('');
+			oParams.Info = oParams.Info.concat(aLogs);
+		}
+
+		var fComposeMessageWithData = ModulesManager.run('MailWebclient', 'getComposeMessageWithData');
+		if (_.isFunction(fComposeMessageWithData))
+		{
+			oParams.Info.unshift('Please describe a problem: <br />');
+			fComposeMessageWithData({
+				to: 'nadine@afterlogic.com',
+				subject: 'debug report - ' + moment().format('DD.MM, HH:mm:ss'),
+				body: oParams.Info.join('<br />'),
+				isHtml: true
+			});
+		}
+	}
 };
 
 CHeaderView.prototype.switchToFullVersion = function ()

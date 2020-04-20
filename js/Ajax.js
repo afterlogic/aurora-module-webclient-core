@@ -15,9 +15,10 @@ var
 	
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	Pulse = require('%PathToCoreWebclientModule%/js/Pulse.js'),
+	Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
 	
-	sLastPulseTime = ''
+	aFilterDebugInfo = []
 ;
 
 /**
@@ -45,18 +46,31 @@ function CAjax()
 	this.bAllowRequests = true;
 	this.bInternetConnectionProblem = false;
 	
-	App.subscribeEvent('%ModuleName%::GetDebugInfo', _.bind(function (oParams) {
-		var aInfo = [];
+	if (Settings.AllowClientDebug)
+	{
+		App.subscribeEvent('%ModuleName%::GetDebugInfo', _.bind(function (oParams) {
+			var aInfo = [];
 
-		_.each(this.requests(), function (oReqData) {
-			aInfo.push(oReqData.Request.Module + ':' + oReqData.Request.Method + ':' + oReqData.Xhr.readyState + (Types.isString(oReqData.Xhr.statusText) ? ':' + oReqData.Xhr.statusText : ''));
-		});
-		
-		aInfo.push('Last pulse time: ' + sLastPulseTime);
-		aInfo.push('Now time: ' + moment().format('DD.MM, HH:mm:ss'));
-	
-		oParams.Info.push(aInfo.join('<br />'));
-	}, this));
+			if (this.requests().length)
+			{
+				aInfo.push('<b>Current requests:</b>');
+				_.each(this.requests(), function (oReqData) {
+					aInfo.push(oReqData.Time.format('DD.MM, HH:mm:ss') + '<br />' + JSON.stringify(oReqData.Request).substr(0, 200) + '<br />' 
+							+ 'readyState:' + oReqData.Xhr.readyState + (Types.isString(oReqData.Xhr.statusText) ? ':' + oReqData.Xhr.statusText : '') + '<br />' 
+							+ (Types.isString(oReqData.Xhr.responseText) ? ':' + oReqData.Xhr.responseText.substr(0, 200) + '<br />' : ''));
+				});
+			}
+
+			if (aFilterDebugInfo.length > 0)
+			{
+				aInfo.push('');
+				aInfo.push('<b>aFilterDebugInfo:</b>');
+				aInfo = aInfo.concat(aFilterDebugInfo);
+			}
+
+			oParams.Info.push(aInfo.join('<br />'));
+		}, this));
+	}
 }
 
 /**
@@ -395,9 +409,24 @@ CAjax.prototype.filterRequests = function (oRequest)
 				bFail = oReqData.Xhr.readyState === 0 && (oReqData.Xhr.statusText === 'abort' || oReqData.Xhr.statusText === 'error'),
 				bTooLong = moment().diff(oReqData.Time) > 1000 * 60 * 5 // 5 minutes
 			;
-			if (bTooLong)
+			if (Settings.AllowClientDebug && !bComplete && !bFail)
 			{
-				Utils.log('always, request is in the list more than 5 minutes', oReqData);
+				if (bTooLong)
+				{
+					Utils.log('always, request is in the list more than 5 minutes', oReqData);
+				}
+				else
+				{
+					if (aFilterDebugInfo.length > 100)
+					{
+						aFilterDebugInfo.shift();
+						aFilterDebugInfo.shift();
+					}
+					aFilterDebugInfo.push('<b>request left at ' + moment().format('DD.MM, HH:mm:ss') + (oRequest ? '</b>' : ' (pulse)</b>'));
+					aFilterDebugInfo.push(oReqData.Time.format('DD.MM, HH:mm:ss') + '<br />' + JSON.stringify(oReqData.Request).substr(0, 200) + '<br />' 
+						+ 'readyState:' + oReqData.Xhr.readyState + (Types.isString(oReqData.Xhr.statusText) ? ':' + oReqData.Xhr.statusText : '') + '<br />' 
+						+ (Types.isString(oReqData.Xhr.responseText) ? ':' + oReqData.Xhr.responseText.substr(0, 200) + '<br />' : ''));
+				}
 			}
 			return !bComplete && !bFail && !bTooLong;
 		}
@@ -448,6 +477,5 @@ module.exports = {
 };
 
 Pulse.registerEveryMinuteFunction(function () {
-	sLastPulseTime = moment().format('DD.MM, HH:mm:ss');
 	Ajax.filterRequests();
 });
