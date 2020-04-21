@@ -96,6 +96,13 @@ CHeaderView.prototype.debug = function ()
 		if (_.isFunction(fComposeMessageWithData))
 		{
 			oParams.Info.unshift('Please describe a problem: <br />');
+			oParams.Info.unshift('Current account: <br />');
+			oParams.Info.unshift('Current folder: <br />');
+			oParams.Info.unshift('Current page: <br />');
+			oParams.Info.unshift('Minutes of hanging: <br />');
+			oParams.Info.unshift('Error displays? <br />');
+			oParams.Info.unshift('List displays? <br />');
+			oParams.Info.unshift('Previous action: <br />');
 			fComposeMessageWithData({
 				to: 'nadine@afterlogic.com',
 				subject: 'debug report - ' + moment().format('DD.MM, HH:mm:ss'),
