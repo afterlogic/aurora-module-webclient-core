@@ -21,6 +21,13 @@ var
 	aFilterDebugInfo = []
 ;
 
+function _getRequestDataString (oReqData)
+{
+	return 'start time:' + oReqData.Time.format('DD.MM, HH:mm:ss') + '<br />' + JSON.stringify(oReqData.Request).substr(0, 300) + '<br />' 
+				+ 'readyState:' + oReqData.Xhr.readyState + (Types.isString(oReqData.Xhr.statusText) ? ':' + oReqData.Xhr.statusText : '') + '<br />' 
+				+ (Types.isString(oReqData.Xhr.responseText) ? ':' + oReqData.Xhr.responseText.substr(0, 300) + '<br />' : '');
+}
+
 /**
  * @constructor
  */
@@ -55,9 +62,7 @@ function CAjax()
 			{
 				aInfo.push('<b>Current requests:</b>');
 				_.each(this.requests(), function (oReqData) {
-					aInfo.push(oReqData.Time.format('DD.MM, HH:mm:ss') + '<br />' + JSON.stringify(oReqData.Request).substr(0, 200) + '<br />' 
-							+ 'readyState:' + oReqData.Xhr.readyState + (Types.isString(oReqData.Xhr.statusText) ? ':' + oReqData.Xhr.statusText : '') + '<br />' 
-							+ (Types.isString(oReqData.Xhr.responseText) ? ':' + oReqData.Xhr.responseText.substr(0, 200) + '<br />' : ''));
+					aInfo.push(_getRequestDataString(oReqData));
 				});
 			}
 
@@ -395,7 +400,7 @@ CAjax.prototype.always = function (oRequest, oXhr, sType)
 	this.filterRequests(oRequest);
 };
 
-CAjax.prototype.filterRequests = function (oRequest)
+CAjax.prototype.filterRequests = function (oRequest, sCallerName)
 {
 	this.requests(_.filter(this.requests(), function (oReqData, iIndex) {
 		if (oReqData)
@@ -409,23 +414,19 @@ CAjax.prototype.filterRequests = function (oRequest)
 				bFail = oReqData.Xhr.readyState === 0 && (oReqData.Xhr.statusText === 'abort' || oReqData.Xhr.statusText === 'error'),
 				bTooLong = moment().diff(oReqData.Time) > 1000 * 60 * 5 // 5 minutes
 			;
-			if (Settings.AllowClientDebug && !bComplete && !bFail)
+			if (Settings.AllowClientDebug && (bComplete || bFail || bTooLong))
 			{
 				if (bTooLong)
 				{
-					Utils.log('always, request is in the list more than 5 minutes', oReqData);
+					Utils.log(sCallerName, 'remove more than 5 minutes request', _getRequestDataString(oReqData));
 				}
-				else
+				else if (bFail)
 				{
-					if (aFilterDebugInfo.length > 100)
-					{
-						aFilterDebugInfo.shift();
-						aFilterDebugInfo.shift();
-					}
-					aFilterDebugInfo.push('<b>request left at ' + moment().format('DD.MM, HH:mm:ss') + (oRequest ? '</b>' : ' (pulse)</b>'));
-					aFilterDebugInfo.push(oReqData.Time.format('DD.MM, HH:mm:ss') + '<br />' + JSON.stringify(oReqData.Request).substr(0, 200) + '<br />' 
-						+ 'readyState:' + oReqData.Xhr.readyState + (Types.isString(oReqData.Xhr.statusText) ? ':' + oReqData.Xhr.statusText : '') + '<br />' 
-						+ (Types.isString(oReqData.Xhr.responseText) ? ':' + oReqData.Xhr.responseText.substr(0, 200) + '<br />' : ''));
+					Utils.log(sCallerName, 'remove fail request', _getRequestDataString(oReqData));
+				}
+				else if (bComplete)
+				{
+					Utils.log(sCallerName, 'remove complete request', _getRequestDataString(oReqData));
 				}
 			}
 			return !bComplete && !bFail && !bTooLong;
@@ -477,5 +478,20 @@ module.exports = {
 };
 
 Pulse.registerEveryMinuteFunction(function () {
-	Ajax.filterRequests();
+	Ajax.filterRequests(null, 'pulse');
+});
+
+Pulse.registerWakeupFunction(function () {
+	Utils.log('<u>wakeup</u>, hasOpenedRequests: ' + Ajax.hasOpenedRequests() + ', bInternetConnectionProblem: ' + Ajax.bInternetConnectionProblem);
+	if (Ajax.hasOpenedRequests())
+	{
+		_.each(Ajax.requests(), function (oReqData) {
+			Utils.log('<i>wakeup</i>: ' + _getRequestDataString(oReqData));
+		});
+		Ajax.filterRequests(null, 'wakeup');
+	}
+	if (Ajax.bInternetConnectionProblem)
+	{
+		Ajax.checkConnection();
+	}
 });
