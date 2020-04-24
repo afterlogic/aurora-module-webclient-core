@@ -53,6 +53,8 @@ function CHeaderView()
 	this.showLogout = App.getUserRole() !== window.Enums.UserRole.Anonymous && !App.isPublic();
 
 	this.sLogoUrl = Settings.LogoUrl;
+	this.sTopIframeUrl = Settings.TopIframeUrl;
+	this.iTopIframeHeightPx = Settings.TopIframeHeightPx;
 	this.bDebugMode = Settings.DebugMode;
 	
 	this.mobileDevice = Browser.mobileDevice;

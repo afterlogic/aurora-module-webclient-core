@@ -83,6 +83,8 @@ var Settings = {
 	
 	// Settings from BrandingWebclient module
 	LogoUrl: '',
+	TopIframeUrl: '',
+	TopIframeHeightPx: 0,
 	
 	// Settings from HTML
 	IsRTL: bRtl,
@@ -174,6 +176,8 @@ var Settings = {
 		if (!_.isEmpty(oAppDataBrandingWebclientSection))
 		{
 			this.LogoUrl = Types.pString(oAppDataBrandingWebclientSection.TabsbarLogo, this.LogoUrl);
+			this.TopIframeUrl = Types.pString(oAppDataBrandingWebclientSection.TopIframeUrl, this.TopIframeUrl);
+			this.TopIframeHeightPx = Types.pString(oAppDataBrandingWebclientSection.TopIframeHeightPx, this.TopIframeHeightPx);
 		}
 		
 		if (moment.locale() !== this.ShortLanguage && this.Language !== 'Arabic' && this.Language !== 'Persian')

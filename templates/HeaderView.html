@@ -1,3 +1,6 @@
+<!-- ko if: sTopIframeUrl !== '' && iTopIframeHeightPx > 0 -->
+<iframe data-bind="attr: {'src': sTopIframeUrl, 'height': iTopIframeHeightPx} " style="border: none;"></iframe>
+<!-- /ko -->
 <div class="tabsbar">
 	<div class="content">
 		<!-- ko if: sLogoUrl === '' -->
