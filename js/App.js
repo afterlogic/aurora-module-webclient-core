@@ -13,7 +13,6 @@ var
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	UrlUtils = require('%PathToCoreWebclientModule%/js/utils/Url.js'),
 	
-	Api = require('%PathToCoreWebclientModule%/js/Api.js'),
 	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	Routing = require('%PathToCoreWebclientModule%/js/Routing.js'),
@@ -300,6 +299,7 @@ CApp.prototype.showLastErrorOnLogin = function ()
 		
 		if (iError !== 0)
 		{
+			var Api = require('%PathToCoreWebclientModule%/js/Api.js');
 			Api.showErrorByCode({'ErrorCode': iError, 'Module': sErrorModule}, '', true);
 		}
 		
