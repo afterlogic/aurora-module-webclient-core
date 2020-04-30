@@ -288,6 +288,9 @@ module.exports = {
 	currentHash: Routing.currentHash,
 	replaceHashDirectly: _.bind(Routing.replaceHashDirectly, Routing),
 	setPreviousHash: _.bind(Routing.setPreviousHash, Routing),
+	clearPreviousHash: function () {
+		Routing.previousHash('');
+	},
 	stopListening: _.bind(Routing.stopListening, Routing),
 	startListening: _.bind(Routing.startListening, Routing),
 	goDirectly: _.bind(Routing.goDirectly, Routing),
