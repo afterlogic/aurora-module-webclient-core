@@ -356,6 +356,17 @@ CAjax.prototype.fail = function (oRequest, fResponseHandler, oContext, oXhr, sTy
 			}
 			else
 			{
+				var oReqData = _.find(this.requests(), function (oTmpReqData, iIndex) {
+					return oTmpReqData && _.isEqual(oTmpReqData.Request, oRequest);
+				});
+				if (oReqData)
+				{
+					Utils.log('DataTransferFailed', _getRequestDataString(oReqData));
+				}
+				else
+				{
+					Utils.log('DataTransferFailed', sErrorText, '<br />' + JSON.stringify(oReqData).substr(0, 300) + '<br />' + oXhr.responseText.substr(0, 300));
+				}
 				oResponse = { Result: false, ErrorCode: Enums.Errors.DataTransferFailed, ResponseText:  oXhr.responseText };
 			}
 			break;
