@@ -152,18 +152,15 @@ CPopups.prototype.removePopup = function (oPopup)
 		$(document).off('keyup', this.keyupPopupBound);
 		this.keyupPopupBound = undefined;
 	}
-	if (oPopup.$popupDom)
+	if (oPopup.$popupDom instanceof $)
 	{
 		oPopup.$popupDom.remove();
 		oPopup.$popupDom = undefined;
 	}
-	if (oPopup.$templatePlace[0])
+	if (oPopup.$templatePlace instanceof $)
 	{
-		oPopup.$templatePlace[0].remove();
-	}
-	if (oPopup.$templatePlace[1])
-	{
-		oPopup.$templatePlace[1].remove();
+		oPopup.$templatePlace.remove();
+		delete oPopup.$templatePlace;
 	}
 	this.popups = _.without(this.popups, oPopup);
 };
