@@ -377,8 +377,9 @@ CAbstractFileModel.prototype.getInThumbQueue = function ()
 CAbstractFileModel.prototype.downloadFile = function ()
 {
 	//todo: UrlUtils.downloadByUrl in nessesary context in new window
-	var 
-		sDownloadLink = this.getActionUrl('download'),
+	var
+		sRandomHash = Utils.getRandomHash(),
+		sDownloadLink = this.getActionUrl('download') + '&' + sRandomHash,
 		oParams = {
 			'File': this,
 			'CancelDownload': false
@@ -419,14 +420,15 @@ CAbstractFileModel.prototype.viewFile = function (oViewModel, oEvent)
  */
 CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 {
-	var 
+	var
 		oWin = null,
-		oParams = null
+		oParams = null,
+		sRandomHash = Utils.getRandomHash()
 	;
 	
 	if (!Types.isNonEmptyString(sUrl))
 	{
-		sUrl = UrlUtils.getAppPath() + this.getActionUrl('view');
+		sUrl = UrlUtils.getAppPath() + this.getActionUrl('view') + '&' + sRandomHash;
 	}
 
 	if (sUrl.length > 0 && sUrl !== '#')
