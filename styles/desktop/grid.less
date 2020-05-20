@@ -701,7 +701,8 @@ html.non-adjustable .panels {
 	}
 }
 
-@media all and (min-width:0\0) and (min-resolution:.001dpcm)
+/* IE9 do not support flex-wrap and flex-direction */
+.no-flexwrap
 {
 	.panel {
 		float: left;
