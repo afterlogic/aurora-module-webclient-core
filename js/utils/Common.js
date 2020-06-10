@@ -320,6 +320,9 @@ Utils.getDateFormatForMoment = function (sDateFormat)
 		case 'DD Month YYYY':
 			sMomentDateFormat = 'DD MMMM YYYY';
 			break;
+		default:
+			sMomentDateFormat = sDateFormat;
+			break;
 	}
 	
 	return sMomentDateFormat;

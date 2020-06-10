@@ -110,6 +110,9 @@ var Settings = {
 			this.UserSelectsDateFormat = Types.pBool(oAppDataCoreSection.UserSelectsDateFormat, this.UserSelectsDateFormat);
 			this.dateFormat(Types.pString(oAppDataCoreSection.DateFormat, this.dateFormat()));
 			this.DateFormatList = Types.pArray(oAppDataCoreSection.DateFormatList, this.DateFormatList);
+			if (_.indexOf(this.DateFormatList, this.dateFormat()) === -1) {
+				this.DateFormatList.unshift(this.dateFormat());
+			}
 			this.EUserRole = Types.pObject(oAppDataCoreSection.EUserRole, this.EUserRole);
 			this.IsSystemConfigured = Types.pBool(oAppDataCoreSection.IsSystemConfigured, this.IsSystemConfigured);
 			this.Language = Types.pString(oAppDataCoreSection.Language, this.Language);
