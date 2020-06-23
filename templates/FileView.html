@@ -32,7 +32,7 @@
 		<span class="secure-image"></span>
 		<!-- /ko -->
 		<!-- ko if: (isShared()) -->
-		<span class="shared-image" data-bind="css: {'with_thumb': thumbnailSrc() !== ''}"></span>
+		<span class="shared-image" data-bind="css: {'with_thumb': thumbnailSrc() !== ''}, click: function (oItem) { $root.onFileShareIconClick(oItem); }"></span>
 		<!-- /ko -->
 		<div class="footer">
 			<span class="progress" data-bind="visible: visibleProgress()">
