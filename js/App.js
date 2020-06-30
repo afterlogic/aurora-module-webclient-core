@@ -215,9 +215,10 @@ CApp.prototype.init = function ()
 		
 	ModulesManager.run('Ios', 'routeToIos');
 
-	if (this.iUserRole !== Enums.UserRole.Anonymous && !this.bPublic)
+	if (this.iUserRole !== Enums.UserRole.Anonymous)
 	{
-		var AccountList = ModulesManager.run('MailWebclient', 'getAccountList');
+		var MainTab = App.isNewTab() && window.opener && window.opener.MainTabMailMethods;
+		var AccountList = MainTab ? MainTab.getAccountList() : ModulesManager.run('MailWebclient', 'getAccountList');
 		if (AccountList)
 		{
 			this.currentAccountId = AccountList.currentId;
