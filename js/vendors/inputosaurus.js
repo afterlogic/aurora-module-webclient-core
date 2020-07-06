@@ -166,6 +166,7 @@ var inputosaurustext = {
 			this.parseInput();
 		}
 
+		this.keysInfo = {};
 		this._instAutocomplete();
 	},
 
@@ -199,6 +200,7 @@ var inputosaurustext = {
 					}
 
 					ev.preventDefault();
+					widget.keysInfo[ui.item.value] = ui.item.hasKey;
 					widget.elements.input.val(ui.item.value);
 					widget.parseInput();
 				},
@@ -695,12 +697,13 @@ var inputosaurustext = {
 			deleteTitle = TextUtils.i18n('%MODULENAME%/ACTION_DELETE_ADDRESS'),
 			deleteHtml = '<a href="javascript:void(0);" class="ficon" title="' + deleteTitle + '">&#x2716;</a>',
 			li = null,
-			widget = this
+			widget = this,
+			sAddClass = widget.keysInfo[fullValue] ? ' address_capsule_key' : ''
 		;
 
 		if (name !== undefined)
 		{
-			li = $('<li class="address_capsule" data-inputosaurus="' + key + '"' + title + '>' + deleteHtml + '<span>' + name + '</span></li>');
+			li = $('<li class="address_capsule' + sAddClass + '" data-inputosaurus="' + key + '"' + title + '>' + deleteHtml + '<span>' + name + '</span></li>');
 			if (!widget.options.mobileDevice)
 			{
 				li.data('full', fullValue);

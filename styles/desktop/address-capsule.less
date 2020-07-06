@@ -18,6 +18,15 @@ li.address_capsule {
 		right: 0;
 		text-decoration: none;
 	}
+
+	&.address_capsule_key span {
+		.init-icon-font(after);
+
+		&:after {
+			content: "\e658";
+			vertical-align: middle;
+		}
+	}
 	
 	.theme-address-capsule();
 }
