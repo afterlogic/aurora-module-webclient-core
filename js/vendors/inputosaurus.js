@@ -166,7 +166,6 @@ var inputosaurustext = {
 			this.parseInput();
 		}
 
-		this.keysInfo = {};
 		this._instAutocomplete();
 	},
 
@@ -200,7 +199,10 @@ var inputosaurustext = {
 					}
 
 					ev.preventDefault();
-					widget.keysInfo[ui.item.value] = ui.item.hasKey;
+					if (_.isFunction(widget.options.addRecipientInfo))
+					{
+						widget.options.addRecipientInfo(ui.item);
+					}
 					widget.elements.input.val(ui.item.value);
 					widget.parseInput();
 				},
@@ -698,12 +700,12 @@ var inputosaurustext = {
 			deleteHtml = '<a href="javascript:void(0);" class="ficon" title="' + deleteTitle + '">&#x2716;</a>',
 			li = null,
 			widget = this,
-			sAddClass = widget.keysInfo[fullValue] ? ' address_capsule_key' : ''
+			sKeyHtml = (_.isFunction(widget.options.getRecipientPgpKeyHtml)) ? widget.options.getRecipientPgpKeyHtml(fullValue) : ''
 		;
 
 		if (name !== undefined)
 		{
-			li = $('<li class="address_capsule' + sAddClass + '" data-inputosaurus="' + key + '"' + title + '>' + deleteHtml + '<span>' + name + '</span></li>');
+			li = $('<li class="address_capsule" data-inputosaurus="' + key + '"' + title + '>' + deleteHtml + '<span>' + name + '</span>' + sKeyHtml + '</li>');
 			if (!widget.options.mobileDevice)
 			{
 				li.data('full', fullValue);
@@ -756,14 +758,21 @@ var inputosaurustext = {
 	_removeLiTag : function ($li, widget) {
 		var key = $li.data('inputosaurus'),
 			indexFound = false;
-
+	
 		$.each(widget._chosenValues, function(k,v) {
 			if(key === v.key){
 				indexFound = k;
 			}
 		});
 
-		indexFound !== false && widget._chosenValues.splice(indexFound, 1);
+		if (indexFound !== false)
+		{
+			if (_.isFunction(widget.options.removeRecipientInfo))
+			{
+				widget.options.removeRecipientInfo(widget._chosenValues[indexFound].value);
+			}
+			widget._chosenValues.splice(indexFound, 1);
+		}
 
 		widget._setValue(widget._buildValue());
 

@@ -19,12 +19,23 @@ li.address_capsule {
 		text-decoration: none;
 	}
 
-	&.address_capsule_key span {
+	span.address_capsule_key {
+		margin: -1px;
+		
 		.init-icon-font(after);
 
 		&:after {
 			content: "\e658";
 			vertical-align: middle;
+			text-shadow: 0 0 1px grey;
+		}
+		
+		&.address_capsule_key_encrypt {
+			color: green;
+		}
+		
+		&.address_capsule_key_sign {
+			color: orange;
 		}
 	}
 	
