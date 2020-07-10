@@ -767,10 +767,6 @@ var inputosaurustext = {
 
 		if (indexFound !== false)
 		{
-			if (_.isFunction(widget.options.removeRecipientInfo))
-			{
-				widget.options.removeRecipientInfo(widget._chosenValues[indexFound].value);
-			}
 			widget._chosenValues.splice(indexFound, 1);
 		}
 
