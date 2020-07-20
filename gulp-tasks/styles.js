@@ -99,15 +99,15 @@ function BuildThemeCss(sTheme, bMobile)
 		{
 			aThemeSpecyficFiles.push(sThemePath);
 		
-			var sThemeImagesPath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme + '/images');
-			if (fs.existsSync(sThemeImagesPath))
-			{
-				var aPathParts = sThemeImagesPath.split('styles/themes');
-				if (aPathParts.length > 1)
-				{
-					MoveFiles(sThemeImagesPath, 'static/styles/themes' + aPathParts[1]);
-				}
-			}
+//			var sThemeImagesPath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme + '/images');
+//			if (fs.existsSync(sThemeImagesPath))
+//			{
+//				var aPathParts = sThemeImagesPath.split('styles/themes');
+//				if (aPathParts.length > 1)
+//				{
+//					MoveFiles(sThemeImagesPath, 'static/styles/themes' + aPathParts[1]);
+//				}
+//			}
 		}
 	});
 	
