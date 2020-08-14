@@ -29,7 +29,7 @@
 		<span class="published_icon" data-bind="css: {'with_thumb': thumbnailSrc() !== ''}, click: function (oItem) { $root.onShareIconClick(oItem); }"></span>
 		<!-- /ko -->
 		<!-- ko if: (bIsSecure()) -->
-		<span class="secure-image"></span>
+		<span class="secure-image" data-bind="click: function (oItem) { $root.onSecureIconClick(oItem); }"></span>
 		<!-- /ko -->
 		<!-- ko if: (isShared()) -->
 		<span class="shared-image" data-bind="css: {'with_thumb': thumbnailSrc() !== ''}, click: function (oItem) { $root.onFileShareIconClick(oItem); }"></span>
