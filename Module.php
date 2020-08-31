@@ -108,6 +108,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'IsDemo' => $this->getConfig('IsDemo', false),
 			'IsMobile' => $oIntegrator->isMobile(),
 			'LanguageListWithNames' => $this->getLanguageList($oIntegrator->getLanguageList()),
+			'MultipleFilesUploadLimit' => $this->getConfig('MultipleFilesUploadLimit', 50),
 			'ShowQuotaBar' => $this->getConfig('ShowQuotaBar', false),
 			'QuotaWarningPerc' => $this->getConfig('QuotaWarningPerc', 0),
 			'Theme' => $oUser ? $oUser->{self::GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),

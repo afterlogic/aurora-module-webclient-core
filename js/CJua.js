@@ -7,10 +7,16 @@ var
 
 	queue = require('%PathToCoreWebclientModule%/js/vendors/queue.js'),
 	
+	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
-	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	
-	iDefLimit = 20
+	App = require('%PathToCoreWebclientModule%/js/App.js'),
+	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
+	
+	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
+	AlertPopup = require('%PathToCoreWebclientModule%/js/popups/AlertPopup.js'),
+	
+	iDefLimit = UserSettings.MultipleFilesUploadLimit;
 ;
 /**
  * @param {*} mValue
@@ -169,6 +175,7 @@ function getDataFromFile(oFile, sPath)
  */
 function getDataFromFiles(aItems, fFileCallback, bEntry, bAllowFolderDragAndDrop, iLimit, fLimitCallback)
 {
+	console.log('iLimit', iLimit);
 	var
 		iInputLimit = 0,
 		iLen = 0,
@@ -896,7 +903,11 @@ function CJua(oOptions)
 		'onDrop': null,
 		'onBodyDragEnter': null,
 		'onBodyDragLeave': null,
-		'onLimitReached': null
+		'onLimitReached': function () {
+			Popups.showPopup(AlertPopup, [TextUtils.i18n('%MODULENAME%/ERROR_UPLOAD_NUMBER_LIMIT_PLURAL', {
+				'NUMBERLIMIT': iDefLimit
+			}, null, iDefLimit)]);
+		}
 	};
 
 	self.oOptions = _.extend({
@@ -913,7 +924,7 @@ function CJua(oOptions)
 		'disableMultiple': false,
 		'disableDocumentDropPrevent': false,
 		'disableAutoUploadOnDrop': false,
-		'multipleSizeLimit': 50,
+		'multipleSizeLimit': iDefLimit,
 		'hiddenElementsPosition': 'left'
 	}, oOptions);
 	

@@ -99,6 +99,10 @@
 		},
 		"array"
 	],
+	"MultipleFilesUploadLimit": [
+		50,
+		"int"
+	],
 	"ShowQuotaBar": [
 		true,
 		"bool"
