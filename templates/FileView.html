@@ -1,3 +1,4 @@
+<!-- ko if: !bIsHidden -->
 <div class="item file attachment" data-bind="
 	css: cssClasses,
 	event: allowDrag() ? { 'dragstart': eventDragStart } : null,
@@ -64,4 +65,6 @@
 	<!-- ko if: $data.data() !== null -->
 		<!-- ko template: $data --><!-- /ko -->
 	<!-- /ko -->
+<!-- /ko -->
+
 <!-- /ko -->

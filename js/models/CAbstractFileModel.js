@@ -178,6 +178,9 @@ function CAbstractFileModel()
 	
 	this.subFiles = ko.observableArray([]);
 	this.subFilesExpanded = ko.observable(false);
+	
+	this.sUploadSubFolder = '';
+	this.bIsHidden = false;
 }
 
 CAbstractFileModel.prototype.addAction = function (sAction, bMain, oActionData)
@@ -498,6 +501,10 @@ CAbstractFileModel.prototype.onUploadSelect = function (sFileUid, oFileData, bOn
 	this.statusText('');
 	this.progressPercent(0);
 	this.visibleProgress(false);
+	
+	// if uploading file is from uploading folder it should be hidden in files list.
+	this.sUploadSubFolder = Types.pString(oFileData.Folder);
+	this.bIsHidden = this.sUploadSubFolder !== '';
 };
 
 /**
