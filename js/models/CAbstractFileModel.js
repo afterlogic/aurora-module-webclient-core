@@ -377,7 +377,7 @@ CAbstractFileModel.prototype.getInThumbQueue = function ()
 /**
  * Starts downloading attachment on click.
  */
-CAbstractFileModel.prototype.downloadFile = function ()
+CAbstractFileModel.prototype.downloadFile = function (bNotBroadcastEvent)
 {
 	//todo: UrlUtils.downloadByUrl in nessesary context in new window
 	var 
@@ -389,7 +389,10 @@ CAbstractFileModel.prototype.downloadFile = function ()
 	;
 	if (sDownloadLink.length > 0 && sDownloadLink !== '#')
 	{
-		App.broadcastEvent('AbstractFileModel::FileDownload::before', oParams);
+		if (!bNotBroadcastEvent)
+		{
+			App.broadcastEvent('AbstractFileModel::FileDownload::before', oParams);
+		}
 		if (!oParams.CancelDownload)
 		{
 			if (_.isFunction(oParams.CustomDownloadHandler))
