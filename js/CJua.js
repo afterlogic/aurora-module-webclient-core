@@ -175,7 +175,6 @@ function getDataFromFile(oFile, sPath)
  */
 function getDataFromFiles(aItems, fFileCallback, bEntry, bAllowFolderDragAndDrop, iLimit, fLimitCallback)
 {
-	console.log('iLimit', iLimit);
 	var
 		iInputLimit = 0,
 		iLen = 0,
