@@ -85,9 +85,9 @@ function BuildThemeCss(sTheme, bMobile)
 				aModulesFiles.push('modules/' + sModuleName + '/styles/styles' + sPostfix + '.less');
 			}
 		}
-		if (sModuleName !== sCoreModule && fs.existsSync('modules/' + sModuleName + '/styles/images'))
+		if (sModuleName !== sCoreModule && fs.existsSync('modules/' + sModuleName + '/styles/images' + sPostfix))
 		{
-			MoveFiles('modules/' + sModuleName + '/styles/images', 'static/styles/images/modules/' + sModuleName);
+			MoveFiles('modules/' + sModuleName + '/styles/images' + sPostfix, 'static/styles/images' + sPostfix + '/modules/' + sModuleName);
 		}
 	});
 	
@@ -99,15 +99,15 @@ function BuildThemeCss(sTheme, bMobile)
 		{
 			aThemeSpecyficFiles.push(sThemePath);
 		
-//			var sThemeImagesPath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme + '/images');
-//			if (fs.existsSync(sThemeImagesPath))
-//			{
-//				var aPathParts = sThemeImagesPath.split('styles/themes');
-//				if (aPathParts.length > 1)
-//				{
-//					MoveFiles(sThemeImagesPath, 'static/styles/themes' + aPathParts[1]);
-//				}
-//			}
+			var sThemeImagesPath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme + '/images' + sPostfix);
+			if (fs.existsSync(sThemeImagesPath))
+			{
+				var aPathParts = sThemeImagesPath.split('styles/themes');
+				if (aPathParts.length > 1)
+				{
+					MoveFiles(sThemeImagesPath, 'static/styles/themes' + aPathParts[1]);
+				}
+			}
 		}
 	});
 	
@@ -223,8 +223,6 @@ gulp.task('styles', function (done) {
 	_.each(aThemes, function (sTheme) {
 		BuildThemeCss(sTheme, false);
 		BuildThemeCss(sTheme, true);
-		MoveFiles(sPathToCoreWebclient + '/styles/themes/' + sTheme, sTenantPathPrefix + 'static/styles/themes/' + sTheme);
-		MoveFiles(sPathToCoreMobileWebclient + '/styles/themes/' + sTheme + '/images-mobile', sTenantPathPrefix + 'static/styles/themes/' + sTheme + '/images-mobile');
 	});
 	
 	done();
