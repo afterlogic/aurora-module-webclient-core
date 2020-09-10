@@ -164,7 +164,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 
 		$oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
 
-		@\header('Content-Type: text/html; charset=utf-8', true);
+		\Aurora\System\Managers\Response::HtmlOutputHeaders();
 
 		$sUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 		if (!\strpos(\strtolower($sUserAgent), 'firefox'))
