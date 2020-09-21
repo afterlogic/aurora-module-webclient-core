@@ -315,7 +315,15 @@
 @theme-section-title-text-shadow: none;
 
 .sharing_panel {
-	color: white;
+	transition: background 200ms ease 0s, color 200ms ease 0s;
+	border-radius: 15px;
+	border: 1px solid #ffffff;
+	box-shadow: 0 0 8px #3d5250;
+	background: #ffffff;
+	
+	.item.file {
+		padding: 10px;
+	}
 	
 	.item .size {
 		color: #ddd;
