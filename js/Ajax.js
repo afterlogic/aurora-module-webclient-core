@@ -5,26 +5,26 @@ var
 	$ = require('jquery'),
 	moment = require('moment'),
 	ko = require('knockout'),
-	
+
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
-	
+
 	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
 	AlertPopup = require('%PathToCoreWebclientModule%/js/popups/AlertPopup.js'),
-	
+
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	Pulse = require('%PathToCoreWebclientModule%/js/Pulse.js'),
 	Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
-	
+
 	aFilterDebugInfo = []
 ;
 
 function _getRequestDataString (oReqData)
 {
-	return 'start time:' + oReqData.Time.format('DD.MM, HH:mm:ss') + '<br />' + JSON.stringify(oReqData.Request).substr(0, 300) + '<br />' 
-				+ 'readyState:' + oReqData.Xhr.readyState + (Types.isString(oReqData.Xhr.statusText) ? ':' + oReqData.Xhr.statusText : '') + '<br />' 
+	return 'start time:' + oReqData.Time.format('DD.MM, HH:mm:ss') + '<br />' + JSON.stringify(oReqData.Request).substr(0, 300) + '<br />'
+				+ 'readyState:' + oReqData.Xhr.readyState + (Types.isString(oReqData.Xhr.statusText) ? ':' + oReqData.Xhr.statusText : '') + '<br />'
 				+ (Types.isString(oReqData.Xhr.responseText) ? ':' + oReqData.Xhr.responseText.substr(0, 300) + '<br />' : '');
 }
 
@@ -34,7 +34,7 @@ function _getRequestDataString (oReqData)
 function CAjax()
 {
 	this.requests = ko.observableArray([]);
-	
+
 	this.aOnAllRequestsClosedHandlers = [];
 	this.requests.subscribe(function () {
 		if (this.requests().length === 0)
@@ -47,12 +47,12 @@ function CAjax()
 			});
 		}
 	}, this);
-	
+
 	this.aAbortRequestHandlers = {};
-	
+
 	this.bAllowRequests = true;
 	this.bInternetConnectionProblem = false;
-	
+
 	if (Settings.AllowClientDebug)
 	{
 		App.subscribeEvent('%ModuleName%::GetDebugInfo', _.bind(function (oParams) {
@@ -88,7 +88,7 @@ CAjax.prototype.getOpenedRequest = function (sModule, sMethod)
 	var oFoundReqData = _.find(this.requests(), function (oReqData) {
 		return oReqData.Request.Module === sModule && oReqData.Request.Method === sMethod;
 	});
-	
+
 	return oFoundReqData ? oFoundReqData.Request : null;
 };
 
@@ -100,10 +100,10 @@ CAjax.prototype.getOpenedRequest = function (sModule, sMethod)
 CAjax.prototype.hasOpenedRequests = function (sModule, sMethod)
 {
 	// Do not change requests here. It calls hasOpenedRequests and we get a loop.
-	
+
 	sModule = Types.pString(sModule);
 	sMethod = Types.pString(sMethod);
-	
+
 	if (sMethod === '')
 	{
 		return this.requests().length > 0;
@@ -145,7 +145,7 @@ CAjax.prototype.registerOnAllRequestsClosedHandler = function (fHandler)
 CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler, oContext, iTimeout, oMainParams)
 {
 	oParameters = oParameters || {};
-	
+
 	var oRequest = _.extendOwn({
 		Module: sModule,
 		Method: sMethod,
@@ -156,7 +156,7 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 	{
 		oRequest = _.extendOwn(oRequest, oMainParams);
 	}
-	
+
 	if (this.bAllowRequests && !this.bInternetConnectionProblem)
 	{
 		var oEventParams = {
@@ -168,7 +168,7 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 			'Continue': true
 		};
 		App.broadcastEvent('SendAjaxRequest::before', oEventParams);
-		
+
 		if (oEventParams.Continue)
 		{
 			this.abortSameRequests(oRequest);
@@ -202,19 +202,21 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeou
 		sAuthToken = $.cookie('AuthToken') || '',
 		oHeader = { 'X-Client': 'WebClient' }
 	;
-	
+
 	if (sAuthToken === '' && App.getUserRole() !== Enums.UserRole.Anonymous)
 	{
 		App.logoutAndGotoLogin();
 	}
-	
+
 	if (sAuthToken !== '')
 	{
 		oHeader['Authorization'] = 'Bearer ' + sAuthToken;
 	}
-	
+
+	oHeader['X-DeviceId'] = Utils.getUUID();
+
 	oCloneRequest.Parameters = JSON.stringify(oCloneRequest.Parameters);
-	
+
 	oXhr = $.ajax({
 		url: '?/Api/',
 		type: 'POST',
@@ -227,7 +229,7 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeou
 		complete: alwaysFunc,
 		timeout: iTimeout === undefined ? 50000 : iTimeout
 	});
-	
+
 	this.requests().push({ Request: oRequest, Xhr: oXhr, Time: moment() });
 };
 
@@ -237,7 +239,7 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeou
 CAjax.prototype.abortSameRequests = function (oRequest)
 {
 	var fHandler = this.aAbortRequestHandlers[oRequest.Module];
-	
+
 	if (_.isFunction(fHandler) && this.requests().length > 0)
 	{
 		_.each(this.requests(), _.bind(function (oReqData) {
@@ -306,7 +308,7 @@ CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse
 			App.logoutAndGotoLogin();
 		}, '', TextUtils.i18n('%MODULENAME%/ACTION_LOGOUT')]);
 	}
-	
+
 	// if oResponse.Result === 0 or oResponse.Result === '' this is not an error
 	if (oResponse && (oResponse.Result === false || oResponse.Result === null || oResponse.Result === undefined))
 	{
@@ -323,10 +325,10 @@ CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse
 				}
 				break;
 		}
-		
+
 		oResponse.Result = false;
 	}
-	
+
 	this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest, sType);
 };
 
@@ -341,7 +343,7 @@ CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse
 CAjax.prototype.fail = function (oRequest, fResponseHandler, oContext, oXhr, sType, sErrorText)
 {
 	var oResponse = { Result: false, ErrorCode: 0 };
-	
+
 	switch (sType)
 	{
 		case 'abort':
@@ -371,7 +373,7 @@ CAjax.prototype.fail = function (oRequest, fResponseHandler, oContext, oXhr, sTy
 			}
 			break;
 	}
-	
+
 	this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest, sType);
 };
 
@@ -388,16 +390,16 @@ CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, o
 	{
 		oResponse = { Result: false, ErrorCode: 0 };
 	}
-	
+
 	// Check the Internet connection before passing control to the modules.
 	// It forbids or allows further AJAX requests.
 	this.checkConnection(oRequest.Module, oRequest.Method, sType);
-	
+
 	if (_.isFunction(fResponseHandler) && !oResponse.StopExecuteResponse)
 	{
 		fResponseHandler.apply(oContext, [oResponse, oRequest]);
 	}
-	
+
 	App.broadcastEvent('ReceiveAjaxResponse::after', {'Request': oRequest, 'Response': oResponse});
 };
 

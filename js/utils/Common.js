@@ -5,11 +5,11 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	moment = require('moment'),
-	
+
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
-	
+
 	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
-	
+
 	Utils = {}
 ;
 
@@ -52,7 +52,7 @@ Utils.createCommand = function (oContext, fExecute, mCanExecute)
 			return fResult.enabled() && !!mCanExecute;
 		});
 	}
-	
+
 	return fResult;
 };
 
@@ -114,7 +114,7 @@ Utils.desktopNotify = (function ()
 
 	return function (oData) {
 		var AppTab = require('%PathToCoreWebclientModule%/js/AppTab.js');
-		
+
 		if (oData && UserSettings.AllowDesktopNotifications && window.Notification && !AppTab.focused())
 		{
 			switch (oData.action)
@@ -149,7 +149,7 @@ Utils.desktopNotify = (function ()
 								aNotifications.push(oNotification);
 							}
 						;
-						
+
 						if (window.Notification.permission === 'granted')
 						{
 							fShowNotification();
@@ -187,16 +187,16 @@ Utils.desktopNotify = (function ()
 
 /**
  * @param {string} sFile
- * 
+ *
  * @return {string}
  */
 Utils.getFileExtension = function (sFile)
 {
-	var 
+	var
 		sResult = '',
 		iIndex = sFile.lastIndexOf('.')
 	;
-	
+
 	if (iIndex > -1)
 	{
 		sResult = sFile.substr(iIndex + 1);
@@ -270,18 +270,18 @@ Utils.validateFileOrFolderName = function (sName)
 
 /**
  * @param {string} sFile
- * 
+ *
  * @return {string}
  */
 Utils.getFileNameWithoutExtension = function (sFile)
 {
-	var 
+	var
 		sResult = sFile,
 		iIndex = sFile.lastIndexOf('.')
 	;
 	if (iIndex > -1)
 	{
-		sResult = sFile.substr(0, iIndex);	
+		sResult = sFile.substr(0, iIndex);
 	}
 	return sResult;
 };
@@ -302,13 +302,13 @@ Utils.defaultOptionsAfterRender = function (oElement, oItem)
 
 /**
  * @param {string} sDateFormat
- * 
+ *
  * @return string
  */
 Utils.getDateFormatForMoment = function (sDateFormat)
 {
 	var sMomentDateFormat = 'MM/DD/YYYY';
-	
+
 	switch (sDateFormat)
 	{
 		case 'MM/DD/YYYY':
@@ -324,7 +324,7 @@ Utils.getDateFormatForMoment = function (sDateFormat)
 			sMomentDateFormat = sDateFormat;
 			break;
 	}
-	
+
 	return sMomentDateFormat;
 };
 
@@ -365,12 +365,12 @@ Utils.getHash = function (sUniqVal)
 		iIndex = 0,
 		iLen = sUniqVal.length
 	;
-	
+
 	while (iIndex < iLen)
 	{
 		iHash  = ((iHash << 5) - iHash + sUniqVal.charCodeAt(iIndex++)) << 0;
 	}
-	
+
 	return Types.pString(iHash);
 };
 
@@ -383,7 +383,7 @@ Utils.getHash = function (sUniqVal)
 Utils.destroyObjectWithObservables = function (oParent, mObjectKey)
 {
 	var oObject = oParent[mObjectKey];
-	
+
 	for (var mKey in oObject)
 	{
 		if (oObject[mKey] && _.isFunction(oObject[mKey].dispose))
@@ -399,6 +399,27 @@ Utils.destroyObjectWithObservables = function (oParent, mObjectKey)
 Utils.getRandomHash = function ()
 {
 	return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+};
+
+Utils.generateUUID = function ()
+{
+	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+		var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+		return v.toString(16);
+	  });
+};
+
+Utils.getUUID = function ()
+{
+	var sDeviceId = $.cookie('DeviceId') || '';
+
+	if (sDeviceId === '')
+	{
+		sDeviceId = Utils.generateUUID();
+		$.cookie('DeviceId', sDeviceId);
+	}
+
+	return sDeviceId;
 };
 
 module.exports = Utils;
