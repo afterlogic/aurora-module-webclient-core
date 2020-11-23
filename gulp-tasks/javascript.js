@@ -83,7 +83,7 @@ var
 					],
 				},
 				{
-					test: /(OpenPgpWebclient|OpenPgpFilesWebclient|CoreParanoidEncryptionWebclientPlugin|ComposeWordCounterPlugin).*\.js$/,
+					test: /(OpenPgpWebclient|OpenPgpFilesWebclient|CoreParanoidEncryptionWebclientPlugin|ComposeWordCounterPlugin|TwoFactorAuth).*\.js$/,
 					exclude: /node_modules/,
 					use: [
 						{
