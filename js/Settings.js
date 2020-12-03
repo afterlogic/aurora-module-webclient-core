@@ -33,6 +33,7 @@ var Settings = {
 	ShortLanguage: 'en',
 	SiteName: 'Afterlogic Platform',
 	SocialName: '',
+	StoreAuthTokenInDB: false,
 	TenantName: '',
 	timeFormat: ko.observable('0'), // 0 - 24, 1 - 12
 	timezone: ko.observable(''),
@@ -53,7 +54,6 @@ var Settings = {
 	DbLogin: '',
 	DbName: '',
 	SaltNotEmpty: false,
-	StoreAuthTokenInDB: false,
 	dbSettingsChanged: ko.observable(false).extend({'autoResetToFalse': 100}),
 	
 	// Settings from CoreWebclient module
@@ -121,6 +121,7 @@ var Settings = {
 			this.ShortLanguage = Types.pString(oAppDataCoreSection.ShortLanguage, this.ShortLanguage);
 			this.SiteName = Types.pString(oAppDataCoreSection.SiteName, this.SiteName);
 			this.SocialName = Types.pString(oAppDataCoreSection.SocialName, this.SocialName);
+			this.StoreAuthTokenInDB = Types.pBool(oAppDataCoreSection.StoreAuthTokenInDB, this.StoreAuthTokenInDB);
 			this.TenantName = Types.pString(oAppDataCoreSection.TenantName || UrlUtils.getRequestParam('tenant'), this.TenantName);
 			this.timeFormat(Types.pString(oAppDataCoreSection.TimeFormat, this.timeFormat()));
 			this.timezone(Types.pString(oAppDataCoreSection.Timezone, this.timezone()));
@@ -145,7 +146,6 @@ var Settings = {
 			this.DbLogin = Types.pString(oAppDataCoreSection.DBLogin, this.DbLogin);
 			this.DbName = Types.pString(oAppDataCoreSection.DBName, this.DbName);
 			this.SaltNotEmpty = Types.pBool(oAppDataCoreSection.SaltNotEmpty, this.SaltNotEmpty);
-			this.StoreAuthTokenInDB = Types.pBool(oAppDataCoreSection.StoreAuthTokenInDB, this.StoreAuthTokenInDB);
 		}
 		
 		if (!_.isEmpty(oAppDataCoreWebclientSection))
