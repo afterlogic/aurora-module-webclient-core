@@ -332,35 +332,44 @@ CApp.prototype.logout = function ()
  */
 CApp.prototype.logoutAndGotoLogin = function ()
 {
+	function gotoLoginPage()
+	{
+		if (Types.isNonEmptyString(UserSettings.CustomLogoutUrl))
+		{
+			window.location.href = UserSettings.CustomLogoutUrl;
+		}
+		else
+		{
+			UrlUtils.clearAndReloadLocation(Browser.ie8AndBelow, true);
+		}
+	}
+	
 	if ($.cookie('AuthToken'))
 	{
 		var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
 
-		Ajax.send('Core', 'Logout', null);
+		Ajax.send('Core', 'Logout', {}, function () {
+			$.removeCookie('AuthToken');
 
+			Routing.finalize();
+
+			this.iUserRole = Enums.UserRole.Anonymous;
+			this.sUserName = '';
+			this.sUserPublicId = '';
+			this.iUserId = 0;
+
+			gotoLoginPage();
+		}, this);
+		
 		var oExcept = {
 			Module: 'Core',
 			Method: 'Logout'
 		};
 		Ajax.abortAndStopSendRequests(oExcept);
-
-		$.removeCookie('AuthToken');
-
-		Routing.finalize();
-		
-		this.iUserRole = Enums.UserRole.Anonymous;
-		this.sUserName = '';
-		this.sUserPublicId = '';
-		this.iUserId = 0;
-	}
-	
-	if (Types.isNonEmptyString(UserSettings.CustomLogoutUrl))
-	{
-		window.location.href = UserSettings.CustomLogoutUrl;
 	}
 	else
 	{
-		UrlUtils.clearAndReloadLocation(Browser.ie8AndBelow, true);
+		gotoLoginPage();
 	}
 };
 
