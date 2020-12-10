@@ -15,7 +15,7 @@ var
 	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js'),
 	
 	aViewMimeTypes = [
-		'image/jpeg', 'image/png', 'image/gif',
+		'image/jpeg', 'image/jpg', 'image/png', 'image/gif',
 		'text/html', 'text/plain', 'text/css',
 		'text/rfc822-headers', 'message/delivery-status',
 		'application/x-httpd-php', 'application/javascript'
