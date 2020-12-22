@@ -12,7 +12,7 @@ namespace Aurora\Modules\CoreWebclient;
  *
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
- * @copyright Copyright (c) 2019, Afterlogic Corp.
+ * @copyright Copyright (c) 2020, Afterlogic Corp.
  *
  * @package Modules
  */
@@ -48,6 +48,10 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		);
 
 		$this->subscribeEvent('Core::UpdateSettings::after', array($this, 'onAfterUpdateSettings'));
+		
+		$this->denyMethodsCallByWebApi([
+			'SetHtmlOutputHeaders',
+		]);
 	}
 
 	/**
@@ -158,13 +162,45 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	/**
 	 * @ignore
 	 */
+	public function SetHtmlOutputHeaders()
+	{
+		@\header('Content-Type: text/html; charset=utf-8', true);
+		$sContentSecurityPolicy = $this->getConfig('ContentSecurityPolicy', '');
+		if (!empty($sContentSecurityPolicy))
+		{
+			$aArgs = [];
+			$aAddDefault = [];
+			$this->broadcastEvent(
+				'AddToContentSecurityPolicyDefault',
+				$aArgs,
+				$aAddDefault
+			);
+			if (!empty($aAddDefault))
+			{
+				$aPieces = explode(';', $sContentSecurityPolicy);
+				foreach ($aPieces as $iIndex => $sPiece) {
+					$sPrepared = strtolower(trim($sPiece));
+					if (strpos($sPrepared, 'default-src') === 0)
+					{
+						$aPieces[$iIndex] = implode(' ', array_merge([$sPiece], $aAddDefault));
+					}
+				}
+				$sContentSecurityPolicy = implode(';', $aPieces);
+			}
+			@\header('Content-Security-Policy: ' . $sContentSecurityPolicy, true);
+		}
+	}
+
+	/**
+	 * @ignore
+	 */
 	public function EntryDefault()
 	{
 		$sResult = '';
 
 		$oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
 
-		\Aurora\System\Managers\Response::HtmlOutputHeaders();
+		self::Decorator()->SetHtmlOutputHeaders();
 
 		$sUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 		if (!\strpos(\strtolower($sUserAgent), 'firefox'))

@@ -31,6 +31,10 @@
 		1,
 		"int"
 	],
+    "ContentSecurityPolicy": [
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; img-src * data: blob:; frame-src *; font-src 'self' data:",
+        "string"
+    ],
 	"CustomLogoutUrl": [
 		"",
 		"string"
