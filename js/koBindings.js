@@ -467,6 +467,11 @@ ko.bindingHandlers.onEnter = {
 			if (oEvent.keyCode === Enums.Key.Enter)
 			{
 				$(oElement).trigger('change');
+				
+				// sometimes nockoutjs doesn't see changes here in FF (maybe because of saved passwords functionality)
+				// so we put new value in observable variable
+				fAllBindingsAccessor().value($(oElement).val());
+				
 				var mResult = fValueAccessor().call(oViewModel);
 				if (typeof mResult === 'boolean')
 				{
