@@ -450,6 +450,18 @@ ko.bindingHandlers.autocompleteSimple = {
 					fDelete();
 				}
 			});
+			var oAutocomplete = jqEl.data('customAutocomplete') || jqEl.data('uiAutocomplete') || jqEl.data('autocomplete') || jqEl.data('ui-autocomplete');
+			if (oAutocomplete)
+			{
+				if (_.isFunction(oOptions.renderItem))
+				{
+					oAutocomplete._renderItem = oOptions.renderItem;
+				}
+				oAutocomplete._resizeMenu = function () {
+					var oUl = this.menu.element;
+					oUl.outerWidth(this.element.outerWidth());
+				};
+			}
 			jqEl.autocomplete('widget').addClass('autocomplete-simple');
 		}
 	}
