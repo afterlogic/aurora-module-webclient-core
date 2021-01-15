@@ -470,7 +470,10 @@ ko.bindingHandlers.onEnter = {
 				
 				// sometimes nockoutjs doesn't see changes here in FF (maybe because of saved passwords functionality)
 				// so we put new value in observable variable
-				fAllBindingsAccessor().value($(oElement).val());
+				if (fAllBindingsAccessor() && fAllBindingsAccessor().value)
+				{
+					fAllBindingsAccessor().value($(oElement).val());
+				}
 				
 				var mResult = fValueAccessor().call(oViewModel);
 				if (typeof mResult === 'boolean')
