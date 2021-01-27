@@ -67,7 +67,7 @@ CRouting.prototype.replaceHashWithoutMessageUid = function (sUid)
 {
 	if (typeof sUid === 'string' && sUid !== '')
 	{
-		var sNewHash = location.hash.replace('/msg' + sUid, '');
+		var sNewHash = location.hash.replace('/msg' + encodeURIComponent(sUid), '');
 		this.replaceHashFromString(sNewHash);
 	}
 };
