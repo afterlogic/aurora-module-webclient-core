@@ -173,13 +173,18 @@ var inputosaurustext = {
 		if(this.options.autoCompleteSource){
 			var
 				widget = this,
-				sOrigSearch = ''
+				sOrigSearch = '',
+				oPosition = {
+					of : this.elements.ul
+				}
 			;
 
+			if (this.options.allowFlip) {
+				oPosition['collision'] = 'flip';
+			}
+
 			this.elements.input.autocomplete({
-				position : {
-					of : this.elements.ul
-				},
+				position : oPosition,
 				source : function (oRequest, fResponse) {
 					sOrigSearch = oRequest.term;
 					widget.options.sourceResponse = fResponse;
@@ -215,11 +220,13 @@ var inputosaurustext = {
 
 					if (menu)
 					{
-						menu.element.width(0 + widget.elements.ul.outerWidth(false) - 20);
+						if (!widget.options.disableCalcMeasurements) {
+							menu.element.width(0 + widget.elements.ul.outerWidth(false) - 20);
 
-						// set max-height
-						maxHeight = $(window).height() - widget.elements.ul.outerHeight() - widget.elements.ul.offset().top + window.pageYOffset;
-						menu.element.css('max-height', maxHeight > 200 ? maxHeight - 50 : maxHeight - 2);
+							// set max-height
+							maxHeight = $(window).height() - widget.elements.ul.outerHeight() - widget.elements.ul.offset().top + window.pageYOffset;
+							menu.element.css('max-height', maxHeight > 200 ? maxHeight - 50 : maxHeight - 2);
+						}
 
 						// auto-activate the result if it's the only one
 						if(widget.options.activateFinalResult)
