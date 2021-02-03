@@ -367,7 +367,7 @@ CAjax.prototype.fail = function (oRequest, fResponseHandler, oContext, oXhr, sTy
 				}
 				else
 				{
-					Utils.log('DataTransferFailed', sErrorText, '<br />' + JSON.stringify(oReqData).substr(0, 300) + '<br />' + oXhr.responseText.substr(0, 300));
+					Utils.log('DataTransferFailed', sErrorText, '<br />' + oXhr.responseText.substr(0, 300));
 				}
 				oResponse = { Result: false, ErrorCode: Enums.Errors.DataTransferFailed, ResponseText:  oXhr.responseText };
 			}
