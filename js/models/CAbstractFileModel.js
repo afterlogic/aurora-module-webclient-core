@@ -401,7 +401,7 @@ CAbstractFileModel.prototype.downloadFile = function (bNotBroadcastEvent)
 			}
 			else
 			{
-				UrlUtils.downloadByUrl(sDownloadLink);
+				UrlUtils.downloadByUrl(sDownloadLink, this.extension() === 'eml');
 			}
 		}
 	}
