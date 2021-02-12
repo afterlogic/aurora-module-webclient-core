@@ -302,6 +302,10 @@ var inputosaurustext = {
 		{
 			widget.elements.input.val('');
 			widget._resizeInput();
+			if (_.isFunction(this.options.filterValues))
+			{
+				values = this.options.filterValues(values);
+			}
 			widget._setChosen(values);
 		}
 		widget._resetPlaceholder();
@@ -618,7 +622,7 @@ var inputosaurustext = {
 	_setChosen : function(valArr) {
 		var self = this;
 
-		if (!_.isArray(valArr)) {
+		if (!_.isArray(valArr) || valArr.length === 0) {
 			return;
 		}
 
