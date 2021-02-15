@@ -90,7 +90,12 @@ var inputosaurustext = {
 		},
 		sourceResponseItems: null,
 		selectedItem: null,
-		autoCompleteDeleteItem: function () {}
+		autoCompleteDeleteItem: function () {},
+
+		allowFlip: false,
+		disableCalcMeasurements: false,
+		allowEditCapsules: true,
+		filterValues: null // should be a function
 	},
 
 	_create: function(e) {
@@ -460,11 +465,16 @@ var inputosaurustext = {
 	},
 
 	_editTag : function(ev) {
-		var widget = (ev && ev.data.widget) || this,
+		var widget = (ev && ev.data.widget) || this;
+		if (!widget.options || !widget.options.allowEditCapsules) {
+			return;
+		}
+
+		var
 			tagName = '',
 			$li = $(ev.currentTarget).closest('li'),
-			tagKey = $li.data('inputosaurus');
-
+			tagKey = $li.data('inputosaurus')
+		;
 		if (!tagKey) {
 			return;
 		}
