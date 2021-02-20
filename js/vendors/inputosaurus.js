@@ -307,9 +307,9 @@ var inputosaurustext = {
 		{
 			widget.elements.input.val('');
 			widget._resizeInput();
-			if (_.isFunction(this.options.filterValues))
+			if (_.isFunction(widget.options.filterValues))
 			{
-				values = this.options.filterValues(values);
+				values = widget.options.filterValues(values);
 			}
 			widget._setChosen(values);
 		}
