@@ -741,7 +741,10 @@ CSelector.prototype.onDelete = function ()
  */
 CSelector.prototype.onEnter = function (oItem)
 {
-	this.fEnterCallback.call(this, oItem);
+	if (oItem)
+	{
+		this.fEnterCallback.call(this, oItem);
+	}
 };
 
 /**
