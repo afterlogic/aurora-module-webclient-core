@@ -31,6 +31,13 @@ CPopups.prototype.hasOpenedMinimizedPopups = function ()
 	return bOpenedMinimizedPopups;
 };
 
+CPopups.prototype.getOpenedMinimizedPopup = function (sPopupTemplate)
+{
+	return _.find(this.popups, function (oPopup) {
+		return sPopupTemplate === oPopup.PopupTemplate && oPopup.minimized && oPopup.minimized();
+	});
+}
+
 CPopups.prototype.hasOnlyOneOpenedPopup = function ()
 {
 	return this.popups.length === 1;
