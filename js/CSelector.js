@@ -91,7 +91,7 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 	}
 
 	this.sActionSelector = '';
-	this.sSelectabelSelector = '';
+	this.sSelectableSelector = '';
 	this.sCheckboxSelector = '';
 
 	var self = this;
@@ -283,19 +283,19 @@ CSelector.prototype.getLastOrSelected = function ()
 
 /**
  * @param {string} sActionSelector css-selector for the active for pressing regions of the list
- * @param {string} sSelectabelSelector css-selector to the item that was selected
+ * @param {string} sSelectableSelector css-selector to the item that was selected
  * @param {string} sCheckboxSelector css-selector to the element that checkbox in the list
  * @param {*} oListScope
  * @param {*} oScrollScope
  */
-CSelector.prototype.initOnApplyBindings = function (sActionSelector, sSelectabelSelector, sCheckboxSelector, oListScope, oScrollScope)
+CSelector.prototype.initOnApplyBindings = function (sActionSelector, sSelectableSelector, sCheckboxSelector, oListScope, oScrollScope)
 {
 	$(document).on('keydown', this.onKeydownBound);
 
 	this.oListScope = oListScope;
 	this.oScrollScope = oScrollScope;
 	this.sActionSelector = sActionSelector;
-	this.sSelectabelSelector = sSelectabelSelector;
+	this.sSelectableSelector = sSelectableSelector;
 	this.sCheckboxSelector = sCheckboxSelector;
 
 	var
@@ -805,21 +805,26 @@ CSelector.prototype.scrollToSelected = function ()
 
 	var
 		iOffset = 20,
-		oSelected = $(this.sSelectabelSelector, this.oScrollScope),
+		oSelected = $(this.sSelectableSelector, this.oScrollScope),
 		oPos = oSelected.position(),
 		iVisibleHeight = this.oScrollScope.height(),
-		iSelectedHeight = oSelected.outerHeight()
+		iScrollTop = this.oScrollScope.scrollTop(),
+		iSelectedHeight = oSelected.outerHeight(),
+		bSelectedVisible = oPos && (oPos.top >= iScrollTop) && (oPos.top <= (iScrollTop + iVisibleHeight - iSelectedHeight))
 	;
 
-	if (oPos && (oPos.top < 0 || oPos.top + iSelectedHeight > iVisibleHeight))
+	if (oPos && !bSelectedVisible)
 	{
-		if (oPos.top < 0)
+		if ((oPos.top < (iScrollTop + iVisibleHeight)) && ((oPos.top + iSelectedHeight) > (iScrollTop + iVisibleHeight)))
 		{
-			this.oScrollScope.scrollTop(this.oScrollScope.scrollTop() + oPos.top - iOffset);
+			// selected item is partially visible from below
+			// make it visible at bottom with offset
+			this.oScrollScope.scrollTop(oPos.top + iSelectedHeight + iOffset - iVisibleHeight);
 		}
 		else
 		{
-			this.oScrollScope.scrollTop(this.oScrollScope.scrollTop() + oPos.top - iVisibleHeight + iSelectedHeight + iOffset);
+			// make selected item visible at top with offset
+			this.oScrollScope.scrollTop(oPos.top - iOffset);
 		}
 
 		return true;
