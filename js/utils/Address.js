@@ -3,7 +3,7 @@
 var
 	_ = require('underscore'),
 	$ = require('jquery'),
-	
+
 	AddressUtils = {}
 ;
 
@@ -217,6 +217,12 @@ AddressUtils.getIncorrectEmailsFromAddressString = function (sAddresses)
 	}
 
 	return aIncorrectEmails;
+};
+
+AddressUtils.getDomain = function (sEmail)
+{
+	var aParts = this.isCorrectEmail(sEmail) ? sEmail.split('@') : [''];
+	return aParts[aParts.length - 1];
 };
 
 module.exports = AddressUtils;
