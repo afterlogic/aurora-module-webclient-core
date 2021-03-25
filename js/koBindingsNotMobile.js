@@ -413,7 +413,15 @@ ko.bindingHandlers.autocompleteSimple = {
 					});
 				},
 				'focus': function (oEvent, oItem) {
-					oSelectedItem = oItem.item;
+					if (!oItem.item || oItem.item.disabled)
+					{
+						return false;
+					}
+					else
+					{
+						oSelectedItem = oItem.item;
+						return true;
+					}
 				},
 				'open': function (oEvent, oItem) {
 					$(jqEl.autocomplete('widget')).find('span.del').on('click', function(oEvent, oItem) {
@@ -422,12 +430,19 @@ ko.bindingHandlers.autocompleteSimple = {
 					});
 				},
 				'select': function (oEvent, oItem) {
-					_.delay(function () {
-						jqEl.trigger('change');
-					}, 5);
-					fDataAccessor(oItem.item);
+					if (!oItem.item || oItem.item.disabled)
+					{
+						return false;
+					}
+					else
+					{
+						_.delay(function () {
+							jqEl.trigger('change');
+						}, 5);
+						fDataAccessor(oItem.item);
 
-					return true;
+						return true;
+					}
 				}
 			}).on('click', function(oEvent, oItem) {
 				if (jqEl.val() === '')
