@@ -19,7 +19,7 @@ Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
 {
 	var
 		iErrorCode = oResponse.ErrorCode,
-		sResponseError = oResponse.ErrorMessage || '',
+		sResponseError = TextUtils.encodeHtml(oResponse.ErrorMessage || ''),
 		sResultError = ModuleErrors.getErrorMessage(oResponse) || ''
 	;
 	
