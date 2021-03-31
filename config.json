@@ -127,6 +127,10 @@
 		["Default"],
 		"array"
 	],
+	"HideLogout": [
+		false,
+		"bool"
+	],
 	"IncludeInMobile": [
 		true,
 		"bool"

@@ -50,7 +50,7 @@ function CHeaderView()
 		});
 	}, this).extend({ rateLimit: 50 });
 	
-	this.showLogout = App.getUserRole() !== window.Enums.UserRole.Anonymous && !App.isPublic();
+	this.bShowLogout = !Settings.HideLogout && App.getUserRole() !== window.Enums.UserRole.Anonymous && !App.isPublic();
 
 	this.sLogoUrl = Settings.LogoUrl;
 	this.sTopIframeUrl = Settings.TopIframeUrl;
@@ -62,7 +62,7 @@ function CHeaderView()
 	
 	App.broadcastEvent('%ModuleName%::ConstructView::after', {'Name': this.ViewConstructorName, 'View': this});
 	
-	if (!_.isEmpty(this.tabs) || this.showLogout) {
+	if (!_.isEmpty(this.tabs) || this.bShowLogout) {
 		$('#auroraContent > .screens').addClass('show-header');
 	}
 }

@@ -77,7 +77,8 @@ var Settings = {
 	QuotaWarningPerc: 0,
 	Theme: 'Default',
 	ThemeList: ['Default'],
-	
+	HideLogout: false,
+
 	// Settings from CoreMobileWebclient module
 	MobileTheme: 'Default',
 	MobileThemeList: ['Default'],
@@ -170,6 +171,7 @@ var Settings = {
 			this.QuotaWarningPerc = Types.pInt(oAppDataCoreWebclientSection.QuotaWarningPerc, this.QuotaWarningPerc);
 			this.Theme = Types.pString(oAppDataCoreWebclientSection.Theme, this.Theme);
 			this.ThemeList = Types.pArray(oAppDataCoreWebclientSection.ThemeList, this.ThemeList);
+			this.HideLogout = Types.pBool(oAppDataCoreWebclientSection.HideLogout, this.HideLogout);
 		}
 
 		if (!_.isEmpty(oAppDataCoreMobileWebclientSection))

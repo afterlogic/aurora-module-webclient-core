@@ -117,6 +117,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'QuotaWarningPerc' => $this->getConfig('QuotaWarningPerc', 0),
 			'Theme' => $oUser ? $oUser->{self::GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),
 			'ThemeList' => $this->getConfig('ThemeList', ['Default']),
+			'HideLogout' => $this->getConfig('HideLogout', false),
 		);
 	}
 
