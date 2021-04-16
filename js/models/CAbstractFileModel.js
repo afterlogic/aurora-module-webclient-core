@@ -443,7 +443,7 @@ CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 		
 		if (!oParams.bBreakView)
 		{
-			oWin = WindowOpener.open(sUrl, sUrl, false);
+			oWin = WindowOpener.open(oParams.sUrl, oParams.sUrl, false);
 
 			if (oWin)
 			{
