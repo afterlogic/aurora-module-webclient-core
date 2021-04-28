@@ -22,6 +22,10 @@
 			<span class="link" data-bind="i18n: {'key': '%MODULENAME%/ACTION_SHOW_MOBILE_VERSION'}"></span>
 		</span>
 
+		<span class="item mobile" data-bind="visible: bDebugMode, click: debug">
+			<span class="link">Debug</span>
+		</span>
+
 		<span class="item logout" data-bind="visible: bShowLogout">
 			<span class="link" data-bind="click: logout">
 				<span class="icon"></span>
