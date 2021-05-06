@@ -4,7 +4,8 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	ko = require('knockout'),
-	
+	moment = require('moment'),
+
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	FilesUtils = require('%PathToCoreWebclientModule%/js/utils/Files.js'),
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
@@ -401,6 +402,7 @@ CAbstractFileModel.prototype.downloadFile = function (bNotBroadcastEvent)
 			}
 			else
 			{
+				sDownloadLink += '/' + moment().unix();
 				UrlUtils.downloadByUrl(sDownloadLink, this.extension() === 'eml');
 			}
 		}
