@@ -4,10 +4,10 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	ko = require('knockout'),
-	
+
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
-	
+
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
 	Popups = require('%PathToCoreWebclientModule%/js/Popups.js')
@@ -39,7 +39,7 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 	this.bUnselectOnCtrl = !!bUnselectOnCtrl;
 	this.bDisableMultiplySelection = !!bDisableMultiplySelection;
 	this.bChangeOnSelect = (typeof bChangeOnSelect === 'undefined') ? true : !!bChangeOnSelect;
-	
+
 	this.useKeyboardKeys = ko.observable(false);
 
 	this.list = ko.observableArray([]);
@@ -50,9 +50,9 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 			this.list(mValue);
 		}, this);
 	}
-	
+
 	this.multiplyLineFactor = multiplyLineFactor;
-	
+
 	this.oLast = null;
 	this.oListScope = null;
 	this.oScrollScope = null;
@@ -265,7 +265,7 @@ CSelector.prototype.getLastOrSelected = function ()
 		iCheckedCount = 0,
 		oLastSelected = null
 	;
-	
+
 	_.each(this.list(), function (oItem) {
 		if (oItem.checked())
 		{
@@ -412,7 +412,7 @@ CSelector.prototype.initOnApplyBindings = function (sActionSelector, sSelectable
 					fEventClickFunction(oLast, oItem, oEvent);
 				}
 			}
-			else if (oEvent.ctrlKey)
+			else if (oEvent.ctrlKey || oEvent.metaKey)
 			{
 				bClick = false;
 				if (!self.bDisableMultiplySelection)
@@ -480,7 +480,7 @@ CSelector.prototype.initOnApplyBindings = function (sActionSelector, sSelectable
 /**
  * @param {Object} oSelected
  * @param {number} iEventKeyCode
- * 
+ *
  * @return {Object}
  */
 CSelector.prototype.getResultSelection = function (oSelected, iEventKeyCode)
@@ -648,13 +648,13 @@ CSelector.prototype.shiftClickResult = function (oResult, oSelected, iEventKeyCo
 					Add = false;
 				}
 			});
-			
+
 			if (bMultiply && oResult && (iEventKeyCode === Enums.Key.Up || iEventKeyCode === Enums.Key.Down))
 			{
 				oResult.checked(!oResult.checked());
 			}
 		}
-	}	
+	}
 };
 
 /**
@@ -680,7 +680,7 @@ CSelector.prototype.clickNewSelectPosition = function (iEventKeyCode, bShiftKey)
 
 /**
  * @param {Object} oEvent
- * 
+ *
  * @return {boolean}
  */
 CSelector.prototype.onKeydown = function (oEvent)
