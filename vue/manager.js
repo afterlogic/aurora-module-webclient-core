@@ -1,9 +1,5 @@
-import settings from "../../AdminPanelWebclient/vue/src/settings";
 
 export default {
-    init (appData) {
-        settings.init(appData)
-    },
     getAdminSystemTabs () {
         return [
             {
