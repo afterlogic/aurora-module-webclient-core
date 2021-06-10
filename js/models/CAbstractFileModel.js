@@ -12,16 +12,16 @@ var
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	UrlUtils = require('%PathToCoreWebclientModule%/js/utils/Url.js'),
 	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
-	
+
 	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js'),
-	
+
 	aViewMimeTypes = [
 		'image/jpeg', 'image/jpg', 'image/png', 'image/gif',
 		'text/html', 'text/plain', 'text/css',
 		'text/rfc822-headers', 'message/delivery-status',
 		'application/x-httpd-php', 'application/javascript'
 	],
-	
+
 	aViewExtensions = []
 ;
 
@@ -42,20 +42,20 @@ function CAbstractFileModel()
 	this.tempName = ko.observable('');
 	this.displayName = ko.observable('');
 	this.extension = ko.observable('');
-	
+
 	this.fileName.subscribe(function (sFileName) {
 		this.id(sFileName);
 		this.displayName(sFileName);
 		this.extension(Utils.getFileExtension(sFileName));
 	}, this);
-	
+
 	this.size = ko.observable(0);
 	this.friendlySize = ko.computed(function () {
 		return this.size() > 0 ? TextUtils.getFriendlySize(this.size()) : '';
 	}, this);
-	
+
 	this.hash = ko.observable('');
-	
+
 	this.thumbUrlInQueue = ko.observable('');
 	this.thumbUrlInQueueSubscribtion = this.thumbUrlInQueue.subscribe(function () {
 		this.getInThumbQueue();
@@ -74,19 +74,19 @@ function CAbstractFileModel()
 		return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes));
 	}, this);
 	this.bHasHtmlEmbed = false;
-	
+
 	this.otherTemplates = ko.observableArray([]);
 
 	// Some modules can override this field if it is necessary to manage it.
 	this.visibleCancelButton = ko.observable(true);
-	
+
 	this.statusText = ko.observable('');
 	this.statusTooltip = ko.computed(function () {
 		return this.uploadError() ? this.statusText() : '';
 	}, this);
 	this.progressPercent = ko.observable(0);
 	this.visibleProgress = ko.observable(false);
-	
+
 	this.uploadStarted = ko.observable(false);
 	this.uploadStarted.subscribe(function () {
 		if (this.uploadStarted())
@@ -102,7 +102,7 @@ function CAbstractFileModel()
 			this.uploaded(true);
 		}
 	}, this);
-	
+
 	this.downloading.subscribe(function () {
 		if (this.downloading())
 		{
@@ -114,13 +114,13 @@ function CAbstractFileModel()
 			this.progressPercent(0);
 		}
 	}, this);
-	
+
 	this.allowDrag = ko.observable(false);
 	this.allowUpload = ko.observable(false);
 	this.allowPublicLink = ko.observable(false);
 	this.bIsSecure = ko.observable(false);
 	this.isShared = ko.observable(false);
-	
+
 	this.sHeaderText = '';
 
 	this.oActionsData = {
@@ -146,17 +146,17 @@ function CAbstractFileModel()
 			}, this)
 		}
 	};
-	
+
 	this.allowActions = ko.observable(true);
-	
+
 	this.iconAction = ko.observable('download');
-	
+
 	this.cssClasses = ko.computed(function () {
 		return this.getCommonClasses().join(' ');
 	}, this);
-	
+
 	this.actions = ko.observableArray([]);
-	
+
 	this.firstAction = ko.computed(function () {
 		if (this.actions().length > 1)
 		{
@@ -164,7 +164,7 @@ function CAbstractFileModel()
 		}
 		return '';
 	}, this);
-	
+
 	this.secondAction = ko.computed(function () {
 		if (this.actions().length === 1)
 		{
@@ -176,10 +176,10 @@ function CAbstractFileModel()
 		}
 		return '';
 	}, this);
-	
+
 	this.subFiles = ko.observableArray([]);
 	this.subFilesExpanded = ko.observable(false);
-	
+
 	this.sUploadSubFolder = '';
 	this.bIsHidden = false;
 }
@@ -381,7 +381,7 @@ CAbstractFileModel.prototype.getInThumbQueue = function ()
 CAbstractFileModel.prototype.downloadFile = function (bNotBroadcastEvent)
 {
 	//todo: UrlUtils.downloadByUrl in nessesary context in new window
-	var 
+	var
 		sDownloadLink = this.getActionUrl('download'),
 		oParams = {
 			'File': this,
@@ -427,11 +427,11 @@ CAbstractFileModel.prototype.viewFile = function (oViewModel, oEvent)
  */
 CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 {
-	var 
+	var
 		oWin = null,
 		oParams = null
 	;
-	
+
 	if (!Types.isNonEmptyString(sUrl))
 	{
 		sUrl = UrlUtils.getAppPath() + this.getActionUrl('view');
@@ -439,10 +439,11 @@ CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 
 	if (sUrl.length > 0 && sUrl !== '#')
 	{
+		sUrl += '/' + moment().unix();
 		oParams = {sUrl: sUrl, index: this.index(), bBreakView: false};
-		
+
 		App.broadcastEvent('AbstractFileModel::FileView::before', oParams);
-		
+
 		if (!oParams.bBreakView)
 		{
 			oWin = WindowOpener.open(oParams.sUrl, oParams.sUrl, false);
@@ -500,13 +501,13 @@ CAbstractFileModel.prototype.onUploadSelect = function (sFileUid, oFileData, bOn
 		this.mimeType(Types.pString(oFileData['Type']));
 		this.size(Types.pInt(oFileData['Size']));
 	}
-	
+
 	this.uploadUid(sFileUid);
 	this.uploaded(false);
 	this.statusText('');
 	this.progressPercent(0);
 	this.visibleProgress(false);
-	
+
 	// if uploading file is from uploading folder it should be hidden in files list.
 	this.sUploadSubFolder = Types.pString(oFileData.Folder);
 	this.bIsHidden = this.sUploadSubFolder !== '';
@@ -568,7 +569,7 @@ CAbstractFileModel.prototype.onUploadComplete = function (sFileUid, bResponseRec
 
 	this.progressPercent(0);
 	this.visibleProgress(false);
-	
+
 	this.uploaded(true);
 	this.uploadError(bError);
 	this.statusText(bError ? sError : TextUtils.i18n('%MODULENAME%/REPORT_UPLOAD_COMPLETE'));
@@ -576,7 +577,7 @@ CAbstractFileModel.prototype.onUploadComplete = function (sFileUid, bResponseRec
 	if (!bError)
 	{
 		this.fillDataAfterUploadComplete(oResponse, sFileUid);
-		
+
 		setTimeout((function (self) {
 			return function () {
 				self.statusText('');
@@ -587,7 +588,7 @@ CAbstractFileModel.prototype.onUploadComplete = function (sFileUid, bResponseRec
 
 /**
  * Should be overriden.
- * 
+ *
  * @param {Object} oResult
  * @param {string} sFileUid
  */
