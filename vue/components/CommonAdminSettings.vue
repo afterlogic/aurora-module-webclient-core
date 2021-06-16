@@ -4,73 +4,71 @@
       <div class="row q-mb-md">
         <div class="col text-h5">Common settings</div>
       </div>
-    <q-card flat bordered class="card-edit-settings">
-      <q-card-section>
-        <div class="row q-mb-md">
-          <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_SITENAME'"></div>
-          <div class="col-5 q-ml-xl">
-            <q-input outlined dense class="bg-white" v-model="siteName" @keyup.enter="save" />
-          </div>
-        </div>
-        <div v-if="themeList.length > 1" class="row q-mb-md">
-          <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_THEME'"></div>
-          <div class="col-5 q-ml-xl">
-            <q-select outlined dense class="bg-white" v-model="theme"
-                      emit-value map-options :options="themeList" option-label="name" />
-          </div>
-        </div>
-        <div  v-if="mobileThemeList.length > 1" class="row q-mb-md">
-          <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_MOBILE_THEME'"></div>
-          <div class="col-5 q-ml-xl">
-            <q-select outlined dense class="bg-white" v-model="mobileTheme"
-                      emit-value map-options :options="mobileThemeList" option-label="name" />
-          </div>
-        </div>
-        <div v-if="languageOptions.length > 1" class="row q-mb-md">
-          <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_LANGUAGE'"></div>
-          <div class="col-5 q-ml-xl">
-            <q-select outlined dense class="bg-white" v-model="language"
-                      emit-value map-options :options="languageOptions" option-label="name" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_TIME_FORMAT'"></div>
-          <div class="col-5 q-ml-xl">
-            <div class="  q-my-sm">
-              <q-radio dense v-model="timeFormat" val="0" :label="$t('COREWEBCLIENT.LABEL_TIME_FORMAT_12')" />
-              <q-radio class="q-ml-md" dense v-model="timeFormat" val="1" :label="$t('COREWEBCLIENT.LABEL_TIME_FORMAT_24')" />
-             
+      <q-card flat bordered class="card-edit-settings">
+        <q-card-section>
+          <div class="row q-mb-md">
+            <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_SITENAME'"></div>
+            <div class="col-5 q-ml-xl">
+              <q-input outlined dense class="bg-white" v-model="siteName" @keyup.enter="save"/>
             </div>
           </div>
-        </div>
-      </q-card-section>
-    </q-card>
+          <div v-if="themeList.length > 1" class="row q-mb-md">
+            <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_THEME'"></div>
+            <div class="col-5 q-ml-xl">
+              <q-select outlined dense class="bg-white" v-model="theme"
+                        emit-value map-options :options="themeList" option-label="name"/>
+            </div>
+          </div>
+          <div v-if="mobileThemeList.length > 1" class="row q-mb-md">
+            <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_MOBILE_THEME'"></div>
+            <div class="col-5 q-ml-xl">
+              <q-select outlined dense class="bg-white" v-model="mobileTheme"
+                        emit-value map-options :options="mobileThemeList" option-label="name"/>
+            </div>
+          </div>
+          <div v-if="languageOptions.length > 1" class="row q-mb-md">
+            <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_LANGUAGE'"></div>
+            <div class="col-5 q-ml-xl">
+              <q-select outlined dense class="bg-white" v-model="language"
+                        emit-value map-options :options="languageOptions" option-label="name"/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_TIME_FORMAT'"></div>
+            <div class="col-5 q-ml-xl">
+              <div class="  q-my-sm">
+                <q-radio dense v-model="timeFormat" val="0" :label="$t('COREWEBCLIENT.LABEL_TIME_FORMAT_12')"/>
+                <q-radio class="q-ml-md" dense v-model="timeFormat" val="1"
+                         :label="$t('COREWEBCLIENT.LABEL_TIME_FORMAT_24')"/>
+              </div>
+            </div>
+          </div>
+        </q-card-section>
+      </q-card>
       <div class="q-pa-md text-right">
         <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary" @click="save"
                :label="saving ? $t('COREWEBCLIENT.ACTION_SAVE_IN_PROGRESS') : $t('COREWEBCLIENT.ACTION_SAVE')">
         </q-btn>
       </div>
     </div>
-    <UnsavedChangesDialog ref="unsavedChangesDialog" />
+    <UnsavedChangesDialog ref="unsavedChangesDialog"/>
   </q-scroll-area>
 </template>
 
 <script>
-import AdminPanelSettings from "../../../AdminPanelWebclient/vue/src/settings";
-import settings from "../../../AdminPanelWebclient/vue/src/settings";
-import webApi from "../../../AdminPanelWebclient/vue/src/utils/web-api";
-import notification from "../../../AdminPanelWebclient/vue/src/utils/notification";
-import errors from "../../../AdminPanelWebclient/vue/src/utils/errors";
-import _ from "lodash";
-import UnsavedChangesDialog from "../../../AdminPanelWebclient/vue/src/components/UnsavedChangesDialog";
+import AdminPanelSettings from '../../../AdminPanelWebclient/vue/src/settings'
+import webApi from '../../../AdminPanelWebclient/vue/src/utils/web-api'
+import notification from '../../../AdminPanelWebclient/vue/src/utils/notification'
+import errors from '../../../AdminPanelWebclient/vue/src/utils/errors'
+import _ from 'lodash'
+import UnsavedChangesDialog from '../../../AdminPanelWebclient/vue/src/components/UnsavedChangesDialog'
 
 export default {
-  name: "CommonAdminSetting",
+  name: 'CommonAdminSetting',
   components: {
     UnsavedChangesDialog,
   },
-  
-  data() {
+  data () {
     return {
       language: '',
       theme: '',
@@ -78,14 +76,13 @@ export default {
       siteName: '',
       timeFormat: 0,
       saving: false,
-      
       languageOptions: [],
       themeList: [],
       mobileThemeList: [],
       commonSettings: {},
     }
   },
-  mounted() {
+  mounted () {
     this.populate()
     this.languageOptions = AdminPanelSettings.getLanguageList()
     this.themeList = AdminPanelSettings.getThemeList()
@@ -99,7 +96,7 @@ export default {
     }
   },
   methods: {
-    populate() {
+    populate () {
       const commonSettings = AdminPanelSettings.getCommonSettingData()
       this.language = commonSettings.language
       this.theme = commonSettings.theme
@@ -112,7 +109,7 @@ export default {
       return this.language !== commonSettings.language || this.theme !== commonSettings.theme || this.mobileTheme !== commonSettings.mobileTheme ||
           this.siteName !== commonSettings.siteName || this.timeFormat !== commonSettings.timeFormat
     },
-    save() {
+    save () {
       if (!this.saving) {
         this.saving = true
         const parameters = {
@@ -130,7 +127,7 @@ export default {
         }).then(result => {
           this.saving = false
           if (result === true) {
-            settings.saveCommonSettingData({
+            AdminPanelSettings.saveCommonSettingData({
               siteName: this.siteName,
               theme: this.theme,
               mobileTheme: this.mobileTheme,
