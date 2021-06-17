@@ -2,7 +2,7 @@
   <q-scroll-area class="full-height full-width">
     <div class="q-pa-lg ">
       <div class="row q-mb-md">
-        <div class="col text-h5">Common settings</div>
+        <div class="col text-h5" v-t="'COREWEBCLIENT.HEADING_COMMON_SETTINGS'"></div>
       </div>
       <q-card flat bordered class="card-edit-settings">
         <q-card-section>
@@ -37,8 +37,8 @@
             <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_TIME_FORMAT'"></div>
             <div class="col-5 q-ml-xl">
               <div class="  q-my-sm">
-                <q-radio dense v-model="timeFormat" val="0" :label="$t('COREWEBCLIENT.LABEL_TIME_FORMAT_12')"/>
-                <q-radio class="q-ml-md" dense v-model="timeFormat" val="1"
+                <q-radio dense v-model="timeFormat" val="1" :label="$t('COREWEBCLIENT.LABEL_TIME_FORMAT_12')"/>
+                <q-radio class="q-ml-md" dense v-model="timeFormat" val="0"
                          :label="$t('COREWEBCLIENT.LABEL_TIME_FORMAT_24')"/>
               </div>
             </div>
