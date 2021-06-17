@@ -3,7 +3,7 @@ export default {
     return [
       {
         name: 'common',
-        title: 'ADMINPANELWEBCLIENT.LABEL_COMMON_SETTINGS_TAB',
+        title: 'COREWEBCLIENT.LABEL_COMMON_SETTINGS_TABNAME',
         component () {
           return import('src/../../../CoreWebclient/vue/components/CommonAdminSettings')
         },
