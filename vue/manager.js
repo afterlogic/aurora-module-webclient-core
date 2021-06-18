@@ -1,8 +1,12 @@
 export default {
+  moduleName: 'CoreWebclient',
+
+  requiredModules: [],
+
   getAdminSystemTabs () {
     return [
       {
-        name: 'common',
+        tabName: 'common',
         title: 'COREWEBCLIENT.LABEL_COMMON_SETTINGS_TABNAME',
         component () {
           return import('src/../../../CoreWebclient/vue/components/CommonAdminSettings')
