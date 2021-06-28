@@ -7,35 +7,35 @@
       <q-card flat bordered class="card-edit-settings">
         <q-card-section>
           <div class="row q-mb-md">
-            <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_SITENAME'"></div>
-            <div class="col-5 q-ml-xl">
+            <div class="col-2 q-my-sm" v-t="'COREWEBCLIENT.LABEL_SITENAME'"></div>
+            <div class="col-5">
               <q-input outlined dense class="bg-white" v-model="siteName" @keyup.enter="save"/>
             </div>
           </div>
           <div v-if="themeList.length > 1" class="row q-mb-md">
-            <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_THEME'"></div>
-            <div class="col-5 q-ml-xl">
+            <div class="col-2 q-my-sm" v-t="'COREWEBCLIENT.LABEL_THEME'"></div>
+            <div class="col-5">
               <q-select outlined dense class="bg-white" v-model="theme"
                         emit-value map-options :options="themeList" option-label="name"/>
             </div>
           </div>
           <div v-if="mobileThemeList.length > 1" class="row q-mb-md">
-            <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_MOBILE_THEME'"></div>
-            <div class="col-5 q-ml-xl">
+            <div class="col-2 q-my-sm" v-t="'COREWEBCLIENT.LABEL_MOBILE_THEME'"></div>
+            <div class="col-5">
               <q-select outlined dense class="bg-white" v-model="mobileTheme"
                         emit-value map-options :options="mobileThemeList" option-label="name"/>
             </div>
           </div>
           <div v-if="languageOptions.length > 1" class="row q-mb-md">
-            <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_LANGUAGE'"></div>
-            <div class="col-5 q-ml-xl">
+            <div class="col-2 q-my-sm" v-t="'COREWEBCLIENT.LABEL_LANGUAGE'"></div>
+            <div class="col-5">
               <q-select outlined dense class="bg-white" v-model="language"
                         emit-value map-options :options="languageOptions" option-label="name"/>
             </div>
           </div>
           <div class="row">
-            <div class="col-1 q-my-sm" v-t="'COREWEBCLIENT.LABEL_TIME_FORMAT'"></div>
-            <div class="col-5 q-ml-xl">
+            <div class="col-2 q-my-sm" v-t="'COREWEBCLIENT.LABEL_TIME_FORMAT'"></div>
+            <div class="col-5 ">
               <div class="  q-my-sm">
                 <q-radio dense v-model="timeFormat" val="1" :label="$t('COREWEBCLIENT.LABEL_TIME_FORMAT_12')"/>
                 <q-radio class="q-ml-md" dense v-model="timeFormat" val="0"
@@ -45,7 +45,7 @@
           </div>
         </q-card-section>
       </q-card>
-      <div class="q-pa-md text-right">
+      <div class="q-pt-md text-right">
         <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary" @click="save"
                :label="saving ? $t('COREWEBCLIENT.ACTION_SAVE_IN_PROGRESS') : $t('COREWEBCLIENT.ACTION_SAVE')">
         </q-btn>
