@@ -37,18 +37,8 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			]
 		);
 
-		\Aurora\Modules\Core\Classes\User::extend(
-			self::GetName(),
-			[
-				'AllowDesktopNotifications'		=> array('bool', $this->getConfig('AllowDesktopNotifications', false)),
-				'AutoRefreshIntervalMinutes'	=> array('int', $this->getConfig('AutoRefreshIntervalMinutes', 0)),
-				'Theme'							=> array('string', $this->getConfig('Theme', 'Default')),
-			]
-
-		);
-
 		$this->subscribeEvent('Core::UpdateSettings::after', array($this, 'onAfterUpdateSettings'));
-		
+
 		$this->denyMethodsCallByWebApi([
 			'SetHtmlOutputHeaders',
 		]);
@@ -99,11 +89,11 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		return array(
 			'AllowChangeSettings' => $this->getConfig('AllowChangeSettings', false),
 			'AllowClientDebug' => $this->getConfig('AllowClientDebug', false),
-			'AllowDesktopNotifications' => $oUser ? $oUser->{self::GetName().'::AllowDesktopNotifications'} : $this->getConfig('AllowDesktopNotifications', false),
+			'AllowDesktopNotifications' => $oUser && isset($oUser->{self::GetName().'::AllowDesktopNotifications'}) ? $oUser->{self::GetName().'::AllowDesktopNotifications'} : $this->getConfig('AllowDesktopNotifications', false),
 			'AllowMobile' => $this->getConfig('AllowMobile', false),
 			'AllowPrefetch' => $this->getConfig('AllowPrefetch', true),
 			'AttachmentSizeLimit' => $this->getConfig('AttachmentSizeLimit', 0),
-			'AutoRefreshIntervalMinutes' => $oUser ? $oUser->{self::GetName().'::AutoRefreshIntervalMinutes'} : $this->getConfig('AutoRefreshIntervalMinutes', 0),
+			'AutoRefreshIntervalMinutes' => $oUser && isset($oUser->{self::GetName().'::AutoRefreshIntervalMinutes'} ) ? $oUser->{self::GetName().'::AutoRefreshIntervalMinutes'} : $this->getConfig('AutoRefreshIntervalMinutes', 0),
 			'CustomLogoutUrl' => $this->getConfig('CustomLogoutUrl', ''),
 			'DefaultAnonymScreenHash' => $this->getConfig('DefaultAnonymScreenHash', ''),
 			'DefaultUserScreenHash' => $this->getConfig('DefaultUserScreenHash', ''),
@@ -115,7 +105,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'MultipleFilesUploadLimit' => $this->getConfig('MultipleFilesUploadLimit', 50),
 			'ShowQuotaBar' => $this->getConfig('ShowQuotaBar', false),
 			'QuotaWarningPerc' => $this->getConfig('QuotaWarningPerc', 0),
-			'Theme' => $oUser ? $oUser->{self::GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),
+			'Theme' => $oUser && isset($oUser->{self::GetName().'::AutoRefreshIntervalMinutes'}) ? $oUser->{self::GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),
 			'ThemeList' => $this->getConfig('ThemeList', ['Default']),
 			'HideLogout' => $this->getConfig('HideLogout', false),
 		);
@@ -135,15 +125,15 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		{
 			if (isset($Args['AllowDesktopNotifications']))
 			{
-				$oUser->{self::GetName().'::AllowDesktopNotifications'} = $Args['AllowDesktopNotifications'];
+				$oUser->setExtendedProp(self::GetName().'::AllowDesktopNotifications', $Args['AllowDesktopNotifications']);
 			}
 			if (isset($Args['AutoRefreshIntervalMinutes']))
 			{
-				$oUser->{self::GetName().'::AutoRefreshIntervalMinutes'} = $Args['AutoRefreshIntervalMinutes'];
+				$oUser->setExtendedProp(self::GetName().'::AutoRefreshIntervalMinutes', $Args['AutoRefreshIntervalMinutes']);
 			}
 			if (isset($Args['Theme']))
 			{
-				$oUser->{self::GetName().'::Theme'} = $Args['Theme'];
+				$oUser->setExtendedProp(self::GetName().'::Theme', $Args['Theme']);
 			}
 
 			$oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
