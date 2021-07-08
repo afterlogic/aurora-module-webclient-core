@@ -9,7 +9,7 @@ export default {
         tabName: 'common',
         title: 'COREWEBCLIENT.LABEL_COMMON_SETTINGS_TABNAME',
         component () {
-          return import('src/../../../CoreWebclient/vue/components/CommonAdminSettings')
+          return import('./components/CommonAdminSettings')
         },
       },
     ]
