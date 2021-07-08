@@ -9,27 +9,27 @@
           <div class="row q-mb-md">
             <div class="col-2 q-my-sm" v-t="'COREWEBCLIENT.LABEL_SITENAME'"></div>
             <div class="col-5">
-              <q-input outlined dense class="bg-white" v-model="siteName" @keyup.enter="save"/>
+              <q-input outlined dense bg-color="white" v-model="siteName" @keyup.enter="save"/>
             </div>
           </div>
           <div v-if="themeList.length > 1" class="row q-mb-md">
             <div class="col-2 q-my-sm" v-t="'COREWEBCLIENT.LABEL_THEME'"></div>
             <div class="col-5">
-              <q-select outlined dense class="bg-white" v-model="theme"
+              <q-select outlined dense bg-color="white" v-model="theme"
                         emit-value map-options :options="themeList" option-label="name"/>
             </div>
           </div>
           <div v-if="mobileThemeList.length > 1" class="row q-mb-md">
             <div class="col-2 q-my-sm" v-t="'COREWEBCLIENT.LABEL_MOBILE_THEME'"></div>
             <div class="col-5">
-              <q-select outlined dense class="bg-white" v-model="mobileTheme"
+              <q-select outlined dense bg-color="white" v-model="mobileTheme"
                         emit-value map-options :options="mobileThemeList" option-label="name"/>
             </div>
           </div>
           <div v-if="languageOptions.length > 1" class="row q-mb-md">
             <div class="col-2 q-my-sm" v-t="'COREWEBCLIENT.LABEL_LANGUAGE'"></div>
             <div class="col-5">
-              <q-select outlined dense class="bg-white" v-model="language"
+              <q-select outlined dense bg-color="white" v-model="language"
                         emit-value map-options :options="languageOptions" option-label="name"/>
             </div>
           </div>
