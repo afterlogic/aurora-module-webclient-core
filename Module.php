@@ -114,6 +114,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'LanguageListWithNames' => $this->getLanguageList($oIntegrator->getLanguageList()),
 			'MultipleFilesUploadLimit' => $this->getConfig('MultipleFilesUploadLimit', 50),
 			'ShowQuotaBar' => $this->getConfig('ShowQuotaBar', false),
+			'ShowQuotaBarTextAsTooltip' => $this->getConfig('ShowQuotaBarTextAsTooltip', true),
 			'QuotaWarningPerc' => $this->getConfig('QuotaWarningPerc', 0),
 			'Theme' => $oUser ? $oUser->{self::GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),
 			'ThemeList' => $this->getConfig('ThemeList', ['Default']),

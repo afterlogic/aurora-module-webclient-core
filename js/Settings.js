@@ -74,6 +74,7 @@ var Settings = {
 	LanguageList: [{name: 'English', text: 'English'}],
 	MultipleFilesUploadLimit: 50,
 	ShowQuotaBar: false,
+	ShowQuotaBarTextAsTooltip: true,
 	QuotaWarningPerc: 0,
 	Theme: 'Default',
 	ThemeList: ['Default'],
@@ -168,6 +169,7 @@ var Settings = {
 			this.LanguageList = Types.pArray(oAppDataCoreWebclientSection.LanguageListWithNames, this.LanguageList);
 			this.MultipleFilesUploadLimit = Types.pNonNegativeInt(oAppDataCoreWebclientSection.MultipleFilesUploadLimit, this.MultipleFilesUploadLimit);
 			this.ShowQuotaBar = Types.pBool(oAppDataCoreWebclientSection.ShowQuotaBar, this.ShowQuotaBar);
+			this.ShowQuotaBarTextAsTooltip = Types.pBool(oAppDataCoreWebclientSection.ShowQuotaBarTextAsTooltip, this.ShowQuotaBarTextAsTooltip);
 			this.QuotaWarningPerc = Types.pInt(oAppDataCoreWebclientSection.QuotaWarningPerc, this.QuotaWarningPerc);
 			this.Theme = Types.pString(oAppDataCoreWebclientSection.Theme, this.Theme);
 			this.ThemeList = Types.pArray(oAppDataCoreWebclientSection.ThemeList, this.ThemeList);
