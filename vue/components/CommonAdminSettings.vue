@@ -51,23 +51,19 @@
         </q-btn>
       </div>
     </div>
-    <UnsavedChangesDialog ref="unsavedChangesDialog"/>
   </q-scroll-area>
 </template>
 
 <script>
-import AdminPanelSettings from '../../../AdminPanelWebclient/vue/src/settings'
-import webApi from '../../../AdminPanelWebclient/vue/src/utils/web-api'
-import notification from '../../../AdminPanelWebclient/vue/src/utils/notification'
-import errors from '../../../AdminPanelWebclient/vue/src/utils/errors'
-import _ from 'lodash'
-import UnsavedChangesDialog from '../../../AdminPanelWebclient/vue/src/components/UnsavedChangesDialog'
+import errors from 'src/utils/errors'
+import notification from 'src/utils/notification'
+import webApi from 'src/utils/web-api'
+
+import adminSettings from 'src/settings'
 
 export default {
   name: 'CommonAdminSetting',
-  components: {
-    UnsavedChangesDialog,
-  },
+
   data () {
     return {
       language: '',
@@ -82,33 +78,46 @@ export default {
       commonSettings: {},
     }
   },
+
   mounted () {
     this.populate()
-    this.languageOptions = AdminPanelSettings.getLanguageList()
-    this.themeList = AdminPanelSettings.getThemeList()
-    this.mobileThemeList = AdminPanelSettings.getMobileThemeList()
+    this.languageOptions = adminSettings.getLanguageList()
+    this.themeList = adminSettings.getThemeList()
+    this.mobileThemeList = adminSettings.getMobileThemeList()
   },
+
   beforeRouteLeave (to, from, next) {
-    if (this.hasChanges() && _.isFunction(this?.$refs?.unsavedChangesDialog?.openConfirmDiscardChangesDialog)) {
-      this.$refs.unsavedChangesDialog.openConfirmDiscardChangesDialog(next)
-    } else {
-      next()
-    }
+    this.doBeforeRouteLeave(to, from, next)
   },
+
   methods: {
     populate () {
-      const commonSettings = AdminPanelSettings.getCommonSettingData()
+      const commonSettings = adminSettings.getCommonSettingData()
       this.language = commonSettings.language
       this.theme = commonSettings.theme
       this.mobileTheme = commonSettings.mobileTheme
       this.siteName = commonSettings.siteName
       this.timeFormat = commonSettings.timeFormat
     },
+
+    /**
+     * Method is used in doBeforeRouteLeave mixin
+     */
     hasChanges () {
-      const commonSettings = AdminPanelSettings.getCommonSettingData()
+      const commonSettings = adminSettings.getCommonSettingData()
       return this.language !== commonSettings.language || this.theme !== commonSettings.theme || this.mobileTheme !== commonSettings.mobileTheme ||
           this.siteName !== commonSettings.siteName || this.timeFormat !== commonSettings.timeFormat
     },
+
+    /**
+     * Method is used in doBeforeRouteLeave mixin,
+     * do not use async methods - just simple and plain reverting of values
+     * !! hasChanges method must return true after executing revertChanges method
+     */
+    revertChanges () {
+      this.populate()
+    },
+
     save () {
       if (!this.saving) {
         this.saving = true
@@ -127,7 +136,7 @@ export default {
         }).then(result => {
           this.saving = false
           if (result === true) {
-            AdminPanelSettings.saveCommonSettingData({
+            adminSettings.saveCommonSettingData({
               siteName: this.siteName,
               theme: this.theme,
               mobileTheme: this.mobileTheme,
