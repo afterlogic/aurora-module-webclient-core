@@ -51,6 +51,12 @@ ko.bindingHandlers.splitterFlex = {
 						{
 							Storage.setData(oCommand['name'] + 'ResizerWidth', oSplitter.getSizes());
 						}
+						if (oCommand.expandSecondPaneWidth) {
+							oCommand.expandSecondPaneWidth(false);
+						}
+						if (oCommand.expandThirdPaneWidth) {
+							oCommand.expandThirdPaneWidth(false);
+						}
 					}
 				}
 			;
@@ -64,6 +70,50 @@ ko.bindingHandlers.splitterFlex = {
 			}
 
 			oSplitter = Splitter(aElements, oSplitterParams);
+			
+			
+			function _setPrevSizes()
+			{
+				var
+					secondPaneExpanded = oCommand.expandSecondPaneWidth && oCommand.expandSecondPaneWidth(),
+					thirdPaneExpanded = oCommand.expandThirdPaneWidth && oCommand.expandThirdPaneWidth()
+				;
+				if (!secondPaneExpanded && !thirdPaneExpanded) {
+					var aPrevSizes = Storage.getData(oCommand['name'] + 'ResizerWidth');
+					if (_.isArray(aPrevSizes)) {
+						oSplitter.setSizes(aPrevSizes);
+					}
+				}
+			}
+			var collapsedPercent = 1;
+			if (oCommand.expandSecondPaneWidth) {
+				oCommand.expandSecondPaneWidth.subscribe(function () {
+					if (oCommand.expandThirdPaneWidth) {
+						oCommand.expandThirdPaneWidth(false);
+					}
+
+					var aSizes = oSplitter.getSizes();
+					if (oCommand.expandSecondPaneWidth()) {
+						oSplitter.setSizes([aSizes[0], 100 - collapsedPercent - aSizes[0], collapsedPercent]);
+					} else {
+						_setPrevSizes();
+					}
+				});
+			}
+			if (oCommand.expandThirdPaneWidth) {
+				oCommand.expandThirdPaneWidth.subscribe(function () {
+					if (oCommand.expandSecondPaneWidth) {
+						oCommand.expandSecondPaneWidth(false);
+					}
+
+					var aSizes = oSplitter.getSizes();
+					if (oCommand.expandThirdPaneWidth()) {
+						oSplitter.setSizes([aSizes[0], collapsedPercent, 100 - collapsedPercent - aSizes[0]]);
+					} else {
+						_setPrevSizes();
+					}
+				});
+			}
 		});
 	}
 };
