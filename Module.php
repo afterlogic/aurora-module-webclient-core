@@ -116,7 +116,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'ShowQuotaBar' => $this->getConfig('ShowQuotaBar', false),
 			'ShowQuotaBarTextAsTooltip' => $this->getConfig('ShowQuotaBarTextAsTooltip', true),
 			'QuotaWarningPerc' => $this->getConfig('QuotaWarningPerc', 0),
-			'Theme' => $oUser && isset($oUser->{self::GetName().'::AutoRefreshIntervalMinutes'}) ? $oUser->{self::GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),
+			'Theme' => $oUser && isset($oUser->{self::GetName().'::Theme'}) ? $oUser->{self::GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),
 			'ThemeList' => $this->getConfig('ThemeList', ['Default']),
 			'HideLogout' => $this->getConfig('HideLogout', false),
 		);
