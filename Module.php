@@ -7,6 +7,8 @@
 
 namespace Aurora\Modules\CoreWebclient;
 
+use Aurora\System\Application;
+
 /**
  * System module that provides Web application core functionality and UI framework.
  *
@@ -119,6 +121,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'Theme' => $oUser && isset($oUser->{self::GetName().'::Theme'}) ? $oUser->{self::GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),
 			'ThemeList' => $this->getConfig('ThemeList', ['Default']),
 			'HideLogout' => $this->getConfig('HideLogout', false),
+			'BaseUrl' => Application::getBaseUrl(),
 		);
 	}
 
