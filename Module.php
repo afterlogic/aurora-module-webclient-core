@@ -7,7 +7,9 @@
 
 namespace Aurora\Modules\CoreWebclient;
 
+use Aurora\Api;
 use Aurora\System\Application;
+use Aurora\System\Router;
 
 /**
  * System module that provides Web application core functionality and UI framework.
@@ -255,6 +257,9 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	public function EntryCompatibility()
 	{
 		$mResult = '';
+		if (basename(\MailSo\Base\Http::SingletonInstance()->GetFullUrl()) !== 'adminpanel') { //TODO
+			\header("Location: ./");
+		}
 
 		$aCompatibilities = \Aurora\System\Api::GetModuleDecorator('Core')->GetCompatibilities();
 		$sContent = '';
