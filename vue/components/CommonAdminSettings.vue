@@ -70,6 +70,7 @@ export default {
   data () {
     return {
       language: '',
+      savedLanguage: '',
       theme: '',
       mobileTheme: '',
       siteName: '',
@@ -102,7 +103,8 @@ export default {
     populate () {
       const commonSettings = adminSettings.getCommonSettingData()
       this.autodetectLanguage = commonSettings.autodetectLanguage
-      this.language = this.autodetectLanguage ? { name: 'Autodetect', value: 'AutodetectLanguage' } : commonSettings.language
+      this.language = this.autodetectLanguage ? 'AutodetectLanguage' : commonSettings.language
+      this.savedLanguage = this.autodetectLanguage ? 'AutodetectLanguage' : commonSettings.language
       this.theme = commonSettings.theme
       this.mobileTheme = commonSettings.mobileTheme
       this.siteName = commonSettings.siteName
@@ -114,7 +116,7 @@ export default {
      */
     hasChanges () {
       const commonSettings = adminSettings.getCommonSettingData()
-      return this.language !== commonSettings.language || this.theme !== commonSettings.theme || this.mobileTheme !== commonSettings.mobileTheme ||
+      return this.language !== this.savedLanguage || this.theme !== commonSettings.theme || this.mobileTheme !== commonSettings.mobileTheme ||
           this.siteName !== commonSettings.siteName || this.timeFormat !== commonSettings.timeFormat
     },
 
@@ -154,7 +156,8 @@ export default {
               theme: this.theme,
               mobileTheme: this.mobileTheme,
               language: this.language,
-              timeFormat: this.timeFormat
+              timeFormat: this.timeFormat,
+              autodetectLanguage: this.language === 'AutodetectLanguage'
             })
             this.populate()
             notification.showReport(this.$t('COREWEBCLIENT.REPORT_SETTINGS_UPDATE_SUCCESS'))
