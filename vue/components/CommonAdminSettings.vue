@@ -79,6 +79,7 @@ export default {
       themeList: [],
       mobileThemeList: [],
       commonSettings: {},
+      autodetectLanguage: false
     }
   },
 
@@ -100,7 +101,8 @@ export default {
   methods: {
     populate () {
       const commonSettings = adminSettings.getCommonSettingData()
-      this.language = commonSettings.language
+      this.autodetectLanguage = commonSettings.autodetectLanguage
+      this.language = this.autodetectLanguage ? { name: 'Autodetect', value: 'AutodetectLanguage' } : commonSettings.language
       this.theme = commonSettings.theme
       this.mobileTheme = commonSettings.mobileTheme
       this.siteName = commonSettings.siteName
