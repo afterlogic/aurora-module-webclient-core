@@ -61,7 +61,7 @@
 import errors from 'src/utils/errors'
 import notification from 'src/utils/notification'
 import webApi from 'src/utils/web-api'
-
+import _ from 'lodash'
 import adminSettings from 'src/settings'
 
 export default {
@@ -84,7 +84,11 @@ export default {
 
   mounted () {
     this.populate()
-    this.languageOptions = adminSettings.getLanguageList()
+    this.languageOptions = _.cloneDeep(adminSettings.getLanguageList())
+    this.languageOptions.unshift({
+      name: 'Autodetect',
+      value: 'AutodetectLanguage'
+    })
     this.themeList = adminSettings.getThemeList()
     this.mobileThemeList = adminSettings.getMobileThemeList()
   },
@@ -129,8 +133,12 @@ export default {
           MobileTheme: this.mobileTheme,
           TimeFormat: this.timeFormat,
           SiteName: this.siteName,
-          AutodetectLanguage: this.sKey,
-          Language: this.language,
+        }
+        if (this.language === 'AutodetectLanguage') {
+          parameters.AutodetectLanguage = true
+        } else {
+          parameters.AutodetectLanguage = false
+          parameters.Language = this.language
         }
         webApi.sendRequest({
           moduleName: 'Core',
