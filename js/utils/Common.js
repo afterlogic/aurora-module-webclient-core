@@ -382,16 +382,16 @@ Utils.getHash = function (sUniqVal)
  */
 Utils.destroyObjectWithObservables = function (oParent, mObjectKey)
 {
-	var oObject = oParent[mObjectKey];
-
-	for (var mKey in oObject)
-	{
-		if (oObject[mKey] && _.isFunction(oObject[mKey].dispose))
-		{
-			oObject[mKey].dispose();
-		}
-		delete oObject[mKey];
-	}
+//	var oObject = oParent[mObjectKey];
+//
+//	for (var mKey in oObject)
+//	{
+//		if (oObject[mKey] && _.isFunction(oObject[mKey].dispose))
+//		{
+//			oObject[mKey].dispose();
+//		}
+//		delete oObject[mKey];
+//	}
 
 	delete oParent[mObjectKey];
 };
