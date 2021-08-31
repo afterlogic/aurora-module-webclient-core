@@ -494,13 +494,14 @@ CSelector.prototype.getResultSelection = function (oSelected, iEventKeyCode)
 		bMultiply = !!this.multiplyLineFactor,
 		iIndex = 0,
 		iLen = 0,
-		aList = []
+		aList = _.filter(this.list(), function (oItem) {
+			return oItem && (!oItem.deleted || !oItem.deleted());
+		})
 	;
 
 	if (!oSelected && -1 < $.inArray(iEventKeyCode, [this.KeyUp, this.KeyDown, this.KeyLeft, this.KeyRight,
 		Enums.Key.PageUp, Enums.Key.PageDown, Enums.Key.Home, Enums.Key.End]))
 	{
-		aList = this.list();
 		if (aList && 0 < aList.length)
 		{
 			if (-1 < $.inArray(iEventKeyCode, [this.KeyDown, this.KeyRight, Enums.Key.PageUp, Enums.Key.Home]))
@@ -515,7 +516,6 @@ CSelector.prototype.getResultSelection = function (oSelected, iEventKeyCode)
 	}
 	else if (oSelected)
 	{
-		aList = this.list();
 		iLen = aList ? aList.length : 0;
 
 		if (0 < iLen)
