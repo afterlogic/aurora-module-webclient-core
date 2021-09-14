@@ -57,7 +57,7 @@ module.exports = {
 	 * 
 	 * @return Object
 	 */
-	open: function (sUrl, sPopupName, bMenubar)
+	open: function (sUrl, sPopupName, bMenubar, sSize = '')
 	{
 		var
 			sMenubar = (bMenubar) ? ',menubar=yes' : ',menubar=no',
@@ -66,7 +66,8 @@ module.exports = {
 		;
 
 		sPopupName = sPopupName.replace(/\W/g, ''); // forbidden characters in the name of the window for ie
-		sParams += GetSizeParameters();
+		
+		sParams += sSize === '' ? GetSizeParameters() : sSize;
 
 		oWin = window.open(sUrl, sPopupName, sParams);
 		
