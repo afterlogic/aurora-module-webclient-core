@@ -70,7 +70,7 @@ TextUtils.i18n = function (sKey, oValueList, sDefaultValue, iPluralCount) {
 		}
 	}
 	
-	if (Types.isPositiveNumber(iPluralCount))
+	if (Types.isNumber(iPluralCount))
 	{
 		sResult = (function (iPluralCount, sResult) {
 			var
