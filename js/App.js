@@ -287,6 +287,8 @@ CApp.prototype.init = function ()
 	{
 		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_SYSTEM_NOT_CONFIGURED'), true);
 	}
+
+	ModulesManager.start();
 };
 
 CApp.prototype.showLastErrorOnLogin = function ()
