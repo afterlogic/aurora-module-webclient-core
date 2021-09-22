@@ -188,6 +188,19 @@ CScreens.prototype.showView = function (sScreen, fCallback)
 	return oScreen;
 };
 
+CScreens.prototype.initHiddenView = function (sScreenId)
+{
+	var
+		fGetScreen = this.oGetScreenFunctions[sScreenId],
+		oScreen = this.screens()[sScreenId]
+	;
+	
+	if (!oScreen && fGetScreen)
+	{
+		this.initView(sScreenId, fGetScreen);
+	}
+};
+
 /**
  * @param {string} sScreenId
  * @param {function} fGetScreen

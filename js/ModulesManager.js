@@ -22,7 +22,9 @@ module.exports = {
 				}
 			}
 		});
+	},
 		
+	start: function (oAvailableModules) {
 		_.each(oModules, _.bind(function (oModule) {
 			if (_.isFunction(oModule.start))
 			{
