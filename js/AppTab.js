@@ -65,7 +65,14 @@ CAppTab.prototype.init = function ()
 					iCount += oTab.unseenCount();
 				}
 			});
-			this.favico.badge(iCount < 100 ? iCount : '99+');
+			var sBadge = iCount.toString();
+			if (iCount < 1) {
+				sBadge = '';
+			}
+			if (iCount > 99) {
+				sBadge = '99+';
+			}
+			this.favico.badge(sBadge);
 		}, this);
 	}
 };
