@@ -249,7 +249,6 @@ CApp.prototype.init = function ()
 	}
 	
 	Screens.init(this.iUserRole === Enums.UserRole.Anonymous);
-	Routing.init();
 	
 	require('%PathToCoreWebclientModule%/js/AppTab.js');
 	if (!this.bNewTab)
@@ -289,6 +288,7 @@ CApp.prototype.init = function ()
 	}
 
 	ModulesManager.start();
+	Routing.init();
 };
 
 CApp.prototype.showLastErrorOnLogin = function ()
