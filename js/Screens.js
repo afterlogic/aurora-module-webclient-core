@@ -34,13 +34,15 @@ function CScreens()
 	}, this);
 
 	this.informationScreen = ko.observable(null);
+
+	this.bStarted = false;
+	this.aPreInitScreens = [];
 }
 
 CScreens.prototype.init = function (bAnonymUser)
 {
 	var
 		oModulesScreens = ModulesManager.getModulesScreens(),
-		oModulesTabs = ModulesManager.getModulesTabs(false),
 		aKeys = [],
 		sDefaultScreenHash = bAnonymUser ? Settings.DefaultAnonymScreenHash.toLowerCase() : Settings.DefaultUserScreenHash.toLowerCase()
 	;
@@ -64,13 +66,22 @@ CScreens.prototype.init = function (bAnonymUser)
 			this.sDefaultScreen = aKeys[0];
 		}
 	}
-	
+};
+
+CScreens.prototype.start = function ()
+{
+	var oModulesTabs = ModulesManager.getModulesTabs(false);
 	if (oModulesTabs.length > 0)
 	{
 		this.showView('header');
 	}
 	
 	this.initInformation();
+	
+	this.bStarted = true;
+	_.each(this.aPreInitScreens, function (sScreenId) {
+		this.initHiddenView(sScreenId);
+	}.bind(this));
 };
 
 /**
@@ -197,7 +208,14 @@ CScreens.prototype.initHiddenView = function (sScreenId)
 	
 	if (!oScreen && fGetScreen)
 	{
-		this.initView(sScreenId, fGetScreen);
+		if (this.bStarted)
+		{
+			this.initView(sScreenId, fGetScreen);
+		}
+		else
+		{
+			this.aPreInitScreens.push(sScreenId);
+		}
 	}
 };
 

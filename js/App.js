@@ -288,6 +288,7 @@ CApp.prototype.init = function ()
 	}
 
 	ModulesManager.start();
+	Screens.start();
 	Routing.init();
 };
 
