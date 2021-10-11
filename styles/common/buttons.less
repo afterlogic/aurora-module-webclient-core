@@ -73,7 +73,8 @@
 		}
 	}
 
-	.dropdown .dropdown_content {
+	& > .dropdown > .dropdown_helper > .dropdown_content,
+	& > .button > .dropdown > .dropdown_helper > .dropdown_content {
 		background: @theme-buttons-primary-background;
 		border: 1px solid darken(@theme-buttons-primary-background, 10%);
 		color: #ffffff;
