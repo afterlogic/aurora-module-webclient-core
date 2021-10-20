@@ -19,7 +19,12 @@ require('%PathToCoreWebclientModule%/js/autocomplete.js');
 
 ko.bindingHandlers.splitterFlex = {
 	'valiateStorageData': function (aData, aDefaultValue) {
-		if ((!_.isArray(aData) || _.contains(aData, 0) || _.contains(aData, null) ||  _.contains(aData, NaN)) && _.isArray(aDefaultValue))
+		if (!_.isArray(aDefaultValue))
+		{
+			aDefaultValue = [];
+		}
+		var bValid = _.isArray(aData) && !_.contains(aData, 0) && !_.contains(aData, null) && !_.contains(aData, NaN) && aData.length === aDefaultValue.length;
+		if (!bValid)
 		{
 			aData = aDefaultValue;
 		}
@@ -60,7 +65,7 @@ ko.bindingHandlers.splitterFlex = {
 					}
 				}
 			;
-			
+
 			if (_.isArray(aInitSizes))
 			{
 				oSplitterParams['sizes'] = aInitSizes;
