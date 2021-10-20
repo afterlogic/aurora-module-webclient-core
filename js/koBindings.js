@@ -54,6 +54,7 @@ ko.bindingHandlers.dropdown = {
 					'trueValue': true
 				}
 			),
+			jqAlignTo = jqElement.closest('.' + oCommand['alignTo']),
 			bControl = typeof oCommand['control'] === 'function' ? oCommand['control']() : oCommand['control'],
 			jqControl = jqElement.find('.control'),
 			jqDrop = jqElement.find('.dropdown'),
@@ -63,9 +64,6 @@ ko.bindingHandlers.dropdown = {
 			bRightAligned = jqElement.hasClass('right'),
 			oDocument = $(document),
 			bScrollBar = false,
-			oOffset,
-			iLeft,
-			iFitToScreenOffset,
 			fCallback = function () {
 				if ($.isFunction(oCommand['callback']))
 				{
@@ -107,24 +105,39 @@ ko.bindingHandlers.dropdown = {
 					});
 				}
 			},
-			fFitToScreen = function (iOffsetLeft) {
-				oOffset = jqDropHelper.offset();
+			fFitToScreen = function () {
+				var oOffset = jqDropHelper.offset();
 				if (oOffset)
 				{
-					iLeft = oOffset.left + 10;
-					iFitToScreenOffset = $(window).width() - (iLeft + jqDropHelper.outerWidth(true));
+					var
+						iLeft = oOffset.left,
+						iWidth = jqDropHelper.outerWidth(true),
+						iFitToScreenOffset = 0
+					;
+					if (jqAlignTo.length === 1)
+					{
+						var oAlignToOffset = jqAlignTo.offset();
+						iFitToScreenOffset = oAlignToOffset.left + jqAlignTo.outerWidth(true) - iWidth - iLeft;
+						if (iWidth > 0)
+						{
+							iFitToScreenOffset -= 10;
+						}
+					}
+					else
+					{
+						iFitToScreenOffset = $(window).width() - (iLeft + 10 + iWidth);
+					}
 
 					if (iFitToScreenOffset > 0)
 					{
 						iFitToScreenOffset = 0;
-						
-					} 
-					if (!bRightAligned)
-					{
-						jqDropHelper.css('left', iOffsetLeft || iFitToScreenOffset + 'px');
-						jqDropArrow.css('left', iOffsetLeft || Math.abs(iFitToScreenOffset ? iFitToScreenOffset + Types.pInt(jqDropArrow.css('margin-left')) : 0) + 'px');
 					}
 
+					if (!bRightAligned)
+					{
+						jqDropHelper.css('left', iFitToScreenOffset + 'px');
+						jqDropArrow.css('left', Math.abs(iFitToScreenOffset ? iFitToScreenOffset + Types.pInt(jqDropArrow.css('margin-left')) : 0) + 'px');
+					}
 				}
 			},
 			fControlClick = function (oEv) {
@@ -163,7 +176,7 @@ ko.bindingHandlers.dropdown = {
 									fToggleExpand(false);
 
 									fCallback();
-									fFitToScreen(0);
+									fFitToScreen();
 								}
 								bScrollBar = false;
 							});
@@ -216,8 +229,7 @@ ko.bindingHandlers.dropdown = {
 				fControlClick(oEv);
 			}
 		});
-		
-		fFitToScreen(0);
+		fFitToScreen();
 	}
 };
 
