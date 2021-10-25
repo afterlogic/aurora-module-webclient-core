@@ -272,6 +272,7 @@ CApp.prototype.init = function ()
 			return '';
 		}
 		WindowOpener.getOpenedWindows(); // prepare open windows by removing those that already have a different origin
+		Screens.doBeforeUnload();
 	}, this);
 	
 	if (Browser.ie8AndBelow)

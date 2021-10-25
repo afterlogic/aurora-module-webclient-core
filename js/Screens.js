@@ -343,6 +343,12 @@ CScreens.prototype.hasUnsavedChanges = function ()
 	return oCurrentScreen && _.isFunction(oCurrentScreen.hasUnsavedChanges) && oCurrentScreen.hasUnsavedChanges();
 };
 
+CScreens.prototype.doBeforeUnload = function ()
+{
+	var oCurrentScreen = this.screens()[this.currentScreen()];
+	return oCurrentScreen && _.isFunction(oCurrentScreen.doBeforeUnload) && oCurrentScreen.doBeforeUnload();
+};
+
 /**
  * Returns current screen object.
  * @returns {object}
