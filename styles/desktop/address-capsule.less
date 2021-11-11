@@ -59,11 +59,11 @@ span.address_capsule {
 	position: relative;
 	vertical-align: middle;
 	
-	&:not(.found_contact) {
+/*	&:not(.found_contact) {
 		cursor: default;
 		
 		.theme-address-capsule-notfound();
-	}
+	}*/
 	
 	&.found_contact {
 		padding-right: 12px;
@@ -73,5 +73,17 @@ span.address_capsule {
 		bottom: 5px;
 		position: absolute;
 		right: 8px;
+	}
+}
+
+.icon_copy_to_buffer {
+	.init-icon-font();
+
+	font-size: 15pt !important;
+	vertical-align: middle;
+	cursor: pointer;
+
+	&:before {
+		content: "\e905";
 	}
 }
