@@ -151,6 +151,8 @@ Types.pBool = function (mValue, bDefault)
 
 Types.pEnum = function (mValue, oEnum, mDefault)
 {
+	mValue = mValue || null;
+	mDefault = mDefault || null;
 	if (mValue === _.find(oEnum, function(mEnumValue){ return mEnumValue === mValue; }))
 	{
 		return mValue;
