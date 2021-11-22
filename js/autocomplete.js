@@ -10,8 +10,13 @@ require("jquery-ui/ui/widgets/autocomplete");
 	// styling results
 	$.ui.autocomplete.prototype._renderItem = function (ul, item) {
 		item.label = item.label.replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
-		return $('<li>')
-			.append('<a>' + item.label + (item.hasKey ? '<span class="key"></span>' : '') + (item.team ? '' : '<span class="del"></span>') + '</a>')
+		var
+			liClass = item.disabled ? ' class="disabled"' : '',
+			keyEl = item.hasKey ? '<span class="key"></span>' : '',
+			delEl = item.team || item.disabled ? '' : '<span class="del"></span>'
+		;
+		return $('<li' + liClass + '>')
+			.append('<a>' + item.label + keyEl + delEl + '</a>')
 			.appendTo(ul);
 	};
 
