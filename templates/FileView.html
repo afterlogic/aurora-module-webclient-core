@@ -7,6 +7,10 @@
 	draggableDragStopCallback: function() { if (allowDrag()) { $root.dragover(false); } }
 ">
 
+	<!-- ko if: (sHeaderDenseText.length > 0) -->
+	<span class="header_dense" data-bind="text: sHeaderDenseText"></span>
+	<!-- /ko -->
+	
 	<!-- ko if: (sHeaderText.length > 0) -->
 	<span class="header" data-bind="text: sHeaderText"></span>
 	<!-- /ko -->
