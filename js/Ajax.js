@@ -226,8 +226,8 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeou
 		data: oCloneRequest,
 		success: doneFunc,
 		error: failFunc,
-		complete: alwaysFunc,
-		timeout: iTimeout === undefined ? 50000 : iTimeout
+		complete: alwaysFunc
+//		timeout: iTimeout === undefined ? 50000 : iTimeout
 	});
 
 	this.requests().push({ Request: oRequest, Xhr: oXhr, Time: moment() });
