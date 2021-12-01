@@ -119,7 +119,7 @@ function CAbstractFileModel()
 	this.allowUpload = ko.observable(false);
 	this.allowPublicLink = ko.observable(false);
 	this.bIsSecure = ko.observable(false);
-	this.isShared = ko.observable(false);
+	this.sharedWithOthers = ko.observable(false); // can be changed by other modules
 
 	this.sHeaderDenseText = '';
 	this.sHeaderText = '';

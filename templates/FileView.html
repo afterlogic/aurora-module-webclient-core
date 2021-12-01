@@ -36,7 +36,7 @@
 		<!-- ko if: (bIsSecure()) -->
 		<span class="secure-image" data-bind="click: function (oItem) { $root.onSecureIconClick(oItem); }"></span>
 		<!-- /ko -->
-		<!-- ko if: (isShared()) -->
+		<!-- ko if: (sharedWithOthers()) -->
 		<span class="shared-image" data-bind="css: {'with_thumb': thumbnailSrc() !== ''}, click: function (oItem) { $root.onFileShareIconClick(oItem); }"></span>
 		<!-- /ko -->
 		<div class="footer">
