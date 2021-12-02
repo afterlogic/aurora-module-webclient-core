@@ -40,13 +40,16 @@ function CAbstractFileModel()
 	this.index = ko.observable(0);
 	this.fileName = ko.observable('');
 	this.tempName = ko.observable('');
-	this.displayName = ko.observable('');
 	this.extension = ko.observable('');
 
 	this.fileName.subscribe(function (sFileName) {
 		this.id(sFileName);
-		this.displayName(sFileName);
 		this.extension(Utils.getFileExtension(sFileName));
+	}, this);
+
+	// Can be overwritten
+	this.displayName = ko.computed(function () {
+		return this.fileName();
 	}, this);
 
 	this.size = ko.observable(0);
