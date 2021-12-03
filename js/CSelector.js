@@ -267,14 +267,16 @@ CSelector.prototype.getLastOrSelected = function ()
 	;
 
 	_.each(this.list(), function (oItem) {
-		if (oItem.checked())
-		{
-			iCheckedCount++;
-		}
+		if (oItem && _.isFunction(oItem.checked)) {
+			if (oItem.checked())
+			{
+				iCheckedCount++;
+			}
 
-		if (oItem.selected())
-		{
-			oLastSelected = oItem;
+			if (oItem.selected())
+			{
+				oLastSelected = oItem;
+			}
 		}
 	});
 
