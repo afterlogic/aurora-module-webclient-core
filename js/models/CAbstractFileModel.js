@@ -461,6 +461,7 @@ CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 };
 
 /**
+ * This allows to download a file from the Webmail UI using drag-n-drop
  * @param {Object} oAttachment
  * @param {*} oEvent
  * @return {boolean}
