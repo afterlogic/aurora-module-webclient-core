@@ -173,7 +173,7 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 		{
 			this.abortSameRequests(oRequest);
 
-			this.doSend(oRequest, fResponseHandler, oContext, iTimeout);
+			this.doSend(oRequest, fResponseHandler, oContext);
 		}
 	}
 	else
@@ -189,9 +189,8 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
  * @param {Object} oRequest
  * @param {Function=} fResponseHandler
  * @param {Object=} oContext
- * @param {number=} iTimeout
  */
-CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeout)
+CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext)
 {
 	var
 		doneFunc = _.bind(this.done, this, oRequest, fResponseHandler, oContext),
@@ -226,8 +225,7 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, iTimeou
 		data: oCloneRequest,
 		success: doneFunc,
 		error: failFunc,
-		complete: alwaysFunc,
-		timeout: iTimeout === undefined ? 50000 : iTimeout
+		complete: alwaysFunc
 	});
 
 	this.requests().push({ Request: oRequest, Xhr: oXhr, Time: moment() });
