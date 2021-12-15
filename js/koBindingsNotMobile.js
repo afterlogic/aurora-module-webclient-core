@@ -231,7 +231,11 @@ ko.bindingHandlers.draggablePlace = {
 			'handle': '.dragHandle',
 			'cursorAt': {'top': 0, 'left': 0},
 			'helper': function (oEvent) {
-				return fValueAccessor().apply(oViewModel, oEvent && oEvent.target ? [ko.dataFor(oEvent.target), oEvent.ctrlKey] : null);
+				var
+					isMac = navigator.platform.toUpperCase().indexOf('MAC')>=0,
+					ctrlOrCmdUsed = isMac ? oEvent.metaKey : oEvent.ctrlKey
+				;
+				return fValueAccessor().apply(oViewModel, oEvent && oEvent.target ? [ko.dataFor(oEvent.target), ctrlOrCmdUsed] : null);
 			},
 			'start': (oAllBindingsAccessor && oAllBindingsAccessor['draggableDragStartCallback']) ? oAllBindingsAccessor['draggableDragStartCallback'] : function () {},
 			'stop': (oAllBindingsAccessor && oAllBindingsAccessor['draggableDragStopCallback']) ? oAllBindingsAccessor['draggableDragStopCallback'] : function () {}
