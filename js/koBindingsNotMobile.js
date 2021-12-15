@@ -235,6 +235,9 @@ ko.bindingHandlers.draggablePlace = {
 					isMac = navigator.platform.toUpperCase().indexOf('MAC')>=0,
 					ctrlOrCmdUsed = isMac ? oEvent.metaKey : oEvent.ctrlKey
 				;
+				if (isMac && oEvent.ctrlKey) {
+					return $('<span></span>');
+				}
 				return fValueAccessor().apply(oViewModel, oEvent && oEvent.target ? [ko.dataFor(oEvent.target), ctrlOrCmdUsed] : null);
 			},
 			'start': (oAllBindingsAccessor && oAllBindingsAccessor['draggableDragStartCallback']) ? oAllBindingsAccessor['draggableDragStartCallback'] : function () {},
