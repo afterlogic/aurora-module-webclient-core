@@ -25,16 +25,19 @@ body {
 
 .screens {
 	.box-sizing;
-	
+
 	display: flex;
 	flex-direction: column;
 	flex-wrap: nowrap;
-	
+
 	height: 100%;
-	
+	.non-adjustable & {
+		height: auto;
+	}
 	.screen {
-		height: calc(100vh ~"-" @theme-tabs-height);
-		
+		overflow: hidden;
+		flex-grow: 1;
+
 		&.AdminPanelLayout {
 			height: 100%;
 		}
