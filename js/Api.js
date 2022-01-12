@@ -11,91 +11,95 @@ var
 ;
 
 /**
- * @param {Object} oResponse
- * @param {string=} sDefaultError
- * @param {boolean=} bNotHide = false
+ * @param {Object} response
+ * @param {string=} defaultErrorText = ''
  */
-Api.showErrorByCode = function (oResponse, sDefaultError, bNotHide)
+Api.getErrorByCode = function (response, defaultErrorText = '')
 {
 	var
-		iErrorCode = oResponse.ErrorCode,
-		sResponseError = TextUtils.encodeHtml(oResponse.ErrorMessage || ''),
-		sResultError = ModuleErrors.getErrorMessage(oResponse) || ''
+		errorCode = response.ErrorCode,
+		responseErrorMessage = TextUtils.encodeHtml(response.ErrorMessage || ''),
+		errorText = ModuleErrors.getErrorMessage(response) || ''
 	;
-	
-	if (sResultError === '')
-	{
-		switch (iErrorCode)
-		{
+
+	if (errorText === '') {
+		switch (errorCode) {
 			default:
-				sResultError = sDefaultError || TextUtils.i18n('%MODULENAME%/ERROR_UNKNOWN');
+				errorText = defaultErrorText || TextUtils.i18n('%MODULENAME%/ERROR_UNKNOWN');
 				break;
 			case Enums.Errors.AuthError:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_PASS_INCORRECT');
+				errorText = TextUtils.i18n('%MODULENAME%/ERROR_PASS_INCORRECT');
 				break;
 			case Enums.Errors.DataBaseError:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_DATABASE');
+				errorText = TextUtils.i18n('%MODULENAME%/ERROR_DATABASE');
 				break;
 			case Enums.Errors.LicenseProblem:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_INVALID_LICENSE');
+				errorText = TextUtils.i18n('%MODULENAME%/ERROR_INVALID_LICENSE');
 				break;
 			case Enums.Errors.LicenseLimit:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_LICENSE_USERS_LIMIT');
+				errorText = TextUtils.i18n('%MODULENAME%/ERROR_LICENSE_USERS_LIMIT');
 				break;
 			case Enums.Errors.DemoLimitations:
-				sResultError = TextUtils.i18n('%MODULENAME%/INFO_DEMO_THIS_FEATURE_IS_DISABLED');
+				errorText = TextUtils.i18n('%MODULENAME%/INFO_DEMO_THIS_FEATURE_IS_DISABLED');
 				break;
 			case Enums.Errors.Captcha:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_CAPTCHA_IS_INCORRECT');
+				errorText = TextUtils.i18n('%MODULENAME%/ERROR_CAPTCHA_IS_INCORRECT');
 				break;
 			case Enums.Errors.AccessDenied:
-				if (oResponse.AuthenticatedUserId === 0 && App.getUserId() !== 0)
-				{
-					sResultError = TextUtils.i18n('%MODULENAME%/ERROR_USER_DELETED');
-				}
-				else
-				{
-					sResultError = TextUtils.i18n('%MODULENAME%/ERROR_ACCESS_DENIED');
+				if (response.AuthenticatedUserId === 0 && App.getUserId() !== 0) {
+					errorText = TextUtils.i18n('%MODULENAME%/ERROR_USER_DELETED');
+				} else {
+					errorText = TextUtils.i18n('%MODULENAME%/ERROR_ACCESS_DENIED');
 				}
 				break;
 			case Enums.Errors.UserAlreadyExists:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_USER_ALREADY_EXISTS');
+				errorText = TextUtils.i18n('%MODULENAME%/ERROR_USER_ALREADY_EXISTS');
 				break;
 			case Enums.Errors.CanNotChangePassword:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_UNABLE_CHANGE_PASSWORD');
+				errorText = TextUtils.i18n('%MODULENAME%/ERROR_UNABLE_CHANGE_PASSWORD');
 				break;
 			case Enums.Errors.AccountOldPasswordNotCorrect:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_CURRENT_PASSWORD_NOT_CORRECT');
+				errorText = TextUtils.i18n('%MODULENAME%/ERROR_CURRENT_PASSWORD_NOT_CORRECT');
 				break;
 			case Enums.Errors.AccountAlreadyExists:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_ACCOUNT_ALREADY_EXISTS');
+				errorText = TextUtils.i18n('%MODULENAME%/ERROR_ACCOUNT_ALREADY_EXISTS');
 				break;
 			case Enums.Errors.HelpdeskUserNotExists:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_FORGOT_NO_HELPDESK_ACCOUNT');
+				errorText = TextUtils.i18n('%MODULENAME%/ERROR_FORGOT_NO_HELPDESK_ACCOUNT');
 				break;
 			case Enums.Errors.DataTransferFailed:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_DATA_TRANSFER_FAILED');
+				errorText = TextUtils.i18n('%MODULENAME%/ERROR_DATA_TRANSFER_FAILED');
 				break;
 			case Enums.Errors.NotDisplayedError:
-				sResultError = '';
+				errorText = '';
 				break;
 			case Enums.Errors.SystemNotConfigured:
-				sResultError = TextUtils.i18n('%MODULENAME%/ERROR_SYSTEM_NOT_CONFIGURED');
+				errorText = TextUtils.i18n('%MODULENAME%/ERROR_SYSTEM_NOT_CONFIGURED');
 				break;
 		}
 	}
-	
-	if (sResultError !== '')
-	{
-		if (sResponseError !== '')
-		{
-			sResultError += ' (' + sResponseError + ')';
+
+	if (errorText !== '') {
+		if (responseErrorMessage !== '') {
+			errorText += ' (' + responseErrorMessage + ')';
 		}
-		Screens.showError(sResultError, !!bNotHide);
+	} else if (responseErrorMessage !== '') {
+		errorText = responseErrorMessage;
 	}
-	else if (sResponseError !== '')
-	{
-		Screens.showError(sResponseError);
+
+	return errorText;
+};
+
+/**
+ * @param {Object} response
+ * @param {string=} defaultErrorText
+ * @param {boolean=} disableAutohide = false
+ */
+Api.showErrorByCode = function (response, defaultErrorText = '', disableAutohide = false)
+{
+	var errorText = this.getErrorByCode(response, defaultErrorText);
+	if (errorText !== '') {
+		Screens.showError(errorText, disableAutohide);
 	}
 };
 
