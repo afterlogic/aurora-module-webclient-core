@@ -46,36 +46,35 @@ FilesUtils.thumbQueue = (function () {
 		iNumberOfImages = 2
 	;
 
-	return function (sSessionUid, sImageSrc, fImageSrcObserver)
+	return function (sImageSrc, fImageSrcObserver)
 	{
-		if(sImageSrc && fImageSrcObserver)
+		if(fImageSrcObserver)
 		{
-			if(!(sSessionUid in oImagesIncrements) || oImagesIncrements[sSessionUid] > 0) //load first images
+			if(!(sImageSrc in oImagesIncrements) || oImagesIncrements[sImageSrc] > 0) //load first images
 			{
-				if(!(sSessionUid in oImagesIncrements)) //on first image
+				if(!(sImageSrc in oImagesIncrements)) //on first image
 				{
-					oImagesIncrements[sSessionUid] = iNumberOfImages;
-					oImages[sSessionUid] = [];
+					oImagesIncrements[sImageSrc] = iNumberOfImages;
+					oImages[sImageSrc] = [];
 				}
-				oImagesIncrements[sSessionUid]--;
+				oImagesIncrements[sImageSrc]--;
 
 				fImageSrcObserver(sImageSrc); //load image
 			}
 			else //create queue
 			{
-				oImages[sSessionUid].push({
+				oImages[sImageSrc].push({
 					imageSrc: sImageSrc,
-					imageSrcObserver: fImageSrcObserver,
-					messageUid: sSessionUid
+					imageSrcObserver: fImageSrcObserver
 				});
 			}
 		}
 		else //load images from queue (fires load event)
 		{
-			if(oImages[sSessionUid] && oImages[sSessionUid].length)
+			if(oImages[sImageSrc] && oImages[sImageSrc].length)
 			{
-				oImages[sSessionUid][0].imageSrcObserver(oImages[sSessionUid][0].imageSrc);
-				oImages[sSessionUid].shift();
+				oImages[sImageSrc][0].imageSrcObserver(oImages[sImageSrc][0].imageSrc);
+				oImages[sImageSrc].shift();
 			}
 		}
 	};
