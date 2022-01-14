@@ -123,7 +123,6 @@ function CAbstractFileModel()
 	this.bIsSecure = ko.observable(false);
 	this.sharedWithOthers = ko.observable(false); // can be changed by other modules
 
-	this.sHeaderDenseText = '';
 	this.sHeaderText = '';
 
 	this.oActionsData = {

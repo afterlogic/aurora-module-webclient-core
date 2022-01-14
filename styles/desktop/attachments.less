@@ -79,31 +79,47 @@
 
 		.cancel {
 			display: none;
-			
-			.upload& {
-				background: #e84d49;
-				border-radius: 2px;
-				color: #ffffff;
-				cursor: pointer;
-				display: block;
-				float: right;
-				font-size: 12px;
-				height: 14px;
-				margin-left: -14px;
-				overflow: hidden;
-				position: relative;
-				text-align: center;
-				width: 14px;
-				z-index: 10;
-				
-				.init-icon-font();
-				
-				&:before {
-					content: "\e63e";
-				}
+		}
+		.upload& .cancel,
+		&.incomplete .cancel {
+			background: #e84d49;
+			color: #ffffff;
+			cursor: pointer;
+			display: block;
+			float: right;
+			font-size: 12px;
+			height: 18px;
+			line-height: 18px;
+			margin-left: -18px;
+			overflow: hidden;
+			position: relative;
+			right: -18px;
+			text-align: center;
+			top: -18px;
+			width: 18px;
+			z-index: 10;
+
+			.init-icon-font();
+
+			&:before {
+				content: "\e63e";
+				display: inline-block;
+				height: 100%;
+				line-height: inherit;
+				width: 100%;
 			}
 		}
-		
+		.upload& .cancel {
+			border-radius: 26px;
+			right: -18px;
+			top: -18px;
+		}
+		&.incomplete .cancel {
+			border-radius: 3px;
+			right: 2px;
+			top: 2px;
+		}
+
 		.footer {
 			min-height: 22px;
 		}
@@ -146,13 +162,10 @@
 			}
 			
 			img {
-				background: #ffffff;
-				left: 50%;
-				max-height: 100px;
 				position: absolute;
-				top: 50%;
+				top: calc(50% - 4px);
 				transform: translate(-50%, -50%);
-				vertical-align: middle;
+				max-height: 94px;
 			}
 		}
 		
@@ -249,6 +262,10 @@
 				html.rtl & {
 					float: right;
 					text-align: right;
+				}
+
+				&:hover {
+					color: darken(@theme-attachment-action-link-color, 15%);
 				}
 
 				&.open,
