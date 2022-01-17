@@ -33,28 +33,16 @@ CalendarUtils.getTimeListStepHalfHour = function (sTimeFormatMoment)
 };
 
 /**
- * @param {string} sDateFormat
+ * @param {string} dateFormat
  * 
  * @return string
  */
-CalendarUtils.getDateFormatForDatePicker = function (sDateFormat)
+CalendarUtils.getDateFormatForDatePicker = function (dateFormat)
 {
-	var sDatePickerDateFormat = 'mm/dd/yy';
-	
-	switch (sDateFormat)
-	{
-		case 'MM/DD/YYYY':
-			sDatePickerDateFormat = 'mm/dd/yy';
-			break;
-		case 'DD/MM/YYYY':
-			sDatePickerDateFormat = 'dd/mm/yy';
-			break;
-		case 'DD Month YYYY':
-			sDatePickerDateFormat = 'dd MM yy';
-			break;
-	}
-	
-	return sDatePickerDateFormat;
+	//'MM/DD/YYYY' -> 'mm/dd/yy'
+	//'DD/MM/YYYY' -> 'dd/mm/yy'
+	//'DD Month YYYY' -> 'dd MM yy'
+	return dateFormat.replace('MM', 'mm').replace('DD', 'dd').replace('YYYY', 'yy').replace('Month', 'MM');
 };
 
 module.exports = CalendarUtils;

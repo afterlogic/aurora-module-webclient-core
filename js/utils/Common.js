@@ -301,31 +301,16 @@ Utils.defaultOptionsAfterRender = function (oElement, oItem)
 };
 
 /**
- * @param {string} sDateFormat
+ * @param {string} dateFormat
  *
  * @return string
  */
-Utils.getDateFormatForMoment = function (sDateFormat)
+Utils.getDateFormatForMoment = function (dateFormat)
 {
-	var sMomentDateFormat = 'MM/DD/YYYY';
-
-	switch (sDateFormat)
-	{
-		case 'MM/DD/YYYY':
-			sMomentDateFormat = 'MM/DD/YYYY';
-			break;
-		case 'DD/MM/YYYY':
-			sMomentDateFormat = 'DD/MM/YYYY';
-			break;
-		case 'DD Month YYYY':
-			sMomentDateFormat = 'DD MMMM YYYY';
-			break;
-		default:
-			sMomentDateFormat = sDateFormat;
-			break;
-	}
-
-	return sMomentDateFormat;
+	// 'MM/DD/YYYY' -> 'MM/DD/YYYY'
+	// 'DD/MM/YYYY' -> 'DD/MM/YYYY'
+	// 'DD Month YYYY' -> 'DD MMMM YYYY'
+	return dateFormat.replace('Month', 'MMMM');
 };
 
 Utils.log = (function () {
