@@ -336,6 +336,8 @@ CApp.prototype.logout = function ()
  */
 CApp.prototype.logoutAndGotoLogin = function ()
 {
+	App.broadcastEvent('Logout', {});
+	
 	function gotoLoginPage()
 	{
 		if (Types.isNonEmptyString(UserSettings.CustomLogoutUrl))
