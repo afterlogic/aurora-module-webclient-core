@@ -183,21 +183,21 @@ CApp.prototype.isMobile = function ()
 	return UserSettings.IsMobile === 1;
 };
 
+CApp.prototype.sendLogMessage = function (message)
+{
+	var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
+	Ajax.send('%ModuleName%', 'LogMessage', { Message: message });
+};
+
 CApp.prototype.init = function ()
 {
 	window.onerror = function(error, url, line) {
-		var
-			Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
-			parameters = {
-				ErrorMessage: JSON.stringify({
-					ERROR: error,
-					URL: url,
-					Line: line
-				})
-			}
-		;
-		Ajax.send('%ModuleName%', 'LogError', parameters);
-	};
+		this.sendLogMessage(JSON.stringify({
+			'ERROR in console on front': error,
+			URL: url,
+			Line: line
+		}));
+	}.bind(this);
 
 	ModulesManager.run('StandardLoginFormWebclient', 'beforeAppRunning', [this.iUserRole !== Enums.UserRole.Anonymous]);
 	
