@@ -185,6 +185,20 @@ CApp.prototype.isMobile = function ()
 
 CApp.prototype.init = function ()
 {
+	window.onerror = function(error, url, line) {
+		var
+			Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
+			parameters = {
+				ErrorMessage: JSON.stringify({
+					ERROR: error,
+					URL: url,
+					Line: line
+				})
+			}
+		;
+		Ajax.send('%ModuleName%', 'LogError', parameters);
+	};
+
 	ModulesManager.run('StandardLoginFormWebclient', 'beforeAppRunning', [this.iUserRole !== Enums.UserRole.Anonymous]);
 	
 	if (App.isUserNormalOrTenant() && UserSettings.AllowChangeSettings)

@@ -86,6 +86,14 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 
 	/***** public functions *****/
 	/**
+	 * @param string $ErrorMessage
+	 */
+	public function LogError($ErrorMessage)
+	{
+		\Aurora\System\Api::Log($ErrorMessage);
+	}
+
+	/**
 	 *
 	 * @return array
 	 */
