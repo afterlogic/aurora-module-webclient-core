@@ -29,7 +29,19 @@
 			right: 0px;
 		}
 	}
-	
+
+	&.dropdown_right {
+		.expand {
+			left: auto;
+		}
+		.dropdown_helper {
+			right: 0;
+		}
+		.dropdown_arrow {
+			margin: 0px 0px 0px calc(100% - 20px);
+		}
+	}
+
 	.dropdown_helper {
 		left: ~"0px\0/";//IE8 hack
 		position: absolute;

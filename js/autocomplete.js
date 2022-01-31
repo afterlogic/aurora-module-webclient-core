@@ -10,14 +10,23 @@ require("jquery-ui/ui/widgets/autocomplete");
 	// styling results
 	$.ui.autocomplete.prototype._renderItem = function (ul, item) {
 		item.label = item.label.replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
-		var
-			liClass = item.disabled ? ' class="disabled"' : '',
+
+		let liClasses = [];
+		if (item.disabled) {
+			liClasses.push('disabled');
+		}
+		if (item.hasKey) {
+			liClasses.push('menu-item-has-key');
+		}
+
+		let
+			liClass = liClasses.length > 0 ? ` class="${liClasses.join(' ')}"` : '',
 			keyEl = item.hasKey ? '<span class="key"></span>' : '',
 			delEl = item.team || item.disabled ? '' : '<span class="del"></span>'
 		;
-		return $('<li' + liClass + '>')
-			.append('<a>' + item.label + keyEl + delEl + '</a>')
-			.appendTo(ul);
+		return $(`<li${liClass}>`)
+				.append(`<a><span class="menu-item-label">${item.label}</span>${keyEl}${delEl}</a>`)
+				.appendTo(ul);
 	};
 
 	// add categories
