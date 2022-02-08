@@ -326,7 +326,7 @@ CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse
 		oResponse.Result = false;
 	}
 
-	this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest, sType);
+	this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest, sType, oXhr.status);
 };
 
 /**
@@ -372,7 +372,7 @@ CAjax.prototype.fail = function (oRequest, fResponseHandler, oContext, oXhr, sTy
 			break;
 	}
 
-	this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest, sType);
+	this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest, sType, oXhr.status);
 };
 
 /**
@@ -381,8 +381,9 @@ CAjax.prototype.fail = function (oRequest, fResponseHandler, oContext, oXhr, sTy
  * @param {Object} oResponse
  * @param {Object} oRequest
  * @param {string} sType
+ * @param {int} status
  */
-CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, oResponse, oRequest, sType)
+CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, oResponse, oRequest, sType, status = 200)
 {
 	if (!oResponse)
 	{
@@ -395,7 +396,7 @@ CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, o
 
 	if (_.isFunction(fResponseHandler) && !oResponse.StopExecuteResponse)
 	{
-		fResponseHandler.apply(oContext, [oResponse, oRequest]);
+		fResponseHandler.apply(oContext, [oResponse, oRequest, status]);
 	}
 
 	App.broadcastEvent('ReceiveAjaxResponse::after', {'Request': oRequest, 'Response': oResponse});
