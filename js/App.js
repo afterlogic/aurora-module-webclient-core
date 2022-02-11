@@ -249,7 +249,6 @@ CApp.prototype.init = function ()
 	}
 	
 	Screens.init(this.iUserRole === Enums.UserRole.Anonymous);
-	Routing.init();
 	
 	require('%PathToCoreWebclientModule%/js/AppTab.js');
 	if (!this.bNewTab)
@@ -278,6 +277,9 @@ CApp.prototype.init = function ()
 	{
 		$('body').css('overflow', 'hidden');
 	}
+
+	ModulesManager.start();
+	Screens.start();
 	
 	this.checkCookies();
 	
@@ -287,6 +289,8 @@ CApp.prototype.init = function ()
 	{
 		Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_SYSTEM_NOT_CONFIGURED'), true);
 	}
+
+	Routing.init();
 };
 
 CApp.prototype.showLastErrorOnLogin = function ()
