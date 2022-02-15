@@ -3,7 +3,9 @@
 
 	<span class="item_content">
 
-		<span class="cancel" data-bind="visible: visibleCancelButton, click: function () { $parent.onFileRemove( uploadUid(), $data); }, customTooltip: '%MODULENAME%/ACTION_CANCEL'"></span>
+		<span class="cancel" data-bind="visible: visibleCancelButton,
+			  click: function () { $parent.onFileRemove( uploadUid(), $data); },
+			  customTooltip: cancelButtonTooltip"></span>
 
 		<span class="image" data-bind="customTooltip: getTooltip(iconAction()), click: function () { executeAction(iconAction()); }, 
 				css: {'has_action': iconAction() !== ''}, clickBubble: iconAction() === ''">

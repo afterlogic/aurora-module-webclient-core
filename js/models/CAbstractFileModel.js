@@ -81,6 +81,7 @@ function CAbstractFileModel()
 
 	// Some modules can override this field if it is necessary to manage it.
 	this.visibleCancelButton = ko.observable(true);
+	this.cancelButtonTooltip = TextUtils.i18n('COREWEBCLIENT/ACTION_CANCEL');
 
 	this.statusText = ko.observable('');
 	this.statusTooltip = ko.computed(function () {
