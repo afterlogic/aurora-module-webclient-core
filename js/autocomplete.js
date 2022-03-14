@@ -22,10 +22,11 @@ require("jquery-ui/ui/widgets/autocomplete");
 		let
 			liClass = liClasses.length > 0 ? ` class="${liClasses.join(' ')}"` : '',
 			keyEl = item.hasKey ? '<span class="key"></span>' : '',
+			groupEl = item.groupId ? '<span class="group"></span>' : '',
 			delEl = item.team || item.disabled ? '' : '<span class="del"></span>'
 		;
 		return $(`<li${liClass}>`)
-				.append(`<a><span class="menu-item-label">${item.label}</span>${keyEl}${delEl}</a>`)
+				.append(`<a><span class="menu-item-label">${item.label}</span>${groupEl}${keyEl}${delEl}</a>`)
 				.appendTo(ul);
 	};
 
