@@ -24,6 +24,7 @@
 				display: inline-block;
 				max-width: 100%;
 				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 
 			span.group {
@@ -68,6 +69,10 @@
 					content: "\e658";
 				}
 			}
+		}
+
+		&.menu-item-group a .menu-item-label {
+			max-width: calc(100% - 22px);
 		}
 
 		&.menu-item-has-key a .menu-item-label {

@@ -15,6 +15,9 @@ require("jquery-ui/ui/widgets/autocomplete");
 		if (item.disabled) {
 			liClasses.push('disabled');
 		}
+		if (item.groupId) {
+			liClasses.push('menu-item-group');
+		}
 		if (item.hasKey) {
 			liClasses.push('menu-item-has-key');
 		}
@@ -23,7 +26,7 @@ require("jquery-ui/ui/widgets/autocomplete");
 			liClass = liClasses.length > 0 ? ` class="${liClasses.join(' ')}"` : '',
 			keyEl = item.hasKey ? '<span class="key"></span>' : '',
 			groupEl = item.groupId ? '<span class="group"></span>' : '',
-			delEl = item.team || item.disabled ? '' : '<span class="del"></span>'
+			delEl = item.team || item.disabled || item.groupId ? '' : '<span class="del"></span>'
 		;
 		return $(`<li${liClass}>`)
 				.append(`<a><span class="menu-item-label">${item.label}</span>${groupEl}${keyEl}${delEl}</a>`)
