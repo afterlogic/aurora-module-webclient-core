@@ -705,7 +705,7 @@ CSelector.prototype.onKeydown = function (oEvent)
 			this.clickNewSelectPosition(iCode, oEvent.shiftKey);
 			bResult = false;
 		}
-		else if (Enums.Key.Del === iCode && !oEvent.ctrlKey && !oEvent.shiftKey)
+		else if ((Enums.Key.Del === iCode || Enums.Key.Backspace === iCode) && !oEvent.ctrlKey && !oEvent.shiftKey)
 		{
 			if (0 < this.list().length)
 			{
