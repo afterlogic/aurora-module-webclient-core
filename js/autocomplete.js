@@ -31,6 +31,9 @@ require("jquery-ui/ui/widgets/autocomplete");
 		if (item.isUserGroup) {
 			groupEl = '<span class="user_group"></span>';
 		}
+		if (item.isAllUsersGroup) {
+			groupEl = '<span class="all_users_group"></span>';
+		}
 		if (item.isContactGroup) {
 			groupEl = '<span class="contact_group"></span>';
 		}
