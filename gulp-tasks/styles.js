@@ -108,6 +108,16 @@ function BuildThemeCss(sTheme, bMobile)
 					MoveFiles(sThemeImagesPath, 'static/styles/themes' + aPathParts[1]);
 				}
 			}
+
+			var sThemeFontsPath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme + '/fonts' + sPostfix);
+			if (fs.existsSync(sThemeFontsPath))
+			{
+				var aPathParts = sThemeFontsPath.split('styles/themes');
+				if (aPathParts.length > 1)
+				{
+					MoveFiles(sThemeFontsPath, 'static/styles/themes' + aPathParts[1]);
+				}
+			}
 		}
 	});
 	
