@@ -51,6 +51,7 @@ function CAbstractFileModel()
 
 	this.size = ko.observable(0);
 	this.friendlySize = ko.computed(function () {
+		console.log('this.size()', this.size());
 		return this.size() > 0 ? TextUtils.getFriendlySize(this.size()) : '';
 	}, this);
 
@@ -260,14 +261,18 @@ CAbstractFileModel.prototype.executeAction = function (sAction)
  */
 CAbstractFileModel.prototype.getTooltip = function (sAction)
 {
-	var mTootip = this.hasAction(sAction) && this.oActionsData[sAction] ? this.oActionsData[sAction].Tooltip : '';
-	if (typeof mTootip === 'string')
-	{
-		return mTootip;
+	if (!this.hasAction(sAction) || !this.oActionsData[sAction]) {
+		return '';
 	}
-	if (_.isFunction(mTootip))
+
+	let tootip = this.oActionsData[sAction].Tooltip || this.oActionsData[sAction].Text;
+	if (typeof tootip === 'string')
 	{
-		return mTootip();
+		return tootip;
+	}
+	if (_.isFunction(tootip))
+	{
+		return tootip();
 	}
 	return '';
 };
