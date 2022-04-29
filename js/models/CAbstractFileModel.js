@@ -63,7 +63,6 @@ function CAbstractFileModel()
 
 	this.thumbnailSrc = ko.observable('');
 	this.thumbnailLoaded = ko.observable(false);
-	this.thumbnailSessionUid = ko.observable('');
 
 	this.mimeType = ko.observable('');
 	this.uploadUid = ko.observable('');
@@ -370,8 +369,7 @@ CAbstractFileModel.prototype.getInThumbQueue = function ()
 {
 	if(this.thumbUrlInQueue() !== '' && (!this.linked || this.linked && !this.linked()))
 	{
-		this.thumbnailSessionUid(Date.now().toString());
-		FilesUtils.thumbQueue(this.thumbnailSessionUid(), this.thumbUrlInQueue(), this.thumbnailSrc);
+		FilesUtils.thumbQueue(this.thumbUrlInQueue(), this.thumbnailSrc);
 	}
 };
 
@@ -605,7 +603,7 @@ CAbstractFileModel.prototype.onImageLoad = function (oAttachmentModel, oEvent)
 	if(this.thumbUrlInQueue() !== '' && !this.thumbnailLoaded())
 	{
 		this.thumbnailLoaded(true);
-		FilesUtils.thumbQueue(this.thumbnailSessionUid());
+		FilesUtils.thumbQueue(this.thumbUrlInQueue());
 	}
 };
 
