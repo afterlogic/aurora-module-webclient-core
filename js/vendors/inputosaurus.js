@@ -893,10 +893,11 @@ var inputosaurustext = {
 	},
 
 	_destroy: function() {
-		this.elements.input.unbind('.inputosaurus');
+		if (this.elements) {
+			this.elements.input.unbind('.inputosaurus');
 
-		this.elements.ul.replaceWith(this.element);
-
+			this.elements.ul.replaceWith(this.element);
+		}
 	}
 };
 
