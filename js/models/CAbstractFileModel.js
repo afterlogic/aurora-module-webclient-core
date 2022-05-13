@@ -51,7 +51,6 @@ function CAbstractFileModel()
 
 	this.size = ko.observable(0);
 	this.friendlySize = ko.computed(function () {
-		console.log('this.size()', this.size());
 		return this.size() > 0 ? TextUtils.getFriendlySize(this.size()) : '';
 	}, this);
 
