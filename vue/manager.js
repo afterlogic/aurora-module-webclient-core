@@ -7,10 +7,10 @@ export default {
     return [
       {
         tabName: 'common',
-        title: 'COREWEBCLIENT.LABEL_COMMON_SETTINGS_TABNAME',
-        component () {
-          return import('./components/CommonAdminSettings')
-        },
+        tabTitle: 'COREWEBCLIENT.LABEL_COMMON_SETTINGS_TABNAME',
+        tabRouteChildren: [
+          { path: 'common', component: () => import('./components/CommonAdminSettings') },
+        ],
       },
     ]
   },
