@@ -1,248 +1,248 @@
 {
-  "AllowChangeSettings": [
-    true,
-    "bool"
-  ],
-  "AllowChangeSettings_Description": [
-    "",
-    "string"
-  ],
-  "AllowClientDebug": [
-    false,
-    "bool"
-  ],
-  "AllowClientDebug_Description": [
-    "",
-    "string"
-  ],
-  "AllowDesktopNotifications": [
-    false,
-    "bool"
-  ],
-  "AllowDesktopNotifications_Description": [
-    "",
-    "string"
-  ],
-  "AllowIosProfile": [
-    true,
-    "bool"
-  ],
-  "AllowIosProfile_Description": [
-    "",
-    "string"
-  ],
-  "AllowMobile": [
-    false,
-    "bool"
-  ],
-  "AllowMobile_Description": [
-    "",
-    "string"
-  ],
-  "AllowPrefetch": [
-    true,
-    "bool"
-  ],
-  "AllowPrefetch_Description": [
-    "",
-    "string"
-  ],
-  "AttachmentSizeLimit": [
-    0,
-    "int"
-  ],
-  "AttachmentSizeLimit_Description": [
-    "",
-    "string"
-  ],
-  "AutoRefreshIntervalMinutes": [
-    1,
-    "int"
-  ],
-  "AutoRefreshIntervalMinutes_Description": [
-    "",
-    "string"
-  ],
-  "ContentSecurityPolicy": [
-    "",
-    "string"
-  ],
-  "ContentSecurityPolicy_Description": [
-    "",
-    "string"
-  ],
-  "CustomLogoutUrl": [
-    "",
-    "string"
-  ],
-  "CustomLogoutUrl_Description": [
-    "",
-    "string"
-  ],
-  "Disabled": [
-    false,
-    "bool"
-  ],
-  "Disabled_Description": [
-    "",
-    "string"
-  ],
-  "DefaultAnonymScreenHash": [
-    "login",
-    "string"
-  ],
-  "DefaultAnonymScreenHash_Description": [
-    "",
-    "string"
-  ],
-  "DefaultUserScreenHash": [
-    "",
-    "string"
-  ],
-  "DefaultUserScreenHash_Description": [
-    "",
-    "string"
-  ],
-  "GoogleAnalyticsAccount": [
-    "",
-    "string"
-  ],
-  "GoogleAnalyticsAccount_Description": [
-    "",
-    "string"
-  ],
-  "HeaderModulesOrder": [
-    [],
-    "array"
-  ],
-  "HeaderModulesOrder_Description": [
-    "",
-    "string"
-  ],
-  "IsDemo": [
-    false,
-    "bool"
-  ],
-  "IsDemo_Description": [
-    "",
-    "string"
-  ],
-  "LanguageNames": [
-    {
-      "Arabic": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
-      "Bulgarian": "\u0411\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u0438",
-      "Chinese-Simplified": "\u4e2d\u6587(\u7b80\u4f53)",
-      "Chinese-Traditional": "\u4e2d\u6587(\u9999\u6e2f)",
-      "Czech": "\u010ce\u0161tina",
-      "Danish": "Dansk",
-      "Dutch": "Nederlands",
-      "English": "English",
-      "Estonian": "eesti",
-      "Finnish": "Suomi",
-      "French": "Fran\u00e7ais",
-      "German": "Deutsch",
-      "Greek": "\u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac",
-      "Hebrew": "\u05e2\u05d1\u05e8\u05d9\u05ea",
-      "Hungarian": "Magyar",
-      "Italian": "Italiano",
-      "Japanese": "\u65e5\u672c\u8a9e",
-      "Korean": "\ud55c\uad6d\uc5b4",
-      "Latvian": "Latvie\u0161u",
-      "Lithuanian": "Lietuvi\u0173",
-      "Norwegian": "Norsk",
-      "Persian": "\u0641\u0627\u0631\u0633\u06cc",
-      "Polish": "Polski",
-      "Portuguese-Portuguese": "Portugu\u00eas",
-      "Portuguese-Brazil": "Portugu\u00eas Brasileiro",
-      "Romanian": "Rom\u00e2n\u0103",
-      "Russian": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
-      "Serbian": "Srpski",
-      "Slovenian": "Sloven\u0161\u010dina",
-      "Spanish": "Espa\u00f1ol",
-      "Swedish": "Svenska",
-      "Thai": "\u0e20\u0e32\u0e29\u0e32\u0e44\u0e17\u0e22",
-      "Turkish": "T\u00fcrk\u00e7e",
-      "Ukrainian": "\u0423\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430",
-      "Vietnamese": "ti\u1ebfng Vi\u1ec7t"
-    },
-    "array"
-  ],
-  "LanguageNames_Description": [
-    "",
-    "string"
-  ],
-  "MultipleFilesUploadLimit": [
-    50,
-    "int"
-  ],
-  "MultipleFilesUploadLimit_Description": [
-    "",
-    "string"
-  ],
-  "ShowQuotaBar": [
-    true,
-    "bool"
-  ],
-  "ShowQuotaBar_Description": [
-    "",
-    "string"
-  ],
-  "ShowQuotaBarTextAsTooltip": [
-    true,
-    "bool"
-  ],
-  "ShowQuotaBarTextAsTooltip_Description": [
-    "",
-    "string"
-  ],
-  "QuotaWarningPerc": [
-    0,
-    "int"
-  ],
-  "QuotaWarningPerc_Description": [
-    "",
-    "string"
-  ],
-  "SyncIosAfterLogin": [
-    true,
-    "bool"
-  ],
-  "SyncIosAfterLogin_Description": [
-    "",
-    "string"
-  ],
-  "Theme": [
-    "Default",
-    "string"
-  ],
-  "Theme_Description": [
-    "",
-    "string"
-  ],
-  "ThemeList": [
-    [
-      "Default"
-    ],
-    "array"
-  ],
-  "ThemeList_Description": [
-    "",
-    "string"
-  ],
-  "HideLogout": [
-    false,
-    "bool"
-  ],
-  "HideLogout_Description": [
-    "",
-    "string"
-  ],
-  "IncludeInMobile": [
-    true,
-    "bool"
-  ],
-  "IncludeInMobile_Description": [
-    "",
-    "string"
-  ]
+	"AllowChangeSettings": [
+		true,
+		"bool"
+	],
+	"AllowChangeSettings_Description": [
+		"",
+		"string"
+	],
+	"AllowClientDebug": [
+		false,
+		"bool"
+	],
+	"AllowClientDebug_Description": [
+		"",
+		"string"
+	],
+	"AllowDesktopNotifications": [
+		false,
+		"bool"
+	],
+	"AllowDesktopNotifications_Description": [
+		"",
+		"string"
+	],
+	"AllowIosProfile": [
+		true,
+		"bool"
+	],
+	"AllowIosProfile_Description": [
+		"",
+		"string"
+	],
+	"AllowMobile": [
+		false,
+		"bool"
+	],
+	"AllowMobile_Description": [
+		"",
+		"string"
+	],
+	"AllowPrefetch": [
+		true,
+		"bool"
+	],
+	"AllowPrefetch_Description": [
+		"",
+		"string"
+	],
+	"AttachmentSizeLimit": [
+		0,
+		"int"
+	],
+	"AttachmentSizeLimit_Description": [
+		"",
+		"string"
+	],
+	"AutoRefreshIntervalMinutes": [
+		1,
+		"int"
+	],
+	"AutoRefreshIntervalMinutes_Description": [
+		"",
+		"string"
+	],
+	"ContentSecurityPolicy": [
+		"",
+		"string"
+	],
+	"ContentSecurityPolicy_Description": [
+		"",
+		"string"
+	],
+	"CustomLogoutUrl": [
+		"",
+		"string"
+	],
+	"CustomLogoutUrl_Description": [
+		"",
+		"string"
+	],
+	"Disabled": [
+		false,
+		"bool"
+	],
+	"Disabled_Description": [
+		"",
+		"string"
+	],
+	"DefaultAnonymScreenHash": [
+		"login",
+		"string"
+	],
+	"DefaultAnonymScreenHash_Description": [
+		"",
+		"string"
+	],
+	"DefaultUserScreenHash": [
+		"",
+		"string"
+	],
+	"DefaultUserScreenHash_Description": [
+		"",
+		"string"
+	],
+	"GoogleAnalyticsAccount": [
+		"",
+		"string"
+	],
+	"GoogleAnalyticsAccount_Description": [
+		"",
+		"string"
+	],
+	"HeaderModulesOrder": [
+		[],
+		"array"
+	],
+	"HeaderModulesOrder_Description": [
+		"",
+		"string"
+	],
+	"IsDemo": [
+		false,
+		"bool"
+	],
+	"IsDemo_Description": [
+		"",
+		"string"
+	],
+	"LanguageNames": [
+		{
+			"Arabic": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+			"Bulgarian": "\u0411\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u0438",
+			"Chinese-Simplified": "\u4e2d\u6587(\u7b80\u4f53)",
+			"Chinese-Traditional": "\u4e2d\u6587(\u9999\u6e2f)",
+			"Czech": "\u010ce\u0161tina",
+			"Danish": "Dansk",
+			"Dutch": "Nederlands",
+			"English": "English",
+			"Estonian": "eesti",
+			"Finnish": "Suomi",
+			"French": "Fran\u00e7ais",
+			"German": "Deutsch",
+			"Greek": "\u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac",
+			"Hebrew": "\u05e2\u05d1\u05e8\u05d9\u05ea",
+			"Hungarian": "Magyar",
+			"Italian": "Italiano",
+			"Japanese": "\u65e5\u672c\u8a9e",
+			"Korean": "\ud55c\uad6d\uc5b4",
+			"Latvian": "Latvie\u0161u",
+			"Lithuanian": "Lietuvi\u0173",
+			"Norwegian": "Norsk",
+			"Persian": "\u0641\u0627\u0631\u0633\u06cc",
+			"Polish": "Polski",
+			"Portuguese-Portuguese": "Portugu\u00eas",
+			"Portuguese-Brazil": "Portugu\u00eas Brasileiro",
+			"Romanian": "Rom\u00e2n\u0103",
+			"Russian": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
+			"Serbian": "Srpski",
+			"Slovenian": "Sloven\u0161\u010dina",
+			"Spanish": "Espa\u00f1ol",
+			"Swedish": "Svenska",
+			"Thai": "\u0e20\u0e32\u0e29\u0e32\u0e44\u0e17\u0e22",
+			"Turkish": "T\u00fcrk\u00e7e",
+			"Ukrainian": "\u0423\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430",
+			"Vietnamese": "ti\u1ebfng Vi\u1ec7t"
+		},
+		"array"
+	],
+	"LanguageNames_Description": [
+		"",
+		"string"
+	],
+	"MultipleFilesUploadLimit": [
+		50,
+		"int"
+	],
+	"MultipleFilesUploadLimit_Description": [
+		"",
+		"string"
+	],
+	"ShowQuotaBar": [
+		true,
+		"bool"
+	],
+	"ShowQuotaBar_Description": [
+		"",
+		"string"
+	],
+	"ShowQuotaBarTextAsTooltip": [
+		true,
+		"bool"
+	],
+	"ShowQuotaBarTextAsTooltip_Description": [
+		"",
+		"string"
+	],
+	"QuotaWarningPerc": [
+		0,
+		"int"
+	],
+	"QuotaWarningPerc_Description": [
+		"",
+		"string"
+	],
+	"SyncIosAfterLogin": [
+		true,
+		"bool"
+	],
+	"SyncIosAfterLogin_Description": [
+		"",
+		"string"
+	],
+	"Theme": [
+		"Default",
+		"string"
+	],
+	"Theme_Description": [
+		"",
+		"string"
+	],
+	"ThemeList": [
+		[
+			"Default"
+		],
+		"array"
+	],
+	"ThemeList_Description": [
+		"",
+		"string"
+	],
+	"HideLogout": [
+		false,
+		"bool"
+	],
+	"HideLogout_Description": [
+		"",
+		"string"
+	],
+	"IncludeInMobile": [
+		true,
+		"bool"
+	],
+	"IncludeInMobile_Description": [
+		"",
+		"string"
+	]
 }
