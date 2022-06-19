@@ -134,3 +134,69 @@
 .ui-widget-content a:hover {
 	color: inherit
 }
+
+.ui-datepicker-prev,
+.ui-datepicker-next {
+	color: #222222;
+	background: none;
+	text-align: center;
+
+	&.ui-state-hover,
+	&:hover {
+		background: #f2f2f2;
+		border: 1px solid #999999;
+	}
+
+	.init-icon-font();
+
+	&:before {
+		color: inherit;
+		display: inline-block;
+		font-size: 18px;
+		height: 18px;
+		margin-top: 4px;
+		vertical-align: sub;
+	}
+
+	.ui-icon {
+		display: none !important;
+	}
+}
+
+.ui-datepicker-prev:before {
+	content: "\e671";
+}
+
+.ui-datepicker-next:before {
+	content: "\e670";
+}
+
+.ui-datepicker-trigger {
+	background: none;
+	border: none;
+	color: #c2c7cb;
+	cursor: pointer;
+	display: inline-block;
+	margin: 1px 5px 0px -21px;
+	padding: 0px;
+	position: relative;
+	vertical-align: middle;
+	z-index: 3001;
+
+	&:hover {
+		color: #8f9295;
+	}
+
+	.init-icon-font(after);
+	&:after {
+		content: "\e623";
+		display: inline-block;
+		font-size: 18px;
+		height: 18px;
+		vertical-align: sub;
+	}
+
+	html.rtl & {
+		margin: 1px -21px 0px 5px;
+	}
+}
