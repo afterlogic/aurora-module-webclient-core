@@ -4,7 +4,7 @@
 		"bool"
 	],
 	"AllowChangeSettings_Description": [
-		"",
+		"If true, users are allowed to select theme, language etc. in common settings screen",
 		"string"
 	],
 	"AllowClientDebug": [
@@ -12,7 +12,7 @@
 		"bool"
 	],
 	"AllowClientDebug_Description": [
-		"",
+		"Enables clientside debug logs, viewed by entering window.auroraLogs in browser console",
 		"string"
 	],
 	"AllowDesktopNotifications": [
@@ -20,7 +20,7 @@
 		"bool"
 	],
 	"AllowDesktopNotifications_Description": [
-		"",
+		"Enables desktop notifications, the value is applied to new user accounts",
 		"string"
 	],
 	"AllowIosProfile": [
@@ -28,7 +28,7 @@
 		"bool"
 	],
 	"AllowIosProfile_Description": [
-		"",
+		"Enables retrieving account profile download when logging into web interface from iOS device",
 		"string"
 	],
 	"AllowMobile": [
@@ -36,7 +36,7 @@
 		"bool"
 	],
 	"AllowMobile_Description": [
-		"",
+		"Enables mobile version of web interface and automatically switches to it on Android or iOS smartphone",
 		"string"
 	],
 	"AllowPrefetch": [
@@ -44,7 +44,7 @@
 		"bool"
 	],
 	"AllowPrefetch_Description": [
-		"",
+		"Enables downloading message bodies in background, to display messages instantly upon selecting those",
 		"string"
 	],
 	"AttachmentSizeLimit": [
@@ -52,7 +52,7 @@
 		"int"
 	],
 	"AttachmentSizeLimit_Description": [
-		"",
+		"Attachment file size limit for upload, in bytes",
 		"string"
 	],
 	"AutoRefreshIntervalMinutes": [
@@ -60,7 +60,7 @@
 		"int"
 	],
 	"AutoRefreshIntervalMinutes_Description": [
-		"",
+		"Default value for auto refresh interval in minutes",
 		"string"
 	],
 	"ContentSecurityPolicy": [
@@ -68,7 +68,7 @@
 		"string"
 	],
 	"ContentSecurityPolicy_Description": [
-		"",
+		"Specifies CSP header used for protection from cross-site scripting, clickjacking, code injection attacks",
 		"string"
 	],
 	"CustomLogoutUrl": [
@@ -76,7 +76,7 @@
 		"string"
 	],
 	"CustomLogoutUrl_Description": [
-		"",
+		"Specifies URL user will be redirected to upon logging out of their account",
 		"string"
 	],
 	"Disabled": [
@@ -84,7 +84,7 @@
 		"bool"
 	],
 	"Disabled_Description": [
-		"",
+		"Setting to true disables the module",
 		"string"
 	],
 	"DefaultAnonymScreenHash": [
@@ -92,7 +92,7 @@
 		"string"
 	],
 	"DefaultAnonymScreenHash_Description": [
-		"",
+		"Hash ID of the screen available to non-logged in user by default",
 		"string"
 	],
 	"DefaultUserScreenHash": [
@@ -100,7 +100,7 @@
 		"string"
 	],
 	"DefaultUserScreenHash_Description": [
-		"",
+		"Hash ID of the screen available to logged in user by default",
 		"string"
 	],
 	"GoogleAnalyticsAccount": [
@@ -108,7 +108,7 @@
 		"string"
 	],
 	"GoogleAnalyticsAccount_Description": [
-		"",
+		"If specified, Google Analytics code will be loaded with this account ID used",
 		"string"
 	],
 	"HeaderModulesOrder": [
@@ -116,7 +116,7 @@
 		"array"
 	],
 	"HeaderModulesOrder_Description": [
-		"",
+		"Denotes the list of top menu items in the order how they're displayed",
 		"string"
 	],
 	"IsDemo": [
@@ -124,7 +124,7 @@
 		"bool"
 	],
 	"IsDemo_Description": [
-		"",
+		"Enables warnings of demo limitations, used by various modules",
 		"string"
 	],
 	"LanguageNames": [
@@ -168,7 +168,7 @@
 		"array"
 	],
 	"LanguageNames_Description": [
-		"",
+		"Mapping of language names and their local translations",
 		"string"
 	],
 	"MultipleFilesUploadLimit": [
@@ -176,7 +176,7 @@
 		"int"
 	],
 	"MultipleFilesUploadLimit_Description": [
-		"",
+		"Defines a limit for number of files uploaded during a single user request",
 		"string"
 	],
 	"ShowQuotaBar": [
@@ -184,7 +184,7 @@
 		"bool"
 	],
 	"ShowQuotaBar_Description": [
-		"",
+		"If true, indicator of disk space usage by email or files will be displayed in the interface",
 		"string"
 	],
 	"ShowQuotaBarTextAsTooltip": [
@@ -192,7 +192,7 @@
 		"bool"
 	],
 	"ShowQuotaBarTextAsTooltip_Description": [
-		"",
+		"If true, quota information will only be shown as the tooltip of the indicator; if false, it's shown directly in the interface",
 		"string"
 	],
 	"QuotaWarningPerc": [
@@ -200,7 +200,7 @@
 		"int"
 	],
 	"QuotaWarningPerc_Description": [
-		"",
+		"Enables warning if percentage of free disk space for email account is less than this value",
 		"string"
 	],
 	"SyncIosAfterLogin": [
@@ -216,7 +216,7 @@
 		"string"
 	],
 	"Theme_Description": [
-		"",
+		"Theme used by default",
 		"string"
 	],
 	"ThemeList": [
@@ -226,7 +226,7 @@
 		"array"
 	],
 	"ThemeList_Description": [
-		"",
+		"List of themes available",
 		"string"
 	],
 	"HideLogout": [
@@ -234,7 +234,7 @@
 		"bool"
 	],
 	"HideLogout_Description": [
-		"",
+		"If true, Logout link will be hidden",
 		"string"
 	],
 	"IncludeInMobile": [
@@ -242,7 +242,7 @@
 		"bool"
 	],
 	"IncludeInMobile_Description": [
-		"",
+		"If true, the module is used in mobile version of the interface",
 		"string"
 	]
 }
