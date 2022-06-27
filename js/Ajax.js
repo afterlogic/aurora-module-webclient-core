@@ -12,6 +12,7 @@ var
 
 	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
 	AlertPopup = require('%PathToCoreWebclientModule%/js/popups/AlertPopup.js'),
+	ConfirmPopup = require('%PathToCoreWebclientModule%/js/popups/ConfirmPopup.js'),
 
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	Pulse = require('%PathToCoreWebclientModule%/js/Pulse.js'),
@@ -169,7 +170,7 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 		};
 		App.broadcastEvent('SendAjaxRequest::before', oEventParams);
 
-		if (oEventParams.Continue)
+		if (oEventParams.Continue && this.hasGoodSubject(oRequest, fResponseHandler, oContext, iTimeout))
 		{
 			this.abortSameRequests(oRequest);
 
@@ -181,6 +182,60 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 		var oResponse = { Result: false, ErrorCode: Enums.Errors.NotDisplayedError };
 		this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest, 'error');
 	}
+};
+
+CAjax.prototype.hasGoodSubject = function (oRequest, fResponseHandler, oContext, iTimeout) {
+	if (oRequest.Module === 'Mail' && oRequest.Method === 'SendMessage' &&
+		(typeof oRequest.Parameters.Subject !== 'string' || oRequest.Parameters.Subject === '')
+	) {
+		Utils.log('hasGoodSubject=false', 'Subject', oRequest.Parameters.Subject);
+		App.sendLogMessage(JSON.stringify({
+			auroraLogs: window.auroraLogs
+		}));
+		window.auroraLogs = [];
+		const
+			confirmText = TextUtils.i18n('COREWEBCLIENT/CONFIRM_MESSAGE_SUBJECT_EMPTY'),
+			confirmHandler = (continueSend => {
+				if (continueSend) {
+					if (oRequest.Parameters.ShowReport) {
+						Screens.showLoading(TextUtils.i18n('COREWEBCLIENT/INFO_SENDING'));
+					}
+					this.abortSameRequests(oRequest);
+					this.doSend(oRequest, fResponseHandler, oContext, iTimeout);
+					if (this.postponedSendMessage) {
+						if (this.postponedSendMessage.oRequest.Parameters.ShowReport) {
+							Screens.showLoading(TextUtils.i18n('COREWEBCLIENT/INFO_SENDING'));
+						}
+						this.abortSameRequests(this.postponedSendMessage.oRequest);
+						this.doSend(this.postponedSendMessage.oRequest, this.postponedSendMessage.fResponseHandler,
+								this.postponedSendMessage.oContext, this.postponedSendMessage.iTimeout
+						);
+					}
+				} else {
+					var oResponse = { Result: false, ErrorCode: Enums.Errors.NotDisplayedError };
+					this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest, 'success');
+					if (this.postponedSendMessage) {
+						this.executeResponseHandler(this.postponedSendMessage.fResponseHandler,
+								this.postponedSendMessage.oContext, oResponse,
+								this.postponedSendMessage.oRequest, 'success'
+						);
+					}
+				}
+				this.postponedSendMessage = null;
+			}),
+			isConfirmPopupOpened = Popups.popups.find(popup => popup.constructor.name === 'CConfirmPopup')
+		;
+		if (isConfirmPopupOpened) {
+			this.postponedSendMessage = {oRequest, fResponseHandler, oContext, iTimeout};
+		} else {
+			Popups.showPopup(ConfirmPopup, [confirmText, confirmHandler]);
+		}
+		if (oRequest.Parameters.ShowReport) {
+			Screens.hideLoading();
+		}
+		return false;
+	}
+	return true;
 };
 
 /*************************private*************************************/
