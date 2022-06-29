@@ -986,22 +986,34 @@
 }
 
 .auroraMain {
-	.login_panel .header .icon:before {
-		color: #24A4EC;
-		text-shadow: none;
-	}
-
-	.login_panel .row {
-		background: #EAEAEA;
-		border-color: #10386C;
-
-		&.focused {
-			background: #e8e0c8;
-			border-color: #10386C;
+	.login_panel {
+		.header .icon:before {
+			color: #24A4EC;
+			text-shadow: none;
 		}
 
-		.input {
-			color: #000000 !important;
+		.row {
+			background: #EAEAEA;
+			border-color: #10386C;
+
+			&.signme {
+				background: none;
+				border: none;
+				color: #ffffff;
+			}
+
+			&.focused {
+				background: #e8e0c8;
+				border-color: #10386C;
+			}
+
+			.input {
+				color: #000000 !important;
+			}
+		}
+
+		.custom_checkbox.focus {
+			box-shadow: none;
 		}
 	}
 
