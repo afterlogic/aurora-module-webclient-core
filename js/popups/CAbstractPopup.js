@@ -48,7 +48,9 @@ CAbstractPopup.prototype.showPopup = function ()
 		this.opened(true);
 
 		_.delay(_.bind(function() {
-			this.$popupDom.addClass('visible');
+			if (this.$popupDom) {
+				this.$popupDom.addClass('visible');
+			}
 		}, this), 50);
 		
 		this.onShow();
