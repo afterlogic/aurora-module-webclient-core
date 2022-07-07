@@ -54,7 +54,7 @@
 	.items_list .item {
 		color: @text-color-1;
 
-		.custom_checkbox {
+		.message_list& .custom_checkbox {
 			margin-left: -1px;
 		}
 
@@ -161,7 +161,12 @@
 		}
 	}
 
-	.popup.calendar_event .panel_wrap,
+	.popup.calendar_popup .dates.close:before {
+		color: @text-color-1;
+	}
+	.popup.calendar_event .panel_wrap {
+		background: @background-color-2;
+	}
 	.popup_panel {
 		background: @background-color-2;
 		color: @text-color-1;
@@ -774,7 +779,7 @@
 			}
 
 			.form_arrow {
-				border-color: #2A355A;
+				border-top: 6px solid #393d4b;
 			}
 		}
 
@@ -800,11 +805,22 @@
 		}
 	}
 
+	.fc-unthemed .fc-list-empty {
+		background: @background-color-1;
+	}
+	.fc-row .fc-content-skeleton td, .fc-row .fc-helper-skeleton td {
+		border-color: inherit;
+	}
 	.fc-day-header.fc-widget-header,
 	.fc-show-weekends .fc-sat,
 	.fc-show-weekends .fc-sun {
-		background: @background-color-2 !important;
 		color: @text-color-1;
+	}
+
+	.fc-day-header.fc-widget-header,
+	.fc-show-weekends .fc-bg .fc-sat,
+	.fc-show-weekends .fc-bg .fc-sun {
+		background: @background-color-2 !important;
 	}
 	
 	.fc-unthemed th,
@@ -836,8 +852,12 @@
 		color: #ffffff;
 	}
 
-	.fc-unthemed td.fc-today {
+	.fc-unthemed .fc-bg td.fc-today {
 		background: #0B5269;
+	}
+
+	.fc-unthemed td.fc-today {
+		background: transparent;
 	}
 	
 	.panel.calendars_panel .panel_bottom {
@@ -1011,6 +1031,10 @@
 			background: #EAEAEA;
 			border-color: #10386C;
 
+			.input:-webkit-autofill {
+				-webkit-box-shadow: 0 0 0 1000px #EAEAEA inset !important;
+			}
+
 			&.signme {
 				background: none;
 				border: none;
@@ -1020,6 +1044,10 @@
 			&.focused {
 				background: #e8e0c8;
 				border-color: #10386C;
+
+				.input:-webkit-autofill {
+					-webkit-box-shadow: 0 0 0 1000px #e8e0c8 inset !important;
+				}
 			}
 
 			.input {
