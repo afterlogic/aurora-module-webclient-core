@@ -1,12 +1,32 @@
 {
   "metadata": {
-    "name": "Afterlogic",
+    "name": "Afterlogic 1",
     "lastOpened": 0,
-    "created": 1631702373319
+    "created": 1657280025174
   },
   "iconSets": [
     {
       "icons": [
+        {
+          "id": 163,
+          "paths": [
+            "M208.75 224c-44.672 0-80.562 37.881-80.562 83.375v12.5c-0.224 1.534-0.224 3.091 0 4.625v392.187c0 45.469 35.9 83.313 80.562 83.313h351.25c21.637 0.307 21.637-32.306 0-32h-351.25c-26.645 0-48.562-22.428-48.562-51.313v-363.812l341.437 234.875c2.050 1.724 4.5 2.906 7.125 3.437 0.269 0.070 0.54 0.13 0.812 0.188 0.144 0.023 0.291 0.043 0.438 0.062 0.125 0.022 0.25 0.040 0.375 0.062 0.269 0.028 0.541 0.046 0.812 0.062 0.25 0.006 0.5 0.006 0.75 0 0.272 0.007 0.542 0.007 0.813 0 0.272-0.014 0.542-0.034 0.812-0.062 0.23-0.035 0.459-0.077 0.687-0.125 0.042 0 0.083 0 0.125 0 0.25-0.035 0.501-0.077 0.75-0.125 0.272-0.054 0.543-0.117 0.813-0.187 0 0 0.062 0 0.062 0 2.42-0.598 4.668-1.754 6.562-3.375l341.313-234.875 0.125 111.187c-0.307 21.637 32.306 21.637 32 0l-0.187-139.5c0.224-1.533 0.224-3.092 0-4.625v-12.563c-0.051-45.462-35.828-83.312-80.5-83.312h-606.563zM208.75 256h606.563c26.636 0 48.466 22.419 48.5 51.375v6.625l-351.813 242.062-351.812-242.062v-6.625c0-28.924 21.927-51.375 48.562-51.375zM784 544c-79.339 0-144 64.661-144 144s64.661 144 144 144c79.339 0 144-64.661 144-144s-64.661-144-144-144zM784 576c62.045 0 112 49.955 112 112s-49.955 112-112 112c-62.045 0-112-49.955-112-112s49.955-112 112-112zM720 672c-8.837 0-16 7.163-16 16v0c0 8.837 7.163 16 16 16v0h128c8.837 0 16-7.163 16-16v0c0-8.837-7.163-16-16-16v0h-128z"
+          ],
+          "attrs": [
+            {}
+          ],
+          "isMulticolor": false,
+          "isMulticolor2": false,
+          "grid": 32,
+          "tags": [
+            "unsubscribe-message"
+          ],
+          "colorPermutations": {
+            "1933945120420420412552552551": [
+              {}
+            ]
+          }
+        },
         {
           "id": 162,
           "paths": [
@@ -3206,12 +3226,20 @@
       },
       "selection": [
         {
+          "order": 377,
+          "id": 85,
+          "name": "unsubscribe-message",
+          "prevSize": 32,
+          "code": 59688,
+          "tempChar": ""
+        },
+        {
           "order": 375,
           "id": 84,
           "name": "allow-messages",
           "prevSize": 32,
           "code": 59686,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 376,
@@ -3219,7 +3247,7 @@
           "name": "block-messages",
           "prevSize": 32,
           "code": 59687,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 374,
@@ -3227,7 +3255,7 @@
           "name": "leave-shared",
           "prevSize": 32,
           "code": 59685,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 372,
@@ -3235,7 +3263,7 @@
           "name": "download-webtorrent",
           "prevSize": 32,
           "code": 59684,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 371,
@@ -3243,7 +3271,7 @@
           "name": "icon-mono",
           "prevSize": 32,
           "code": 59683,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 368,
@@ -3251,7 +3279,7 @@
           "name": "convert-document",
           "prevSize": 32,
           "code": 59682,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 365,
@@ -3259,7 +3287,7 @@
           "name": "scheduled-folder",
           "prevSize": 32,
           "code": 59681,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 364,
@@ -3267,7 +3295,7 @@
           "name": "unified-inbox",
           "prevSize": 32,
           "code": 59680,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 366,
@@ -3275,7 +3303,7 @@
           "name": "exit",
           "prevSize": 32,
           "code": 59679,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 360,
@@ -3283,7 +3311,7 @@
           "name": "password-reset",
           "prevSize": 32,
           "code": 59678,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 358,
@@ -3291,7 +3319,7 @@
           "name": "message-do-not-encrypt",
           "prevSize": 32,
           "code": 59674,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 357,
@@ -3299,7 +3327,7 @@
           "name": "message-encrypt",
           "prevSize": 32,
           "code": 59675,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 356,
@@ -3307,7 +3335,7 @@
           "name": "message-sign",
           "prevSize": 32,
           "code": 59676,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 355,
@@ -3315,7 +3343,7 @@
           "name": "mobile-apps",
           "prevSize": 32,
           "code": 59677,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 354,
@@ -3323,7 +3351,7 @@
           "name": "dropbox-settings",
           "prevSize": 32,
           "code": 59671,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 353,
@@ -3331,7 +3359,7 @@
           "name": "google-settings",
           "prevSize": 32,
           "code": 59672,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 352,
@@ -3339,7 +3367,7 @@
           "name": "facebook-settings",
           "prevSize": 32,
           "code": 59673,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 351,
@@ -3347,7 +3375,7 @@
           "name": "fa-settings",
           "prevSize": 32,
           "code": 59669,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 350,
@@ -3355,7 +3383,7 @@
           "name": "about-app-settings",
           "prevSize": 32,
           "code": 59670,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 348,
@@ -3363,7 +3391,7 @@
           "name": "sort",
           "prevSize": 32,
           "code": 59667,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 347,
@@ -3371,7 +3399,7 @@
           "name": "share1",
           "prevSize": 32,
           "code": 59666,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 343,
@@ -3379,7 +3407,7 @@
           "name": "reload-on",
           "prevSize": 32,
           "code": 59664,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 342,
@@ -3387,7 +3415,7 @@
           "name": "reload-off1",
           "prevSize": 32,
           "code": 59665,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 213,
@@ -3396,7 +3424,7 @@
           "code": 58955,
           "name": "pagination-prev",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 220,
@@ -3405,7 +3433,7 @@
           "code": 58956,
           "name": "pagination-next",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 221,
@@ -3414,7 +3442,7 @@
           "code": 58957,
           "name": "pagination-last",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 222,
@@ -3423,7 +3451,7 @@
           "code": 58958,
           "name": "pagination-first",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 223,
@@ -3432,7 +3460,7 @@
           "code": 58941,
           "name": "logo-apple",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 224,
@@ -3441,7 +3469,7 @@
           "code": 58940,
           "name": "logo",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 225,
@@ -3450,7 +3478,7 @@
           "code": 58964,
           "name": "google-drive",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 226,
@@ -3459,7 +3487,7 @@
           "code": 58965,
           "name": "dropbox",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 227,
@@ -3468,7 +3496,7 @@
           "code": 58966,
           "name": "files",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 228,
@@ -3477,7 +3505,7 @@
           "code": 58967,
           "name": "desktop",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 229,
@@ -3486,7 +3514,7 @@
           "code": 58920,
           "name": "search-magnifier",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 230,
@@ -3495,7 +3523,7 @@
           "code": 58942,
           "name": "misc-close",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 231,
@@ -3504,7 +3532,7 @@
           "code": 58978,
           "name": "marker",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 232,
@@ -3513,7 +3541,7 @@
           "code": 58979,
           "name": "contactphone",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 233,
@@ -3521,7 +3549,7 @@
           "name": "minimize",
           "prevSize": 32,
           "code": 58985,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 234,
@@ -3529,7 +3557,7 @@
           "name": "maximize",
           "prevSize": 32,
           "code": 58986,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 235,
@@ -3537,7 +3565,7 @@
           "name": "closecompose",
           "prevSize": 32,
           "code": 58987,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 236,
@@ -3545,7 +3573,7 @@
           "prevSize": 32,
           "code": 58993,
           "name": "arrow-left2",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 214,
@@ -3553,7 +3581,7 @@
           "prevSize": 32,
           "code": 58992,
           "name": "arrow-right2",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 259,
@@ -3561,7 +3589,7 @@
           "name": "tasks",
           "prevSize": 32,
           "code": 59659,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 373,
@@ -3569,7 +3597,7 @@
           "name": "plus",
           "prevSize": 32,
           "code": 59660,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 267,
@@ -3578,7 +3606,7 @@
           "code": 58891,
           "name": "back-to-previuos",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 268,
@@ -3587,7 +3615,7 @@
           "code": 58880,
           "name": "new-message",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 269,
@@ -3596,7 +3624,7 @@
           "code": 58883,
           "name": "mark-as-read",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 270,
@@ -3605,7 +3633,7 @@
           "code": 58884,
           "name": "move-to-folder",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 271,
@@ -3614,7 +3642,7 @@
           "code": 58954,
           "name": "remove-from-group",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 272,
@@ -3623,7 +3651,7 @@
           "code": 58885,
           "name": "mark-as-spam",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 273,
@@ -3632,7 +3660,7 @@
           "code": 58886,
           "name": "to-trash",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 274,
@@ -3641,7 +3669,7 @@
           "code": 58882,
           "name": "empty-folder",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 340,
@@ -3650,7 +3678,7 @@
           "code": 58887,
           "name": "refresh",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 276,
@@ -3659,7 +3687,7 @@
           "code": 58881,
           "name": "add-contact",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 277,
@@ -3668,7 +3696,7 @@
           "code": 58890,
           "name": "global-all",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 278,
@@ -3677,7 +3705,7 @@
           "code": 58892,
           "name": "reply",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 279,
@@ -3686,7 +3714,7 @@
           "code": 58893,
           "name": "reply-all",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 264,
@@ -3695,7 +3723,7 @@
           "code": 58894,
           "name": "forward",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 237,
@@ -3704,7 +3732,7 @@
           "code": 58895,
           "name": "print",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 215,
@@ -3713,7 +3741,7 @@
           "code": 58896,
           "name": "download-message",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 260,
@@ -3722,7 +3750,7 @@
           "code": 58897,
           "name": "open-in-new-window",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 281,
@@ -3731,7 +3759,7 @@
           "code": 58906,
           "name": "send-contact-as-file",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 282,
@@ -3740,7 +3768,7 @@
           "code": 58925,
           "name": "edit-file",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 283,
@@ -3749,7 +3777,7 @@
           "code": 58926,
           "name": "create-folder",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 284,
@@ -3758,7 +3786,7 @@
           "code": 58930,
           "name": "action-share-with-all",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 285,
@@ -3767,7 +3795,7 @@
           "code": 58960,
           "name": "resend",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 286,
@@ -3776,7 +3804,7 @@
           "code": 58961,
           "name": "more",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 287,
@@ -3785,7 +3813,7 @@
           "code": 58963,
           "name": "headers",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 288,
@@ -3794,7 +3822,7 @@
           "code": 58969,
           "name": "key2",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 289,
@@ -3803,7 +3831,7 @@
           "code": 58970,
           "name": "new_link",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 290,
@@ -3812,7 +3840,7 @@
           "code": 58980,
           "name": "save-as-pdf",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 291,
@@ -3820,7 +3848,7 @@
           "name": "export-contacts-as-cvs",
           "prevSize": 32,
           "code": 59648,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 292,
@@ -3828,7 +3856,7 @@
           "name": "export-contacts-as-vcf",
           "prevSize": 32,
           "code": 59649,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 293,
@@ -3836,7 +3864,7 @@
           "name": "paranoid-encryption",
           "prevSize": 32,
           "code": 59658,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 294,
@@ -3844,7 +3872,7 @@
           "name": "db-auth",
           "prevSize": 32,
           "code": 59652,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 280,
@@ -3852,7 +3880,7 @@
           "name": "settings-contacts",
           "prevSize": 32,
           "code": 59651,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 238,
@@ -3861,7 +3889,7 @@
           "code": 58933,
           "name": "settings-outlook-sync",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 216,
@@ -3870,7 +3898,7 @@
           "code": 58934,
           "name": "settings-mobile-sync",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 261,
@@ -3879,7 +3907,7 @@
           "code": 58935,
           "name": "settings-helpdesk",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 295,
@@ -3888,7 +3916,7 @@
           "code": 58936,
           "name": "settings-email-accounts",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 296,
@@ -3897,7 +3925,7 @@
           "code": 58937,
           "name": "settings-common",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 297,
@@ -3906,7 +3934,7 @@
           "code": 58938,
           "name": "settings-calendar",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 298,
@@ -3915,7 +3943,7 @@
           "code": 58968,
           "name": "settingskey",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 299,
@@ -3924,7 +3952,7 @@
           "code": 58898,
           "name": "folder-trash",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 300,
@@ -3933,7 +3961,7 @@
           "code": 58899,
           "name": "folder-starred",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 301,
@@ -3942,7 +3970,7 @@
           "code": 58900,
           "name": "folder-spam",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 302,
@@ -3951,7 +3979,7 @@
           "code": 58901,
           "name": "folder-sent",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 303,
@@ -3960,7 +3988,7 @@
           "code": 58902,
           "name": "folder-inbox",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 304,
@@ -3969,7 +3997,7 @@
           "code": 58903,
           "name": "folder-drafts",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 305,
@@ -3978,7 +4006,7 @@
           "code": 58904,
           "name": "group-personal",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 306,
@@ -3987,7 +4015,7 @@
           "code": 58959,
           "name": "custom-group-octothorpe",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 307,
@@ -3996,7 +4024,7 @@
           "code": 58983,
           "name": "group-all",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 308,
@@ -4005,7 +4033,7 @@
           "code": 58921,
           "name": "group-shared-all",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 309,
@@ -4013,7 +4041,7 @@
           "name": "group-shared-all2",
           "prevSize": 32,
           "code": 58988,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 239,
@@ -4021,7 +4049,7 @@
           "name": "notes-pin",
           "prevSize": 32,
           "code": 59657,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 217,
@@ -4029,7 +4057,7 @@
           "name": "templates",
           "prevSize": 32,
           "code": 59661,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 262,
@@ -4038,7 +4066,7 @@
           "code": 58917,
           "name": "placeholder-password",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 311,
@@ -4047,7 +4075,7 @@
           "code": 58918,
           "name": "placeholder-login",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 312,
@@ -4056,7 +4084,7 @@
           "code": 58919,
           "name": "placeholder-email",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 313,
@@ -4065,7 +4093,7 @@
           "code": 58913,
           "name": "attachment-vcard",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 314,
@@ -4074,7 +4102,7 @@
           "code": 58914,
           "name": "attachment-paperclip",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 315,
@@ -4083,7 +4111,7 @@
           "code": 58915,
           "name": "attachment-ical",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 316,
@@ -4092,7 +4120,7 @@
           "code": 58912,
           "name": "importance",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 317,
@@ -4101,7 +4129,7 @@
           "code": 58911,
           "name": "message-flag",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 318,
@@ -4110,7 +4138,7 @@
           "code": 58962,
           "name": "star-outline",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 319,
@@ -4119,7 +4147,7 @@
           "code": 58910,
           "name": "menu",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 320,
@@ -4128,7 +4156,7 @@
           "code": 58909,
           "name": "arrow-down",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 321,
@@ -4137,7 +4165,7 @@
           "code": 58916,
           "name": "arrow-up",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 322,
@@ -4146,7 +4174,7 @@
           "code": 58943,
           "name": "arrow-left",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 323,
@@ -4155,7 +4183,7 @@
           "code": 58944,
           "name": "arrow-right",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 324,
@@ -4164,7 +4192,7 @@
           "code": 58939,
           "name": "misc-plus",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 310,
@@ -4173,7 +4201,7 @@
           "code": 58945,
           "name": "misc-add",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 240,
@@ -4182,7 +4210,7 @@
           "code": 58949,
           "name": "misc-remove",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 218,
@@ -4191,7 +4219,7 @@
           "code": 58952,
           "name": "misc-attenders-declined",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 263,
@@ -4200,7 +4228,7 @@
           "code": 58946,
           "name": "misc-download-as",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 325,
@@ -4209,7 +4237,7 @@
           "code": 58953,
           "name": "misc-dot",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 326,
@@ -4218,7 +4246,7 @@
           "code": 58947,
           "name": "event-repeat-marker",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 327,
@@ -4227,7 +4255,7 @@
           "code": 58948,
           "name": "event-guests-marker",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 328,
@@ -4236,7 +4264,7 @@
           "code": 58950,
           "name": "event-alarm-marker",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 329,
@@ -4245,7 +4273,7 @@
           "code": 58951,
           "name": "misc-minus",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 330,
@@ -4254,7 +4282,7 @@
           "code": 58971,
           "name": "fetcher",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 331,
@@ -4263,7 +4291,7 @@
           "code": 58972,
           "name": "shared",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 332,
@@ -4272,7 +4300,7 @@
           "code": 58973,
           "name": "drag-handler",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 333,
@@ -4281,7 +4309,7 @@
           "code": 58974,
           "name": "visible",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 334,
@@ -4290,7 +4318,7 @@
           "code": 58976,
           "name": "invisible",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 335,
@@ -4299,7 +4327,7 @@
           "code": 58975,
           "name": "delete",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 336,
@@ -4308,7 +4336,7 @@
           "code": 58977,
           "name": "phone",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 337,
@@ -4317,7 +4345,7 @@
           "name": "phone-outgoing",
           "code": 58981,
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 338,
@@ -4326,7 +4354,7 @@
           "name": "phone-incoming",
           "code": 58982,
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 265,
@@ -4335,7 +4363,7 @@
           "code": 58984,
           "name": "phone-missed",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 241,
@@ -4343,7 +4371,7 @@
           "name": "arrow-down2",
           "prevSize": 32,
           "code": 58989,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 219,
@@ -4351,7 +4379,7 @@
           "name": "arrow-up2",
           "prevSize": 32,
           "code": 58990,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 243,
@@ -4359,7 +4387,7 @@
           "name": "meditation",
           "prevSize": 32,
           "code": 58991,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 244,
@@ -4367,7 +4395,7 @@
           "prevSize": 32,
           "code": 58994,
           "name": "dwa",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 245,
@@ -4375,7 +4403,7 @@
           "prevSize": 32,
           "code": 58999,
           "name": "play",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 246,
@@ -4384,7 +4412,7 @@
           "code": 58907,
           "name": "radiobutton-dot",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 247,
@@ -4393,7 +4421,7 @@
           "code": 58908,
           "name": "checkbox-check",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 248,
@@ -4401,7 +4429,7 @@
           "name": "paste1",
           "prevSize": 32,
           "code": 59656,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 249,
@@ -4409,7 +4437,7 @@
           "name": "paste",
           "prevSize": 32,
           "code": 59653,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 250,
@@ -4417,7 +4445,7 @@
           "name": "cut",
           "prevSize": 32,
           "code": 59654,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 251,
@@ -4425,7 +4453,7 @@
           "name": "key",
           "prevSize": 32,
           "code": 59655,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 252,
@@ -4434,7 +4462,7 @@
           "code": 58888,
           "name": "mark-not-spam",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 253,
@@ -4443,7 +4471,7 @@
           "code": 58889,
           "name": "add-contact-group",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 345,
@@ -4452,7 +4480,7 @@
           "code": 58922,
           "name": "share",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 255,
@@ -4461,7 +4489,7 @@
           "code": 58923,
           "name": "unshare",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 256,
@@ -4470,7 +4498,7 @@
           "code": 58924,
           "name": "get-link",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 349,
@@ -4478,7 +4506,7 @@
           "name": "encrypted-link",
           "prevSize": 32,
           "code": 59668,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 257,
@@ -4487,7 +4515,7 @@
           "code": 58927,
           "name": "complete-thread",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 258,
@@ -4496,7 +4524,7 @@
           "code": 58928,
           "name": "ask",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 242,
@@ -4505,7 +4533,7 @@
           "code": 58929,
           "name": "wait",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 205,
@@ -4514,7 +4542,7 @@
           "code": 58931,
           "name": "action-unshare-with-all",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 206,
@@ -4522,7 +4550,7 @@
           "prevSize": 32,
           "code": 58995,
           "name": "completed-thread-part1",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 207,
@@ -4530,7 +4558,7 @@
           "prevSize": 32,
           "code": 58996,
           "name": "completed-thread-part2",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 208,
@@ -4538,7 +4566,7 @@
           "prevSize": 32,
           "code": 58997,
           "name": "explosion",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 209,
@@ -4546,7 +4574,7 @@
           "prevSize": 32,
           "code": 58998,
           "name": "explosion2",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 367,
@@ -4554,7 +4582,7 @@
           "name": "import-contacts",
           "prevSize": 32,
           "code": 59650,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 211,
@@ -4563,7 +4591,7 @@
           "code": 58905,
           "name": "group-coporate",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 212,
@@ -4572,7 +4600,7 @@
           "code": 58932,
           "name": "group-shared",
           "ligatures": "",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 204,
@@ -4580,7 +4608,7 @@
           "name": "templates-on",
           "prevSize": 32,
           "code": 59662,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 203,
@@ -4588,7 +4616,7 @@
           "name": "templates-off",
           "prevSize": 32,
           "code": 59663,
-          "tempChar": ""
+          "tempChar": ""
         }
       ],
       "prevSize": 32,
@@ -4667,6 +4695,5 @@
       "AfterLogicicons": "NDdkOWFkZmEwNmVhYWE3ZDJkYTEwYjRmZDQyMDQ4ODQjMSMxNDI1Mjk3MjM4IyMj"
     }
   },
-  "uid": -1,
-  "time": 1643718615013
+  "uid": -1
 }
