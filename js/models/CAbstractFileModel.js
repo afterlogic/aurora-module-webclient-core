@@ -441,12 +441,16 @@ CAbstractFileModel.prototype.viewCommonFile = function (sUrl)
 	if (sUrl.length > 0 && sUrl !== '#')
 	{
 		sUrl += '/' + moment().unix();
-		oParams = {sUrl: sUrl, index: this.index(), bBreakView: false};
+		oParams = {
+			sUrl,
+			index: this.index(),
+			hash: this.hash(),
+			continueView: true
+		};
 
 		App.broadcastEvent('AbstractFileModel::FileView::before', oParams);
 
-		if (!oParams.bBreakView)
-		{
+		if (oParams.continueView) {
 			oWin = WindowOpener.open(oParams.sUrl, oParams.sUrl, false);
 
 			if (oWin)
