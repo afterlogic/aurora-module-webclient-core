@@ -280,11 +280,11 @@
 	background: @background-color-1;
 	box-shadow: none !important;
 
-	&.users_list_panel {
+	.AdminPanelLayout &.users_list_panel {
 		border-color: @border-color-2;
 		border-style: solid;
 		border-width: 1px 1px 0 0;
-		border-radius: 0 5px 5px 0;
+		border-radius: 0 5px 0 0;
 
 		.toolbar[style="display: none;"] + .middle_bar {
 			border-radius: 0 5px 5px 0;
@@ -292,6 +292,17 @@
 
 		.panel_bottom {
 			color: @text-color-2;
+		}
+	}
+	.AdminPanelLayout &.data.modules {
+		border-width: 1px 1px 0 1px;
+		border-radius: 5px 5px 0 0 !important;
+	}
+	.AdminPanelLayout &.data:not(.modules):not(.users_list_panel) {
+		border-width: 1px 0 0 1px;
+		border-radius: 5px 0 0 0 !important;
+		& > .panel_content {
+			border-radius: 5px 0 0 0 !important;
 		}
 	}
 
