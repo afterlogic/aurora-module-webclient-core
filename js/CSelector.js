@@ -338,7 +338,7 @@ CSelector.prototype.initOnApplyBindings = function (sActionSelector, sSelectable
 							bIsInRange = !bIsInRange;
 						}
 
-						if (bIsInRange || bChangeRange)
+						if ((bIsInRange || bChangeRange) && oListItem && oListItem.checked)
 						{
 							oListItem.checked(bChecked);
 						}
