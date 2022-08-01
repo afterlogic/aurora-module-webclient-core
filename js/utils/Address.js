@@ -16,7 +16,7 @@ var
  */
 AddressUtils.isCorrectEmail = function (sValue)
 {
-	return !!(sValue.match(/^[A-Z0-9\"!#\$%\^\{\}`~&'\+\-=_\.]+@[A-Z0-9\.\-]+$/i));
+	return !!(sValue.match(/^[A-Z0-9\"!#\$%\^\{\}`~&'\+\-=_\./]+@[A-Z0-9\.\-]+$/i));
 };
 
 /**
