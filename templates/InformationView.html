@@ -1,12 +1,12 @@
 <div>
-	<div class="report_panel loading" data-bind="css: {'hide': loadingHidden()}">
+	<div class="report_panel loading" data-bind="css: {'hide': loadingHidden()}, click: hideReport">
 		<span class="content">
 			<span class="icon"></span>
 			<span class="text" data-bind="html: loadingMessage"></span>
 		</span>
 	</div>
-	<div class="report_panel report" data-bind="css: {'hide': reportHidden()}" id="selenium_report">
-		<span class="content" >
+	<div class="report_panel report" data-bind="css: {'hide': reportHidden()}, click: hideReport" id="selenium_report">
+		<span class="content">
 			<span class="icon"></span>
 			<span class="text" data-bind="html: reportMessage"></span>
 			<span class="close" data-bind="visible: closeReportButtonVisible, click: hideReport"></span>

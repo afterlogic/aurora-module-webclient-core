@@ -102,7 +102,15 @@ CInformationView.prototype.showReport = function (sMessage, iDelay)
 
 CInformationView.prototype.hideReport = function ()
 {
-	this.reportHidden(true);
+	var text = '';
+	if (window.getSelection) {
+		text = window.getSelection().toString();
+	} else if (document.selection && document.selection.type != "Control") {
+		text = document.selection.createRange().text;
+	}
+	if (text === '') {
+		this.reportHidden(true);
+	}
 };
 
 /**
