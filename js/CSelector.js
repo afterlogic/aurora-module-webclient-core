@@ -166,22 +166,19 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 		'owner': this
 	});
 
-	this.list.subscribe(function (aList) {
-		if (_.isArray(aList))
-		{
-			var	oSelected = this.itemSelected();
-			if (oSelected)
-			{
-				if (!_.find(aList, function (oItem) {
-					return oSelected === oItem;
-				}))
-				{
-					this.itemSelected(null);
+	this.list.subscribe(function (list) {
+		const selected = this.itemSelected();
+		if (Array.isArray(list) && selected) {
+			const hasSelected = !!list.find(item => {
+				if (typeof selected.isEqual === 'function') {
+					return selected.isEqual(item);
 				}
+				return selected === item;
+			});
+			if (!hasSelected) {
+				this.itemSelected(null);
 			}
-		}
-		else
-		{
+		} else {
 			this.itemSelected(null);
 		}
 	}, this);
