@@ -149,6 +149,8 @@
 .theme-left-panel-item-selected-count() {
 	background: #74b7ab;
 	box-shadow: 0px 1px 1px #67a398 inset, 0px 1px 0px rgba(255,255,255,0.3);
+	/* this prevents flickering in case the selected CSS class is added for a second */
+	transition: all 0s .1s linear;
 }
 
 .theme-left-panel-item-count-hover() {
@@ -172,6 +174,8 @@
 
 .theme-group-style-selected-item() {
 	text-shadow: none;
+	/* this prevents flickering in case the selected CSS class is added for a second */
+	transition: background-color 0s .1s linear;
 }
 
 .theme-address-capsule() {
