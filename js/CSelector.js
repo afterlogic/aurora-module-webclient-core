@@ -290,7 +290,6 @@ CSelector.prototype.getLastOrSelected = function ()
 CSelector.prototype.initOnApplyBindings = function (sActionSelector, sSelectableSelector, sCheckboxSelector, oListScope, oScrollScope)
 {
 	$(document).on('keydown', this.onKeydownBound);
-
 	this.oListScope = oListScope;
 	this.oScrollScope = oScrollScope;
 	this.sActionSelector = sActionSelector;
@@ -797,7 +796,7 @@ CSelector.prototype.koCheckAllIncomplete = function ()
  */
 CSelector.prototype.scrollToSelected = function ()
 {
-	if (!this.oListScope || !this.oScrollScope)
+	if (!this.oListScope || !this.oScrollScope || !this.oScrollScope[0].isConnected)
 	{
 		return false;
 	}
@@ -805,25 +804,27 @@ CSelector.prototype.scrollToSelected = function ()
 	var
 		iOffset = 20,
 		oSelected = $(this.sSelectableSelector, this.oScrollScope),
-		oPos = oSelected.position(),
+		// oPos = oSelected.position(),
+		offsetTop = oSelected[0] ? oSelected[0].offsetTop : undefined,
 		iVisibleHeight = this.oScrollScope.height(),
 		iScrollTop = this.oScrollScope.scrollTop(),
 		iSelectedHeight = oSelected.outerHeight(),
-		bSelectedVisible = oPos && (oPos.top >= iScrollTop) && (oPos.top <= (iScrollTop + iVisibleHeight - iSelectedHeight))
+		// bSelectedVisible = oPos && (oPos.top >= iScrollTop) && (oPos.top <= (iScrollTop + iVisibleHeight - iSelectedHeight))
+		bSelectedVisible = offsetTop && (offsetTop >= iScrollTop) && (offsetTop <= (iScrollTop + iVisibleHeight - iSelectedHeight))
 	;
 
-	if (oPos && !bSelectedVisible)
+	if (!bSelectedVisible)
 	{
-		if ((oPos.top < (iScrollTop + iVisibleHeight)) && ((oPos.top + iSelectedHeight) > (iScrollTop + iVisibleHeight)))
+		if ((offsetTop < (iScrollTop + iVisibleHeight)) && ((offsetTop + iSelectedHeight) > (iScrollTop + iVisibleHeight)))
 		{
 			// selected item is partially visible from below
 			// make it visible at bottom with offset
-			this.oScrollScope.scrollTop(oPos.top + iSelectedHeight + iOffset - iVisibleHeight);
+			this.oScrollScope.scrollTop(offsetTop + iSelectedHeight + iOffset - iVisibleHeight);
 		}
 		else
 		{
 			// make selected item visible at top with offset
-			this.oScrollScope.scrollTop(oPos.top - iOffset);
+			this.oScrollScope.scrollTop(offsetTop - iOffset);
 		}
 
 		return true;
