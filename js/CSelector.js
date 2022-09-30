@@ -30,6 +30,8 @@ var
 function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fEnterCallback, multiplyLineFactor,
 	bResetCheckedOnClick, bCheckOnSelect, bUnselectOnCtrl, bDisableMultiplySelection, bChangeOnSelect)
 {
+	this.active = ko.observable(true);
+
 	this.fSelectCallback = fSelectCallback || function() {};
 	this.fDeleteCallback = fDeleteCallback || function() {};
 	this.fDblClickCallback = (!App.isMobile() && fDblClickCallback) ? fDblClickCallback : function() {};
@@ -135,17 +137,14 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 	this.selectorHook = ko.observable(null);
 
 	this.selectorHook.subscribe(function () {
-		var oPrev = this.selectorHook();
-		if (oPrev && _.isFunction(oPrev.selected))
-		{
-			oPrev.selected(false);
+		if (this.active() && this.selectorHook()) {
+			this.selectorHook().selected(false);
 		}
 	}, this, 'beforeChange');
 
-	this.selectorHook.subscribe(function (oGroup) {
-		if (oGroup)
-		{
-			oGroup.selected(true);
+	this.selectorHook.subscribe(function () {
+		if (this.active() && this.selectorHook()) {
+			this.selectorHook().selected(true);
 		}
 	}, this);
 
@@ -280,6 +279,12 @@ CSelector.prototype.getLastOrSelected = function ()
 	return 0 === iCheckedCount && oLastSelected ? oLastSelected : this.oLast;
 };
 
+CSelector.prototype.unbind = function () {
+	this.active(false);
+	$(document).off('keydown', this.onKeydownBound);
+	$(this.oListScope).off();
+};
+
 /**
  * @param {string} sActionSelector css-selector for the active for pressing regions of the list
  * @param {string} sSelectableSelector css-selector to the item that was selected
@@ -289,7 +294,9 @@ CSelector.prototype.getLastOrSelected = function ()
  */
 CSelector.prototype.initOnApplyBindings = function (sActionSelector, sSelectableSelector, sCheckboxSelector, oListScope, oScrollScope)
 {
+	this.active(true);
 	$(document).on('keydown', this.onKeydownBound);
+
 	this.oListScope = oListScope;
 	this.oScrollScope = oScrollScope;
 	this.sActionSelector = sActionSelector;
