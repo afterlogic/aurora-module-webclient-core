@@ -281,6 +281,9 @@ CSelector.prototype.getLastOrSelected = function ()
 
 CSelector.prototype.unbind = function () {
 	this.active(false);
+	if (this.itemSelected()) {
+		this.itemSelected().selected(false);
+	}
 	$(document).off('keydown', this.onKeydownBound);
 	$(this.oListScope).off();
 };
