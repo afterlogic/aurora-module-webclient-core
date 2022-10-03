@@ -43,16 +43,6 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 
 		$this->subscribeEvent('Core::UpdateSettings::after', array($this, 'onAfterUpdateSettings'));
 
-		\Aurora\Modules\Core\Classes\User::extend(
-			self::GetName(),
-			[
-				'AllowDesktopNotifications'		=> array('bool', $this->getConfig('AllowDesktopNotifications', false)),
-				'AutoRefreshIntervalMinutes'	=> array('int', $this->getConfig('AutoRefreshIntervalMinutes', 0)),
-				'Theme'							=> array('string', $this->getConfig('Theme', 'Default')),
-			]
-
-		);
-
 		$this->denyMethodsCallByWebApi([
 			'SetHtmlOutputHeaders',
 		]);
