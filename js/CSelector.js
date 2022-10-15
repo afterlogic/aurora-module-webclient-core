@@ -806,7 +806,7 @@ CSelector.prototype.koCheckAllIncomplete = function ()
  */
 CSelector.prototype.scrollToSelected = function ()
 {
-	if (!this.oListScope || !this.oScrollScope || !this.oScrollScope[0].isConnected)
+	if (!this.oListScope || !this.oScrollScope || !this.oScrollScope[0] ||  !this.oScrollScope[0].isConnected)
 	{
 		return false;
 	}
