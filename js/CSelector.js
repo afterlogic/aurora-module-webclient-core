@@ -30,7 +30,7 @@ var
 function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fEnterCallback, multiplyLineFactor,
 	bResetCheckedOnClick, bCheckOnSelect, bUnselectOnCtrl, bDisableMultiplySelection, bChangeOnSelect)
 {
-	this.active = ko.observable(true);
+	this.active = ko.observable(false);
 
 	this.fSelectCallback = fSelectCallback || function() {};
 	this.fDeleteCallback = fDeleteCallback || function() {};
