@@ -13,6 +13,51 @@ var
 ;
 
 /**
+ * Converts plaintext to HTML text.
+ * @param {string} sText
+ * @returns {string}
+ */
+TextUtils.plainToHtml = function (sText)
+{
+	if (sText)
+	{
+		return sText.toString()
+					.replace(/&/g, '&amp;')
+					.replace(/</g, '&lt;')
+					.replace(/>/g, '&gt;')
+					.replace(/"/g, '&quot;')
+					.replace(/'/g, '&#039;')
+					.replace(/\r\n/gi, '<br />')
+					.replace(/\n/gi, '<br />');
+	}
+	return '';
+};
+
+/**
+ * Converts HTML text to plaintext.
+ * @param {string} sHtml
+ * @returns {string}
+ */
+TextUtils.htmlToPlain = function (sHtml)
+{
+	if (sHtml)
+	{
+		return sHtml.toString()
+					.replace(/<style[^>]*>[^<]*<\/style>/gi, '\n')
+					.replace(/<br *\/{0,1}>/gi, '\n')
+					.replace(/<\/p>/gi, '\n')
+					.replace(/<a [^>]*href="([^"]*?)"[^>]*>(.*?)<\/a>/gi, '$2 ($1)')
+					.replace(/<[^>]*>/g, '')
+					.replace(/&nbsp;/g, ' ')
+					.replace(/&lt;/g, '<')
+					.replace(/&gt;/g, '>')
+					.replace(/&amp;/g, '&')
+					.replace(/&quot;/g, '"');
+	}
+	return '';
+};
+
+/**
  * @param {string} sText
  * 
  * @return {string}
