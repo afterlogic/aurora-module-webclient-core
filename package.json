@@ -42,6 +42,7 @@
     "ncp": "^2.0.0",
     "newman": "^4.5.0",
     "owl.carousel": "^2.2.0",
+    "prettier": "^2.7.1",
     "style-loader": "^0.13.1",
 	"ua-parser-js": "^0.7.22",
     "underscore": "~1.12.1",
