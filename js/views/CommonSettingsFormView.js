@@ -16,14 +16,14 @@ var
 	CAbstractSettingsFormView
 ;
 
-if (App.getUserRole() === Enums.UserRole.SuperAdmin)
-{
-	CAbstractSettingsFormView = ModulesManager.run('AdminPanelWebclient', 'getAbstractSettingsFormViewClass');
-}
-else
-{
+// if (App.getUserRole() === Enums.UserRole.SuperAdmin)
+// {
+// 	CAbstractSettingsFormView = ModulesManager.run('AdminPanelWebclient', 'getAbstractSettingsFormViewClass');
+// }
+// else
+// {
 	CAbstractSettingsFormView = ModulesManager.run('SettingsWebclient', 'getAbstractSettingsFormViewClass');
-}
+// }
 
 /**
  * @constructor
