@@ -1,16 +1,13 @@
 'use strict';
 
-var _ = require('underscore'),
+var
+	_ = require('underscore'),
 	argv = require('./argv.js'),
 	fs = require('fs'),
 	gulp = require('gulp'),
 	log = require('fancy-log'),
-	concat = require('gulp-concat-util'),
-	plumber = require('gulp-plumber'),
 	webpack = require('webpack'),
-	gulpWebpack = require('webpack-stream'),
 	path = require('path'),
-	TerserPlugin = require('terser-webpack-plugin'),
 
 	sTenantName = argv.getParameter('--tenant'),
 	sOutputName = argv.getParameter('--output'), /* app, app-mobile, app-message-newtab, app-adminpanel, app-files-pub, app-calendar-pub, app-helpdesk*/
@@ -49,8 +46,7 @@ var
 		return sFoundedFilePath;
 	})),
 	oWebPackConfig = {
-		mode: 'none',
-		// mode: 'production',
+		mode: 'none', //none,production,development
 		stats: {
 			source: false
 		},
@@ -103,10 +99,6 @@ var
 						}
 					],
 				},
-				// {
-					// test: /\.less$/,
-					// loader: "style-loader!css-loader!less-loader"
-				// },
 				{
 					test: /\.css$/,
 					use: [
@@ -121,14 +113,6 @@ var
 					]
 				}
 			]
-		},
-		optimization: {
-			splitChunks: {
-				// chunks: 'all',
-				cacheGroups: {
-					'default': false
-				}
-			}
 		},
 		plugins: [
 			new webpack.HashedModuleIdsPlugin(), // so that file hashes don't change unexpectedly
@@ -194,7 +178,7 @@ var
 			//context: true,
 			hash: false,
 			version: false,
-			timings: true,
+			timings: false,
 			assets: false,
 			chunks: false,
 			chunkModules: false,
@@ -212,26 +196,10 @@ var
 	}
 ;
 
-function jsTask(sTaskName, sName, oWebPackConfig) {
-		gulp.src(aModules)
-		// gulp.src('static/js/_app-entry.js')
-			.pipe(plumber({
-				errorHandler: function (err) {
-					console.log(err.toString());
-					this.emit('end');
-				}
-			}))
-			.pipe(concat('_' + sName + '-entry.js', {
-				sep: crlf,
-				process: function (sSrc, sFilePath) {
-					var sModuleName = GetModuleName(sFilePath);
-return `
-		if (window.aAvailableModules.indexOf('${sModuleName}') >= 0) {
-			oAvailableModules['${sModuleName}'] = import(/* webpackChunkName: "${sModuleName}" */ 'modules/${sModuleName}/js/manager.js').then(function (module) { return module.default});
-		}`;
-				}
-			}))
-		.pipe(concat.header(
+function generateEntryTask(sName) {
+	const modulesJs = [];
+
+	modulesJs.push(
 `'use strict';
 import Promise from 'bluebird';
 Promise.config({
@@ -249,11 +217,22 @@ $('body').ready(function () {
 	var oAvailableModules = {};
 	if (window.aAvailableModules) {
 `
-		))
-		.pipe(concat.footer(
-	`
-	}
-	Promise.all(_.values(oAvailableModules)).then(function(aModules){
+	);
+
+	_.each(aModules, (sFilePath) => {
+		const sModuleName = GetModuleName(sFilePath);
+
+		modulesJs.push(`
+		if (window.aAvailableModules.indexOf('${sModuleName}') >= 0) {
+			oAvailableModules['${sModuleName}'] = import(/* webpackChunkName: "${sModuleName}" */ 'modules/${sModuleName}/js/manager.js').then(function (module) { return module.default});
+		}`);
+	});
+
+	modulesJs.push(`
+}
+
+Promise.all(_.values(oAvailableModules))
+	.then(function(aModules){
 		var
 			ModulesManager = require('modules/CoreWebclient/js/ModulesManager.js'),
 			App = require('modules/CoreWebclient/js/App.js'),
@@ -269,70 +248,75 @@ $('body').ready(function () {
 			ModulesManager.init(_.object(_.keys(oAvailableModules), aModules));
 			App.init();
 		}
-	}).catch(function (oError) { console.error('An error occurred while loading the component:'); console.error(oError); });
+	})
+	.catch(function (oError) { console.error('An error occurred while loading the component:'); console.error(oError); });
 });
-
-`
-				))
-		.pipe(gulp.dest(sPath))
-		.pipe(gulpWebpack(oWebPackConfig, webpack, compileCallback))
-		.pipe(plumber.stop())
-		.pipe(gulp.dest(sPath))
-	;
-}
+`);
+	fs.mkdir(sPath, { recursive: true }, (err) => {
+		if (err) throw err;
+	});
+	fs.writeFileSync( sPath + '_app-entry.js', modulesJs.join(crlf), function (err) {
+		if (err) throw err;
+	});
+};
 
 gulp.task('js:build', function (done) {
-	jsTask('js:build', sOutputName, _.defaults({
-		'output': {
-			'filename': sOutputName + '.js',
-			'chunkFilename': '[name].' + sOutputName + '.[chunkhash].js',
-			'publicPath': sPath,
-			'pathinfo': true,
+
+	const config = _.defaults({
+		mode: 'none',
+		entry: sPath + '_' + sOutputName + '-entry.js',
+		output: {
+			path: path.resolve(__dirname, '../../../' + sPath),
+			filename: sOutputName + '.js',
+			chunkFilename: '[name].' + sOutputName + '.[chunkhash].js',
+			publicPath: sPath,
+			pathinfo: true,
 		}
-	}, oWebPackConfig));
+	}, oWebPackConfig);
+
+	generateEntryTask(sOutputName);
+	webpack(config, compileCallback);
+	
 	done();
 });
 
 gulp.task('js:watch', function (done) {
-	jsTask('js:watch', sOutputName, _.defaults({
-		'watch': true,
-		// 'aggregateTimeout': 300,
-		// 'poll': true,
-		'output':  {
-			'filename': sOutputName + '.js',
-			'chunkFilename': '[name].' + sOutputName + '.[chunkhash].js',
-			'publicPath': sPath
-		}
-	}, oWebPackConfig));
+
+	const config = _.defaults({
+		mode: 'none',
+		watch: true,
+		entry: sPath + '_' + sOutputName + '-entry.js',
+		output: {
+			path: path.resolve(__dirname, '../../../' + sPath),
+			filename: sOutputName + '.js',
+			chunkFilename: '[name].' + sOutputName + '.[chunkhash].js',
+			publicPath: sPath,
+			pathinfo: true,
+		},
+	}, oWebPackConfig);
+
+	generateEntryTask(sOutputName);
+	webpack(config, compileCallback);
+
 	done();
 });
 
 gulp.task('js:min', function (done) {
-	jsTask('js:min', sOutputName, _.defaults({
-		'mode': 'production',
-		optimization: {
-			splitChunks: {
-				// chunks: 'all',
-				cacheGroups: {
-					'default': false
-				}
-			},
-			minimizer: [
-			  new TerserPlugin({
-				terserOptions: {
-				  output: {
-					comments: false,
-				  },
-				},
-			  }),
-			],
-		  },
-		'output':  {
-			'filename': sOutputName + '.min.js',
-			'chunkFilename': '[name].' + sOutputName + '.[chunkhash].min.js',
-			'publicPath': sPath
+
+	const config = _.defaults({
+		mode: 'production',
+		entry: sPath + '_' + sOutputName + '-entry.js',
+		output:  {
+			path: path.resolve(__dirname, '../../../' + sPath),
+			filename: sOutputName + '.min.js',
+			chunkFilename: '[name].' + sOutputName + '.[chunkhash].min.js',
+			publicPath: sPath
 		}
-	}, oWebPackConfig));
+	}, oWebPackConfig);
+
+	generateEntryTask(sOutputName);
+	webpack(config, compileCallback);
+
 	done();
 });
 
