@@ -14,47 +14,56 @@ var
 
 /**
  * Converts plaintext to HTML text.
- * @param {string} sText
+ * @param {string} text
+ * @param {boolean} prepareLinks
  * @returns {string}
  */
-TextUtils.plainToHtml = function (sText)
+TextUtils.plainToHtml = function (text = '', prepareLinks = false)
 {
-	if (sText)
-	{
-		return sText.toString()
-					.replace(/&/g, '&amp;')
-					.replace(/</g, '&lt;')
-					.replace(/>/g, '&gt;')
-					.replace(/"/g, '&quot;')
-					.replace(/'/g, '&#039;')
-					.replace(/\r\n/gi, '<br />')
-					.replace(/\n/gi, '<br />');
+	let html = text.toString()
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#039;');
+
+	if (prepareLinks) {
+		//URLs starting with http://, https://, or ftp://
+		const replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+		html = html.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+
+		//URLs starting with "www." (without // before it, or it'd re-link the ones done above).
+		const replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+		html = html.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+
+		//Change email addresses to mailto:: links.
+		const replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+		html = html.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
 	}
-	return '';
+
+	return html.replace(/\r/g, '').replace(/\n/g, '<br />');
 };
 
 /**
  * Converts HTML text to plaintext.
- * @param {string} sHtml
+ * @param {string} html
  * @returns {string}
  */
-TextUtils.htmlToPlain = function (sHtml)
-{
-	if (sHtml)
-	{
-		return sHtml.toString()
-					.replace(/<style[^>]*>[^<]*<\/style>/gi, '\n')
-					.replace(/<br *\/{0,1}>/gi, '\n')
-					.replace(/<\/p>/gi, '\n')
-					.replace(/<a [^>]*href="([^"]*?)"[^>]*>(.*?)<\/a>/gi, '$2 ($1)')
-					.replace(/<[^>]*>/g, '')
-					.replace(/&nbsp;/g, ' ')
-					.replace(/&lt;/g, '<')
-					.replace(/&gt;/g, '>')
-					.replace(/&amp;/g, '&')
-					.replace(/&quot;/g, '"');
-	}
-	return '';
+TextUtils.htmlToPlain = function(html = '') {
+	return html.toString()
+		.replace(/([^>]{1})<div>/gi, '$1\n')
+		.replace(/<style[^>]*>[^<]*<\/style>/gi, '\n')
+		.replace(/<br *\/{0,1}>/gi, '\n')
+		.replace(/<\/p>/gi, '\n')
+		.replace(/<\/div>/gi, '\n')
+		.replace(/<a [^>]*href="([^"]*?)"[^>]*>(.*?)<\/a>/gi, '$2')
+		.replace(/<[^>]*>/g, '')
+		.replace(/&nbsp;/g, ' ')
+		.replace(/&lt;/g, '<')
+		.replace(/&gt;/g, '>')
+		.replace(/&amp;/g, '&')
+		.replace(/&quot;/g, '"')
+	;
 };
 
 /**
