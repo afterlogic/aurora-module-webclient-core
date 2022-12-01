@@ -115,7 +115,7 @@ var
 			]
 		},
 		plugins: [
-			new webpack.HashedModuleIdsPlugin(), // so that file hashes don't change unexpectedly
+			new webpack.ids.HashedModuleIdsPlugin(), // so that file hashes don't change unexpectedly
 			new webpack.ProvidePlugin({
 				$: "jquery",
 				jQuery: "jquery",
