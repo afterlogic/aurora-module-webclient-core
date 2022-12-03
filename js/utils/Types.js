@@ -151,11 +151,11 @@ Types.pBool = function (mValue, bDefault)
 
 Types.pEnum = function (mValue, oEnum, mDefault)
 {
-	if (mValue === _.find(oEnum, function(mEnumValue){ return mEnumValue === mValue; }))
+	if (mValue !== undefined && mValue === _.find(oEnum, function(mEnumValue){ return mEnumValue === mValue; }))
 	{
 		return mValue;
 	}
-	if (mDefault === _.find(oEnum, function(mEnumValue){ return mEnumValue === mDefault; }))
+	if (mDefault !== undefined && mDefault === _.find(oEnum, function(mEnumValue){ return mEnumValue === mDefault; }))
 	{
 		return mDefault;
 	}
