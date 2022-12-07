@@ -21,9 +21,13 @@ function CBrowser()
 	this.safari = /safari/.test(navigator.userAgent.toLowerCase()) && !this.chromeIos && !this.edge;
 	
 	this.windowsPhone = -1 < navigator.userAgent.indexOf('Windows Phone');
-	this.iosDevice = !this.windowsPhone && (-1 < navigator.userAgent.indexOf('iPhone') ||
-		-1 < navigator.userAgent.indexOf('iPod') ||
-		-1 < navigator.userAgent.indexOf('iPad'));
+	this.iosDevice = !this.windowsPhone 
+		&& (
+			-1 < navigator.userAgent.indexOf('iPhone')
+			|| -1 < navigator.userAgent.indexOf('iPod')
+			|| -1 < navigator.userAgent.indexOf('iPad') // works in Chrome on iPad
+			|| ( -1 < navigator.userAgent.indexOf('Macintosh') && navigator.maxTouchPoints && navigator.maxTouchPoints > 1) // works in Safary on iPad
+		);
 	this.androidDevice = !this.windowsPhone && (-1 < navigator.userAgent.toLowerCase().indexOf('android')),
 	this.mobileDevice = this.windowsPhone || this.iosDevice || this.androidDevice;
 }
