@@ -220,7 +220,7 @@ var Settings = {
 			}
 			else
 			{
-				if (sServerTimezone !== sBrowserTimezone && Storage.getData('showNewTimezone') !== sBrowserTimezone)
+				if (sServerTimezone !== sBrowserTimezone && Storage.getData('aurora_core_browser-timezone') !== sBrowserTimezone)
 				{
 					Screens.showReport(TextUtils.i18n('%MODULENAME%/CONFIRM_TIMEZONE_CHANGES', {
 						OLDTIME: oNowMoment.clone().tz(sServerTimezone).format('HH:mm') + ' (' + sServerTimezone + ')',
@@ -228,12 +228,12 @@ var Settings = {
 					}), 0);
 
 					$('.report_panel.report a').on('click', _.bind(function () {
-						Storage.removeData('showNewTimezone');
+						Storage.removeData('aurora_core_browser-timezone');
 						Ajax.send('Core', 'UpdateUserTimezone', {Timezone: sBrowserTimezone}, _.bind(function (oUpdateResponse) {
 							Screens.hideReport();
 							if (oUpdateResponse.Result === true)
 							{
-								Storage.setData('showNewTimezone', sBrowserTimezone);
+								Storage.setData('aurora_core_browser-timezone', sBrowserTimezone);
 								this.timezone(sBrowserTimezone);
 							}
 							else
@@ -243,7 +243,7 @@ var Settings = {
 						}, this));
 					}, this));
 				}
-				Storage.setData('showNewTimezone', sBrowserTimezone);
+				Storage.setData('aurora_core_browser-timezone', sBrowserTimezone);
 			}
 		}
 	},

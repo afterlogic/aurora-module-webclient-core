@@ -28,12 +28,14 @@ ko.bindingHandlers.splitterFlex = {
 	'init': function (oElement, fValueAccessor) {
 		_.defer(function() {
 			//https://nathancahill.github.io/Split.js/
-			var 
-				oCommand = _.defaults(fValueAccessor(), {
-					'minSize' : 200,
-					'name': ''
-				}),
-				aInitSizes = ko.bindingHandlers.splitterFlex.valiateStorageData(Storage.getData(oCommand['name'] + 'ResizerWidth'), oCommand['sizes']),
+			var
+				oCommand = Object.assign({
+					minSize : 200,
+					sizes: [20, 80],
+					storagePrefix: ''
+				}, fValueAccessor()),
+				storageKey = `${oCommand['storagePrefix']}resizer-width`,
+				aInitSizes = ko.bindingHandlers.splitterFlex.valiateStorageData(Storage.getData(storageKey), oCommand['sizes']),
 				gutterCallback = function (i, gutterDirection) {
 					var elGutter = document.createElement('div');
 					elGutter.appendChild(document.createElement('div'));
@@ -47,10 +49,7 @@ ko.bindingHandlers.splitterFlex = {
 					gutterSize: 0,
 					gutter: gutterCallback,
 					onDragEnd: function () {
-						if (oCommand['name'])
-						{
-							Storage.setData(oCommand['name'] + 'ResizerWidth', oSplitter.getSizes());
-						}
+						Storage.setData(storageKey, oSplitter.getSizes());
 						if (oCommand.expandSecondPaneWidth) {
 							oCommand.expandSecondPaneWidth(false);
 						}
@@ -79,7 +78,7 @@ ko.bindingHandlers.splitterFlex = {
 					thirdPaneExpanded = oCommand.expandThirdPaneWidth && oCommand.expandThirdPaneWidth()
 				;
 				if (!secondPaneExpanded && !thirdPaneExpanded) {
-					var aPrevSizes = Storage.getData(oCommand['name'] + 'ResizerWidth');
+					var aPrevSizes = Storage.getData(storageKey);
 					if (_.isArray(aPrevSizes)) {
 						oSplitter.setSizes(aPrevSizes);
 					}

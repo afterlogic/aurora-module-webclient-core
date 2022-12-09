@@ -1,10 +1,6 @@
 'use strict';
 
-var
-	$ = require('jquery'),
-	
-	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js')
-;
+var $ = require('jquery');
 
 /**
  * Object for saving and restoring data in local storage or cookies.
@@ -104,13 +100,58 @@ CStorage.prototype.init = function ()
 	{
 		try
 		{
-			localStorage.setItem('check', 'val');
-			localStorage.removeItem('check');
+			localStorage.setItem('aurora_core_check', 'aurora');
+			localStorage.removeItem('aurora_core_check');
 		}
 		catch (err)
 		{
 			this.bHtml5 = false;
 		}
+	}
+};
+
+CStorage.prototype.replaceStorageDataKey = function(oldKey, newKey) {
+	let data = this.getData(oldKey);
+	if (data) {
+		this.removeData(oldKey);
+		if (oldKey === 'MessageDetailsVisible') {
+			data = data === '1';
+		}
+		this.setData(newKey, data);
+	}
+};
+
+CStorage.prototype.convertStorageData = function(userId, AccountList) {
+	const convertMap = [
+		{ old: 'showNewTimezone', new: 'aurora_core_browser-timezone' },
+		{ old: 'message_listResizerWidth', new: 'aurora_mail_resizer-width' },
+		{ old: 'folder_2pane_listResizerWidth', new: 'aurora_mail_hr_folders_resizer-width' },
+		{ old: 'message_2pane_listResizerWidth', new: 'aurora_mail_hr_messages_resizer-width' },
+		{ old: 'compose_attachmentsResizerWidth', new: 'aurora_mail_compose_resizer-width' },
+		{ old: 'contact_listResizerWidth', new: 'aurora_contacts_resizer-width' },
+		{ old: 'files_listResizerWidth', new: 'aurora_files_resizer-width' },
+		{ old: 'files_list1ResizerWidth', new: 'aurora_files_preview_resizer-width' },
+		{ old: 'calendarResizerWidth', new: 'aurora_calendar_resizer-width' },
+		{ old: 'tasks_listResizerWidth', new: 'aurora_tasks_resizer-width' },
+		{ old: 'sendersExpanded', new: 'aurora_custom_senders-expanded' },
+		{ old: 'moveMessagesHistoryData', new: 'aurora_custom_move-messages-history-data' },
+		{ old: 'MailtoAsked', new: 'aurora_mail_is-mailto-asked' },
+		{ old: 'MessageDetailsVisible', new: 'aurora_mail_is-message-details-visible' }
+	];
+
+	convertMap.forEach(dataKeys => {
+		this.replaceStorageDataKey(dataKeys.old, dataKeys.new);
+	});
+
+	this.replaceStorageDataKey(`user_${userId}_cryptoKeyEncrypted`, `aurora_paranoid_user_${userId}_encrypted-crypto-key`);
+	this.replaceStorageDataKey(`user_${userId}_public-keys`, `aurora_openpgp_user_${userId}_public-keys`);
+	this.replaceStorageDataKey(`user_${userId}_private-keys`, `aurora_openpgp_user_${userId}_private-keys`);
+
+	if (AccountList) {
+		this.replaceStorageDataKey('folderAccordion', `aurora_mail_account_${AccountList.currentId()}_expanded-folders`);
+		AccountList.collection().forEach(account => {
+			this.replaceStorageDataKey(`customSenderList-${account.id()}`, `aurora_custom_account_${account.id()}_sender-list`);
+		});
 	}
 };
 

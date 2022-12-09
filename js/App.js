@@ -17,6 +17,7 @@ var
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	Routing = require('%PathToCoreWebclientModule%/js/Routing.js'),
 	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
+
 	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js'),
 	
@@ -215,10 +216,11 @@ CApp.prototype.init = function ()
 		
 	ModulesManager.run('Ios', 'routeToIos');
 
+	let AccountList;
 	if (this.iUserRole !== Enums.UserRole.Anonymous)
 	{
 		var MainTab = App.isNewTab() && window.opener && window.opener.MainTabMailMethods;
-		var AccountList = MainTab ? MainTab.getAccountList() : ModulesManager.run('MailWebclient', 'getAccountList');
+		AccountList = MainTab ? MainTab.getAccountList() : ModulesManager.run('MailWebclient', 'getAccountList');
 		if (AccountList)
 		{
 			this.currentAccountId = AccountList.currentId;
@@ -291,6 +293,9 @@ CApp.prototype.init = function ()
 	}
 
 	Routing.init();
+
+	const Storage = require('%PathToCoreWebclientModule%/js/Storage.js');
+	Storage.convertStorageData(this.iUserId, AccountList);
 };
 
 CApp.prototype.showLastErrorOnLogin = function ()
@@ -564,5 +569,5 @@ CApp.prototype.subscribeEvent = function (sEventName, fCallback)
 var App = new CApp();
 
 InitModernizr();
-	
+
 module.exports = App;
