@@ -117,13 +117,16 @@ CStorage.prototype.replaceStorageDataKey = function(oldKey, newKey) {
 		if (oldKey === 'MessageDetailsVisible') {
 			data = data === '1';
 		}
-		this.setData(newKey, data);
+		if (newKey) {
+			this.setData(newKey, data);
+		}
 	}
 };
 
 CStorage.prototype.convertStorageData = function(userId, AccountList) {
 	const convertMap = [
 		{ old: 'showNewTimezone', new: 'aurora_core_browser-timezone' },
+		{ old: 'folderAccordionCleared', new: '' },
 		{ old: 'message_listResizerWidth', new: 'aurora_mail_resizer-width' },
 		{ old: 'folder_2pane_listResizerWidth', new: 'aurora_mail_hr_folders_resizer-width' },
 		{ old: 'message_2pane_listResizerWidth', new: 'aurora_mail_hr_messages_resizer-width' },
