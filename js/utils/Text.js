@@ -12,6 +12,16 @@ var
 	TextUtils = {}
 ;
 
+TextUtils.isHtml = function (text = '')
+{
+	return (
+		text.indexOf('<br') !== -1 ||
+		text.indexOf('<div') !== -1 ||
+		text.indexOf('<span') !== -1 ||
+		text.indexOf('<a') !== -1
+	);
+};
+
 /**
  * Converts plaintext to HTML text.
  * @param {string} text
