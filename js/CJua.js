@@ -170,10 +170,11 @@ function getDataFromFile(oFile, sPath)
  * @param {Function} fFileCallback
  * @param {boolean=} bEntry = false
  * @param {boolean=} bAllowFolderDragAndDrop = true
+ * @param {Function=} fEmptyFolderCallback
  * @param {number=} iLimit = 20
  * @param {Function=} fLimitCallback
  */
-function getDataFromFiles(aItems, fFileCallback, bEntry, bAllowFolderDragAndDrop, iLimit, fLimitCallback)
+function getDataFromFiles(aItems, fFileCallback, bEntry, bAllowFolderDragAndDrop, fEmptyFolderCallback, iLimit, fLimitCallback)
 {
 	var
 		iInputLimit = 0,
@@ -222,6 +223,8 @@ function getDataFromFiles(aItems, fFileCallback, bEntry, bAllowFolderDragAndDrop
 								{
 									fTraverseFileTree(aEntries[iIndex], sPath + oItem['name'] + '/', fCallback, fLimitCallbackProxy);
 								}
+							} else {
+								fEmptyFolderCallback(oItem);
 							}
 						});
 					}
@@ -287,7 +290,7 @@ function getDataFromInput(oInput, fFileCallback, iLimit, fLimitCallback)
 	var aFiles = oInput && oInput.files && 0 < oInput.files.length ? oInput.files : null;
 	if (aFiles)
 	{
-		getDataFromFiles(aFiles, fFileCallback, false, false, iLimit, fLimitCallback);
+		getDataFromFiles(aFiles, fFileCallback, false, false, () => {}, iLimit, fLimitCallback);
 	}
 	else
 	{
@@ -327,11 +330,12 @@ function eventContainsFiles(oEvent)
 /**
  * @param {Event} oEvent
  * @param {Function} fFileCallback
+ * @param {Function=} fEmptyFolderCallback
  * @param {number=} iLimit = 20
  * @param {Function=} fLimitCallback
  * @param {boolean=} bAllowFolderDragAndDrop = true
  */
-function getDataFromDragEvent(oEvent, fFileCallback, iLimit, fLimitCallback, bAllowFolderDragAndDrop)
+function getDataFromDragEvent(oEvent, fFileCallback, fEmptyFolderCallback, iLimit, fLimitCallback, bAllowFolderDragAndDrop)
 {
 	var
 		aItems = null,
@@ -344,7 +348,7 @@ function getDataFromDragEvent(oEvent, fFileCallback, iLimit, fLimitCallback, bAl
 		aItems = (oEvent.dataTransfer ? getValue(oEvent.dataTransfer, 'items', null) : null) || getValue(oEvent, 'items', null);
 		if (aItems && 0 < aItems.length && aItems[0] && aItems[0]['webkitGetAsEntry'])
 		{
-			getDataFromFiles(aItems, fFileCallback, true, bAllowFolderDragAndDrop, iLimit, fLimitCallback);
+			getDataFromFiles(aItems, fFileCallback, true, bAllowFolderDragAndDrop, fEmptyFolderCallback, iLimit, fLimitCallback);
 		}
 		else if (eventContainsFiles(oEvent))
 		{
@@ -353,7 +357,7 @@ function getDataFromDragEvent(oEvent, fFileCallback, iLimit, fLimitCallback, bAl
 
 			if (aFiles && 0 < aFiles.length)
 			{
-				getDataFromFiles(aFiles, fFileCallback, false, false, iLimit, fLimitCallback);
+				getDataFromFiles(aFiles, fFileCallback, false, false, fEmptyFolderCallback, iLimit, fLimitCallback);
 			}
 		}
 	}
@@ -900,6 +904,7 @@ function CJua(oOptions)
 		'onDragEnter': null,
 		'onDragLeave': null,
 		'onDrop': null,
+		'onEmptyFolderDrop': null,
 		'onBodyDragEnter': null,
 		'onBodyDragLeave': null,
 		'onLimitReached': function () {
@@ -1017,6 +1022,7 @@ function CJua(oOptions)
 										}
 									}
 								},
+								self.getEvent('onEmptyFolderDrop'),
 								getValue(self.oOptions, 'multipleSizeLimit', iDefLimit),
 								self.getEvent('onLimitReached'),
 								!getValue(self.oOptions, 'disableFolderDragAndDrop', true)
