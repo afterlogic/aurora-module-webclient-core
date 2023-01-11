@@ -109,6 +109,14 @@
 	.inputosaurus-container .inputosaurus-input input,
 	input.field {
 		border: none !important;
+
+		&:-webkit-autofill,
+		&:-webkit-autofill:hover, 
+		&:-webkit-autofill:focus, 
+		&:-webkit-autofill:active{
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: @text-color-1;
+		}
 	}
 
 	// .popup.calendar_event .scrollable_field {
