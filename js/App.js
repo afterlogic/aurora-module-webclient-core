@@ -8,11 +8,12 @@ var
 	$ = require('jquery'),
 	ko = require('knockout'),
 	modernizr = require('%PathToCoreWebclientModule%/js/vendors/modernizr.js'),
-	
+
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	UrlUtils = require('%PathToCoreWebclientModule%/js/utils/Url.js'),
-	
+	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
+
 	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	Routing = require('%PathToCoreWebclientModule%/js/Routing.js'),
@@ -182,6 +183,13 @@ CApp.prototype.isNewTab = function ()
 CApp.prototype.isMobile = function ()
 {
 	return UserSettings.IsMobile === 1;
+};
+
+CApp.prototype.getCurrentDeviceId = function ()
+{
+	const deviceId = $.cookie('DeviceId') || Utils.generateUUID();
+	$.cookie('DeviceId', deviceId, {expires: 365});
+	return deviceId;
 };
 
 CApp.prototype.init = function ()

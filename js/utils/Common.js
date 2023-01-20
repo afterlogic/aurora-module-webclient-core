@@ -394,17 +394,4 @@ Utils.generateUUID = function ()
 	  });
 };
 
-Utils.getUUID = function ()
-{
-	var sDeviceId = $.cookie('DeviceId') || '';
-
-	if (sDeviceId === '')
-	{
-		sDeviceId = Utils.generateUUID();
-		$.cookie('DeviceId', sDeviceId);
-	}
-
-	return sDeviceId;
-};
-
 module.exports = Utils;

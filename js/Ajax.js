@@ -211,7 +211,7 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext)
 		oHeader['Authorization'] = 'Bearer ' + sAuthToken;
 	}
 
-	oHeader['X-DeviceId'] = Utils.getUUID();
+	oHeader['X-DeviceId'] = App.getCurrentDeviceId();
 
 	oCloneRequest.Parameters = JSON.stringify(oCloneRequest.Parameters);
 
