@@ -14,6 +14,8 @@ var
 	bRtl = $('html').hasClass('rtl')
 ;
 
+require('%PathToCoreWebclientModule%/js/vendors/jquery.cookie.js');
+
 var Settings = {
 	ServerModuleName: 'Core',
 	HashModuleName: 'core',
@@ -130,12 +132,14 @@ var Settings = {
 			this.UserId = Types.pInt(oAppDataCoreSection.UserId, this.UserId);
 			this.PasswordMinLength = Types.pNonNegativeInt(oAppDataCoreSection.PasswordMinLength, this.PasswordMinLength);
 			this.PasswordMustBeComplex = Types.pBool(oAppDataCoreSection.PasswordMustBeComplex, this.PasswordMustBeComplex);
+
 			this.CookiePath = Types.pString(oAppDataCoreSection.CookiePath, this.CookiePath);
-			if (this.CookiePath === '')
-			{
+			if (this.CookiePath === '') {
 				this.CookiePath = '/';
 			}
 			this.CookieSecure = Types.pBool(oAppDataCoreSection.CookieSecure, this.CookieSecure);
+			$.cookie.defaults = { path: this.CookiePath, secure: this.CookieSecure };
+
 			this.Version = Types.pString(oAppDataCoreSection.Version, this.Version);
 			this.ProductName = Types.pString(oAppDataCoreSection.ProductName, this.ProductName);
 			

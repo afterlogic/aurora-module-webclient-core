@@ -33,8 +33,6 @@ require('%PathToCoreWebclientModule%/js/koOtherBindings.js');
 
 require('%PathToCoreWebclientModule%/js/vendors/inputosaurus.js');
 
-require('%PathToCoreWebclientModule%/js/vendors/jquery.cookie.js');
-
 function InitNotMobileRequires()
 {
 	require('%PathToCoreWebclientModule%/js/CustomTooltip.js');
@@ -185,10 +183,22 @@ CApp.prototype.isMobile = function ()
 	return UserSettings.IsMobile === 1;
 };
 
+function saveDeviceId(deviceId) {
+	$.cookie('DeviceId', deviceId, {expires: 365});
+}
+
+function refreshOrGenerateAndSaveDeviceId() {
+	const deviceId = $.cookie('DeviceId') || Utils.generateUUID();
+	saveDeviceId(deviceId);
+};
+
 CApp.prototype.getCurrentDeviceId = function ()
 {
-	const deviceId = $.cookie('DeviceId') || Utils.generateUUID();
-	$.cookie('DeviceId', deviceId, {expires: 365});
+	let deviceId = $.cookie('DeviceId');
+	if (!deviceId) {
+		deviceId = Utils.generateUUID();
+		saveDeviceId(deviceId);
+	}
 	return deviceId;
 };
 
@@ -290,9 +300,9 @@ CApp.prototype.init = function ()
 
 	ModulesManager.start();
 	Screens.start();
-	
+
 	this.checkCookies();
-	
+
 	this.showLastErrorOnLogin();
 	
 	if (UserSettings.IsSystemConfigured === false)
@@ -496,8 +506,6 @@ CApp.prototype.useGoogleAnalytics = function ()
  */
 CApp.prototype.checkCookies = function ()
 {
-	$.cookie.defaults = { path: UserSettings.CookiePath, secure: UserSettings.CookieSecure };
-	
 	$.cookie('checkCookie', '1');
 	var bCookieWorks = $.cookie('checkCookie') === '1';
 	$.removeCookie('checkCookie');
@@ -520,6 +528,7 @@ CApp.prototype.checkCookies = function ()
 				this.setAuthToken(sAuthToken);
 			}
 		}
+		refreshOrGenerateAndSaveDeviceId();
 	}
 	
 	return bCookieWorks;
