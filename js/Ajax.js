@@ -140,8 +140,9 @@ CAjax.prototype.registerOnAllRequestsClosedHandler = function (fHandler)
  * @param {function=} fResponseHandler
  * @param {object=} oContext
  * @param {object=} oMainParams
+ * @param {string=} authToken
  */
-CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler, oContext, oMainParams)
+CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler, oContext, oMainParams, authToken)
 {
 	oParameters = oParameters || {};
 
@@ -172,7 +173,7 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
 		{
 			this.abortSameRequests(oRequest);
 
-			this.doSend(oRequest, fResponseHandler, oContext);
+			this.doSend(oRequest, fResponseHandler, oContext, authToken);
 		}
 	}
 	else
@@ -188,8 +189,9 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
  * @param {Object} oRequest
  * @param {Function=} fResponseHandler
  * @param {Object=} oContext
+ * @param {string=} authToken
  */
-CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext)
+CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, authToken = '')
 {
 	var
 		doneFunc = _.bind(this.done, this, oRequest, fResponseHandler, oContext),
@@ -197,7 +199,7 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext)
 		alwaysFunc = _.bind(this.always, this, oRequest),
 		oXhr = null,
 		oCloneRequest = _.clone(oRequest),
-		sAuthToken = $.cookie('AuthToken') || '',
+		sAuthToken = $.cookie('AuthToken') || authToken,
 		oHeader = { 'X-Client': 'WebClient' }
 	;
 
