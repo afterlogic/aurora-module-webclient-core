@@ -343,14 +343,25 @@ CApp.prototype.showLastErrorOnLogin = function ()
  */
 CApp.prototype.logout = function ()
 {
-	if (Screens.hasUnsavedChanges() || Popups.hasUnsavedChanges())
-	{
-		var oCurrentScreen = _.isFunction(Screens.getCurrentScreen) ? Screens.getCurrentScreen() : null;
-		this.askDiscardChanges(this.logoutAndGotoLogin.bind(this), null, oCurrentScreen);
-	}
-	else
-	{
-		this.logoutAndGotoLogin();
+	const continueLogout = () => {
+		const eventParams = {
+			logoutPromises: []
+		};
+		App.broadcastEvent('Logout', eventParams);
+		if (Array.isArray(eventParams.logoutPromises)){
+			Promise.all(eventParams.logoutPromises).then(() => {
+				this.logoutAndGotoLogin();
+			}, () => {
+				// logout was rejected by some module
+			});
+		} else {
+			this.logoutAndGotoLogin();
+		}
+	};
+	if (Screens.hasUnsavedChanges() || Popups.hasUnsavedChanges()) {
+		this.askDiscardChanges(continueLogout, null, Screens.getCurrentScreen());
+	} else {
+		continueLogout();
 	}
 };
 
@@ -359,8 +370,6 @@ CApp.prototype.logout = function ()
  */
 CApp.prototype.logoutAndGotoLogin = function ()
 {
-	App.broadcastEvent('Logout', {});
-	
 	function gotoLoginPage()
 	{
 		if (Types.isNonEmptyString(UserSettings.CustomLogoutUrl))
