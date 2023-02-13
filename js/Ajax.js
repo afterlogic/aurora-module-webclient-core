@@ -392,6 +392,8 @@ CAjax.prototype.executeResponseHandler = function (fResponseHandler, oContext, o
 		oResponse = { Result: false, ErrorCode: 0 };
 	}
 
+	App.broadcastEvent('ReceiveAjaxResponse::before', {'Request': oRequest, 'Response': oResponse});
+
 	// Check the Internet connection before passing control to the modules.
 	// It forbids or allows further AJAX requests.
 	this.checkConnection(oRequest.Module, oRequest.Method, sType);
