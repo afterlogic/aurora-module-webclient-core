@@ -87,6 +87,11 @@ Enums.Errors = {
 	'NotDisplayedError': 1155
 };
 
+Enums.SortOrder = {
+	'Asc': 0,
+	'Desc': 1
+};
+
 Enums.MobilePanel = {
 	'Groups': 1,
 	'Items': 2,
