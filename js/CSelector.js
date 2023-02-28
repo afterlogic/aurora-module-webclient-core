@@ -154,7 +154,6 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 		'read': this.selectorHook,
 
 		'write': function (oItemToSelect) {
-
 			this.selectorHook(oItemToSelect);
 
 			if (oItemToSelect)
@@ -806,25 +805,24 @@ CSelector.prototype.scrollToSelected = function ()
 	var
 		iOffset = 20,
 		oSelected = $(this.sSelectableSelector, this.oScrollScope),
-		oPos = oSelected.position(),
+		offsetTop = oSelected[0] ? oSelected[0].offsetTop : undefined,
 		iVisibleHeight = this.oScrollScope.height(),
 		iScrollTop = this.oScrollScope.scrollTop(),
 		iSelectedHeight = oSelected.outerHeight(),
-		bSelectedVisible = oPos && (oPos.top >= iScrollTop) && (oPos.top <= (iScrollTop + iVisibleHeight - iSelectedHeight))
+		bSelectedVisible = offsetTop && (offsetTop >= iScrollTop) && (offsetTop <= (iScrollTop + iVisibleHeight - iSelectedHeight))
 	;
-
-	if (oPos && !bSelectedVisible)
+	if (offsetTop && !bSelectedVisible)
 	{
-		if ((oPos.top < (iScrollTop + iVisibleHeight)) && ((oPos.top + iSelectedHeight) > (iScrollTop + iVisibleHeight)))
+		if ((offsetTop < (iScrollTop + iVisibleHeight)) && ((offsetTop + iSelectedHeight) > (iScrollTop + iVisibleHeight)))
 		{
 			// selected item is partially visible from below
 			// make it visible at bottom with offset
-			this.oScrollScope.scrollTop(oPos.top + iSelectedHeight + iOffset - iVisibleHeight);
+			this.oScrollScope.scrollTop(offsetTop + iSelectedHeight + iOffset - iVisibleHeight);
 		}
 		else
 		{
 			// make selected item visible at top with offset
-			this.oScrollScope.scrollTop(oPos.top - iOffset);
+			this.oScrollScope.scrollTop(offsetTop - iOffset);
 		}
 
 		return true;
