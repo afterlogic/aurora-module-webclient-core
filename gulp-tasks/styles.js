@@ -4,11 +4,13 @@ var
 	gulp = require('gulp'),
 	less = require('gulp-less'),
 	log = require('fancy-log'),
-	concat = require('gulp-concat-util'),
+	concat = require('gulp-concat'),
 	plumber = require('gulp-plumber'),
 	fs = require('fs'),
 	ncp = require('ncp').ncp,
 	mkdirp = require('mkdirp'),
+	Vinyl = require('vinyl');
+	through2 = require('through2');
 
 	aModulesNames = argv.getModules(),
 	aModulesWatchPaths = [],
@@ -20,7 +22,7 @@ var
 	sTenantPathPrefix = sTenanthash ? 'tenants/' + sTenanthash + '/' : '',
 	
 	sPathToCoreWebclient = 'modules/CoreWebclient',
-	sPathToCoreMobileWebclient = 'modules/CoreMobileWebclient'
+	crlf = '\n'
 ;
 
 aModulesNames.forEach(function (sModuleName) {
@@ -132,22 +134,22 @@ function BuildThemeCss(sTheme, bMobile)
 	
 	aModulesFiles = aThemeSpecyficDefaultFiles.concat(aThemeSpecyficFiles.concat(aModulesFiles));
 
-	gulp.src(aModulesFiles)
-		.pipe(concat('styles' + sPostfix + '.css', {
-			process: function(sSrc, sFilePath) {
-//				var
-//					sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme.toLowerCase() + '.less')
-//				;
-//				
-//				if ( fs.existsSync(sThemePath)) {
-//					aThemeSpecyficFiles.push('@import "' + sThemePath + '";\r\n');
-//				}
-		
-				return '@import "' + sFilePath + '";\r\n'; 
-			}
-		}))
-//		.pipe(concat.header('.' + aModulesNames.join('Screen, .') + 'Screen { \n')) /* wrap styles */
-//		.pipe(concat.footer('} \n'))
+	function createVirtualFilePipe() {
+		return through2.obj(function (file, _, cb) {
+			const content = '@import "' + file.path + '";\r\n';
+			const virtualFile = new Vinyl({
+				path: 'file.txt',
+				contents: Buffer.from(content),
+			});
+			
+			this.push(virtualFile);
+			cb();
+		});
+	}
+	
+	return gulp.src(aModulesFiles)
+		.pipe(createVirtualFilePipe())
+		.pipe(concat('styles' + sPostfix + '.css'))
 		.pipe(plumber({
 			errorHandler: function (err) {
 				console.log(err.toString());

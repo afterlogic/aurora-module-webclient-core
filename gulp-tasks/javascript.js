@@ -255,7 +255,7 @@ Promise.all(_.values(oAvailableModules))
 	fs.mkdir(sPath, { recursive: true }, (err) => {
 		if (err) throw err;
 	});
-	fs.writeFileSync( sPath + '_app-entry.js', modulesJs.join(crlf), function (err) {
+	fs.writeFileSync( sPath + '_' + sName + '-entry.js', modulesJs.join(crlf), function (err) {
 		if (err) throw err;
 	});
 };
