@@ -1,26 +1,19 @@
 'use strict';
 
-var
+const
 	_ = require('underscore'),
-	argv = require('./argv.js'),
 	fs = require('fs'),
-	gulp = require('gulp'),
 	log = require('fancy-log'),
 	webpack = require('webpack'),
 	path = require('path'),
-
-	sTenantName = argv.getParameter('--tenant'),
-	sOutputName = argv.getParameter('--output'), /* app, app-mobile, app-message-newtab, app-adminpanel, app-files-pub, app-calendar-pub, app-helpdesk*/
-	aModulesNames = argv.getModules(),
-	sBuild = argv.getParameter('--build'),
+	sTenantName = process.env.npm_config_tenant,
+	sOutputName = process.env.npm_config_output ?? 'app', // app, app-mobile, app-message-newtab, app-adminpanel, app-files-pub, app-calendar-pub, app-helpdesk
+	sBuild = process.env.npm_config_build,
 	sPath = sTenantName ? './tenants/' + sTenantName + '/static/js/' : './static/js/',
 	crlf = '\n'
 ;
 
-if (sOutputName === '')
-{
-	sOutputName = 'app';
-}
+const aModulesNames = fs.readdirSync('./modules/');
 
 function GetModuleName(sFilePath) {
 	return sFilePath.replace(/.*modules[\\/](.*?)[\\/]js.*/, "$1");
@@ -66,7 +59,13 @@ var
 				{
 					test: /[\\\/]modernizr\.js$/,
 					use: [
-						'imports-loader?this=>window',
+						{
+							loader: "imports-loader",
+							options: {
+							  	wrapper: "window"
+							},
+						},
+						// 'imports-loader?this=>window',
 						'exports-loader?window.Modernizr'
 					]
 				},
@@ -137,7 +136,7 @@ var
 				iBuild = aParsedVersion[2] ? aParsedVersion[2].replace(/^([a-z]+)(\d+)$/, '$2') : 1
 			;
 			
-			if (sBuild !== '')
+			if (sBuild)
 			{
 				sBuildPrefix = sBuild;
 			}
@@ -260,8 +259,7 @@ Promise.all(_.values(oAvailableModules))
 	});
 };
 
-gulp.task('js:build', function (done) {
-
+function build () {
 	const config = _.defaults({
 		mode: 'none',
 		entry: sPath + '_' + sOutputName + '-entry.js',
@@ -276,12 +274,9 @@ gulp.task('js:build', function (done) {
 
 	generateEntryTask(sOutputName);
 	webpack(config, compileCallback);
-	
-	done();
-});
+}
 
-gulp.task('js:watch', function (done) {
-
+function watch () {
 	const config = _.defaults({
 		mode: 'none',
 		watch: true,
@@ -297,12 +292,9 @@ gulp.task('js:watch', function (done) {
 
 	generateEntryTask(sOutputName);
 	webpack(config, compileCallback);
+};
 
-	done();
-});
-
-gulp.task('js:min', function (done) {
-
+function min () {
 	const config = _.defaults({
 		mode: 'production',
 		entry: sPath + '_' + sOutputName + '-entry.js',
@@ -316,8 +308,10 @@ gulp.task('js:min', function (done) {
 
 	generateEntryTask(sOutputName);
 	webpack(config, compileCallback);
+};
 
-	done();
-});
-
-module.exports = {};
+exports.default = {
+	build,
+	min,
+	watch
+};
