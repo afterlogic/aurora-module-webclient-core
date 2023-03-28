@@ -1,19 +1,13 @@
 {
-  "title": "Afterlogic Aurora Core Webclient module",
-  "description": "",
-  "name": "corewebclient",
-  "version": "8.0.0",
-  "main": "gulpfile.js",
-  "homepage": "http://afterlogic.org/aurora-cloud",
-  "repository": "https://github.com/afterlogic/aurora-core",
+  "title": "Afterlogic Aurora Core Webclient module",	
+  "version": "9.0.0",
+  "homepage": "https://github.com/afterlogic/aurora-module-webclient-core",
+  "repository": "https://github.com/afterlogic/aurora-module-webclient-core",
   "license": "AGPL-3.0",
   "author": {
     "name": "Afterlogic Corp.",
     "email": "support@afterlogic.com",
-    "web": "http://afterlogic.com"
-  },
-  "engines": {
-    "node": ">= 0.8.0"
+    "web": "https://afterlogic.com"
   },
   "dependencies": {
     "bluebird": "^3.4.6",
