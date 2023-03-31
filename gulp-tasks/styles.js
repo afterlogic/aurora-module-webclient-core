@@ -31,7 +31,7 @@ function BuildLibsCss(){
 	var
 		aLibsFiles = [
 			sPathToCoreWebclient + '/styles/vendors/normalize.css',
-			// sPathToCoreWebclient + '/styles/vendors/jquery/jquery-ui-1.10.4.custom.min.css',
+			sPathToCoreWebclient + '/styles/vendors/jquery/jquery-ui-1.10.4.custom.min.css',
 			//sPathToCoreWebclient + '/styles/vendors/fullcalendar-2.2.3.min.css',
 			sPathToCoreWebclient + '/styles/vendors/inputosaurus.css'
 		],
