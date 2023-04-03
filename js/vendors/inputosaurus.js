@@ -127,7 +127,14 @@ var inputosaurustext = {
 		}
 
 		o.wrapperElement && o.wrapperElement.append(els.ul);
-		this.element.replaceWith(o.wrapperElement || els.ul);
+		// this doesn't work due to some jQuery chaтges.
+		// this.element.replaceWith(o.wrapperElement || els.ul);
+		// It's possible to use native replaceWith 
+		this.element[0].replaceWith((o.wrapperElement && o.wrapperElement[0]) || els.ul[0]);
+		// var elementParent = this.element.parent();
+		// elementParent.append(o.wrapperElement || els.ul);
+		// this.element.remove();
+
 		els.origInputCont.append(this.element).hide();
 
 		els.inputCont.append(els.input);
