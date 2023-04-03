@@ -5,6 +5,7 @@ const
 	fs = require('fs'),
 	log = require('fancy-log'),
 	webpack = require('webpack'),
+	WebpackBar = require('webpackbar'),
 	path = require('path'),
 	sTenantName = process.env.npm_config_tenant,
 	sOutputName = process.env.npm_config_output ?? 'app', // app, app-mobile, app-message-newtab, app-adminpanel, app-files-pub, app-calendar-pub, app-helpdesk
@@ -119,7 +120,16 @@ var
 				$: "jquery",
 				jQuery: "jquery",
 				"window.jQuery": "jquery"
-			})
+			}),
+			// new webpack.ProgressPlugin((percentage, message, ...args) => {
+			// 	console.info(percentage, message, ...args);
+			// }),
+			new WebpackBar({
+				// name: "My App",
+				color: '#2598d6',
+				compiledIn: false,
+				fancy: true,
+			}),
 		]
 	},
 	updateVersion = function () {
