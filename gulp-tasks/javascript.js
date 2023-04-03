@@ -115,7 +115,7 @@ var
 					]
 				},
 				{
-					test: /\.(png|jpe?g|gif)$/,
+					test: /\.(png|jpe?g|gif|ttf|woff|woff2|eot)$/,
 					use: [
 						'file-loader'
 					]
