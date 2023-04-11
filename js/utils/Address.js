@@ -16,7 +16,9 @@ var
  */
 AddressUtils.isCorrectEmail = function (sValue)
 {
-	return !!(sValue.match(/^[A-Z0-9\"!#\$%\^\{\}`~&'\+\-=_\./]+@[A-Z0-9\.\-]+$/i));
+	// \p{L} matches a single code point in the category "letter"
+	const regex = /^[0-9A-Z"!#$%^{}`~&'+-=_./]+@[0-9\p{L}.-]+$/iu;
+	return !!(sValue.match(regex));
 };
 
 /**
