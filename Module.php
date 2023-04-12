@@ -9,6 +9,7 @@ namespace Aurora\Modules\CoreWebclient;
 
 use Aurora\Api;
 use Aurora\System\Application;
+use Aurora\System\Module\Decorator;
 use Aurora\System\Router;
 
 /**
@@ -22,6 +23,14 @@ use Aurora\System\Router;
  */
 class Module extends \Aurora\System\Module\AbstractWebclientModule
 {
+    /**
+     * @return Module
+     */
+    public static function Decorator()
+    {
+        return parent::Decorator();
+    }
+
     /***** private functions *****/
     /**
      * Initializes CoreWebclient Module.
@@ -84,7 +93,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::Anonymous);
 
         $oUser = \Aurora\System\Api::getAuthenticatedUser();
-        $oIntegrator = \Aurora\System\Api::GetModule('Core')->getIntegratorManager();
+        $oIntegrator = \Aurora\Modules\Core\Module::getInstance()->getIntegratorManager();
 
         return array(
             'AllowChangeSettings' => $this->getConfig('AllowChangeSettings', false),
@@ -217,7 +226,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
             }
 
             $sResult = strtr($sResult, array(
-                '{{AppVersion}}' => AU_APP_VERSION,
+                '{{AppVersion}}' => Application::GetVersion(),
                 '{{IntegratorDir}}' => $oIntegrator->isRtl() ? 'rtl' : 'ltr',
                 '{{IntegratorLinks}}' => $oIntegrator->buildHeadersLink(),
                 '{{IntegratorBody}}' => $oIntegrator->buildBody()
@@ -238,7 +247,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
             \header("Location: ./");
         }
 
-        $aCompatibilities = \Aurora\System\Api::GetModuleDecorator('Core')->GetCompatibilities();
+        $aCompatibilities = \Aurora\Modules\Core\Module::Decorator()->GetCompatibilities();
         $sContent = '';
         $bResult = true;
         foreach ($aCompatibilities as $sModule => $aItems) {
