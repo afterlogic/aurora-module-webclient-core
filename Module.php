@@ -19,6 +19,8 @@ use Aurora\System\Router;
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
  * @copyright Copyright (c) 2023, Afterlogic Corp.
  *
+ * @property Settings $oModuleSettings
+ *
  * @package Modules
  */
 class Module extends \Aurora\System\Module\AbstractWebclientModule
@@ -74,7 +76,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
     private function getLanguageList($aSystemList)
     {
         $aResultList = [];
-        $aLanguageNames = $this->getConfig('LanguageNames', false);
+        $aLanguageNames = $this->oModuleSettings->LanguageNames;
         foreach ($aSystemList as $sLanguage) {
             if (isset($aLanguageNames[$sLanguage])) {
                 $aResultList[] = [
@@ -105,28 +107,28 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         $oIntegrator = \Aurora\Modules\Core\Module::getInstance()->getIntegratorManager();
 
         return array(
-            'AllowChangeSettings' => $this->getConfig('AllowChangeSettings', false),
-            'AllowClientDebug' => $this->getConfig('AllowClientDebug', false),
-            'AllowDesktopNotifications' => $oUser && isset($oUser->{self::GetName().'::AllowDesktopNotifications'}) ? $oUser->{self::GetName().'::AllowDesktopNotifications'} : $this->getConfig('AllowDesktopNotifications', false),
-            'AllowMobile' => $this->getConfig('AllowMobile', false),
-            'AllowPrefetch' => $this->getConfig('AllowPrefetch', true),
-            'AttachmentSizeLimit' => $this->getConfig('AttachmentSizeLimit', 0),
-            'AutoRefreshIntervalMinutes' => $oUser && isset($oUser->{self::GetName().'::AutoRefreshIntervalMinutes'}) ? $oUser->{self::GetName().'::AutoRefreshIntervalMinutes'} : $this->getConfig('AutoRefreshIntervalMinutes', 0),
-            'CustomLogoutUrl' => $this->getConfig('CustomLogoutUrl', ''),
-            'DefaultAnonymScreenHash' => $this->getConfig('DefaultAnonymScreenHash', ''),
-            'DefaultUserScreenHash' => $this->getConfig('DefaultUserScreenHash', ''),
-            'GoogleAnalyticsAccount' => $this->getConfig('GoogleAnalyticsAccount', ''),
-            'HeaderModulesOrder' => $this->getConfig('HeaderModulesOrder', []),
-            'IsDemo' => $this->getConfig('IsDemo', false),
+            'AllowChangeSettings' => $this->oModuleSettings->AllowChangeSettings,
+            'AllowClientDebug' => $this->oModuleSettings->AllowClientDebug,
+            'AllowDesktopNotifications' => $oUser && isset($oUser->{self::GetName().'::AllowDesktopNotifications'}) ? $oUser->{self::GetName().'::AllowDesktopNotifications'} : $this->oModuleSettings->AllowDesktopNotifications,
+            'AllowMobile' => $this->oModuleSettings->AllowMobile,
+            'AllowPrefetch' => $this->oModuleSettings->AllowPrefetch,
+            'AttachmentSizeLimit' => $this->oModuleSettings->AttachmentSizeLimit,
+            'AutoRefreshIntervalMinutes' => $oUser && isset($oUser->{self::GetName().'::AutoRefreshIntervalMinutes'}) ? $oUser->{self::GetName().'::AutoRefreshIntervalMinutes'} : $this->oModuleSettings->AutoRefreshIntervalMinutes,
+            'CustomLogoutUrl' => $this->oModuleSettings->CustomLogoutUrl,
+            'DefaultAnonymScreenHash' => $this->oModuleSettings->DefaultAnonymScreenHash,
+            'DefaultUserScreenHash' => $this->oModuleSettings->DefaultUserScreenHash,
+            'GoogleAnalyticsAccount' => $this->oModuleSettings->GoogleAnalyticsAccount,
+            'HeaderModulesOrder' => $this->oModuleSettings->HeaderModulesOrder,
+            'IsDemo' => $this->oModuleSettings->IsDemo,
             'IsMobile' => $oIntegrator->isMobile(),
             'LanguageListWithNames' => $this->getLanguageList($oIntegrator->getLanguageList()),
-            'MultipleFilesUploadLimit' => $this->getConfig('MultipleFilesUploadLimit', 50),
-            'ShowQuotaBar' => $this->getConfig('ShowQuotaBar', false),
-            'ShowQuotaBarTextAsTooltip' => $this->getConfig('ShowQuotaBarTextAsTooltip', true),
-            'QuotaWarningPerc' => $this->getConfig('QuotaWarningPerc', 0),
-            'Theme' => $oUser && isset($oUser->{self::GetName().'::Theme'}) ? $oUser->{self::GetName().'::Theme'} : $this->getConfig('Theme', 'Default'),
-            'ThemeList' => $this->getConfig('ThemeList', ['Default']),
-            'HideLogout' => $this->getConfig('HideLogout', false),
+            'MultipleFilesUploadLimit' => $this->oModuleSettings->MultipleFilesUploadLimit,
+            'ShowQuotaBar' => $this->oModuleSettings->ShowQuotaBar,
+            'ShowQuotaBarTextAsTooltip' => $this->oModuleSettings->ShowQuotaBarTextAsTooltip,
+            'QuotaWarningPerc' => $this->oModuleSettings->QuotaWarningPerc,
+            'Theme' => $oUser && isset($oUser->{self::GetName().'::Theme'}) ? $oUser->{self::GetName().'::Theme'} : $this->oModuleSettings->Theme,
+            'ThemeList' => $this->oModuleSettings->ThemeList,
+            'HideLogout' => $this->oModuleSettings->HideLogout,
             'BaseUrl' => Application::getBaseUrl(),
         );
     }
@@ -170,7 +172,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
     public function SetHtmlOutputHeaders()
     {
         @\header('Content-Type: text/html; charset=utf-8', true);
-        $sContentSecurityPolicy = $this->getConfig('ContentSecurityPolicy', '');
+        $sContentSecurityPolicy = $this->oModuleSettings->ContentSecurityPolicy;
         if (!empty($sContentSecurityPolicy)) {
             $aArgs = [];
             $aAddDefault = [];
