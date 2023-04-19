@@ -78,7 +78,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         foreach ($aSystemList as $sLanguage) {
             if (isset($aLanguageNames[$sLanguage])) {
                 $aResultList[] = [
-                    'name' => $aLanguageNames[$sLanguage],
+                    'name' => json_decode('"'.$aLanguageNames[$sLanguage].'"'),
                     'value' => $sLanguage
                 ];
             } else {
