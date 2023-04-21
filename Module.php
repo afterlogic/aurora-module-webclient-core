@@ -220,7 +220,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 
         $oSettings =& \Aurora\System\Api::GetSettings();
         if ($oSettings) {
-            if (($oSettings->GetValue('CacheCtrl', true) && isset($_COOKIE['aft-cache-ctrl']))) {
+            if (($oSettings->CacheCtrl && isset($_COOKIE['aft-cache-ctrl']))) {
                 @\setcookie(
                     'aft-cache-ctrl',
                     '',
@@ -237,7 +237,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         $sResult = \file_get_contents($this->GetPath().'/templates/Index.html');
         if (\is_string($sResult)) {
             if ($oSettings) {
-                $sFrameOptions = $oSettings->GetValue('XFrameOptions', '');
+                $sFrameOptions = $oSettings->XFrameOptions;
                 if (0 < \strlen($sFrameOptions)) {
                     @\header('X-Frame-Options: '.$sFrameOptions);
                 }
