@@ -273,7 +273,7 @@ ko.bindingHandlers.droppable = {
 		if (fSwitchObserv)
 		{
 			fSwitchObserv.subscribe(function (bIsSelected) {
-				if($(oElement).data().droppable)
+				if($(oElement).data().uiDroppable)
 				{
 					if(bIsSelected)
 					{
