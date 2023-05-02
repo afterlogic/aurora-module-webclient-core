@@ -304,7 +304,10 @@ CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse
         App.tokenProblem()
         break
       case Enums.Errors.AuthError:
-        if (App.getUserRole() !== Enums.UserRole.Anonymous) {
+        if (
+          App.getUserRole() !== Enums.UserRole.Anonymous &&
+          !(oRequest.Module === 'Core' && oRequest.Method === 'Logout')
+        ) {
           App.logoutAndGotoLogin()
         }
         break
