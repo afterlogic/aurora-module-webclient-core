@@ -303,10 +303,10 @@ var jQuery = require('jquery');
 			width = trackWidth * paneWidth / innerEl.scrollWidth
 		;
 		
-		if (width < 50)
+		if (width < 20)
 		{
-			trackWidth = trackWidth - (50 - width);
-			width = 50;
+			trackWidth = trackWidth - (20 - width);
+			width = 20;
 		}
 
 		this.el
@@ -382,10 +382,10 @@ var jQuery = require('jquery');
 			top = 0
 		;
 	
-		if (height < 50)
+		if (height < 20)
 		{
-			trackHeight = trackHeight - (50 - height);
-			height = 50;
+			trackHeight = trackHeight - (20 - height);
+			height = 20;
 		}
 		
 		top = trackHeight * innerEl.scrollTop / innerEl.scrollHeight + (this.pane.relativeToInner ? this.pane.inner.position().top : 0);
