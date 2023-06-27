@@ -262,10 +262,13 @@ Promise.all(_.values(oAvailableModules))
 });
 `);
 	fs.mkdir(sPath, { recursive: true }, (err) => {
-		if (err) throw err;
-	});
-	fs.writeFileSync( sPath + '_' + sName + '-entry.js', modulesJs.join(crlf), function (err) {
-		if (err) throw err;
+		if (err) {
+			throw err;
+		} else {
+			fs.writeFileSync( sPath + '_' + sName + '-entry.js', modulesJs.join(crlf), (err) => {
+				if (err) throw err;
+			});
+		}
 	});
 };
 
