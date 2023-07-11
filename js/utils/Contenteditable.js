@@ -39,9 +39,9 @@ ContenteditableUtils.setSelectionRanges = function (ranges, collapse = false) {
       const range = ranges[index]
       if (range) {
         selection.addRange(range)
+        rangeText += range
         if (collapse) {
           range.collapse(false)
-          rangeText += '' + range
         }
       }
     }
