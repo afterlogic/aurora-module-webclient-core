@@ -35,7 +35,9 @@ TextUtils.plainToHtml = function (text = '', prepareLinks = false)
 			.replace(/</g, '&lt;')
 			.replace(/>/g, '&gt;')
 			.replace(/"/g, '&quot;')
-			.replace(/'/g, '&#039;');
+			.replace(/'/g, '&#039;')
+			.replaceAll('&gt;', ' &gt;') /* whitespace is required to separate encoded > from the end of a link */
+	;
 
 	if (prepareLinks) {
 		//URLs starting with http://, https://, or ftp://
@@ -50,6 +52,9 @@ TextUtils.plainToHtml = function (text = '', prepareLinks = false)
 		const replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
 		html = html.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
 	}
+
+	/* removing spaces befor &gt; that where added on purpose */
+	html = html.replaceAll(' &gt;', '&gt;'); 
 
 	return html.replace(/\r/g, '').replace(/\n/g, '<br />');
 };
