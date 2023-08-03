@@ -549,7 +549,11 @@ ko.bindingHandlers.customSelect = {
 					'expand': 'expand',
 					'control': true,
 					'input': false,
-					'expandState': function () {}
+					'expandState': function () {},
+					'options': [],
+					'optionsValue': 'value',
+					'optionsText': 'text',
+					'timeOptions': null,
 				}
 			),
 			aOptions = [],
@@ -558,43 +562,34 @@ ko.bindingHandlers.customSelect = {
 			oText = jqElement.find('.link'),
 
 			updateField = function (value) {
+				const options = ko.isObservable(oCommand['options']) ? oCommand['options']() : oCommand['options'];
+
 				_.each(aOptions, function (item) {
 					item.removeClass(oCommand['selected']);
 				});
-				var item = _.find(oCommand['options'], function (item) {
+				var item = _.find(options, function (item) {
 					return item[oCommand['optionsValue']] === value;
 				});
-				if (!item)
-				{
-					item = oCommand['options'][0];
-				}
-				else
-				{
-					aOptions[_.indexOf(oCommand['options'], item)].addClass(oCommand['selected']);
+				if (!item) {
+					item = options[0];
+				} else {
+					aOptions[_.indexOf(options, item)].addClass(oCommand['selected']);
 					oText.text($.trim(item[oCommand['optionsText']]));
 				}
 				return item[oCommand['optionsValue']];
 			},
-			updateList = function (aList) {
+			updateList = function () {
 				oContainer.empty();
 				aOptions = [];
 
-				_.each(aList ? aList : oCommand['options'], function (item) {
+				_.each(ko.isObservable(oCommand['options']) ? oCommand['options']() : oCommand['options'], function (item) {
 					var
 						oOption = $('<span class="item"></span>')
 							.text(item[oCommand['optionsText']])
-							.data('value', item[oCommand['optionsValue']]),
-						isDisabled = item['isDisabled']
+							.data('value', item[oCommand['optionsValue']])
 					;
 
-					if (isDisabled)
-					{
-						oOption.data('isDisabled', isDisabled).addClass('disabled');
-					}
-					else
-					{
-						oOption.data('isDisabled', isDisabled).removeClass('disabled');
-					}
+					oOption.data('isDisabled', item['isDisabled']).toggleClass('disabled', item['isDisabled']);
 
 					aOptions.push(oOption);
 					oContainer.append(oOption);
@@ -607,74 +602,43 @@ ko.bindingHandlers.customSelect = {
 		oContainer.on('click', '.item', function () {
 			var jqItem = $(this);
 
-			if(!jqItem.data('isDisabled'))
-			{
-				oCommand.value(jqItem.data('value'));
+			if(!jqItem.data('isDisabled')) {
+				oCommand['value'](jqItem.data('value'));
 			}
 		});
 
-		if (!oCommand.input && oCommand['value'] && oCommand['value'].subscribe)
-		{
+		if (ko.isObservable(oCommand['value'])) {
 			oCommand['value'].subscribe(function () {
-				var mValue = updateField(oCommand['value']());
-				if (oCommand['value']() !== mValue)
-				{
+				const mValue = updateField(oCommand['value']());
+				if (!oCommand['input'] && oCommand['value']() !== mValue) {
 					oCommand['value'](mValue);
 				}
 			}, oViewModel);
 
 			oCommand['value'].valueHasMutated();
 		}
-
-		if (oCommand.input && oCommand['value'] && oCommand['value'].subscribe)
-		{
-			oCommand['value'].subscribe(function () {
-				updateField(oCommand['value']());
-			}, oViewModel);
-
-			oCommand['value'].valueHasMutated();
-		}
 		
-		if (oCommand.input && oCommand['value'] && oCommand['value'].subscribe)
-		{
-			oCommand['value'].subscribe(function () {
-				updateField(oCommand['value']());
-			}, oViewModel);
-
-			oCommand['value'].valueHasMutated();
-		}
-
-		if(oCommand.alarmOptions)
-		{
-			oCommand.alarmOptions.subscribe(function () {
+		if (ko.isObservable(oCommand['options'])) {
+			oCommand['options'].subscribe(function () {
 				updateList();
-			}, oViewModel);
-		}
-		
-		if(oCommand.timeOptions)
-		{
-			oCommand.timeOptions.subscribe(function (aList) {
-				updateList(aList);
 			}, oViewModel);
 		}
 
 		//TODO fix data-bind click
 		jqElement.removeClass(oCommand['expand']);
-		oControl.click(function (ev) {
-			if (!jqElement.hasClass(oCommand['disabled']))
-			{
+
+		oControl.on('click', function () {
+			if (!jqElement.hasClass(oCommand['disabled'])) {
 				jqElement.toggleClass(oCommand['expand']);
 				oCommand['expandState'](jqElement.hasClass(oCommand['expand']));
 
-				if (jqElement.hasClass(oCommand['expand']))
-				{
+				if (jqElement.hasClass(oCommand['expand'])) {
 					var
 						jqContent = jqElement.find('.dropdown_content'),
 						jqSelected = jqContent.find('.selected')
 					;
 
-					if (jqSelected.position())
-					{
+					if (jqSelected.position()) {
 						jqContent.scrollTop(0);// need for proper calculation position().top
 						jqContent.scrollTop(jqSelected.position().top - 100);// 100 - hardcoded indent to the element in pixels
 					}
