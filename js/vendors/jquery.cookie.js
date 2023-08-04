@@ -57,9 +57,7 @@
 	}
 
 	var config = $.cookie = function (key, value, options) {
-
 		// Write
-
 		if (arguments.length > 1 && !$.isFunction(value)) {
 			options = $.extend({}, config.defaults, options);
 
@@ -78,7 +76,6 @@
 		}
 
 		// Read
-
 		var result = key ? undefined : {},
 			// To prevent the for loop in the first place assign an empty array
 			// in case there are no cookies at all. Also prevents odd result when

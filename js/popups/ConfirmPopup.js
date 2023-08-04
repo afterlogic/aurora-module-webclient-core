@@ -2,7 +2,6 @@
 
 var
 	_ = require('underscore'),
-	$ = require('jquery'),
 	ko = require('knockout'),
 	
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
@@ -42,7 +41,7 @@ CConfirmPopup.prototype.onOpen = function (sDesc, fConfirmCallback, sHeading, sO
 	this.popupHeading(sHeading || '');
 	this.okButtonText(sOkButtonText || TextUtils.i18n('%MODULENAME%/ACTION_OK'));
 	this.cancelButtonText(sCancelButtonText || TextUtils.i18n('%MODULENAME%/ACTION_CANCEL'));
-	if ($.isFunction(fConfirmCallback))
+	if (_.isFunction(fConfirmCallback))
 	{
 		this.fConfirmCallback = fConfirmCallback;
 	}

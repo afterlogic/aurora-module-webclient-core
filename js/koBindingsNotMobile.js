@@ -136,7 +136,7 @@ ko.bindingHandlers.customScrollbar = {
 		jqElement.addClass('scroll-wrap').customscroll(oCommand);
 		oScroll = jqElement.data('customscroll');
 
-		if (oCommand['oScroll'] && $.isFunction(oCommand['oScroll'].subscribe))
+		if (oCommand['oScroll'] && _.isFunction(oCommand['oScroll'].subscribe))
 		{		
 			oCommand['oScroll'](oScroll);
 		}
@@ -152,7 +152,7 @@ ko.bindingHandlers.customScrollbar = {
 			}, 100);
 		}
 		
-		if (oCommand['scrollToTopTrigger'] && $.isFunction(oCommand.scrollToTopTrigger.subscribe)) {
+		if (oCommand['scrollToTopTrigger'] && _.isFunction(oCommand.scrollToTopTrigger.subscribe)) {
 			oCommand.scrollToTopTrigger.subscribe(function () {
 				if (oScroll) {
 					oScroll['scrollToTop']();
@@ -160,7 +160,7 @@ ko.bindingHandlers.customScrollbar = {
 			});
 		}
 		
-		if (oCommand['scrollToBottomTrigger'] && $.isFunction(oCommand.scrollToBottomTrigger.subscribe))
+		if (oCommand['scrollToBottomTrigger'] && _.isFunction(oCommand.scrollToBottomTrigger.subscribe))
 		{
 			oCommand.scrollToBottomTrigger.subscribe(function () {
 				if (oScroll)
@@ -170,7 +170,7 @@ ko.bindingHandlers.customScrollbar = {
 			});
 		}
 
-		if (oCommand['scrollTo'] && $.isFunction(oCommand.scrollTo.subscribe))
+		if (oCommand['scrollTo'] && _.isFunction(oCommand.scrollTo.subscribe))
 		{
 			oCommand.scrollTo.subscribe(function ()
 			{

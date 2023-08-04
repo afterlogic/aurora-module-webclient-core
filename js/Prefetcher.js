@@ -2,17 +2,10 @@
 
 var
 	_ = require('underscore'),
-	$ = require('jquery'),
-	moment = require('moment-timezone'),
-	
-	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
-	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
 	Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
-	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
-	Storage = require('%PathToCoreWebclientModule%/js/Storage.js'),
 	
 	Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	
@@ -36,11 +29,11 @@ Prefetcher.prefetchAll = function ()
 	_.each(ModulesPrefetchers, function (oModulePrefetcher) {
 		if (!bPrefetchStarted)
 		{
-			if (Settings.AllowPrefetch && $.isFunction(oModulePrefetcher.startAll))
+			if (Settings.AllowPrefetch && _.isFunction(oModulePrefetcher.startAll))
 			{
 				bPrefetchStarted = oModulePrefetcher.startAll();
 			}
-			else if ($.isFunction(oModulePrefetcher.startMin))
+			else if (_.isFunction(oModulePrefetcher.startMin))
 			{
 				bPrefetchStarted = oModulePrefetcher.startMin();
 			}

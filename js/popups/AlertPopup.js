@@ -2,7 +2,6 @@
 
 var
 	_ = require('underscore'),
-	$ = require('jquery'),
 	ko = require('knockout'),
 	
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
@@ -48,7 +47,7 @@ CAlertPopup.prototype.onEnterHandler = function ()
 
 CAlertPopup.prototype.cancelPopup = function ()
 {
-	if ($.isFunction(this.closeCallback))
+	if (_.isFunction(this.closeCallback))
 	{
 		this.closeCallback();
 	}

@@ -36,7 +36,7 @@ Utils.createCommand = function (oContext, fExecute, mCanExecute)
 
 	fResult.enabled = ko.observable(true);
 
-	if ($.isFunction(mCanExecute))
+	if (_.isFunction(mCanExecute))
 	{
 		fResult.canExecute = ko.computed(function () {
 			return fResult.enabled() && mCanExecute.call(oContext);

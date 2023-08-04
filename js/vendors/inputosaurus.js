@@ -308,7 +308,7 @@ var inputosaurustext = {
 			}
 		}
 
-		$.isFunction(widget.options.parseHook) && (values = widget.options.parseHook(values));
+		_.isFunction(widget.options.parseHook) && (values = widget.options.parseHook(values));
 
 		if (values.length)
 		{
@@ -332,7 +332,7 @@ var inputosaurustext = {
 
 		widget._resizeInput();
 
-		if ($.isFunction(widget.options.focus))
+		if (_.isFunction(widget.options.focus))
 		{
 			widget.options.focus();
 		}
@@ -349,7 +349,7 @@ var inputosaurustext = {
 
 		switch(true){
 			case ev.which === 86 && ev.ctrlKey:
-				if ($.isFunction(widget.options.paste)) {
+				if (_.isFunction(widget.options.paste)) {
 					pasteValue = widget.options.paste();
 					if (pasteValue) {
 						widget._setChosen([pasteValue]);
@@ -526,7 +526,7 @@ var inputosaurustext = {
 			// ctrl + 'x' - copy tag
 			case 88:
 				if (ev.ctrlKey) {
-					if ($.isFunction(widget.options.copy)) {
+					if (_.isFunction(widget.options.copy)) {
 						widget.options.copy(widget._cutTag(ev));
 					}
 				}
@@ -535,7 +535,7 @@ var inputosaurustext = {
 			// ctrl + 'c' - copy tag
 			case 67:
 				if (ev.ctrlKey) {
-					if ($.isFunction(widget.options.copy)) {
+					if (_.isFunction(widget.options.copy)) {
 						widget.options.copy(widget._copyTag(ev));
 					}
 				}
@@ -863,7 +863,7 @@ var inputosaurustext = {
 		});
 		this._chosenValues = [];
 
-		$.isFunction(this.options.parseHook) && (values = this.options.parseHook(values));
+		_.isFunction(this.options.parseHook) && (values = this.options.parseHook(values));
 
 		this._setChosen(values);
 		this._renderTags();

@@ -67,7 +67,7 @@ ko.bindingHandlers.dropdown = {
 			iLeft,
 			iFitToScreenOffset,
 			fCallback = function () {
-				if ($.isFunction(oCommand['callback']))
+				if (_.isFunction(oCommand['callback']))
 				{
 					oCommand['callback'].call(
 						oViewModel,

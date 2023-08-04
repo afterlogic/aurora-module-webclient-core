@@ -322,7 +322,7 @@ CAbstractFileModel.prototype.parse = function (oData)
 	this.uploadUid(this.hash());
 	this.uploaded(true);
 
-	if ($.isFunction(this.additionalParse))
+	if (_.isFunction(this.additionalParse))
 	{
 		this.additionalParse(oData);
 	}
