@@ -2,7 +2,8 @@
 
 var
 	_ = require('underscore'),
-	$ = require('jquery'),
+
+	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 
 	AddressUtils = {}
 ;
@@ -87,16 +88,16 @@ AddressUtils.getEmailParts = function (sFullEmail, bIgnoreQuotesInName)
 
 	if (iLeftBrocketPos === -1)
 	{
-		sEmail = $.trim(sFullEmail);
+		sEmail = TextUtils.trim(sFullEmail);
 	}
 	else
 	{
 		iQuote1Pos = bIgnoreQuotesInName ? -1 : iQuote1Pos;
 		sName = (iQuote1Pos === -1) ?
-			$.trim(sFullEmail.substring(0, iLeftBrocketPos)) :
-			$.trim(sFullEmail.substring(iQuote1Pos + 1, iQuote2Pos));
+			TextUtils.trim(sFullEmail.substring(0, iLeftBrocketPos)) :
+			TextUtils.trim(sFullEmail.substring(iQuote1Pos + 1, iQuote2Pos));
 
-		sEmail = $.trim(sFullEmail.substring(iLeftBrocketPos + 1, iRightBrocketPos));
+		sEmail = TextUtils.trim(sFullEmail.substring(iLeftBrocketPos + 1, iRightBrocketPos));
 	}
 
 	return {
@@ -207,10 +208,10 @@ AddressUtils.getIncorrectEmailsFromAddressString = function (sAddresses)
 
 	for (; iIndex < iLen; iIndex++)
 	{
-		sFullEmail = $.trim(aEmails[iIndex]);
+		sFullEmail = TextUtils.trim(aEmails[iIndex]);
 		if (sFullEmail.length > 0)
 		{
-			oEmailParts = AddressUtils.getEmailParts($.trim(aEmails[iIndex]));
+			oEmailParts = AddressUtils.getEmailParts(TextUtils.trim(aEmails[iIndex]));
 			if (!AddressUtils.isCorrectEmail(oEmailParts.email))
 			{
 				aIncorrectEmails.push(oEmailParts.email);
