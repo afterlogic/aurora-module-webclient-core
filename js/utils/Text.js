@@ -12,6 +12,11 @@ var
 	TextUtils = {}
 ;
 
+TextUtils.trim = function (text = '')
+{
+	return typeof text === 'string' ? text.trim() : '';
+};
+
 TextUtils.isHtml = function (text = '')
 {
 	return (
@@ -102,7 +107,7 @@ TextUtils.htmlStartsWithBlockquote = function (sHtml)
 	var
 		aParts = sHtml.split('<blockquote'),
 		sBegin = aParts.length > 0 ? aParts[0] : '',
-		sBeginWithoutTags = $.trim(sBegin.replace(/<[^>]*>/g, ''))
+		sBeginWithoutTags = TextUtils.trim(sBegin.replace(/<[^>]*>/g, ''))
 	;
 	
 	return sBeginWithoutTags === '';

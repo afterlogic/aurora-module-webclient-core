@@ -7,6 +7,7 @@ var
 	moment = require('moment'),
 
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
+	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 
 	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 
@@ -264,7 +265,7 @@ Utils.uiDropHelperAnim = function (oEvent, oUi)
  */
 Utils.validateFileOrFolderName = function (sName)
 {
-	sName = $.trim(sName);
+	sName = TextUtils.trim(sName);
 	return '' !== sName && !/["\/\\*?<>|:]/.test(sName);
 };
 

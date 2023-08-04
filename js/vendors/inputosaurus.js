@@ -173,7 +173,7 @@ var inputosaurustext = {
 		widget._attachEvents();
 
 		// if instantiated input already contains a value, parse that junk
-		if($.trim(this.element.val())){
+		if(TextUtils.trim(this.element.val())){
 			els.input.val( this.element.val() );
 			this.parseInput();
 		}
@@ -651,7 +651,7 @@ var inputosaurustext = {
 					value : ''
 				};
 
-			v = $.trim(v);
+			v = TextUtils.trim(v);
 
 			$.each(self._chosenValues, function(kk,vv) {
 				if (vv.value === self.elements.lastEdit)

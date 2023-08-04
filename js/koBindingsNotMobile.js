@@ -6,6 +6,7 @@ var
 	$ = require('jquery'),
 	
 	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
+	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
 	Storage = require('%PathToCoreWebclientModule%/js/Storage.js'),
 	Splitter = require('%PathToCoreWebclientModule%/js/vendors/split.js')
@@ -189,7 +190,6 @@ ko.bindingHandlers.customScrollbar = {
 		}
 		if (fValueAccessor().top)
 		{
-
 			$(oElement).data('customscroll')['vertical'].set(fValueAccessor().top);
 		}
 	}
@@ -574,7 +574,7 @@ ko.bindingHandlers.customSelect = {
 					item = options[0];
 				} else {
 					aOptions[_.indexOf(options, item)].addClass(oCommand['selected']);
-					oText.text($.trim(item[oCommand['optionsText']]));
+					oText.text(TextUtils.trim(item[oCommand['optionsText']]));
 				}
 				return item[oCommand['optionsValue']];
 			},
