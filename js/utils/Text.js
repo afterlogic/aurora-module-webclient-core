@@ -1,8 +1,6 @@
 'use strict';
 
-var
-	$ = require('jquery'),
-	
+var	
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
 	Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
@@ -19,12 +17,11 @@ TextUtils.trim = function (text = '')
 
 TextUtils.isHtml = function (text = '')
 {
-	return (
-		text.indexOf('<br') !== -1 ||
-		text.indexOf('<div') !== -1 ||
-		text.indexOf('<span') !== -1 ||
-		text.indexOf('<a') !== -1
-	);
+	// Alternative way
+	// var doc = new DOMParser().parseFromString(str, "text/html");
+	// return Array.from(doc.body.childNodes).some(node => node.nodeType === 1);
+
+	return /<\/?[a-zA-Z][\s\S]*>/i.test(text)
 };
 
 /**
