@@ -589,7 +589,7 @@ ko.bindingHandlers.customSelect = {
 							.data('value', item[oCommand['optionsValue']])
 					;
 
-					oOption.data('isDisabled', item['isDisabled']).toggleClass('disabled', item['isDisabled']);
+					oOption.data('isDisabled', item['isDisabled']).toggleClass('disabled', !!item['isDisabled']);
 
 					aOptions.push(oOption);
 					oContainer.append(oOption);
