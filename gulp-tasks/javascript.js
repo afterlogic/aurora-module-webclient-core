@@ -291,7 +291,7 @@ function build () {
 
 function watch () {
 	const config = _.defaults({
-		mode: 'none',
+		mode: 'development',
 		watch: true,
 		entry: sPath + '_' + sOutputName + '-entry.js',
 		output: {
