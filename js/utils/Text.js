@@ -22,7 +22,7 @@ TextUtils.isHtml = function (text = '')
 	// return Array.from(doc.body.childNodes).some(node => node.nodeType === 1);
 	
 	// checking for tags (including closing ones) with names that consist of letters and dashes only
-	return /<\/?[a-zA-Z-]+(?:\s[^>]+|\S)?>/i.test(text)
+	return /<\/?[a-zA-Z-]+(?:\s|\s[^>]+|\S)?>/i.test(text)
 };
 
 /**
