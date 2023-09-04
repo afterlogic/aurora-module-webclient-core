@@ -76,7 +76,7 @@ CAbstractPopup.prototype.cancelPopup = function ()
 	this.closePopup();
 };
 
-CAbstractPopup.prototype.onEscHandler = function (oEvent)
+CAbstractPopup.prototype.onEscHandler = function ()
 {
 	this.cancelPopup();
 };
@@ -105,6 +105,7 @@ CAbstractPopup.prototype.onHide = function ()
 {
 };
 
+// eslint-disable-next-line no-unused-vars
 CAbstractPopup.prototype.onRoute = function (aParams)
 {
 };

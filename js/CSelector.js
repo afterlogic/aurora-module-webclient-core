@@ -62,10 +62,10 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 	this.iTimer = 0;
 	this.iFactor = 1;
 
-	this.KeyUp = Enums.Key.Up;
-	this.KeyDown = Enums.Key.Down;
-	this.KeyLeft = Enums.Key.Up;
-	this.KeyRight = Enums.Key.Down;
+	this.KeyUp = window.Enums.Key.Up;
+	this.KeyDown = window.Enums.Key.Down;
+	this.KeyLeft = window.Enums.Key.Up;
+	this.KeyRight = window.Enums.Key.Down;
 
 	if (this.multiplyLineFactor)
 	{
@@ -80,15 +80,15 @@ function CSelector(list, fSelectCallback, fDeleteCallback, fDblClickCallback, fE
 			this.iFactor = Types.pInt(this.multiplyLineFactor);
 		}
 
-		this.KeyUp = Enums.Key.Up;
-		this.KeyDown = Enums.Key.Down;
-		this.KeyLeft = Enums.Key.Left;
-		this.KeyRight = Enums.Key.Right;
+		this.KeyUp = window.Enums.Key.Up;
+		this.KeyDown = window.Enums.Key.Down;
+		this.KeyLeft = window.Enums.Key.Left;
+		this.KeyRight = window.Enums.Key.Right;
 
 		if ($('html').hasClass('rtl'))
 		{
-			this.KeyLeft = Enums.Key.Right;
-			this.KeyRight = Enums.Key.Left;
+			this.KeyLeft = window.Enums.Key.Right;
+			this.KeyRight = window.Enums.Key.Left;
 		}
 	}
 
@@ -506,16 +506,16 @@ CSelector.prototype.getResultSelection = function (oSelected, iEventKeyCode)
 	;
 
 	if (!oSelected && -1 < $.inArray(iEventKeyCode, [this.KeyUp, this.KeyDown, this.KeyLeft, this.KeyRight,
-		Enums.Key.PageUp, Enums.Key.PageDown, Enums.Key.Home, Enums.Key.End]))
+		window.Enums.Key.PageUp, window.Enums.Key.PageDown, window.Enums.Key.Home, window.Enums.Key.End]))
 	{
 		aList = this.list();
 		if (aList && 0 < aList.length)
 		{
-			if (-1 < $.inArray(iEventKeyCode, [this.KeyDown, this.KeyRight, Enums.Key.PageUp, Enums.Key.Home]))
+			if (-1 < $.inArray(iEventKeyCode, [this.KeyDown, this.KeyRight, window.Enums.Key.PageUp, window.Enums.Key.Home]))
 			{
 				oResult = aList[0];
 			}
-			else if (-1 < $.inArray(iEventKeyCode, [this.KeyUp, this.KeyLeft, Enums.Key.PageDown, Enums.Key.End]))
+			else if (-1 < $.inArray(iEventKeyCode, [this.KeyUp, this.KeyLeft, window.Enums.Key.PageDown, window.Enums.Key.End]))
 			{
 				oResult = aList[aList.length - 1];
 			}
@@ -529,10 +529,10 @@ CSelector.prototype.getResultSelection = function (oSelected, iEventKeyCode)
 		if (0 < iLen)
 		{
 			if (
-				Enums.Key.Home === iEventKeyCode || Enums.Key.PageUp === iEventKeyCode ||
-				Enums.Key.End === iEventKeyCode || Enums.Key.PageDown === iEventKeyCode ||
-				(bMultiply && (Enums.Key.Left === iEventKeyCode || Enums.Key.Right === iEventKeyCode)) ||
-				(!bMultiply && (Enums.Key.Up === iEventKeyCode || Enums.Key.Down === iEventKeyCode))
+				window.Enums.Key.Home === iEventKeyCode || window.Enums.Key.PageUp === iEventKeyCode ||
+				window.Enums.Key.End === iEventKeyCode || window.Emums.Key.PageDown === iEventKeyCode ||
+				(bMultiply && (window.Emums.Key.Left === iEventKeyCode || window.Emums.Key.Right === iEventKeyCode)) ||
+				(!bMultiply && (window.Emums.Key.Up === iEventKeyCode || window.Emums.Key.Down === iEventKeyCode))
 			)
 			{
 				_.each(aList, function (oItem) {
@@ -550,8 +550,8 @@ CSelector.prototype.getResultSelection = function (oSelected, iEventKeyCode)
 									oResult = oItem;
 								}
 								break;
-							case Enums.Key.Home:
-							case Enums.Key.PageUp:
+							case window.Emums.Key.Home:
+							case window.Emums.Key.PageUp:
 								oResult = oItem;
 								bStop = true;
 								break;
@@ -567,8 +567,8 @@ CSelector.prototype.getResultSelection = function (oSelected, iEventKeyCode)
 									bNext = true;
 								}
 								break;
-							case Enums.Key.End:
-							case Enums.Key.PageDown:
+							case window.Emums.Key.End:
+							case window.Emums.Key.PageDown:
 								oResult = oItem;
 								break;
 						}
@@ -631,13 +631,13 @@ CSelector.prototype.shiftClickResult = function (oResult, oSelected, iEventKeyCo
 		;
 
 		if (-1 < $.inArray(iEventKeyCode,
-			bMultiply ? [Enums.Key.Left, Enums.Key.Right] : [Enums.Key.Up, Enums.Key.Down]))
+			bMultiply ? [window.Emums.Key.Left, window.Emums.Key.Right] : [window.Emums.Key.Up, window.Emums.Key.Down]))
 		{
 			oSelected.checked(!oSelected.checked());
 		}
 		else if (-1 < $.inArray(iEventKeyCode, bMultiply ?
-			[Enums.Key.Up, Enums.Key.Down, Enums.Key.PageUp, Enums.Key.PageDown, Enums.Key.Home, Enums.Key.End] :
-			[Enums.Key.Left, Enums.Key.Right, Enums.Key.PageUp, Enums.Key.PageDown, Enums.Key.Home, Enums.Key.End]
+			[window.Emums.Key.Up, window.Emums.Key.Down, window.Emums.Key.PageUp, window.Emums.Key.PageDown, window.Emums.Key.Home, window.Emums.Key.End] :
+			[window.Emums.Key.Left, window.Emums.Key.Right, window.Emums.Key.PageUp, window.Emums.Key.PageDown, window.Emums.Key.Home, window.Emums.Key.End]
 		))
 		{
 			bSelected = !oSelected.checked();
@@ -657,7 +657,7 @@ CSelector.prototype.shiftClickResult = function (oResult, oSelected, iEventKeyCo
 				}
 			});
 
-			if (bMultiply && oResult && (iEventKeyCode === Enums.Key.Up || iEventKeyCode === Enums.Key.Down))
+			if (bMultiply && oResult && (iEventKeyCode === window.Emums.Key.Up || iEventKeyCode === window.Emums.Key.Down))
 			{
 				oResult.checked(!oResult.checked());
 			}
@@ -705,15 +705,15 @@ CSelector.prototype.onKeydown = function (oEvent)
 			(
 				this.KeyUp === iCode || this.KeyDown === iCode ||
 				this.KeyLeft === iCode || this.KeyRight === iCode ||
-				Enums.Key.PageUp === iCode || Enums.Key.PageDown === iCode ||
-				Enums.Key.Home === iCode || Enums.Key.End === iCode
+				window.Emums.Key.PageUp === iCode || window.Emums.Key.PageDown === iCode ||
+				window.Emums.Key.Home === iCode || window.Emums.Key.End === iCode
 			)
 		)
 		{
 			this.clickNewSelectPosition(iCode, oEvent.shiftKey);
 			bResult = false;
 		}
-		else if (Enums.Key.Del === iCode && !oEvent.ctrlKey && !oEvent.shiftKey)
+		else if (window.Emums.Key.Del === iCode && !oEvent.ctrlKey && !oEvent.shiftKey)
 		{
 			if (0 < this.list().length)
 			{
@@ -721,7 +721,7 @@ CSelector.prototype.onKeydown = function (oEvent)
 				bResult = false;
 			}
 		}
-		else if (Enums.Key.Enter === iCode)
+		else if (window.Emums.Key.Enter === iCode)
 		{
 			if (0 < this.list().length && !oEvent.ctrlKey)
 			{
@@ -729,7 +729,7 @@ CSelector.prototype.onKeydown = function (oEvent)
 				bResult = false;
 			}
 		}
-		else if (oEvent.ctrlKey && !oEvent.altKey && !oEvent.shiftKey && Enums.Key.a === iCode)
+		else if (oEvent.ctrlKey && !oEvent.altKey && !oEvent.shiftKey && window.Emums.Key.a === iCode)
 		{
 			this.checkAll(!(this.checkAll() && !this.isIncompleteChecked()));
 			bResult = false;

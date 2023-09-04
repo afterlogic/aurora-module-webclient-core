@@ -50,7 +50,7 @@ module.exports = {
 		
 		if (Types.isNonEmptyString(mResult))
 		{
-			sMedResult = mResult.replace(/[^%]*%(\w+)%[^%]*/g, function(sMatch, sFound, iIndex, sStr) {
+			sMedResult = mResult.replace(/[^%]*%(\w+)%[^%]*/g, function(sMatch, sFound) {
 				if (Types.isNonEmptyString(oResponse[sFound]))
 				{
 					return sMatch.replace('%' + sFound + '%', oResponse[sFound]);

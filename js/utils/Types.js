@@ -159,7 +159,7 @@ Types.pEnum = function (mValue, oEnum, mDefault)
 	{
 		return mDefault;
 	}
-	return _.find(oEnum, function(mEnumValue){ return true; });
+	return _.find(oEnum, function(){ return true; });
 };
 
 /**

@@ -1,9 +1,9 @@
 'use strict';
 
 var
+	_ = require('underscore'),
 	$ = require('jquery'),
 	ko = require('knockout'),
-	_ = require('underscore'),
 	
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js')
@@ -60,7 +60,7 @@ var CustomTooltip = {
 			iItemHalfWidth = (iItemWidth < 70) ? iItemWidth/2 : iItemWidth/4,
 			iItemPaddingLeft = Types.pInt($ItemToAlign.css('padding-left')),
 			jqBody = $('body'),
-			iTop = oItemOffset.top + $ItemToAlign.outerHeight() - $('html').scrollTop();
+			iTop = oItemOffset.top + $ItemToAlign.outerHeight() - $('html').scrollTop()
 		;
 		
 		this._$Text.html(sText);

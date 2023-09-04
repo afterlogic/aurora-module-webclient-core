@@ -7,7 +7,7 @@ var
 	
 	Enums = {
 		has: function (sEnumName, mFoundValue) {
-			return !!_.find(window.Enums[sEnumName], function (mValue) {
+			return !!_.find(Enums[sEnumName], function (mValue) {
 				return mFoundValue === mValue;
 			});
 		}

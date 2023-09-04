@@ -5,8 +5,6 @@ var
 	ko = require('knockout'),
 	moment = require('moment'),
 	
-	Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
-	
 	aEveryMinuteFunctions = [],
 	aDayOfMonthFunctions = [],
 	koNowDayOfMonth = ko.observable(moment().date()),

@@ -3,7 +3,7 @@
 var
 	ko = require('knockout'),
 	
-	App = require('%PathToCoreWebclientModule%/js/App.js')
+	App = require('/modules/CoreWebclient/js/App.js')
 ;
 
 function CAbstractScreenView(sModuleName)
@@ -54,6 +54,7 @@ CAbstractScreenView.prototype.onHide = function ()
 {
 };
 
+// eslint-disable-next-line no-unused-vars
 CAbstractScreenView.prototype.onRoute = function (aParams)
 {
 };

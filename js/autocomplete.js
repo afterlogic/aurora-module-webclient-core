@@ -9,7 +9,7 @@ require("jquery-ui/ui/widgets/autocomplete");
 
 	// styling results
 	$.ui.autocomplete.prototype._renderItem = function (ul, item) {
-		item.label = item.label.replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
+		item.label = item.label.replace(/\</g, '&lt;').replace(/\>/g, '&gt;'); // eslint-disable-line no-useless-escape
 
 		let liClasses = [];
 		if (item.disabled) {

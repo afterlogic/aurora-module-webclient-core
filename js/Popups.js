@@ -126,12 +126,12 @@ CPopups.prototype.keyupPopup = function (oEvent)
 	{
 		var iKeyCode = Types.pInt(oEvent.keyCode);
 		
-		if (Enums.Key.Esc === iKeyCode)
+		if (window.Enums.Key.Esc === iKeyCode)
 		{
 			oPopup.onEscHandler(oEvent);
 		}
 
-		if ((Enums.Key.Enter === iKeyCode || Enums.Key.Space === iKeyCode))
+		if ((window.Enums.Key.Enter === iKeyCode || window.Enums.Key.Space === iKeyCode))
 		{
 			oPopup.onEnterHandler();
 		}

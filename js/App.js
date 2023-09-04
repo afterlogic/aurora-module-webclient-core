@@ -69,7 +69,7 @@ function InitModernizr() {
 }
 
 function CApp() {
-  this.iUserRole = window.auroraAppData.User ? Types.pInt(window.auroraAppData.User.Role) : Enums.UserRole.Anonymous
+  this.iUserRole = window.auroraAppData.User ? Types.pInt(window.auroraAppData.User.Role) : window.UserRole.Anonymous
   this.iTenantId = window.auroraAppData.User ? Types.pInt(window.auroraAppData.User.TenantId) : 0
   this.sUserName = window.auroraAppData.User ? Types.pString(window.auroraAppData.User.Name) : ''
   this.sUserPublicId = window.auroraAppData.User ? Types.pString(window.auroraAppData.User.PublicId) : ''
@@ -127,7 +127,7 @@ CApp.prototype.getUserRole = function () {
 }
 
 CApp.prototype.isUserNormalOrTenant = function () {
-  return this.iUserRole === Enums.UserRole.NormalUser || this.iUserRole === Enums.UserRole.TenantAdmin
+  return this.iUserRole === window.Enums.UserRole.NormalUser || this.iUserRole === window.Enums.UserRole.TenantAdmin
 }
 
 CApp.prototype.getTenantId = function () {
@@ -185,7 +185,7 @@ CApp.prototype.getCurrentDeviceId = function () {
 }
 
 CApp.prototype.init = function () {
-  ModulesManager.run('StandardLoginFormWebclient', 'beforeAppRunning', [this.iUserRole !== Enums.UserRole.Anonymous])
+  ModulesManager.run('StandardLoginFormWebclient', 'beforeAppRunning', [this.iUserRole !== window.Enums.UserRole.Anonymous])
 
   if (App.isUserNormalOrTenant() && UserSettings.AllowChangeSettings) {
     ModulesManager.run('SettingsWebclient', 'registerSettingsTab', [
@@ -197,7 +197,7 @@ CApp.prototype.init = function () {
     ])
   }
 
-  // if (App.getUserRole() === Enums.UserRole.SuperAdmin)
+  // if (App.getUserRole() === window.Enums.UserRole.SuperAdmin)
   // {
   // 	ModulesManager.run('AdminPanelWebclient', 'registerAdminPanelTab', [
   // 		function(resolve) {
@@ -217,7 +217,7 @@ CApp.prototype.init = function () {
   ModulesManager.run('Ios', 'routeToIos')
 
   let AccountList
-  if (this.iUserRole !== Enums.UserRole.Anonymous) {
+  if (this.iUserRole !== window.Enums.UserRole.Anonymous) {
     var MainTab = App.isNewTab() && window.opener && window.opener.MainTabMailMethods
     AccountList = MainTab ? MainTab.getAccountList() : ModulesManager.run('MailWebclient', 'getAccountList')
     if (AccountList) {
@@ -251,7 +251,7 @@ CApp.prototype.init = function () {
     InitNotMobileRequires()
   }
 
-  Screens.init(this.iUserRole === Enums.UserRole.Anonymous)
+  Screens.init(this.iUserRole === window.Enums.UserRole.Anonymous)
 
   require('%PathToCoreWebclientModule%/js/AppTab.js')
   if (!this.bNewTab) {
@@ -295,7 +295,7 @@ CApp.prototype.init = function () {
 }
 
 CApp.prototype.showLastErrorOnLogin = function () {
-  if (this.iUserRole === Enums.UserRole.Anonymous) {
+  if (this.iUserRole === window.Enums.UserRole.Anonymous) {
     var iError = Types.pInt(UrlUtils.getRequestParam('error')),
       sErrorModule = Types.pString(UrlUtils.getRequestParam('module'))
     if (iError !== 0) {
@@ -303,7 +303,7 @@ CApp.prototype.showLastErrorOnLogin = function () {
       Api.showErrorByCode({ ErrorCode: iError, Module: sErrorModule }, '', true)
     }
 
-    if (UserSettings.LastErrorCode === Enums.Errors.AuthError) {
+    if (UserSettings.LastErrorCode === window.Enums.Errors.AuthError) {
       Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_AUTH_PROBLEM'), true)
     }
   }
@@ -362,7 +362,7 @@ CApp.prototype.logoutAndGotoLogin = function () {
 
         Routing.finalize()
 
-        this.iUserRole = Enums.UserRole.Anonymous
+        this.iUserRole = window.Enums.UserRole.Anonymous
         this.sUserName = ''
         this.sUserPublicId = ''
         this.iUserId = 0
@@ -434,7 +434,7 @@ CApp.prototype.checkMobile = function () {
 
     return bMobile
   }
-  // else if (this.iUserRole === Enums.UserRole.SuperAdmin && UserSettings.AllowMobile && UserSettings.IsMobile === 1)
+  // else if (this.iUserRole === window.Enums.UserRole.SuperAdmin && UserSettings.AllowMobile && UserSettings.IsMobile === 1)
   // {
   // 	// There is no admin panel for mobile version so go to full version
   // 	var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
@@ -478,7 +478,7 @@ CApp.prototype.checkCookies = function () {
   if (!bCookieWorks) {
     Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_COOKIES_DISABLED'), true)
   } else {
-    if (this.iUserRole === Enums.UserRole.Anonymous) {
+    if (this.iUserRole === window.Enums.UserRole.Anonymous) {
       $.removeCookie('AuthToken')
     } else {
       var sAuthToken = $.cookie('AuthToken')

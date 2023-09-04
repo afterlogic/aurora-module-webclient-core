@@ -12,11 +12,10 @@ var
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	
-	Enums = window.Enums,
 	CAbstractSettingsFormView
 ;
 
-// if (App.getUserRole() === Enums.UserRole.SuperAdmin)
+// if (App.getUserRole() === window.Enums.UserRole.SuperAdmin)
 // {
 // 	CAbstractSettingsFormView = ModulesManager.run('AdminPanelWebclient', 'getAbstractSettingsFormViewClass');
 // }
@@ -32,7 +31,7 @@ function CCommonSettingsFormView()
 {
 	CAbstractSettingsFormView.call(this);
 	
-	this.bAdmin = App.getUserRole() === Enums.UserRole.SuperAdmin;
+	this.bAdmin = App.getUserRole() === window.Enums.UserRole.SuperAdmin;
 	this.bMobile = App.isMobile();
 	
 	this.aThemes = UserSettings.ThemeList;
@@ -234,7 +233,7 @@ CCommonSettingsFormView.prototype.applySavedValues = function (oParameters)
 	}
 };
 
-CCommonSettingsFormView.prototype.setAccessLevel = function (sEntityType, iEntityId)
+CCommonSettingsFormView.prototype.setAccessLevel = function (sEntityType)
 {
 	this.visible(sEntityType === '');
 };

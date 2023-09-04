@@ -119,7 +119,7 @@ ko.bindingHandlers.splitterFlex = {
 };
 
 ko.bindingHandlers.customScrollbar = {
-	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel) {
+	'init': function (oElement, fValueAccessor) {
 		var
 			jqElement = $(oElement),
 			oCommand = _.defaults(fValueAccessor(), {
@@ -131,8 +131,9 @@ ko.bindingHandlers.customScrollbar = {
 			}),
 			oScroll = null
 		;
-
-		oCommand = /** @type {{scrollToTopTrigger:{subscribe:Function},scrollToBottomTrigger:{subscribe:Function},scrollTo:{subscribe:Function},reset:Function}}*/ oCommand;
+		
+		/** @type {{scrollToTopTrigger:{subscribe:Function},scrollToBottomTrigger:{subscribe:Function},scrollTo:{subscribe:Function},reset:Function}}*/
+		// oCommand
 
 		jqElement.addClass('scroll-wrap').customscroll(oCommand);
 		oScroll = jqElement.data('customscroll');
@@ -183,7 +184,7 @@ ko.bindingHandlers.customScrollbar = {
 		}
 	},
 	
-	'update': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
+	'update': function (oElement, fValueAccessor) {
 		if (oElement._customscroll_reset)
 		{
 			oElement._customscroll_reset();
@@ -214,7 +215,7 @@ ko.bindingHandlers.draggable = {
 };
 
 ko.bindingHandlers.draggablePlace = {
-	'update': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
+	'update': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel) {
 		if (fValueAccessor() === null)
 		{
 			if ($(oElement).draggable())
@@ -291,7 +292,7 @@ ko.bindingHandlers.droppable = {
 };
 
 ko.bindingHandlers.quickReplyAnim = {
-	'update': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
+	'update': function (oElement, fValueAccessor) {
 
 		var
 			jqTextarea = oElement.jqTextarea || null,
@@ -325,8 +326,8 @@ ko.bindingHandlers.quickReplyAnim = {
 			};
 		}
 
-		if (true || jqElement.is(':visible'))
-		{
+		// if (true || jqElement.is(':visible'))
+		// {
 			if (Browser.ie9AndBelow)
 			{
 				if (jqTextarea && !jqElement.defualtHeight && !jqTextarea.defualtHeight)
@@ -403,7 +404,7 @@ ko.bindingHandlers.quickReplyAnim = {
 				jqElement.toggleClass('sending', oActions['sendAction']);
 				jqElement.toggleClass('active', oActions['activeAction']);
 			}
-		}
+		// }
 
 		_.defer(function () {
 			oPrevActions = oActions;
@@ -415,7 +416,7 @@ ko.bindingHandlers.onCtrlEnter = {
 	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel) {
 		var $Element = $(oElement);
 		$Element.on('keydown', function (oEvent) {
-			if (oEvent.ctrlKey && oEvent.keyCode === Enums.Key.Enter)
+			if (oEvent.ctrlKey && oEvent.keyCode === window.Enums.Key.Enter)
 			{
 				$Element.trigger('change');
 				fValueAccessor().call(oViewModel);
@@ -428,7 +429,7 @@ ko.bindingHandlers.onEsc = {
 	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel) {
 		var $Element = $(oElement);
 		$Element.on('keydown', function (oEvent) {
-			if (oEvent.keyCode === Enums.Key.Esc)
+			if (oEvent.keyCode === window.Enums.Key.Esc)
 			{
 				$Element.trigger('change');
 				fValueAccessor().call(oViewModel);
@@ -438,7 +439,7 @@ ko.bindingHandlers.onEsc = {
 };
 
 ko.bindingHandlers.autocompleteSimple = {
-	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
+	'init': function (oElement, fValueAccessor) {
 
 		var
 			jqEl = $(oElement),
@@ -479,8 +480,8 @@ ko.bindingHandlers.autocompleteSimple = {
 						return true;
 					}
 				},
-				'open': function (oEvent, oItem) {
-					$(jqEl.autocomplete('widget')).find('span.del').on('click', function(oEvent, oItem) {
+				'open': function () {
+					$(jqEl.autocomplete('widget')).find('span.del').on('click', function(oEvent) {
 						Utils.calmEvent(oEvent);
 						fDelete();
 					});
@@ -500,7 +501,7 @@ ko.bindingHandlers.autocompleteSimple = {
 						return true;
 					}
 				}
-			}).on('click', function(oEvent, oItem) {
+			}).on('click', function() {
 				if (jqEl.val() === '')
 				{
 					if (!$(jqEl.autocomplete('widget')).is(':visible'))
@@ -514,8 +515,8 @@ ko.bindingHandlers.autocompleteSimple = {
 						jqEl.autocomplete("close");
 					}
 				}
-			}).on('keydown', function(oEvent, oItem) {
-				if (aSourceResponseItems && oSelectedItem && !oSelectedItem.global && oEvent.keyCode === Enums.Key.Del && oEvent.shiftKey) //shift+del on suggestions list
+			}).on('keydown', function(oEvent) {
+				if (aSourceResponseItems && oSelectedItem && !oSelectedItem.global && oEvent.keyCode === window.Enums.Key.Del && oEvent.shiftKey) //shift+del on suggestions list
 				{
 					Utils.calmEvent(oEvent);
 					fDelete();

@@ -27,53 +27,53 @@ Api.getErrorByCode = function (response, defaultErrorText = '')
 			default:
 				errorText = defaultErrorText || TextUtils.i18n('%MODULENAME%/ERROR_UNKNOWN');
 				break;
-			case Enums.Errors.AuthError:
+			case window.Enums.Errors.AuthError:
 				errorText = TextUtils.i18n('%MODULENAME%/ERROR_PASS_INCORRECT');
 				break;
-			case Enums.Errors.DataBaseError:
+			case window.Enums.Errors.DataBaseError:
 				errorText = TextUtils.i18n('%MODULENAME%/ERROR_DATABASE');
 				break;
-			case Enums.Errors.LicenseProblem:
+			case window.Enums.Errors.LicenseProblem:
 				errorText = TextUtils.i18n('%MODULENAME%/ERROR_INVALID_LICENSE');
 				break;
-			case Enums.Errors.LicenseLimit:
+			case window.Enums.Errors.LicenseLimit:
 				errorText = TextUtils.i18n('%MODULENAME%/ERROR_LICENSE_USERS_LIMIT');
 				break;
-			case Enums.Errors.DemoLimitations:
+			case window.Enums.Errors.DemoLimitations:
 				errorText = TextUtils.i18n('%MODULENAME%/INFO_DEMO_THIS_FEATURE_IS_DISABLED');
 				break;
-			case Enums.Errors.Captcha:
+			case window.Enums.Errors.Captcha:
 				errorText = TextUtils.i18n('%MODULENAME%/ERROR_CAPTCHA_IS_INCORRECT');
 				break;
-			case Enums.Errors.AccessDenied:
+			case window.Enums.Errors.AccessDenied:
 				if (response.AuthenticatedUserId === 0 && App.getUserId() !== 0) {
 					errorText = TextUtils.i18n('%MODULENAME%/ERROR_USER_DELETED');
 				} else {
 					errorText = TextUtils.i18n('%MODULENAME%/ERROR_ACCESS_DENIED');
 				}
 				break;
-			case Enums.Errors.UserAlreadyExists:
+			case window.Enums.Errors.UserAlreadyExists:
 				errorText = TextUtils.i18n('%MODULENAME%/ERROR_USER_ALREADY_EXISTS');
 				break;
-			case Enums.Errors.CanNotChangePassword:
+			case window.Enums.Errors.CanNotChangePassword:
 				errorText = TextUtils.i18n('%MODULENAME%/ERROR_UNABLE_CHANGE_PASSWORD');
 				break;
-			case Enums.Errors.AccountOldPasswordNotCorrect:
+			case window.Enums.Errors.AccountOldPasswordNotCorrect:
 				errorText = TextUtils.i18n('%MODULENAME%/ERROR_CURRENT_PASSWORD_NOT_CORRECT');
 				break;
-			case Enums.Errors.AccountAlreadyExists:
+			case window.Enums.Errors.AccountAlreadyExists:
 				errorText = TextUtils.i18n('%MODULENAME%/ERROR_ACCOUNT_ALREADY_EXISTS');
 				break;
-			case Enums.Errors.HelpdeskUserNotExists:
+			case window.Enums.Errors.HelpdeskUserNotExists:
 				errorText = TextUtils.i18n('%MODULENAME%/ERROR_FORGOT_NO_HELPDESK_ACCOUNT');
 				break;
-			case Enums.Errors.DataTransferFailed:
+			case window.Enums.Errors.DataTransferFailed:
 				errorText = TextUtils.i18n('%MODULENAME%/ERROR_DATA_TRANSFER_FAILED');
 				break;
-			case Enums.Errors.NotDisplayedError:
+			case window.Enums.Errors.NotDisplayedError:
 				errorText = '';
 				break;
-			case Enums.Errors.SystemNotConfigured:
+			case window.Enums.Errors.SystemNotConfigured:
 				errorText = TextUtils.i18n('%MODULENAME%/ERROR_SYSTEM_NOT_CONFIGURED');
 				break;
 		}

@@ -166,7 +166,7 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
       this.doSend(oRequest, fResponseHandler, oContext, authToken)
     }
   } else {
-    var oResponse = { Result: false, ErrorCode: Enums.Errors.NotDisplayedError }
+    var oResponse = { Result: false, ErrorCode: window.Enums.Errors.NotDisplayedError }
     this.executeResponseHandler(fResponseHandler, oContext, oResponse, oRequest, 'error')
   }
 }
@@ -187,7 +187,7 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, authTok
     oCloneRequest = _.clone(oRequest),
     sAuthToken = $.cookie('AuthToken') || authToken,
     oHeader = { 'X-Client': 'WebClient' }
-  if (sAuthToken === '' && App.getUserRole() !== Enums.UserRole.Anonymous) {
+  if (sAuthToken === '' && App.getUserRole() !== window.Enums.UserRole.Anonymous) {
     App.logoutAndGotoLogin()
   }
 
@@ -280,7 +280,7 @@ CAjax.prototype.startSendRequests = function () {
  */
 CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse, sType, oXhr) {
   if (
-    App.getUserRole() !== Enums.UserRole.Anonymous &&
+    App.getUserRole() !== window.Enums.UserRole.Anonymous &&
     oResponse &&
     Types.isNumber(oResponse.AuthenticatedUserId) &&
     oResponse.AuthenticatedUserId !== 0 &&
@@ -299,13 +299,13 @@ CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse
   // if oResponse.Result === 0 or oResponse.Result === '' this is not an error
   if (oResponse && (oResponse.Result === false || oResponse.Result === null || oResponse.Result === undefined)) {
     switch (oResponse.ErrorCode) {
-      case Enums.Errors.InvalidToken:
+      case window.Enums.Errors.InvalidToken:
         this.abortAndStopSendRequests()
         App.tokenProblem()
         break
-      case Enums.Errors.AuthError:
+      case window.Enums.Errors.AuthError:
         if (
-          App.getUserRole() !== Enums.UserRole.Anonymous &&
+          App.getUserRole() !== window.Enums.UserRole.Anonymous &&
           !(oRequest.Module === 'Core' && oRequest.Method === 'Logout')
         ) {
           App.logoutAndGotoLogin()
@@ -332,15 +332,15 @@ CAjax.prototype.fail = function (oRequest, fResponseHandler, oContext, oXhr, sTy
 
   switch (sType) {
     case 'abort':
-      oResponse = { Result: false, ErrorCode: Enums.Errors.NotDisplayedError }
+      oResponse = { Result: false, ErrorCode: window.Enums.Errors.NotDisplayedError }
       break
     default:
     case 'error':
     case 'parseerror':
       if (sErrorText === '') {
-        oResponse = { Result: false, ErrorCode: Enums.Errors.NotDisplayedError, ResponseText: oXhr.responseText }
+        oResponse = { Result: false, ErrorCode: window.Enums.Errors.NotDisplayedError, ResponseText: oXhr.responseText }
       } else {
-        var oReqData = _.find(this.requests(), function (oTmpReqData, iIndex) {
+        var oReqData = _.find(this.requests(), function (oTmpReqData) {
           return oTmpReqData && _.isEqual(oTmpReqData.Request, oRequest)
         })
         if (oReqData) {
@@ -349,7 +349,7 @@ CAjax.prototype.fail = function (oRequest, fResponseHandler, oContext, oXhr, sTy
           var sResponseText = Types.pString(oXhr && oXhr.responseText)
           Utils.log('DataTransferFailed', sErrorText, '<br />' + sResponseText.substr(0, 300))
         }
-        oResponse = { Result: false, ErrorCode: Enums.Errors.DataTransferFailed, ResponseText: oXhr.responseText }
+        oResponse = { Result: false, ErrorCode: window.Enums.Errors.DataTransferFailed, ResponseText: oXhr.responseText }
       }
       break
   }
@@ -395,7 +395,7 @@ CAjax.prototype.executeResponseHandler = function (
  * @param {string} sType
  * @param {object} oRequest
  */
-CAjax.prototype.always = function (oRequest, oXhr, sType) {
+CAjax.prototype.always = function (oRequest) {
   this.filterRequests(oRequest)
 }
 
@@ -403,7 +403,7 @@ CAjax.prototype.filterRequests = function (oRequest, sCallerName) {
   this.requests(
     _.filter(
       this.requests(),
-      function (oReqData, iIndex) {
+      function (oReqData) {
         if (oReqData) {
           if (_.isEqual(oReqData.Request, oRequest)) {
             return false

@@ -24,7 +24,7 @@ module.exports = {
 		});
 	},
 		
-	start: function (oAvailableModules) {
+	start: function () {
 		_.each(oModules, _.bind(function (oModule) {
 			if (_.isFunction(oModule.start))
 			{
@@ -94,7 +94,7 @@ module.exports = {
 	{
 		var aPrefetchers = [];
 
-		_.each(oModules, function (oModule, sModuleName) {
+		_.each(oModules, function (oModule) {
 			if (_.isFunction(oModule.getPrefetcher))
 			{
 				aPrefetchers.push(oModule.getPrefetcher());

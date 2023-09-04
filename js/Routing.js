@@ -86,7 +86,7 @@ CRouting.prototype.replaceHashFromString = function (sNewHash)
 };
 
 /**
- * Sets a new hash made ​​up of an array.
+ * Sets a new hash made up of an array.
  * 
  * @param {Array} aRoutingParts
  * 
@@ -120,6 +120,7 @@ CRouting.prototype.setPreviousHash = function ()
 {
 	var
 		sPrevHash = this.previousHash(),
+		// eslint-disable-next-line no-useless-escape
 		aPrevHash = sPrevHash.split(/[-|\/]/)
 	;
 	if (this.currentHash() === sPrevHash)
@@ -212,7 +213,7 @@ CRouting.prototype.goDirectly = function (aRoutingParts, aAddParams)
 /**
  * @param {string} sNeedScreen
  */
-CRouting.prototype.historyBackWithoutParsing = function (sNeedScreen)
+CRouting.prototype.historyBackWithoutParsing = function ()
 {
 	hasher.stop();
 	location.hash = this.currentHash();

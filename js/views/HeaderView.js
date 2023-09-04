@@ -14,9 +14,6 @@ var
 	Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
 	
-	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
-	AlertPopup = require('%PathToCoreWebclientModule%/js/popups/AlertPopup.js'),
-	
 	CAbstractScreenView = require('%PathToCoreWebclientModule%/js/views/CAbstractScreenView.js')
 ;
 

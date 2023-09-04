@@ -44,9 +44,7 @@ CStorage.prototype.getData = function (sKey)
 	{
 		oResult = $.parseJSON(sValue);
 	}
-	catch (oException)
-	{
-	}
+	catch (oException) {} // eslint-disable-line no-empty
 	return oResult;
 };
 

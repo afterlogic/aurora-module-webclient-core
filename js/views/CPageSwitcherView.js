@@ -43,7 +43,7 @@ function CPageSwitcherView(iCount, iPerPage)
 
 		if (iPagesCount > 1)
 		{
-			while (true)
+			while (true)  // eslint-disable-line no-constant-condition
 			{
 				iAllLimit--;
 				
@@ -126,11 +126,11 @@ CPageSwitcherView.prototype.hotKeysBind = function ()
 		if (this.bShown && !Utils.isTextFieldFocused())
 		{
 			var sKey = ev.keyCode;
-			if (ev.ctrlKey && sKey === Enums.Key.Left)
+			if (ev.ctrlKey && sKey === window.Enums.Key.Left)
 			{
 				this.clickPreviousPage();
 			}
-			else if (ev.ctrlKey && sKey === Enums.Key.Right)
+			else if (ev.ctrlKey && sKey === window.Enums.Key.Right)
 			{
 				this.clickNextPage();
 			}

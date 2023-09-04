@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint-disable no-useless-escape */
+
 var	
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	

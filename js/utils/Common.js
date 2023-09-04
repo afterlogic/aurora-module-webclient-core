@@ -135,7 +135,7 @@ Utils.desktopNotify = (function ()
 							oNotification,
 							fShowNotification = function() {
 								oNotification = new window.Notification(oData.title, oOptions); //Firefox and Safari close the notifications automatically after a few moments, e.g. 4 seconds.
-								oNotification.onclick = function (oEv) { //there are also onshow, onclose & onerror events
+								oNotification.onclick = function () { //there are also onshow, onclose & onerror events
 									if(oData.callback)
 									{
 										oData.callback();
@@ -266,7 +266,7 @@ Utils.uiDropHelperAnim = function (oEvent, oUi)
 Utils.validateFileOrFolderName = function (sName)
 {
 	sName = TextUtils.trim(sName);
-	return '' !== sName && !/["\/\\*?<>|:]/.test(sName);
+	return '' !== sName && !/["\/\\*?<>|:]/.test(sName);  // eslint-disable-line no-useless-escape
 };
 
 /**

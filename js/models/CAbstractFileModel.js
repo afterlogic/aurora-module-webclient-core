@@ -568,7 +568,7 @@ CAbstractFileModel.prototype.onUploadComplete = function (sFileUid, bResponseRec
 {
 	var
 		bError = !bResponseReceived || !oResponse || !!oResponse.ErrorCode || !oResponse.Result || !!oResponse.Result.Error || false,
-		sError = (oResponse && oResponse.ErrorCode && oResponse.ErrorCode === Enums.Errors.CanNotUploadFileLimit) ?
+		sError = (oResponse && oResponse.ErrorCode && oResponse.ErrorCode === window.Enums.Errors.CanNotUploadFileLimit) ?
 			TextUtils.i18n('%MODULENAME%/ERROR_UPLOAD_SIZE') :
 			TextUtils.i18n('%MODULENAME%/ERROR_UPLOAD_UNKNOWN')
 	;
@@ -598,6 +598,7 @@ CAbstractFileModel.prototype.onUploadComplete = function (sFileUid, bResponseRec
  * @param {Object} oResult
  * @param {string} sFileUid
  */
+// eslint-disable-next-line no-unused-vars
 CAbstractFileModel.prototype.fillDataAfterUploadComplete = function (oResult, sFileUid)
 {
 };
@@ -606,6 +607,7 @@ CAbstractFileModel.prototype.fillDataAfterUploadComplete = function (oResult, sF
  * @param {Object} oAttachmentModel
  * @param {Object} oEvent
  */
+// eslint-disable-next-line no-unused-vars
 CAbstractFileModel.prototype.onImageLoad = function (oAttachmentModel, oEvent)
 {
 	if(this.thumbUrlInQueue() !== '' && !this.thumbnailLoaded())

@@ -16,7 +16,7 @@ var
 	Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
 	AlertPopup = require('%PathToCoreWebclientModule%/js/popups/AlertPopup.js'),
 	
-	iDefLimit = UserSettings.MultipleFilesUploadLimit;
+	iDefLimit = UserSettings.MultipleFilesUploadLimit
 ;
 /**
  * @param {*} mValue
@@ -665,9 +665,7 @@ AjaxDriver.prototype.cancel = function (sUid)
 				this.oXhrs[sUid].abort();
 			}
 		}
-		catch (oError)
-		{
-		}
+		catch (oError) {} // eslint-disable-line no-empty
 
 		this.oXhrs[sUid] = null;
 	}
@@ -732,6 +730,7 @@ IframeDriver.prototype.regTaskUid = function (sUid)
  * @param {number} iProgressOffset
  * @returns {Boolean}
  */
+// eslint-disable-next-line no-unused-vars
 IframeDriver.prototype.uploadTask = function (sUid, oFileInfo, oParsedHiddenParameters, fCallback, bSkipCompleteFunction, bUseResponce, iProgressOffset)
 {
 	if (false === this.oUids[sUid])
@@ -764,7 +763,7 @@ IframeDriver.prototype.uploadTask = function (sUid, oFileInfo, oParsedHiddenPara
 			fStartFunction(sUid);
 		}
 
-		oForm.find('iframe').on('load', function (oEvent) {
+		oForm.find('iframe').on('load', function () {
 
 			var
 				bResult = false,
@@ -988,7 +987,7 @@ function CJua(oOptions)
 
 								oBigDropZone.trigger('dragover', oEvent);
 							}
-							catch (oExc) {}
+							catch (oExc) {} // eslint-disable-line no-empty
 						}
 					}
 				},
@@ -1082,7 +1081,7 @@ function CJua(oOptions)
 									oEvent.dataTransfer.dropEffect = 'none';
 									oEvent.preventDefault();
 								}
-								catch (oExc) {}
+								catch (oExc) {}  // eslint-disable-line no-empty
 							}
 						}
 					});
@@ -1308,9 +1307,7 @@ CJua.prototype.addFile = function (sUid, oFileInfo)
 				{ // Suppress exceptions in the connection failure case 
 					oResponse = $.parseJSON(sResponse);
 				}
-				catch (err)
-				{
-				}
+				catch (err) {} // eslint-disable-line no-empty
 
 				if (oResponse && oResponse.Result && !oResponse.Result.Error && !oResponse.ErrorCode)
 				{//if response contains result and have no errors

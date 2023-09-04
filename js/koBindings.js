@@ -200,7 +200,7 @@ ko.bindingHandlers.dropdown = {
 			});
 		}
 
-		jqElement.on('mousedown', function (oEv, oEl) {
+		jqElement.on('mousedown', function (oEv) {
 			bScrollBar = ($(oEv.target).hasClass('customscroll-scrollbar') || $(oEv.target.parentElement).hasClass('customscroll-scrollbar'));
 		});
 
@@ -288,10 +288,10 @@ function deferredUpdate(element, state, duration, callback)
 	{
 		element.__state = false;
 	}
-};
+}
 
 ko.bindingHandlers.checkstate = {
-	'update': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
+	'update': function (oElement, fValueAccessor) {
 		var
 			oOptions = oElement.oOptions || null,
 			jqElement = oElement.jqElement || null,
@@ -355,7 +355,7 @@ ko.bindingHandlers.checkstate = {
 };
 
 ko.bindingHandlers.heightAdjust = {
-	'update': function (oElement, fValueAccessor, fAllBindingsAccessor) {
+	'update': function (oElement, fValueAccessor) {
 		var 
 			jqElement = oElement.jqElement || null,
 			height = 0,
@@ -395,7 +395,7 @@ ko.bindingHandlers.heightAdjust = {
 };
 
 ko.bindingHandlers.minHeightAdjust = {
-	'update': function (oElement, fValueAccessor, fAllBindingsAccessor) {
+	'update': function (oElement, fValueAccessor) {
 		var
 			jqEl = $(oElement),
 			oOptions = fValueAccessor(),
@@ -418,7 +418,7 @@ ko.bindingHandlers.minHeightAdjust = {
 };
 
 ko.bindingHandlers.listWithMoreButton = {
-	'init': function (oElement, fValueAccessor) {
+	'init': function (oElement) {
 		var $Element = $(oElement);
 		
 		$Element.resize(function () {
@@ -464,7 +464,7 @@ ko.bindingHandlers.listWithMoreButton = {
 ko.bindingHandlers.onEnter = {
 	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel) {
 		$(oElement).on('keydown', function (oEvent) {
-			if (oEvent.keyCode === Enums.Key.Enter)
+			if (oEvent.keyCode === window.Enums.Key.Enter)
 			{
 				$(oElement).trigger('change');
 				
@@ -486,8 +486,8 @@ ko.bindingHandlers.onEnter = {
 };
 
 ko.bindingHandlers.onFocusSelect = {
-	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel) {
-		$(oElement).on('focus', function (oEvent) {
+	'init': function (oElement) {
+		$(oElement).on('focus', function () {
 			oElement.select();
 		});
 	}
@@ -540,7 +540,7 @@ ko.bindingHandlers.columnCalc = {
 
 //settings
 ko.bindingHandlers.adjustHeightToContent = {
-	'init': function (oElement, fValueAccessor, fAllBindingsAccessor, oViewModel, bindingContext) {
+	'init': function (oElement) {
 		var
 			jqEl = $(oElement),
 			jqTargetEl = null,

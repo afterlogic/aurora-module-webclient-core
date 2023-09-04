@@ -8,7 +8,7 @@ var
 
 //js-in-html-template
 ko.bindingHandlers.simpleTemplate = {
-	'init': function (oElement, fValueAccessor) {
+	'init': function (oElement) {
 		var oEl = $(oElement);
 		
 		if (oEl.length > 0 && oEl.data('replaced') !== 'replaced')
