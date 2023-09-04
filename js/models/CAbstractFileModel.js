@@ -339,7 +339,7 @@ CAbstractFileModel.prototype.commonExcludeActions = function ()
 {
 	if (!this.isViewSupported())
 	{
-		this.actions(_.without(this.actions(), 'view'));
+		this.removeAction('view');
 	}
 };
 
@@ -365,7 +365,7 @@ CAbstractFileModel.addViewExtensions = function (aAddViewExtensions)
 
 CAbstractFileModel.prototype.isViewSupported = function ()
 {
-	return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes) || -1 !== $.inArray(this.extension(), aViewExtensions));
+	return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes) || -1 !== $.inArray(Types.pString(this.extension()).toLowerCase(), aViewExtensions));
 };
 
 CAbstractFileModel.prototype.getInThumbQueue = function ()
