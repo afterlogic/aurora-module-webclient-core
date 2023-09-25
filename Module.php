@@ -87,7 +87,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         foreach ($aSystemList as $sLanguage) {
             if (isset($aLanguageNames[$sLanguage])) {
                 $aResultList[] = [
-                    'name' => json_decode('"'.$aLanguageNames[$sLanguage].'"'),
+                    'name' => json_decode('"' . $aLanguageNames[$sLanguage] . '"'),
                     'value' => $sLanguage
                 ];
             } else {
@@ -116,11 +116,11 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         return array(
             'AllowChangeSettings' => $this->oModuleSettings->AllowChangeSettings,
             'AllowClientDebug' => $this->oModuleSettings->AllowClientDebug,
-            'AllowDesktopNotifications' => $oUser && null !== $oUser->getExtendedProp(self::GetName().'::AllowDesktopNotifications') ? $oUser->getExtendedProp(self::GetName().'::AllowDesktopNotifications') : $this->oModuleSettings->AllowDesktopNotifications,
+            'AllowDesktopNotifications' => $oUser && null !== $oUser->getExtendedProp(self::GetName() . '::AllowDesktopNotifications') ? $oUser->getExtendedProp(self::GetName() . '::AllowDesktopNotifications') : $this->oModuleSettings->AllowDesktopNotifications,
             'AllowMobile' => $this->oModuleSettings->AllowMobile,
             'AllowPrefetch' => $this->oModuleSettings->AllowPrefetch,
             'AttachmentSizeLimit' => $this->oModuleSettings->AttachmentSizeLimit,
-            'AutoRefreshIntervalMinutes' => $oUser && null !== $oUser->getExtendedProp(self::GetName().'::AutoRefreshIntervalMinutes') ? $oUser->getExtendedProp(self::GetName().'::AutoRefreshIntervalMinutes') : $this->oModuleSettings->AutoRefreshIntervalMinutes,
+            'AutoRefreshIntervalMinutes' => $oUser && null !== $oUser->getExtendedProp(self::GetName() . '::AutoRefreshIntervalMinutes') ? $oUser->getExtendedProp(self::GetName() . '::AutoRefreshIntervalMinutes') : $this->oModuleSettings->AutoRefreshIntervalMinutes,
             'CustomLogoutUrl' => $this->oModuleSettings->CustomLogoutUrl,
             'DefaultAnonymScreenHash' => $this->oModuleSettings->DefaultAnonymScreenHash,
             'DefaultUserScreenHash' => $this->oModuleSettings->DefaultUserScreenHash,
@@ -133,7 +133,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
             'ShowQuotaBar' => $this->oModuleSettings->ShowQuotaBar,
             'ShowQuotaBarTextAsTooltip' => $this->oModuleSettings->ShowQuotaBarTextAsTooltip,
             'QuotaWarningPerc' => $this->oModuleSettings->QuotaWarningPerc,
-            'Theme' => $oUser && null !== $oUser->getExtendedProp(self::GetName().'::Theme') ? $oUser->getExtendedProp(self::GetName().'::Theme') : $this->oModuleSettings->Theme,
+            'Theme' => $oUser && null !== $oUser->getExtendedProp(self::GetName() . '::Theme') ? $oUser->getExtendedProp(self::GetName() . '::Theme') : $this->oModuleSettings->Theme,
             'ThemeList' => $this->oModuleSettings->ThemeList,
             'HideLogout' => $this->oModuleSettings->HideLogout,
             'BaseUrl' => Application::getBaseUrl(),
@@ -152,13 +152,13 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         $oUser = \Aurora\System\Api::getAuthenticatedUser();
         if ($oUser && $oUser->isNormalOrTenant()) {
             if (isset($Args['AllowDesktopNotifications'])) {
-                $oUser->setExtendedProp(self::GetName().'::AllowDesktopNotifications', $Args['AllowDesktopNotifications']);
+                $oUser->setExtendedProp(self::GetName() . '::AllowDesktopNotifications', $Args['AllowDesktopNotifications']);
             }
             if (isset($Args['AutoRefreshIntervalMinutes'])) {
-                $oUser->setExtendedProp(self::GetName().'::AutoRefreshIntervalMinutes', $Args['AutoRefreshIntervalMinutes']);
+                $oUser->setExtendedProp(self::GetName() . '::AutoRefreshIntervalMinutes', $Args['AutoRefreshIntervalMinutes']);
             }
             if (isset($Args['Theme'])) {
-                $oUser->setExtendedProp(self::GetName().'::Theme', $Args['Theme']);
+                $oUser->setExtendedProp(self::GetName() . '::Theme', $Args['Theme']);
             }
 
             $oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
@@ -215,10 +215,10 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 
         $sUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
         if (!\strpos(\strtolower($sUserAgent), 'firefox')) {
-            @\header('Last-Modified: '.\gmdate('D, d M Y H:i:s').' GMT');
+            @\header('Last-Modified: ' . \gmdate('D, d M Y H:i:s') . ' GMT');
         }
 
-        $oSettings =& \Aurora\System\Api::GetSettings();
+        $oSettings = &\Aurora\System\Api::GetSettings();
         if ($oSettings) {
             if (($oSettings->CacheCtrl && isset($_COOKIE['aft-cache-ctrl']))) {
                 @\setcookie(
@@ -234,12 +234,12 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
             }
         }
 
-        $sResult = \file_get_contents($this->GetPath().'/templates/Index.html');
+        $sResult = \file_get_contents($this->GetPath() . '/templates/Index.html');
         if (\is_string($sResult)) {
             if ($oSettings) {
                 $sFrameOptions = $oSettings->XFrameOptions;
                 if (0 < \strlen($sFrameOptions)) {
-                    @\header('X-Frame-Options: '.$sFrameOptions);
+                    @\header('X-Frame-Options: ' . $sFrameOptions);
                 }
             }
 
@@ -290,7 +290,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         }
         $sContent .= "<br />";
 
-        $sPath = $this->GetPath().'/templates/Compatibility.html';
+        $sPath = $this->GetPath() . '/templates/Compatibility.html';
         if (\file_exists($sPath)) {
             $sResult = \file_get_contents($sPath);
             if (\is_string($sResult)) {
@@ -316,23 +316,23 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 
     protected function getSuccessHtmlValue($sValue)
     {
-        return '<span class="state_ok">'.$sValue.'</span>';
+        return '<span class="state_ok">' . $sValue . '</span>';
     }
 
     protected function getErrorHtmlValue($sError, $sErrorHelp = '')
     {
-        $sResult = '<span class="state_error">'.$sError.'</span>';
+        $sResult = '<span class="state_error">' . $sError . '</span>';
         if (!empty($sErrorHelp)) {
-            $sResult .= '<span class="field_description">'.$sErrorHelp.'</span>';
+            $sResult .= '<span class="field_description">' . $sErrorHelp . '</span>';
         }
         return $sResult;
     }
 
     protected function getWarningHtmlValue($sVarning, $sVarningHelp = '')
     {
-        $sResult = '<span class="state_warning"><img src="./images/alarm.png"> Not detected. <br />'.$sVarning.'</span>';
+        $sResult = '<span class="state_warning"><img src="./images/alarm.png"> Not detected. <br />' . $sVarning . '</span>';
         if (!empty($sVarningHelp)) {
-            $sResult .= '<span class="field_description">'.$sVarningHelp.'</span>';
+            $sResult .= '<span class="field_description">' . $sVarningHelp . '</span>';
         }
         return $sResult;
     }
