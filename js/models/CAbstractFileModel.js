@@ -72,9 +72,6 @@ function CAbstractFileModel()
 	this.uploaded = ko.observable(false);
 	this.uploadError = ko.observable(false);
 	this.downloading = ko.observable(false);
-	this.isViewMimeType = ko.computed(function () {
-		return (-1 !== $.inArray(this.mimeType(), aViewMimeTypes));
-	}, this);
 	this.bHasHtmlEmbed = false;
 
 	this.otherTemplates = ko.observableArray([]);
