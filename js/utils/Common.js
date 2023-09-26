@@ -382,9 +382,26 @@ Utils.destroyObjectWithObservables = function (oParent, mObjectKey)
 	delete oParent[mObjectKey];
 };
 
-Utils.getRandomHash = function ()
+Utils.getRandomHash = function (length)
 {
-	return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+	const sSymbols = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	const iSymbolsLength = sSymbols.length;
+	let sResult = '';
+	length = typeof length === 'number' ? length : 10;
+
+	if (window.crypto && window.crypto.getRandomValues) {
+		const aRandomValues = new Uint32Array(length);
+		window.crypto.getRandomValues(aRandomValues);
+		aRandomValues.forEach((value) => {
+			sResult += sSymbols.charAt(value % iSymbolsLength);
+		});
+	} else {
+		for (let i = 0; i < length; i++) {
+			sResult += sSymbols.charAt(Math.floor(Math.random() * iSymbolsLength));
+		}
+	}
+
+	return sResult;
 };
 
 Utils.generateUUID = function ()
