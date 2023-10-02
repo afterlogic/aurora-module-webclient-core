@@ -1,6 +1,10 @@
 <!-- ko if: !bIsHidden -->
 <div class="item file attachment" data-bind="css: cssClasses">
 
+	<span class="main_action" data-bind="visible: firstAction().length > 0">
+		<a class="button view" href="javascript: void(0)" data-bind="click: function () { executeAction(firstAction()); }, text: getActionText(firstAction()), clickBubble: false"></a>
+	</span>
+
 	<span class="item_content">
 
 		<span class="cancel" data-bind="visible: visibleCancelButton,
@@ -23,20 +27,30 @@
 				<span class="progress-percent" data-bind="text: progressPercent() + '%'"></span>
 			</span>
 			<span class="status_text" data-bind="text: statusText(), css: {'error': uploadError()}, customTooltip: statusTooltip, visible: statusText().length > 0"></span>
-			<div class="buttons" data-bind="visible: allowActions() && uploaded() && !uploadError() && statusText().length === 0 && !downloading() && !visibleProgress()">
-				<a class="button view" href="javascript: void(0)" data-bind="visible: firstAction().length > 0, 
-						click: function () { executeAction(firstAction()); }, text: getActionText(firstAction()), clickBubble: false"></a>
-				<a class="button download" href="javascript: void(0)" data-bind="visible: secondAction().length > 0, 
-						click: function () { executeAction(secondAction()); }, text: getActionText(secondAction()), clickBubble: false"></a>
-			</div>
+			
+	
+
+			<span class="title" data-bind="customTooltip: displayName, css: {entire_line: friendlySize() === ''}">
+				<span class="name" data-bind="text: displayName"></span>
+			</span>
 		</div>
 	</span>
 
-	<span class="size" data-bind="text: friendlySize()"></span>
+	<div class="buttons" data-bind="visible: allowActions() && uploaded() && !uploadError() && statusText().length === 0 && !downloading() && !visibleProgress()">
+		<!-- <a class="button view" href="javascript: void(0)" data-bind="visible: firstAction().length > 0, 
+				click: function () { executeAction(firstAction()); }, text: getActionText(firstAction()), clickBubble: false"></a> -->
+		<a class="button download" href="javascript: void(0)" data-bind="visible: secondAction().length > 0, 
+				click: function () { executeAction(secondAction()); }, text: getActionText(secondAction()), clickBubble: false"></a>
+		
+		<span class="size" data-bind="text: friendlySize()"></span>
+	</div>
 
-	<span class="title" data-bind="customTooltip: displayName, css: {entire_line: friendlySize() === ''}">
+
+	<!-- <span class="title" data-bind="customTooltip: displayName, css: {entire_line: friendlySize() === ''}">
 		<span class="name" data-bind="text: displayName"></span>
-	</span>
+	</span> -->
+
+	
 	
 	<div class="children" data-bind="visible: subFilesExpanded()">
 		<!-- ko template: {name: 'CoreWebclient_FileView', foreach: subFiles} --><!-- /ko -->

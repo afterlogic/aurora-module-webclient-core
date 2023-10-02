@@ -196,23 +196,30 @@
 
 			display: inline-block;
 			font-weight: bold;
-			max-height: 2.5em;
+			height: 2.2em;
 			overflow: hidden;
-			padding: 0px 43px 0px 8px;
+			// padding: 0px 43px 0px 8px;
 			white-space: normal;
 			width: 100%;
 			word-wrap: break-word;
 
-			&.entire_line {
-				padding: 0px 8px 0px 8px;
-			}
+			margin-bottom: 0px;
+			display: flex;
+			align-items: center;
+			margin-top: 4px;
+
+			// &.entire_line {
+				// padding: 0px;
+			// }
 
 			.name {
 				display: inline-block;
 				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
+				// text-overflow: ellipsis;
+				// white-space: nowrap;
 				width: 100%;
+				max-height: 2.2em;
+				line-height: 1.1;
 			}
 		}
 
@@ -222,8 +229,9 @@
 
 		.size {
 			color: #929292;
-			float: right;
-			margin: 0px 8px -5em 0px;
+			margin: 0px;
+			// float: right;
+			// margin: 0px 8px -5em 0px;
 		}
 		
 		.status_text {
@@ -242,12 +250,12 @@
 		}
 		
 		.buttons {
-			.clearfix-helper();
+			// .clearfix-helper();
 
-			display: block;
+			display: flex;
+			justify-content: space-between;
 			margin: 0;
-			padding: 6px 0px 0px;
-			text-align: left;
+			padding: 0px 8px 0px;
 			
 			.button {
 				background: none;
@@ -257,29 +265,59 @@
 				font-weight: normal;
 				padding: 0px;
 				text-shadow: none;
-				float: left;
-				text-align: left;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				// float: left;
+				// text-align: left;
 
-				html.rtl & {
-					float: right;
-					text-align: right;
-				}
+
+				// html.rtl & {
+				// 	float: right;
+				// 	text-align: right;
+				// }
 
 				&:hover {
-					color: darken(@theme-attachment-action-link-color, 15%);
+					color: lighten(@theme-attachment-action-link-color, 5%);
 				}
 
-				&.open,
-				&.download {
-					float: right;
-					text-align: right;
+				// &.open,
+				// &.download {
+				// 	float: right;
+				// 	text-align: right;
 
-					html.rtl & {
-						float: left;
-						text-align: left;
-					}
+				// 	html.rtl & {
+				// 		float: left;
+				// 		text-align: left;
+				// 	}
+				// }
+			}
+		}
+
+		.main_action {
+			position: absolute;
+			width: 100%;
+			background: #fff;
+			opacity: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 88px;
+			z-index: 1;
+			font-weight: bold;
+			transition: opacity 0.3s ease;
+			padding-top: 20px;
+
+			.button {
+				color: @theme-attachment-action-link-color;
+
+				&:hover {
+					color: lighten(@theme-attachment-action-link-color, 5%)
 				}
 			}
+		}
+
+		&:hover .main_action {
+			opacity: 0.9;
 		}
 	}
 }
