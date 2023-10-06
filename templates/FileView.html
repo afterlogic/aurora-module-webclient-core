@@ -1,13 +1,13 @@
 <!-- ko if: !bIsHidden -->
-<div class="item file attachment" data-bind="css: cssClasses">
+<div class="item file attachment" data-bind="css: $parent.cssClasses">
 
 	<span class="main_action" data-bind="visible: firstAction().length > 0">
-		<a class="button view" href="javascript: void(0)" data-bind="click: function () { executeAction(firstAction()); }, text: getActionText(firstAction()), clickBubble: false"></a>
+		<a class="button view" href="javascript: void(0)" data-bind="click: function () {executeAction(firstAction()); }, text: getActionText(firstAction()), clickBubble: false"></a>
 	</span>
-
+	
 	<span class="item_content">
 
-		<span class="cancel" data-bind="visible: visibleCancelButton,
+		<span class="cancel" data-bind="visible: $data.visibleCancelButton(),
 			  click: function () { $parent.onFileRemove( uploadUid(), $data); },
 			  customTooltip: cancelButtonTooltip"></span>
 
@@ -31,7 +31,7 @@
 	
 
 			<span class="title" data-bind="customTooltip: displayName, css: {entire_line: friendlySize() === ''}">
-				<span class="name" data-bind="text: displayName"></span>
+				<span class="name" data-bind="text: $parent.displayName"></span>
 			</span>
 		</div>
 	</span>
@@ -53,11 +53,11 @@
 	
 	
 	<div class="children" data-bind="visible: subFilesExpanded()">
-		<!-- ko template: {name: 'CoreWebclient_FileView', foreach: subFiles} --><!-- /ko -->
+		<!-- ko template: {name: 'CoreWebclient_FileView', foreach: $parent.subFiles} --><!-- /ko -->
 	</div>
 </div>
 
-<!-- ko foreach: otherTemplates -->
+<!-- ko foreach: $parent.otherTemplates -->
 	<!-- ko if: $data.data() !== null -->
 		<!-- ko template: $data --><!-- /ko -->
 	<!-- /ko -->
