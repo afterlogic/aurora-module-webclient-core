@@ -1,13 +1,12 @@
 <!-- ko if: !bIsHidden -->
-<div class="item file attachment" data-bind="css: $parent.cssClasses">
+<div class="item file attachment" data-bind="css: cssClasses()">
 
 	<span class="main_action" data-bind="visible: firstAction().length > 0">
-		<a class="button view" href="javascript: void(0)" data-bind="click: function () {executeAction(firstAction()); }, text: getActionText(firstAction()), clickBubble: false"></a>
+		<a class="button view" href="javascript: void(0)" data-bind="click: function () { executeAction(firstAction()); }, text: getActionText(firstAction()), clickBubble: false"></a>
 	</span>
 	
 	<span class="item_content">
-
-		<span class="cancel" data-bind="visible: $data.visibleCancelButton(),
+		<span class="cancel" data-bind="visible: visibleCancelButton(),
 			  click: function () { $parent.onFileRemove( uploadUid(), $data); },
 			  customTooltip: cancelButtonTooltip"></span>
 
@@ -27,11 +26,9 @@
 				<span class="progress-percent" data-bind="text: progressPercent() + '%'"></span>
 			</span>
 			<span class="status_text" data-bind="text: statusText(), css: {'error': uploadError()}, customTooltip: statusTooltip, visible: statusText().length > 0"></span>
-			
-	
 
-			<span class="title" data-bind="customTooltip: displayName, css: {entire_line: friendlySize() === ''}">
-				<span class="name" data-bind="text: $parent.displayName"></span>
+			<span class="title" data-bind="customTooltip: displayName(), css: {entire_line: friendlySize() === ''}">
+				<span class="name" data-bind="text: displayName()"></span>
 			</span>
 		</div>
 	</span>
@@ -45,19 +42,16 @@
 		<span class="size" data-bind="text: friendlySize()"></span>
 	</div>
 
-
-	<!-- <span class="title" data-bind="customTooltip: displayName, css: {entire_line: friendlySize() === ''}">
-		<span class="name" data-bind="text: displayName"></span>
+	<!-- <span class="title" data-bind="customTooltip: displayName(), css: {entire_line: friendlySize() === ''}">
+		<span class="name" data-bind="text: displayName()"></span>
 	</span> -->
-
-	
 	
 	<div class="children" data-bind="visible: subFilesExpanded()">
 		<!-- ko template: {name: 'CoreWebclient_FileView', foreach: $parent.subFiles} --><!-- /ko -->
 	</div>
 </div>
 
-<!-- ko foreach: $parent.otherTemplates -->
+<!-- ko foreach: otherTemplates() -->
 	<!-- ko if: $data.data() !== null -->
 		<!-- ko template: $data --><!-- /ko -->
 	<!-- /ko -->
