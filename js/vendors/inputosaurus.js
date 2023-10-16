@@ -753,6 +753,8 @@ var inputosaurustext = {
 						start: function (event, ui) {
 							ui.helper.__widget = widget;
 						},
+						containment: ".popup_panel",
+						tolerance: "pointer",
 						stop: function (event, ui) {
 							var oLiDraggable = $(this);
 							oLiDraggable.css('visibility', 'visible');
