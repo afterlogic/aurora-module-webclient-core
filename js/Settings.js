@@ -25,7 +25,7 @@ var Settings = {
 	// Settings from Core module
 	AuthTokenCookieExpireTime: 30,
 	AutodetectLanguage: false,
-	UserSelectsDateFormat: true,
+	UserSelectsDateFormat: false,
 	dateFormat: ko.observable('DD/MM/YYYY'),
 	DateFormatList: ['DD/MM/YYYY'],
 	EUserRole: {},
