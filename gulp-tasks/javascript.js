@@ -5,6 +5,7 @@ const
 	fs = require('fs'),
 	log = require('fancy-log'),
 	webpack = require('webpack'),
+	{ VueLoaderPlugin } = require('vue-loader'),
 	WebpackBar = require('webpackbar'),
 	path = require('path'),
 	sTenantName = process.env.npm_config_tenant,
@@ -13,6 +14,8 @@ const
 	sPath = sTenantName ? './tenants/' + sTenantName + '/static/js/' : './static/js/',
 	crlf = '\n'
 ;
+
+const WebpackDevServer = require('webpack-dev-server');	
 
 const aModulesNames = fs.readdirSync('./modules/');
 
@@ -41,8 +44,13 @@ var
 	})),
 	oWebPackConfig = {
 		mode: 'none', //none,production,development
+		target: "web",
 		stats: {
 			source: false
+		},
+		devServer: {
+			static: './static/js/',
+		   	hot: true,
 		},
 		resolveLoader: {
 			alias: {
@@ -58,13 +66,15 @@ var
 		module: {
 			rules: [
 				{
+					test: /\.vue$/,
+					loader: 'vue-loader'
+				},
+				{
 					test: /[\\\/]modernizr\.js$/,
 					use: [
 						{
 							loader: "imports-loader",
-							options: {
-							  	wrapper: "window"
-							},
+							options: { wrapper: "window" },
 						},
 						// 'imports-loader?this=>window',
 						'exports-loader?window.Modernizr'
@@ -72,45 +82,32 @@ var
 				},
 				{
 					test: /\.js$/,
-					use: [
-						{
-							loader: 'replace-module-names-loader'
-						}
-					],
+					use: [{ loader: 'replace-module-names-loader' }],
 				},
 				{
-					test: /(OpenPgpWebclient|OpenPgpFilesWebclient|CoreParanoidEncryptionWebclientPlugin|ComposeWordCounterPlugin|TwoFactorAuth).*\.js$/,
+					// test: /(OpenPgpWebclient|OpenPgpFilesWebclient|CoreParanoidEncryptionWebclientPlugin|ComposeWordCounterPlugin|TwoFactorAuth).*\.js$/,
+					test: /\.js$/,
 					exclude: /node_modules/,
-					use: [
-						{
-							loader: 'babel-loader',
-							options: {
-								presets: [
-									[
-										'@babel/preset-env',
-										{
-											useBuiltIns: 'entry',
-											corejs: 'core-js@3'
-										}
-									]
-								],
-								compact: false
-							}
+					use: [{
+						loader: 'babel-loader',
+						options: {
+							presets: [
+								[
+									'@babel/preset-env',
+									{ useBuiltIns: 'entry', corejs: 'core-js@3' }
+								]
+							],
+							compact: false
 						}
-					],
+					}],
 				},
 				{
 					test: /\.css$/,
-					use: [
-						'style-loader',
-						'css-loader'
-					]
+					use: [ 'style-loader', 'css-loader' ]
 				},
 				{
 					test: /\.(png|jpe?g|gif)$/,
-					use: [
-						'file-loader'
-					]
+					use: [ 'file-loader' ]
 				}
 			]
 		},
@@ -130,6 +127,8 @@ var
 				compiledIn: false,
 				fancy: true,
 			}),
+			new VueLoaderPlugin(),
+			// new webpack.HotModuleReplacementPlugin()
 		]
 	},
 	updateVersion = function () {
@@ -323,8 +322,32 @@ function min () {
 	webpack(config, compileCallback);
 };
 
+
+
 exports.default = {
 	build,
 	min,
-	watch
+	watch,
+	serve: async () => {
+		const config = _.defaults({
+			mode: 'development',
+			watch: true,
+			entry: sPath + '_' + sOutputName + '-entry.js',
+			output: {
+				path: path.resolve(__dirname, '../../../' + sPath),
+				filename: sOutputName + '.js',
+				chunkFilename: '[name].' + sOutputName + '.[chunkhash].js',
+				publicPath: sPath,
+				pathinfo: true,
+			},
+		}, oWebPackConfig);
+
+		const compiler = webpack(config);
+		const devServerOptions = { ...config.devServer, open: true };
+		const server = new WebpackDevServer(devServerOptions, compiler);
+
+
+		console.log('Starting server...');
+		await server.start();
+	}
 };
