@@ -11,6 +11,27 @@ var
 	Browser = require('%PathToCoreWebclientModule%/js/Browser.js')
 ;
 
+ko.bindingHandlers.avatarIcon = {
+	'init': function (oElement, fValueAccessor) {
+		var oCommand = _.defaults(
+			fValueAccessor(), {
+				'image': '',
+				'label': '',
+				'color': '#ccc'
+			}
+		);
+
+		$(oElement).css('background-color', oCommand.color);
+
+		if (oCommand.image) {
+			$('<span></span>').appendTo(oElement).css('background', 'url(' + oCommand.image + ') center/cover no-repeat');
+		} else if (oCommand.label[0]) {
+			$(oElement).append('<span>'+oCommand.label[0].toUpperCase()+'</span>');
+		}
+		
+	}
+};
+
 ko.bindingHandlers.i18n = {
 	'init': function (oElement, fValueAccessor) {
 		var
