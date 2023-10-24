@@ -5,8 +5,6 @@ var
 	
 	Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	
-	I18n = window.auroraI18n,
-	
 	TextUtils = {}
 ;
 
@@ -123,7 +121,8 @@ TextUtils.htmlStartsWithBlockquote = function (sHtml)
 TextUtils.i18n = function (sKey, oValueList, sDefaultValue, iPluralCount) {
 	var
 		sValueName = '',
-		sResult = Types.isNonEmptyString(sDefaultValue) ? sDefaultValue : sKey
+		sResult = Types.isNonEmptyString(sDefaultValue) ? sDefaultValue : sKey,
+		I18n = window.auroraI18n
 	;
 	
 	if (Types.isNonEmptyString(sKey))
