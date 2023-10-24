@@ -173,6 +173,24 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         }
     }
 
+    public function GetTemplates()
+    {
+        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::Anonymous);
+
+        $oIntegrator = \Aurora\Modules\Core\Module::getInstance()->getIntegratorManager();
+        return $oIntegrator->compileTemplates();
+    }
+
+    public function GetTranslation()
+    {
+        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::Anonymous);
+
+        $oIntegrator = \Aurora\Modules\Core\Module::getInstance()->getIntegratorManager();
+        list($sLanguage, $sTheme) = $oIntegrator->getThemeAndLanguage();
+
+        return $oIntegrator->getLanguage($sLanguage);
+    }
+
     /**
      * @ignore
      */

@@ -4,18 +4,13 @@ var
 	_ = require('underscore'),
 	$ = require('jquery'),
 	ko = require('knockout'),
-	moment = require('moment'),
 
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
-	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
-
-	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 
 	Utils = {}
 ;
 
 require('jquery.easing');
-
 
 /**
  * @param {(Object|null|undefined)} oContext
@@ -115,6 +110,7 @@ Utils.desktopNotify = (function ()
 
 	return function (oData) {
 		var AppTab = require('%PathToCoreWebclientModule%/js/AppTab.js');
+		var UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js')
 
 		if (oData && UserSettings.AllowDesktopNotifications && window.Notification && !AppTab.focused())
 		{
@@ -265,7 +261,6 @@ Utils.uiDropHelperAnim = function (oEvent, oUi)
  */
 Utils.validateFileOrFolderName = function (sName)
 {
-	sName = TextUtils.trim(sName);
 	return '' !== sName && !/["\/\\*?<>|:]/.test(sName);
 };
 
@@ -313,33 +308,6 @@ Utils.getDateFormatForMoment = function (dateFormat)
 	// 'DD Month YYYY' -> 'DD MMMM YYYY'
 	return dateFormat.replace('Month', 'MMMM');
 };
-
-Utils.log = (function () {
-	if (UserSettings.AllowClientDebug)
-	{
-		window.auroraLogs = [];
-
-		return function () {
-			var aNewRow = [];
-
-			aNewRow.unshift(moment().format('DD.MM, HH:mm:ss'));
-			_.each(arguments, function (mArg) {
-				aNewRow.push(mArg);
-			});
-
-			if (window.auroraLogs.length > 100)
-			{
-				window.auroraLogs.shift();
-			}
-
-			window.auroraLogs.push(aNewRow);
-		};
-	}
-	else
-	{
-		return function () {};
-	}
-}());
 
 /**
  * @param {string} sUniqVal

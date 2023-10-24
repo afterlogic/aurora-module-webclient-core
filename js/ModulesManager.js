@@ -4,18 +4,15 @@ var
 	_ = require('underscore'),
 	
 	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
-	
-	AppData = window.auroraAppData,
-	
 	oModules = {}
 ;
 
 module.exports = {
-	init: function (oAvailableModules) {
+	init: function (oAvailableModules, oAppData) {
 		_.each(oAvailableModules, function (fModuleConstructor, sModuleName) {
 			if (_.isFunction(fModuleConstructor))
 			{
-				var oModule = fModuleConstructor(AppData);
+				var oModule = fModuleConstructor(oAppData);
 				if (oModule)
 				{
 					oModules[sModuleName] = oModule;

@@ -254,7 +254,7 @@ Promise.all(_.values(oAvailableModules))
 			if (window.isNewTab) {
 				App.setNewTab();
 			}
-			ModulesManager.init(_.object(_.keys(oAvailableModules), aModules));
+			ModulesManager.init(_.object(_.keys(oAvailableModules), aModules), window.auroraAppData);
 			App.init();
 		}
 	})

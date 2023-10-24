@@ -7,6 +7,7 @@ var _ = require('underscore'),
   TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
   Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
   Utils = require('%PathToCoreWebclientModule%/js/utils/Common.js'),
+  Logger = require('%PathToCoreWebclientModule%/js/utils/Logger.js'),
   Popups = require('%PathToCoreWebclientModule%/js/Popups.js'),
   AlertPopup = require('%PathToCoreWebclientModule%/js/popups/AlertPopup.js'),
   App = require('%PathToCoreWebclientModule%/js/App.js'),
@@ -199,8 +200,16 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, authTok
 
   oCloneRequest.Parameters = JSON.stringify(oCloneRequest.Parameters)
 
+  let sHost = '/?/Api/'
+
+  try {
+    if (process.env.NODE_ENV === 'development') {
+      sHost = process.env.VUE_APP_API_HOST + '/?/Api/'
+    }
+  } catch (e) {}
+  
   oXhr = $.ajax({
-    url: '?/Api/',
+    url: sHost,
     type: 'POST',
     async: true,
     dataType: 'json',
@@ -344,10 +353,10 @@ CAjax.prototype.fail = function (oRequest, fResponseHandler, oContext, oXhr, sTy
           return oTmpReqData && _.isEqual(oTmpReqData.Request, oRequest)
         })
         if (oReqData) {
-          Utils.log('DataTransferFailed', _getRequestDataString(oReqData))
+          Logger.log('DataTransferFailed', _getRequestDataString(oReqData))
         } else {
           var sResponseText = Types.pString(oXhr && oXhr.responseText)
-          Utils.log('DataTransferFailed', sErrorText, '<br />' + sResponseText.substr(0, 300))
+          Logger.log('DataTransferFailed', sErrorText, '<br />' + sResponseText.substr(0, 300))
         }
         oResponse = { Result: false, ErrorCode: Enums.Errors.DataTransferFailed, ResponseText: oXhr.responseText }
       }
@@ -415,11 +424,11 @@ CAjax.prototype.filterRequests = function (oRequest, sCallerName) {
             bTooLong = moment().diff(oReqData.Time) > 1000 * 60 * 5 // 5 minutes
           if (Settings.AllowClientDebug && (bComplete || bFail || bTooLong)) {
             if (bTooLong) {
-              Utils.log(sCallerName, 'remove more than 5 minutes request', _getRequestDataString(oReqData))
+              Logger.log(sCallerName, 'remove more than 5 minutes request', _getRequestDataString(oReqData))
             } else if (bFail) {
-              Utils.log(sCallerName, 'remove fail request', _getRequestDataString(oReqData))
+              Logger.log(sCallerName, 'remove fail request', _getRequestDataString(oReqData))
             } else if (bComplete) {
-              Utils.log(sCallerName, 'remove complete request', _getRequestDataString(oReqData))
+              Logger.log(sCallerName, 'remove complete request', _getRequestDataString(oReqData))
             }
           }
           return !bComplete && !bFail && !bTooLong
@@ -472,7 +481,7 @@ Pulse.registerEveryMinuteFunction(function () {
 })
 
 Pulse.registerWakeupFunction(function () {
-  Utils.log(
+  Logger.log(
     '<u>wakeup</u>, hasOpenedRequests: ' +
       Ajax.hasOpenedRequests() +
       ', bInternetConnectionProblem: ' +
@@ -480,7 +489,7 @@ Pulse.registerWakeupFunction(function () {
   )
   if (Ajax.hasOpenedRequests()) {
     _.each(Ajax.requests(), function (oReqData) {
-      Utils.log('<i>wakeup</i>: ' + _getRequestDataString(oReqData))
+      Logger.log('<i>wakeup</i>: ' + _getRequestDataString(oReqData))
     })
     Ajax.filterRequests(null, 'wakeup')
   }
