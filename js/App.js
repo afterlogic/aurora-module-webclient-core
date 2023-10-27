@@ -106,13 +106,6 @@ function CApp() {
   }, this)
 }
 
-CApp.prototype.preinit = function (appData) {
-  this.iUserRole = appData.User ? Types.pInt(appData.User.Role) : Enums.UserRole.Anonymous
-  this.iTenantId = appData.User ? Types.pInt(appData.User.TenantId) : 0
-  this.sUserName = appData.User ? Types.pString(appData.User.Name) : ''
-  this.sUserPublicId = appData.User ? Types.pString(appData.User.PublicId) : ''
-  this.iUserId = appData.User ? Types.pInt(appData.User.Id) : 0
-}
 
 CApp.prototype.registerUserAccountsCount = function (koUserAccountsCount) {
   this.userAuthAccountsCountsArray.push(koUserAccountsCount)

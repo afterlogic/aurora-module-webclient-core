@@ -75,33 +75,23 @@ $(function () {
 	
 		Promise.all(_.values(oAvailableModules))
 			.then(aModules => {
-				const oAjax = require('/modules/CoreWebclient/js/Ajax.js');
-
-				oAjax.send('Core', 'GetAppdata', {}, function (res) {
-					window.auroraAppData = res.Result
-	
-					const oAppData = res.Result
-					const ModulesManager = require('/modules/CoreWebclient/js/ModulesManager.js')
-					const App = require('/modules/CoreWebclient/js/App.js')
-					
-					App.preinit(oAppData)
-	
-					const bSwitchingToMobile = App.checkMobile()
-					
-					if (!bSwitchingToMobile) {
-						if (window.isPublic) {
-							App.setPublic();
-						}
-						if (window.isNewTab) {
-							App.setNewTab();
-						}
-						ModulesManager.init(_.object(_.keys(oAvailableModules), aModules), oAppData);
-						App.init();
+				const ModulesManager = require('/modules/CoreWebclient/js/ModulesManager.js')
+				const App = require('/modules/CoreWebclient/js/App.js')
+				const bSwitchingToMobile = App.checkMobile()
+				
+				if (!bSwitchingToMobile) {
+					if (window.isPublic) {
+						App.setPublic()
 					}
-				});
+					if (window.isNewTab) {
+						App.setNewTab()
+					}
+					
+					ModulesManager.init(_.object(_.keys(oAvailableModules), aModules), window.auroraAppData)
+					App.init()
+				}
 			})
 			.catch(function (oError) { console.error('An error occurred while loading the component:'); console.error(oError); });
-
 	})	
 });
 
