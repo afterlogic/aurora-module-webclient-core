@@ -25,7 +25,7 @@ export default {
         }
 
         $.ajax({
-            url: process.env.NODE_ENV === 'development' ? process.env.VUE_APP_API_HOST + '/?/Api/' : '/?/Api/',
+            url: process.env.NODE_ENV === 'development' ? process.env.VUE_APP_API_HOST + '?/Api/' : '?/Api/',
             type: 'POST',
             async: true,
             dataType: 'json',
