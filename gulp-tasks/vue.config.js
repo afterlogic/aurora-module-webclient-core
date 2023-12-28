@@ -1,6 +1,8 @@
-const { defineConfig } = require('@vue/cli-service')
+// const { defineConfig } = require('@vue/cli-service')
 const path = require('path')
 const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const fs = require('fs')
 
 module.exports = {
   productionSourceMap: false,
@@ -20,7 +22,7 @@ module.exports = {
     if (config.resolveLoader.alias === undefined) {
       config.resolveLoader.alias = {}
     }
-    config.resolveLoader['alias']['replace-module-names-loader'] = path.join(__dirname,'module-loader.js')
+    config.resolveLoader['alias']['replace-module-names-loader'] = path.join(__dirname, 'module-loader.js')
 
     config.module.rules.unshift({
       test: /\.js$/,
@@ -38,6 +40,17 @@ module.exports = {
         'exports-loader?window.Modernizr'
       ]
     })
+
+    for (const key in config.plugins) {
+      if (config.plugins[key] instanceof HtmlWebpackPlugin) {
+        config.plugins[key] = new HtmlWebpackPlugin({
+          templateContent: () => {
+            let templateContent = fs.readFileSync(path.join(__dirname, '../templates/Index.html'))
+            return templateContent.toString().replace(new RegExp('{{.*}}', 'g'), '')
+          }
+        })
+      }
+    }
 
     config.plugins.unshift(
       new webpack.ProvidePlugin({

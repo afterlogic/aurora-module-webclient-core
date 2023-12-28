@@ -200,11 +200,11 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, authTok
 
   oCloneRequest.Parameters = JSON.stringify(oCloneRequest.Parameters)
 
-  let sHost = '/?/Api/'
+  let sHost = '?/Api/'
 
   try {
     if (process.env.NODE_ENV === 'development') {
-      sHost = process.env.VUE_APP_API_HOST + '/?/Api/'
+      sHost = process.env.VUE_APP_API_HOST + sHost
     }
   } catch (e) {}
   

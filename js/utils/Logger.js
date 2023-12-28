@@ -1,11 +1,6 @@
 var
-	// _ = require('underscore'),
-	// $ = require('jquery'),
-	// ko = require('knockout'),
+	_ = require('underscore'),
 	moment = require('moment'),
-
-	// Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
-	// TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 
 	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 
