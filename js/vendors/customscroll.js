@@ -288,6 +288,7 @@ var jQuery = require('jquery');
 	Scrollbar.Horizontal = function (pane) {
 		this.el = $('<div class="customscroll-scrollbar customscroll-scrollbar-horizontal" />');
 		this.el.append($('<div />'));
+		this.tolerance = 1;
 		Scrollbar.call(this, pane);
 	};
 
@@ -330,7 +331,7 @@ var jQuery = require('jquery');
   
 	// Called upon container mousewheel.
    	Scrollbar.Horizontal.prototype.mousewheel = function (ev, delta, x, y) {
-		if (this.pane.inner.get(0).scrollWidth > this.pane.el.width())
+		if (this.pane.inner.get(0).scrollWidth > this.pane.el.width() + this.tolerance)
 		{
 			this.enter = true;
 			this.show();
@@ -344,7 +345,7 @@ var jQuery = require('jquery');
 	};
 
 	Scrollbar.Horizontal.prototype.mouseenter = function () {
-		if (this.pane.inner.get(0).scrollWidth > this.pane.el.width())
+		if (this.pane.inner.get(0).scrollWidth > this.pane.el.width() + this.tolerance)
 		{
 			this.enter = true;
 			this.show();
@@ -366,6 +367,7 @@ var jQuery = require('jquery');
 	Scrollbar.Vertical = function (pane) {
 		this.el = $('<div class="customscroll-scrollbar customscroll-scrollbar-vertical" />');
 		this.el.append($('<div />'));
+		this.tolerance = 2;
 		Scrollbar.call(this, pane);
 	};
 
@@ -412,7 +414,7 @@ var jQuery = require('jquery');
 
 	// Called upon container mousewheel.
 	Scrollbar.Vertical.prototype.mousewheel = function (ev, delta, x, y) {
-		if (this.pane.inner.get(0).scrollHeight > this.pane.el.height())
+		if (this.pane.inner.get(0).scrollHeight > this.pane.el.height() + this.tolerance)
 		{
 			this.enter = true;
 			this.show();
@@ -421,7 +423,7 @@ var jQuery = require('jquery');
   
 	// Called upon mouseenter.
 	Scrollbar.Vertical.prototype.mouseenter = function () {
-		if (this.pane.inner.get(0).scrollHeight > this.pane.el.height())
+		if (this.pane.inner.get(0).scrollHeight > this.pane.el.height() + this.tolerance)
 		{
 			this.enter = true;
 			this.show();
