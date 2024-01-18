@@ -1,27 +1,24 @@
-var
+const
 	_ = require('underscore'),
-	argv = require('./argv.js'),
-	gulp = require('gulp'),
-	less = require('gulp-less'),
 	log = require('fancy-log'),
-	concat = require('gulp-concat-util'),
-	plumber = require('gulp-plumber'),
 	fs = require('fs'),
 	ncp = require('ncp').ncp,
 	mkdirp = require('mkdirp'),
-
-	aModulesNames = argv.getModules(),
-	aModulesWatchPaths = [],
-	
-	aThemes = argv.getParameter('--themes').split(','),
-	
-	sTenanthash = argv.getParameter('--tenant'),
-	
-	sTenantPathPrefix = sTenanthash ? 'tenants/' + sTenanthash + '/' : '',
-	
+	chokidar = require('chokidar'),
+	less = require('less'),
+	aThemes = process.env.npm_config_themes ? process.env.npm_config_themes.split(',') : [],
+	sTenantName = process.env.npm_config_tenant,
+	sTenantPathPrefix = sTenantName ? 'tenants/' + sTenantName + '/' : '',
 	sPathToCoreWebclient = 'modules/CoreWebclient',
-	sPathToCoreMobileWebclient = 'modules/CoreMobileWebclient'
+	crlf = '\n'
 ;
+
+let 
+	aModulesNames = [],
+	aModulesWatchPaths = []
+;
+
+aModulesNames = fs.readdirSync('./modules/');
 
 aModulesNames.forEach(function (sModuleName) {
 	if (fs.existsSync('./modules/' + sModuleName + '/styles/styles.less') || fs.existsSync('./modules/' + sModuleName + '/styles/styles-mobile.less'))
@@ -30,8 +27,7 @@ aModulesNames.forEach(function (sModuleName) {
 	}
 });
 
-function BuildLibsCss()
-{
+function BuildLibsCss(){
 	var
 		aLibsFiles = [
 			sPathToCoreWebclient + '/styles/vendors/normalize.css',
@@ -41,18 +37,21 @@ function BuildLibsCss()
 		],
 		sDestPath = 'static/styles/libs/',
 		fBuild = function () {
-			gulp.src(aLibsFiles)
-				.pipe(concat('libs.css'))
-				.pipe(gulp.dest(sDestPath))
-				.on('error', log);
+			let lessContent;
+			aLibsFiles.forEach(file => {
+				lessContent += fs.readFileSync(file, 'utf8');
+			});
+
+			log.info('libs.css was build');
+		
+			fs.writeFileSync(sDestPath + 'libs.css', lessContent);
 		}
 	;
 	
 	CheckFolderAndCallHandler(sDestPath, fBuild);
 }
 
-function BuildThemeCss(sTheme, bMobile)
-{
+function BuildThemeCss(sTheme, bMobile) {
 	var
 		sCoreModule = bMobile ? 'CoreMobileWebclient' : 'CoreWebclient',
 		aModulesFiles = [],
@@ -62,31 +61,28 @@ function BuildThemeCss(sTheme, bMobile)
 		iCoreModuleIndex = aModulesNames.indexOf(sCoreModule)
 	;
 
-	if (!fs.existsSync('modules/' + sCoreModule + '/styles/themes/' + sTheme + '/styles' + sPostfix + '.less'))
-	{
+	if (!fs.existsSync('modules/' + sCoreModule + '/styles/themes/' + sTheme + '/styles' + sPostfix + '.less')) {
+		console.log(sTheme + ' > styles' + sPostfix + '.css was skipped');
 		return;
 	}
 	
-	if (iCoreModuleIndex >= 0)
-	{
+	if (iCoreModuleIndex >= 0) {
 		aModulesNames.unshift(aModulesNames.splice(iCoreModuleIndex, 1)[0]);
 	}
 	
 	aModulesNames.forEach(function (sModuleName) {
-		if (fs.existsSync('modules/' + sModuleName + '/styles/styles' + sPostfix + '.less'))
-		{
+		if (fs.existsSync('modules/' + sModuleName + '/styles/styles' + sPostfix + '.less')) {
 			//check module override
-			if (fs.existsSync('tenants/' + sTenanthash + '/modules/' + sModuleName + '/styles/styles' + sPostfix + '.less'))
+			if (fs.existsSync('tenants/' + sTenantPathPrefix + 'modules/' + sModuleName + '/styles/styles' + sPostfix + '.less'))
 			{
-				aModulesFiles.push('tenants/' + sTenanthash + '/modules/' + sModuleName + '/styles/styles' + sPostfix + '.less');
+				aModulesFiles.push('tenants/' + sTenantPathPrefix + 'modules/' + sModuleName + '/styles/styles' + sPostfix + '.less');
 			}
 			else
 			{
 				aModulesFiles.push('modules/' + sModuleName + '/styles/styles' + sPostfix + '.less');
 			}
 		}
-		if (sModuleName !== sCoreModule && fs.existsSync('modules/' + sModuleName + '/styles/images' + sPostfix))
-		{
+		if (sModuleName !== sCoreModule && fs.existsSync('modules/' + sModuleName + '/styles/images' + sPostfix)) {
 			MoveFiles('modules/' + sModuleName + '/styles/images' + sPostfix, 'static/styles/images' + sPostfix + '/modules/' + sModuleName);
 		}
 	});
@@ -108,6 +104,16 @@ function BuildThemeCss(sTheme, bMobile)
 					MoveFiles(sThemeImagesPath, 'static/styles/themes' + aPathParts[1]);
 				}
 			}
+
+			var sThemeFontsPath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme + '/fonts' + sPostfix);
+			if (fs.existsSync(sThemeFontsPath))
+			{
+				var aPathParts = sThemeFontsPath.split('styles/themes');
+				if (aPathParts.length > 1)
+				{
+					MoveFiles(sThemeFontsPath, 'static/styles/themes' + aPathParts[1]);
+				}
+			}
 		}
 	});
 	
@@ -121,99 +127,76 @@ function BuildThemeCss(sTheme, bMobile)
 	});
 	
 	aModulesFiles = aThemeSpecyficDefaultFiles.concat(aThemeSpecyficFiles.concat(aModulesFiles));
-
-	gulp.src(aModulesFiles)
-		.pipe(concat('styles' + sPostfix + '.css', {
-			process: function(sSrc, sFilePath) {
-//				var
-//					sThemePath = sFilePath.replace('styles' + sPostfix + '.less', 'themes/' + sTheme.toLowerCase() + '.less')
-//				;
-//				
-//				if ( fs.existsSync(sThemePath)) {
-//					aThemeSpecyficFiles.push('@import "' + sThemePath + '";\r\n');
-//				}
 		
-				return '@import "' + sFilePath + '";\r\n'; 
-			}
-		}))
-//		.pipe(concat.header('.' + aModulesNames.join('Screen, .') + 'Screen { \n')) /* wrap styles */
-//		.pipe(concat.footer('} \n'))
-		.pipe(plumber({
-			errorHandler: function (err) {
-				console.log(err.toString());
-				this.emit('end');
-			}
-		}))
-		.pipe(less())
-		.pipe(gulp.dest(sTenantPathPrefix + 'static/styles/themes/' + sTheme))
-		.on('error', log);
-}
+	let lessContent = '';
+		
+	aModulesFiles.forEach(file => {
+		lessContent += '@import "' + file + '";' + crlf; 
+	});
 
-function CheckFolderAndCallHandler(sDir, fHandler)
-{
-	if (fs.existsSync(sDir))
-	{
-		fHandler();
-	}
-	else
-	{
-		mkdirp(sDir, function (oErr) {
-			if (!fs.existsSync(sDir))
-			{
-				console.log(sDir + ' directory creating was failed: ', oErr);
-			}
-			else
-			{
-				fHandler();
-			}
-		});
-	}
-}
-
-function MoveFiles(sFromDir, sToDir)
-{
-	var
-		fFilter = function (name) {
-			console.log(name);
-			return true;
-		},
-		fCopyDir = function () {
-			ncp(sFromDir, sToDir, fFilter, function (oErr) {
-				if (oErr)
-				{
-					console.log(sFromDir + ' directory copying was failed: ', oErr);
-				}
-			});	
+	fs.mkdirSync(sTenantPathPrefix + 'static/styles/themes/' + sTheme + '/', { recursive: true }, (msg) => { if (msg) { console.log(msg) } } );
+		
+	less.render(lessContent, {
+			sourceMap: {sourceMapFileInline: false},
+			sync: true,
+			syncImport: true
+		}, (error, output) => {
+		if (error) {
+			console.log(error);
+		} else {
+			console.log(sTheme + ' > styles' + sPostfix + '.css was build');
+			fs.writeFileSync(sTenantPathPrefix + 'static/styles/themes/' + sTheme + '/styles' + sPostfix + '.css', output.css);
 		}
-	;
-	
-	if (fs.existsSync(sFromDir))
-	{
-		CheckFolderAndCallHandler(sToDir, fCopyDir);
-	}
+	});
+
+	return true;
 }
 
-function MoveSharingCss()
-{
-	var
-		fCopySharing = function () {
-			ncp(sPathToCoreWebclient + '/styles/sharing.css', 'static/styles/sharing.css', function (oErr) {
-				if (oErr)
-				{
-					console.log('static/styles/sharing.css file copying was failed: ', oErr);
-				}
-			});
-		}
-	;
-	
-	CheckFolderAndCallHandler('static/styles', fCopySharing);
+function CheckFolderAndCallHandler(sDir, fHandler) {
+  if (fs.existsSync(sDir)) {
+    fHandler()
+  } else {
+    mkdirp(sDir, function (oErr) {
+      if (!fs.existsSync(sDir)) {
+        log(sDir + ' directory creating was failed: ', oErr)
+      } else {
+        fHandler()
+      }
+    })
+  }
 }
 
-gulp.task('styles', function (done) {
-	if (!sTenanthash)
-	{
-		BuildLibsCss();
-	}
+function MoveFiles(sFromDir, sToDir) {
+  const fFilter = function (name) {
+      console.log(name)
+      return true
+    },
+    fCopyDir = function () {
+      ncp(sFromDir, sToDir, fFilter, function (oErr) {
+        if (oErr) {
+          console.log(sFromDir + ' directory copying was failed: ', oErr)
+        }
+      })
+    }
+  if (fs.existsSync(sFromDir)) {
+    CheckFolderAndCallHandler(sToDir, fCopyDir)
+  }
+}
+
+function MoveSharingCss() {
+  const fCopySharing = function () {
+    ncp(sPathToCoreWebclient + '/styles/sharing.css', 'static/styles/sharing.css', function (oErr) {
+      if (oErr) {
+        console.log('static/styles/sharing.css file copying was failed: ', oErr)
+      }
+    })
+  }
+
+  CheckFolderAndCallHandler('static/styles', fCopySharing)
+}
+
+function build () {
+	if (!sTenantName) { BuildLibsCss(); }
 	
 	MoveFiles(sPathToCoreWebclient + '/styles/vendors/jquery/images', 'static/styles/libs/images');
 	MoveFiles(sPathToCoreWebclient + '/styles/fonts', sTenantPathPrefix + 'static/styles/fonts');
@@ -224,27 +207,33 @@ gulp.task('styles', function (done) {
 		BuildThemeCss(sTheme, false);
 		BuildThemeCss(sTheme, true);
 	});
-	
-	done();
-});
+};
 
-gulp.task('cssonly', function (done) {
-	_.each(aThemes, function (sTheme) {
+function cssonly () {
+	aThemes.forEach((sTheme) => {
 		BuildThemeCss(sTheme, false);
 		BuildThemeCss(sTheme, true);
 	});
-	done();
-});
+};
 
-gulp.task('styles:watch',  gulp.series('styles', function (done) {
-	gulp.watch(aModulesWatchPaths, {interval: 500}, function (done) {
+function watch () {
+	const watcher = chokidar.watch(aModulesWatchPaths, {
+		ignored: /node_modules/,
+		persistent: true,
+		interval: 500,
+	});
+	
+	watcher.on('change', (path) => {
+		log(`File ${path} has been changed`);
 		_.each(aThemes, function (sTheme) {
 			BuildThemeCss(sTheme, false);
 			BuildThemeCss(sTheme, true);
 		});
-		done();
 	});
-	done();
-}));
+} 
 
-module.exports = {};
+exports.default = {
+	build,
+	cssonly,
+	watch
+};

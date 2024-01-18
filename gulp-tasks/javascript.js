@@ -1,29 +1,20 @@
 'use strict';
 
-var _ = require('underscore'),
-	argv = require('./argv.js'),
+const
+	_ = require('underscore'),
 	fs = require('fs'),
-	gulp = require('gulp'),
 	log = require('fancy-log'),
-	concat = require('gulp-concat-util'),
-	plumber = require('gulp-plumber'),
 	webpack = require('webpack'),
-	gulpWebpack = require('webpack-stream'),
+	WebpackBar = require('webpackbar'),
 	path = require('path'),
-	TerserPlugin = require('terser-webpack-plugin'),
-
-	sTenantName = argv.getParameter('--tenant'),
-	sOutputName = argv.getParameter('--output'), /* app, app-mobile, app-message-newtab, app-adminpanel, app-files-pub, app-calendar-pub, app-helpdesk*/
-	aModulesNames = argv.getModules(),
-	sBuild = argv.getParameter('--build'),
+	sTenantName = process.env.npm_config_tenant,
+	sOutputName = process.env.npm_config_output ?? 'app', // app, app-mobile, app-message-newtab, app-adminpanel, app-files-pub, app-calendar-pub, app-helpdesk
+	sBuild = process.env.npm_config_build,
 	sPath = sTenantName ? './tenants/' + sTenantName + '/static/js/' : './static/js/',
 	crlf = '\n'
 ;
 
-if (sOutputName === '')
-{
-	sOutputName = 'app';
-}
+const aModulesNames = fs.readdirSync('./modules/');
 
 function GetModuleName(sFilePath) {
 	return sFilePath.replace(/.*modules[\\/](.*?)[\\/]js.*/, "$1");
@@ -49,8 +40,7 @@ var
 		return sFoundedFilePath;
 	})),
 	oWebPackConfig = {
-		mode: 'none',
-		// mode: 'production',
+		mode: 'none', //none,production,development
 		stats: {
 			source: false
 		},
@@ -70,7 +60,13 @@ var
 				{
 					test: /[\\\/]modernizr\.js$/,
 					use: [
-						'imports-loader?this=>window',
+						{
+							loader: "imports-loader",
+							options: {
+							  	wrapper: "window"
+							},
+						},
+						// 'imports-loader?this=>window',
 						'exports-loader?window.Modernizr'
 					]
 				},
@@ -103,10 +99,6 @@ var
 						}
 					],
 				},
-				// {
-					// test: /\.less$/,
-					// loader: "style-loader!css-loader!less-loader"
-				// },
 				{
 					test: /\.css$/,
 					use: [
@@ -115,28 +107,29 @@ var
 					]
 				},
 				{
-					test: /\.(png|jpe?g|gif|ttf|woff|woff2|eot)$/,
+					test: /\.(png|jpe?g|gif)$/,
 					use: [
 						'file-loader'
 					]
 				}
 			]
 		},
-		optimization: {
-			splitChunks: {
-				// chunks: 'all',
-				cacheGroups: {
-					'default': false
-				}
-			}
-		},
 		plugins: [
-			new webpack.HashedModuleIdsPlugin(), // so that file hashes don't change unexpectedly
+			new webpack.ids.HashedModuleIdsPlugin(), // so that file hashes don't change unexpectedly
 			new webpack.ProvidePlugin({
 				$: "jquery",
 				jQuery: "jquery",
 				"window.jQuery": "jquery"
-			})
+			}),
+			// new webpack.ProgressPlugin((percentage, message, ...args) => {
+			// 	console.info(percentage, message, ...args);
+			// }),
+			new WebpackBar({
+				// name: "My App",
+				color: '#2598d6',
+				compiledIn: false,
+				fancy: true,
+			}),
 		]
 	},
 	updateVersion = function () {
@@ -153,7 +146,7 @@ var
 				iBuild = aParsedVersion[2] ? aParsedVersion[2].replace(/^([a-z]+)(\d+)$/, '$2') : 1
 			;
 			
-			if (sBuild !== '')
+			if (sBuild)
 			{
 				sBuildPrefix = sBuild;
 			}
@@ -194,7 +187,7 @@ var
 			//context: true,
 			hash: false,
 			version: false,
-			timings: true,
+			timings: false,
 			assets: false,
 			chunks: false,
 			chunkModules: false,
@@ -212,26 +205,10 @@ var
 	}
 ;
 
-function jsTask(sTaskName, sName, oWebPackConfig) {
-		gulp.src(aModules)
-		// gulp.src('static/js/_app-entry.js')
-			.pipe(plumber({
-				errorHandler: function (err) {
-					console.log(err.toString());
-					this.emit('end');
-				}
-			}))
-			.pipe(concat('_' + sName + '-entry.js', {
-				sep: crlf,
-				process: function (sSrc, sFilePath) {
-					var sModuleName = GetModuleName(sFilePath);
-return `
-		if (window.aAvailableModules.indexOf('${sModuleName}') >= 0) {
-			oAvailableModules['${sModuleName}'] = import(/* webpackChunkName: "${sModuleName}" */ 'modules/${sModuleName}/js/manager.js').then(function (module) { return module.default});
-		}`;
-				}
-			}))
-		.pipe(concat.header(
+function generateEntryTask(sName) {
+	const modulesJs = [];
+
+	modulesJs.push(
 `'use strict';
 import Promise from 'bluebird';
 Promise.config({
@@ -249,11 +226,22 @@ $('body').ready(function () {
 	var oAvailableModules = {};
 	if (window.aAvailableModules) {
 `
-		))
-		.pipe(concat.footer(
-	`
-	}
-	Promise.all(_.values(oAvailableModules)).then(function(aModules){
+	);
+
+	_.each(aModules, (sFilePath) => {
+		const sModuleName = GetModuleName(sFilePath);
+
+		modulesJs.push(`
+		if (window.aAvailableModules.indexOf('${sModuleName}') >= 0) {
+			oAvailableModules['${sModuleName}'] = import(/* webpackChunkName: "${sModuleName}" */ 'modules/${sModuleName}/js/manager.js').then(function (module) { return module.default});
+		}`);
+	});
+
+	modulesJs.push(`
+}
+
+Promise.all(_.values(oAvailableModules))
+	.then(function(aModules){
 		var
 			ModulesManager = require('modules/CoreWebclient/js/ModulesManager.js'),
 			App = require('modules/CoreWebclient/js/App.js'),
@@ -266,74 +254,77 @@ $('body').ready(function () {
 			if (window.isNewTab) {
 				App.setNewTab();
 			}
-			ModulesManager.init(_.object(_.keys(oAvailableModules), aModules));
+			ModulesManager.init(_.object(_.keys(oAvailableModules), aModules), window.auroraAppData);
 			App.init();
 		}
-	}).catch(function (oError) { console.error('An error occurred while loading the component:'); console.error(oError); });
+	})
+	.catch(function (oError) { console.error('An error occurred while loading the component:'); console.error(oError); });
 });
+`);
+	fs.mkdir(sPath, { recursive: true }, (err) => {
+		if (err) {
+			throw err;
+		} else {
+			fs.writeFileSync( sPath + '_' + sName + '-entry.js', modulesJs.join(crlf), (err) => {
+				if (err) throw err;
+			});
+		}
+	});
+};
 
-`
-				))
-		.pipe(gulp.dest(sPath))
-		.pipe(gulpWebpack(oWebPackConfig, webpack, compileCallback))
-		.pipe(plumber.stop())
-		.pipe(gulp.dest(sPath))
-	;
+function build () {
+	const config = _.defaults({
+		mode: 'none',
+		entry: sPath + '_' + sOutputName + '-entry.js',
+		output: {
+			path: path.resolve(__dirname, '../../../' + sPath),
+			filename: sOutputName + '.js',
+			chunkFilename: '[name].' + sOutputName + '.[chunkhash].js',
+			publicPath: sPath,
+			pathinfo: true,
+		}
+	}, oWebPackConfig);
+
+	generateEntryTask(sOutputName);
+	webpack(config, compileCallback);
 }
 
-gulp.task('js:build', function (done) {
-	jsTask('js:build', sOutputName, _.defaults({
-		'output': {
-			'filename': sOutputName + '.js',
-			'chunkFilename': '[name].' + sOutputName + '.[chunkhash].js',
-			'publicPath': sPath,
-			'pathinfo': true,
-		}
-	}, oWebPackConfig));
-	done();
-});
+function watch () {
+	const config = _.defaults({
+		mode: 'development',
+		watch: true,
+		entry: sPath + '_' + sOutputName + '-entry.js',
+		output: {
+			path: path.resolve(__dirname, '../../../' + sPath),
+			filename: sOutputName + '.js',
+			chunkFilename: '[name].' + sOutputName + '.[chunkhash].js',
+			publicPath: sPath,
+			pathinfo: true,
+		},
+	}, oWebPackConfig);
 
-gulp.task('js:watch', function (done) {
-	jsTask('js:watch', sOutputName, _.defaults({
-		'watch': true,
-		// 'aggregateTimeout': 300,
-		// 'poll': true,
-		'output':  {
-			'filename': sOutputName + '.js',
-			'chunkFilename': '[name].' + sOutputName + '.[chunkhash].js',
-			'publicPath': sPath
-		}
-	}, oWebPackConfig));
-	done();
-});
+	generateEntryTask(sOutputName);
+	webpack(config, compileCallback);
+};
 
-gulp.task('js:min', function (done) {
-	jsTask('js:min', sOutputName, _.defaults({
-		'mode': 'production',
-		optimization: {
-			splitChunks: {
-				// chunks: 'all',
-				cacheGroups: {
-					'default': false
-				}
-			},
-			minimizer: [
-			  new TerserPlugin({
-				terserOptions: {
-				  output: {
-					comments: false,
-				  },
-				},
-			  }),
-			],
-		  },
-		'output':  {
-			'filename': sOutputName + '.min.js',
-			'chunkFilename': '[name].' + sOutputName + '.[chunkhash].min.js',
-			'publicPath': sPath
+function min () {
+	const config = _.defaults({
+		mode: 'production',
+		entry: sPath + '_' + sOutputName + '-entry.js',
+		output:  {
+			path: path.resolve(__dirname, '../../../' + sPath),
+			filename: sOutputName + '.min.js',
+			chunkFilename: '[name].' + sOutputName + '.[chunkhash].min.js',
+			publicPath: sPath
 		}
-	}, oWebPackConfig));
-	done();
-});
+	}, oWebPackConfig);
 
-module.exports = {};
+	generateEntryTask(sOutputName);
+	webpack(config, compileCallback);
+};
+
+exports.default = {
+	build,
+	min,
+	watch
+};
