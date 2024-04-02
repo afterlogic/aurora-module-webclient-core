@@ -198,23 +198,6 @@ CApp.prototype.init = function () {
     ])
   }
 
-  // if (App.getUserRole() === Enums.UserRole.SuperAdmin)
-  // {
-  // 	ModulesManager.run('AdminPanelWebclient', 'registerAdminPanelTab', [
-  // 		function(resolve) {
-  // 			require.ensure(
-  // 				['%PathToCoreWebclientModule%/js/views/CommonSettingsFormView.js'],
-  // 				function() {
-  // 					resolve(require('%PathToCoreWebclientModule%/js/views/CommonSettingsFormView.js'));
-  // 				},
-  // 				"admin-bundle"
-  // 			);
-  // 		},
-  // 		'system',
-  // 		TextUtils.i18n('%MODULENAME%/LABEL_COMMON_SETTINGS_TABNAME')
-  // 	]);
-  // }
-
   ModulesManager.run('Ios', 'routeToIos')
 
   let AccountList
@@ -435,17 +418,6 @@ CApp.prototype.checkMobile = function () {
 
     return bMobile
   }
-  // else if (this.iUserRole === Enums.UserRole.SuperAdmin && UserSettings.AllowMobile && UserSettings.IsMobile === 1)
-  // {
-  // 	// There is no admin panel for mobile version so go to full version
-  // 	var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js');
-
-  // 	Ajax.send('Core', 'SetMobile', {'Mobile': false}, function (oResponse) {
-  // 		window.location.reload();
-  // 	}, this);
-
-  // 	return false;
-  // }
 
   return false
 }

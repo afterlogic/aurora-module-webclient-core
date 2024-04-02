@@ -16,14 +16,7 @@ var
 	CAbstractSettingsFormView
 ;
 
-// if (App.getUserRole() === Enums.UserRole.SuperAdmin)
-// {
-// 	CAbstractSettingsFormView = ModulesManager.run('AdminPanelWebclient', 'getAbstractSettingsFormViewClass');
-// }
-// else
-// {
-	CAbstractSettingsFormView = ModulesManager.run('SettingsWebclient', 'getAbstractSettingsFormViewClass');
-// }
+CAbstractSettingsFormView = ModulesManager.run('SettingsWebclient', 'getAbstractSettingsFormViewClass');
 
 /**
  * @constructor
@@ -32,7 +25,6 @@ function CCommonSettingsFormView()
 {
 	CAbstractSettingsFormView.call(this);
 	
-	this.bAdmin = App.getUserRole() === Enums.UserRole.SuperAdmin;
 	this.bMobile = App.isMobile();
 	
 	this.aThemes = UserSettings.ThemeList;
@@ -40,10 +32,6 @@ function CCommonSettingsFormView()
 	this.aLanguages = _.clone(UserSettings.LanguageList);
 	this.aDateFormats = SettingsUtils.getDateFormatsForSelector();
 	
-	if (this.bAdmin)
-	{
-		this.aLanguages.unshift({value: 'autodetect', name: TextUtils.i18n('%MODULENAME%/LABEL_AUTODETECT')});
-	}
 	this.aRefreshIntervals = [
 		{name: TextUtils.i18n('%MODULENAME%/LABEL_REFRESH_OFF'), value: 0},
 		{name: TextUtils.i18n('%MODULENAME%/LABEL_MINUTES_PLURAL', {'COUNT': 1}, null, 1), value: 1},
@@ -67,7 +55,7 @@ function CCommonSettingsFormView()
 	/*-- Editable fields */
 	
 	this.allowChangeDateFormat = ko.computed(function () {
-		return !this.bAdmin && UserSettings.UserSelectsDateFormat;
+		return UserSettings.UserSelectsDateFormat;
 	}, this);
 	this.isDesktopNotificationsEnable = ko.observable((window.Notification && window.Notification.permission !== 'denied'));
 	this.desktopNotifications.subscribe(function (bChecked) {
@@ -111,7 +99,7 @@ CCommonSettingsFormView.prototype.getCurrentValues = function ()
 CCommonSettingsFormView.prototype.getGlobalLanguage = function ()
 {
 	var
-		sLang = this.bAdmin ? (UserSettings.AutodetectLanguage ? 'autodetect' : UserSettings.CommonLanguage) : UserSettings.Language,
+		sLang = UserSettings.Language,
 		oFoundLang = _.find(this.aLanguages, function (oLangItem) {
 			return oLangItem.value === sLang;
 		})
@@ -187,29 +175,13 @@ CCommonSettingsFormView.prototype.getParametersForSave = function ()
 		'MobileTheme': this.selectedMobileTheme(),
 		'TimeFormat': this.timeFormat()
 	};
-	
-	if (this.bAdmin)
+
+	oParameters['AutoRefreshIntervalMinutes'] = Types.pInt(this.autoRefreshInterval());
+	oParameters['AllowDesktopNotifications'] = this.desktopNotifications();
+	oParameters['Language'] = this.selectedLanguage();
+	if (this.allowChangeDateFormat())
 	{
-		oParameters['SiteName'] = this.siteName();
-		if (this.selectedLanguage() === 'autodetect')
-		{
-			oParameters['AutodetectLanguage'] = true;
-		}
-		else
-		{
-			oParameters['AutodetectLanguage'] = false;
-			oParameters['Language'] = this.selectedLanguage();
-		}
-	}
-	else
-	{
-		oParameters['AutoRefreshIntervalMinutes'] = Types.pInt(this.autoRefreshInterval());
-		oParameters['AllowDesktopNotifications'] = this.desktopNotifications();
-		oParameters['Language'] = this.selectedLanguage();
-		if (this.allowChangeDateFormat())
-		{
-			oParameters['DateFormat'] = this.selectedDateFormat();
-		}
+		oParameters['DateFormat'] = this.selectedDateFormat();
 	}
 	
 	return oParameters;
@@ -222,7 +194,7 @@ CCommonSettingsFormView.prototype.getParametersForSave = function ()
  */
 CCommonSettingsFormView.prototype.applySavedValues = function (oParameters)
 {
-	if (oParameters.Theme !== UserSettings.Theme && !this.bMobile || oParameters.MobileTheme !== UserSettings.MobileTheme && this.bMobile || oParameters.Language !== UserSettings.Language && !this.bAdmin)
+	if (oParameters.Theme !== UserSettings.Theme && !this.bMobile || oParameters.MobileTheme !== UserSettings.MobileTheme && this.bMobile || oParameters.Language !== UserSettings.Language)
 	{
 		window.location.reload();
 	}
