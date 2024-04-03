@@ -692,17 +692,33 @@ var inputosaurustext = {
 
 	_buildValue : function() {
 		var widget = this,
-			value = '';
+			value = '',
+			aValues = [],
+			lastIndex = -1;
 
 		$.each(this._chosenValues, function(k,v) {
-			value +=  value.length ? widget.options.outputDelimiter + v.value : v.value;
+			if (v.value === widget.elements.lastEdit)
+			{
+				lastIndex = k;
+			}
+
+			aValues.push(v.value);
 		});
 
 		if (this.elements.input.val().length > 0)
 		{
-			value +=  value.length ? widget.options.outputDelimiter + this.elements.input.val() : this.elements.input.val();
+			if (-1 < lastIndex)
+			{
+				aValues.splice(lastIndex, 0, this.elements.input.val());
+			}
+			else
+			{
+				aValues.push(this.elements.input.val());
+			}
 		}
 
+		value = aValues.filter((value, index, array) => array.indexOf(value) === index).join(this.options.outputDelimiter);
+		
 		return value;
 	},
 
