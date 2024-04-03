@@ -4,23 +4,15 @@
 <div class="panel_center">
 	<div class="fields">
 		<div class="fieldset">
-			<div class="row" data-bind="visible: bAdmin">
-				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_SITENAME'}"></span>
-				<input class="value input" data-bind="value: siteName" />
-			</div>
 			<div class="row" data-bind="visible: aThemes.length > 1">
 				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_THEME'}"></span>
 				<select class="value input" data-bind="value: selectedTheme, options: aThemes"></select>
-			</div>
-			<div class="row" data-bind="visible: bAdmin && aMobileThemes.length > 1">
-				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_MOBILE_THEME'}"></span>
-				<select class="value input" data-bind="value: selectedMobileTheme, options: aMobileThemes"></select>
 			</div>
 			<div class="row">
 				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_LANGUAGE'}"></span>
 				<select class="value input" data-bind="value: selectedLanguage, options: aLanguages, optionsText: 'name', optionsValue: 'value'"></select>
 			</div>
-			<div class="row" data-bind="visible: !bAdmin">
+			<div class="row">
 				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_REFRESH_EVERY'}"></span>
 				<select class="value input" data-bind="value: autoRefreshInterval, options: aRefreshIntervals, optionsText: 'name', optionsValue: 'value'"></select>
 			</div>
@@ -45,7 +37,7 @@
 				<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_DATEFORMAT'}"></span>
 				<select class="value input" data-bind="value: selectedDateFormat, options: aDateFormats, optionsText: 'name', optionsValue: 'value'"></select>
 			</div>
-			<div class="row" data-bind="visible: window.Notification && !bAdmin">
+			<div class="row" data-bind="visible: window.Notification">
 				<span class="value offset" data-bind="css: {'disabled': !isDesktopNotificationsEnable()}">
 					<label class="custom_checkbox" data-bind="css: {'checked': desktopNotifications}">
 						<span class="icon"></span>
@@ -54,7 +46,7 @@
 					<label for="desktopNotifications" data-bind="i18n: {'key': '%MODULENAME%/LABEL_ENABLE_NOTIFICATION'}"></label>
 				</span>
 			</div>
-			<div class="hint row" data-bind="visible: window.Notification && !isDesktopNotificationsEnable() && !bAdmin">
+			<div class="hint row" data-bind="visible: window.Notification && !isDesktopNotificationsEnable()">
 				<span class="value offset" data-bind="i18n: {'key': '%MODULENAME%/INFO_NOTIFICATION_DISABLED'}"></span>
 			</div>
 		</div>
