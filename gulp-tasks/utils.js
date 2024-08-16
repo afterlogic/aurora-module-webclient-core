@@ -2,14 +2,7 @@ const Utils = require('/modules/CoreWebclient/js/utils/Common.js')
 
 export default {
     sendRequest: function(sModule, sMethod, oParameters, fResponseHandler) {
-        const 
-            sAuthToken = $.cookie('AuthToken'),
-            oHeader = { 'X-Client': 'WebClient' }
-        
-        if (sAuthToken !== '') {
-            oHeader['Authorization'] = 'Bearer ' + sAuthToken
-        }
-    
+
         let deviceId = $.cookie('DeviceId')
         if (!deviceId) {
             deviceId = Utils.generateUUID()

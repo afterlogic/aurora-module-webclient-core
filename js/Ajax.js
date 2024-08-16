@@ -132,9 +132,8 @@ CAjax.prototype.registerOnAllRequestsClosedHandler = function (fHandler) {
  * @param {function=} fResponseHandler
  * @param {object=} oContext
  * @param {object=} oMainParams
- * @param {string=} authToken
  */
-CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler, oContext, oMainParams, authToken) {
+CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler, oContext, oMainParams) {
   oParameters = oParameters || {}
 
   var oRequest = _.extendOwn(
@@ -164,7 +163,7 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
     if (oEventParams.Continue) {
       this.abortSameRequests(oRequest)
 
-      this.doSend(oRequest, fResponseHandler, oContext, authToken)
+      this.doSend(oRequest, fResponseHandler, oContext)
     }
   } else {
     var oResponse = { Result: false, ErrorCode: Enums.Errors.NotDisplayedError }
@@ -178,23 +177,14 @@ CAjax.prototype.send = function (sModule, sMethod, oParameters, fResponseHandler
  * @param {Object} oRequest
  * @param {Function=} fResponseHandler
  * @param {Object=} oContext
- * @param {string=} authToken
  */
-CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext, authToken = '') {
+CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext) {
   var doneFunc = _.bind(this.done, this, oRequest, fResponseHandler, oContext),
     failFunc = _.bind(this.fail, this, oRequest, fResponseHandler, oContext),
     alwaysFunc = _.bind(this.always, this, oRequest),
     oXhr = null,
     oCloneRequest = _.clone(oRequest),
-    sAuthToken = $.cookie('AuthToken') || authToken,
     oHeader = { 'X-Client': 'WebClient' }
-  if (sAuthToken === '' && App.getUserRole() !== Enums.UserRole.Anonymous) {
-    App.logoutAndGotoLogin()
-  }
-
-  if (sAuthToken !== '') {
-    oHeader['Authorization'] = 'Bearer ' + sAuthToken
-  }
 
   oHeader['X-DeviceId'] = App.getCurrentDeviceId()
 

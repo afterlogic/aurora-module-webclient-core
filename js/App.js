@@ -333,37 +333,30 @@ CApp.prototype.logoutAndGotoLogin = function () {
       UrlUtils.clearAndReloadLocation(Browser.ie8AndBelow, true)
     }
   }
+  var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js')
 
-  if ($.cookie('AuthToken')) {
-    var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js')
+  Ajax.send(
+    'Core',
+    'Logout',
+    {},
+    function () {
+      Routing.finalize()
 
-    Ajax.send(
-      'Core',
-      'Logout',
-      {},
-      function () {
-        $.removeCookie('AuthToken')
+      this.iUserRole = Enums.UserRole.Anonymous
+      this.sUserName = ''
+      this.sUserPublicId = ''
+      this.iUserId = 0
 
-        Routing.finalize()
+      gotoLoginPage()
+    },
+    this
+  )
 
-        this.iUserRole = Enums.UserRole.Anonymous
-        this.sUserName = ''
-        this.sUserPublicId = ''
-        this.iUserId = 0
-
-        gotoLoginPage()
-      },
-      this
-    )
-
-    var oExcept = {
-      Module: 'Core',
-      Method: 'Logout',
-    }
-    Ajax.abortAndStopSendRequests(oExcept)
-  } else {
-    gotoLoginPage()
+  var oExcept = {
+    Module: 'Core',
+    Method: 'Logout',
   }
+  Ajax.abortAndStopSendRequests(oExcept)
 }
 
 /**
@@ -451,29 +444,10 @@ CApp.prototype.checkCookies = function () {
   if (!bCookieWorks) {
     Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_COOKIES_DISABLED'), true)
   } else {
-    if (this.iUserRole === Enums.UserRole.Anonymous) {
-      $.removeCookie('AuthToken')
-    } else {
-      var sAuthToken = $.cookie('AuthToken')
-      if (sAuthToken) {
-        this.setAuthToken(sAuthToken)
-      }
-    }
     refreshOrGenerateAndSaveDeviceId()
   }
 
   return bCookieWorks
-}
-
-/**
- * @param {string} sAuthToken
- */
-CApp.prototype.setAuthToken = function (sAuthToken) {
-  var oParams = {}
-  if (UserSettings.AuthTokenCookieExpireTime > 0) {
-    oParams['expires'] = UserSettings.AuthTokenCookieExpireTime
-  }
-  $.cookie('AuthToken', sAuthToken, oParams)
 }
 
 CApp.prototype.getCommonRequestParameters = function () {
