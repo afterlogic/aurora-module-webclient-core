@@ -55,7 +55,7 @@ var Settings = {
 	DbHost: '',
 	DbLogin: '',
 	DbName: '',
-	SaltNotEmpty: false,
+	EncryptionKeyNotEmpty: false,
 	dbSettingsChanged: ko.observable(false).extend({'autoResetToFalse': 100}),
 	
 	// Settings from CoreWebclient module
@@ -151,7 +151,7 @@ var Settings = {
 			this.DbHost = Types.pString(oAppDataCoreSection.DBHost, this.DbHost);
 			this.DbLogin = Types.pString(oAppDataCoreSection.DBLogin, this.DbLogin);
 			this.DbName = Types.pString(oAppDataCoreSection.DBName, this.DbName);
-			this.SaltNotEmpty = Types.pBool(oAppDataCoreSection.SaltNotEmpty, this.SaltNotEmpty);
+			this.EncryptionKeyNotEmpty = Types.pBool(oAppDataCoreSection.EncryptionKeyNotEmpty, this.EncryptionKeyNotEmpty);
 		}
 		
 		if (!_.isEmpty(oAppDataCoreWebclientSection))
