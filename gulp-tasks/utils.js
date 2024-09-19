@@ -2,7 +2,8 @@ const Utils = require('/modules/CoreWebclient/js/utils/Common.js')
 
 export default {
     sendRequest: function(sModule, sMethod, oParameters, fResponseHandler) {
-
+        const oHeader = { 'X-Client': 'WebClient' }
+    
         let deviceId = $.cookie('DeviceId')
         if (!deviceId) {
             deviceId = Utils.generateUUID()
