@@ -3,8 +3,14 @@ const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const fs = require('fs')
-
 module.exports = {
+  // devServer: {
+  //   https: {
+  //     key: fs.readFileSync(path.join(__dirname, '../../../cert/localhost-key.pem')),
+  //     cert: fs.readFileSync(path.join(__dirname, '../../../cert/localhost.pem')),
+  //   },
+  //   port: 8080,
+  // },
   productionSourceMap: false,
   lintOnSave: false,
   transpileDependencies: [

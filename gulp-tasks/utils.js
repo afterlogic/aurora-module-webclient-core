@@ -18,14 +18,27 @@ export default {
             Parameters: JSON.stringify(oParameters),
         }
 
+        let sHost = '?/Api/'
+        let bWithCredentials = false
+
+        try {
+            if (process.env.NODE_ENV === 'development') {
+              sHost = process.env.VUE_APP_API_HOST + sHost
+              bWithCredentials = true
+            }
+        } catch (e) {}
+
         $.ajax({
-            url: process.env.NODE_ENV === 'development' ? process.env.VUE_APP_API_HOST + '?/Api/' : '?/Api/',
+            url: sHost,
             type: 'POST',
             async: true,
             dataType: 'json',
             headers: oHeader,
             data: requestPayload,
             complete: fResponseHandler,
+            xhrFields: {
+                withCredentials: bWithCredentials
+            }
         })
     }
 }

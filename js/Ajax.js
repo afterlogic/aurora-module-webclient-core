@@ -191,10 +191,12 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext) {
   oCloneRequest.Parameters = JSON.stringify(oCloneRequest.Parameters)
 
   let sHost = '?/Api/'
+  let bWithCredentials = false
 
   try {
     if (process.env.NODE_ENV === 'development') {
       sHost = process.env.VUE_APP_API_HOST + sHost
+      bWithCredentials = true
     }
   } catch (e) {}
   
@@ -208,6 +210,9 @@ CAjax.prototype.doSend = function (oRequest, fResponseHandler, oContext) {
     success: doneFunc,
     error: failFunc,
     complete: alwaysFunc,
+    xhrFields: {
+      withCredentials: bWithCredentials
+    }
   })
 
   this.requests().push({ Request: oRequest, Xhr: oXhr, Time: moment() })
