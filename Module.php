@@ -239,13 +239,10 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         $oSettings = &\Aurora\System\Api::GetSettings();
         if ($oSettings) {
             if (($oSettings->CacheCtrl && isset($_COOKIE['aft-cache-ctrl']))) {
-                @\setcookie(
+                \Aurora\System\Api::setCookie(
                     'aft-cache-ctrl',
                     '',
-                    \strtotime('-1 hour'),
-                    \Aurora\System\Api::getCookiePath(),
-                    null,
-                    \Aurora\System\Api::getCookieSecure()
+                    \strtotime('-1 hour')
                 );
                 \MailSo\Base\Http::SingletonInstance()->StatusHeader(304);
                 exit();
