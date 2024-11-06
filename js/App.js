@@ -186,6 +186,8 @@ CApp.prototype.getCurrentDeviceId = function () {
 }
 
 CApp.prototype.init = function () {
+  InitModernizr()
+
   ModulesManager.run('StandardLoginFormWebclient', 'beforeAppRunning', [this.iUserRole !== Enums.UserRole.Anonymous])
 
   if (App.isUserNormalOrTenant() && UserSettings.AllowChangeSettings) {
@@ -481,7 +483,5 @@ CApp.prototype.subscribeEvent = function (sEventName, fCallback) {
 }
 
 var App = new CApp()
-
-InitModernizr()
 
 module.exports = App
