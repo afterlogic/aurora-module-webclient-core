@@ -30,12 +30,10 @@ Utils.createCommand = function (oContext, fExecute, mCanExecute)
 		} : function () {}
 	;
 
-	fResult.enabled = ko.observable(true);
-
-	if (_.isFunction(mCanExecute))
+	if (ko.isObservable(mCanExecute))
 	{
 		fResult.canExecute = ko.computed(function () {
-			return fResult.enabled() && mCanExecute.call(oContext);
+			return mCanExecute.call(oContext);
 		});
 	}
 	else
@@ -45,7 +43,7 @@ Utils.createCommand = function (oContext, fExecute, mCanExecute)
 			mCanExecute = true;
 		}
 		fResult.canExecute = ko.computed(function () {
-			return fResult.enabled() && !!mCanExecute;
+			return !!mCanExecute;
 		});
 	}
 

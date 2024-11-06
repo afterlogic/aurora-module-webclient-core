@@ -259,7 +259,7 @@ ko.bindingHandlers.command = {
 			oCommand = fValueAccessor()
 		;
 
-		if (!oCommand || !oCommand.enabled || !oCommand.canExecute)
+		if (!oCommand || !oCommand.canExecute)
 		{
 			throw new Error('You are not using command function');
 		}
@@ -275,7 +275,6 @@ ko.bindingHandlers.command = {
 			oCommand = fValueAccessor()
 		;
 
-		bResult = oCommand.enabled();
 		jqElement.toggleClass('command-not-enabled', !bResult);
 
 		if (bResult)
