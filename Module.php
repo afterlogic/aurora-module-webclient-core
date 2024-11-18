@@ -69,6 +69,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         );
 
         $this->subscribeEvent('Core::UpdateSettings::after', array($this, 'onAfterUpdateSettings'));
+        $this->subscribeEvent('System::RunEntry::after', array($this, 'onAfterRunEntry'));
 
         $this->denyMethodsCallByWebApi([
             'SetHtmlOutputHeaders',
@@ -350,5 +351,34 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
             $sResult .= '<span class="field_description">' . $sVarningHelp . '</span>';
         }
         return $sResult;
+    }
+
+    /**
+     * This subscription handles AuthToken cookie.
+     */
+    public function onAfterRunEntry(&$aArgs, &$mResult)
+    {
+        $sXClientHeader = $this->oHttp->GetHeader('X-Client');
+        // Set cookie in browser only
+        $bWebClient = strtolower($sXClientHeader) === 'webclient';
+
+        if ($aArgs['EntryName'] === 'api' && $bWebClient ) {
+            $sAuthTokenKey = \Aurora\System\Application::AUTH_TOKEN_KEY;
+
+            $oResult = @json_decode($mResult, true);
+
+            if ($oResult) {
+                if (isset($oResult['ErrorCode']) && $oResult['ErrorCode'] === \Aurora\System\Notifications::AuthError) {
+                    Api::unsetAuthTokenCookie();
+                } elseif (isset($oResult['Result']) && isset($oResult['Result'][$sAuthTokenKey])) {
+                    // Moving AuthToken to cookies
+                    Api::setAuthTokenCookie($oResult['Result'][$sAuthTokenKey]);
+                    $oResult['Result'][$sAuthTokenKey] = true;
+                    $mResult = \Aurora\System\Managers\Response::GetJsonFromObject('Json', $oResult);
+                } elseif (isset($aArgs['Module']) && $aArgs['Module'] === 'Core' && $aArgs['Method'] === 'Logout' && $oResult['Result'] === true) {
+                    Api::unsetAuthTokenCookie();
+                }
+            }
+        }
     }
 }
