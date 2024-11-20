@@ -368,7 +368,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
             $oResult = @json_decode($mResult, true);
 
             if ($oResult) {
-                if (isset($oResult['ErrorCode']) && $oResult['ErrorCode'] === \Aurora\System\Notifications::AuthError) {
+                if (isset($oResult['ErrorCode']) && in_array($oResult['ErrorCode'], [\Aurora\System\Notifications::AuthError, \Aurora\System\Notifications::InvalidToken])) {
                     Api::unsetAuthTokenCookie();
                 } elseif (isset($oResult['Result']) && isset($oResult['Result'][$sAuthTokenKey])) {
                     // Moving AuthToken to cookies
