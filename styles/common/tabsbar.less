@@ -1,11 +1,6 @@
 /*=== Tabsbar CSS ===*/
 .tabsbar {
 	.theme-tabsbar();
-	//display: flex;
-	//flex-direction: row;
-	//flex-wrap: wrap;
-	//align-content: center;
-	//align-items: center;
 
 	height: @theme-tabs-height;
 	padding: 0px 5px;
@@ -21,13 +16,6 @@
 		justify-content: space-between;
 		height: 100%;
 		width: 100%;
-		
-		// &::before {
-		// 	content: "";
-		// 	display: inline-block;
-		// 	height: 100%;
-		// 	vertical-align: middle;
-		// }
 	}
 	
 	.item {
@@ -40,8 +28,6 @@
 		position: relative;
 		text-shadow: @tabsbar-item-font-shadow;
 		vertical-align: middle;
-		
-		//align-self: center;
 		
 		.cssanimations &.recivedAnim {
 			border-radius: 4px;
@@ -148,7 +134,6 @@
 	}
 
 	.spacer {
-		// background: #fff;
 		padding: 10px;
 		flex-grow: 1;
 	}
@@ -156,22 +141,8 @@
 	.mobile,
 	.settings,
 	.logout {
-		//display: block;
-		// float: right;
 		font-size: 8pt;
-		// height: auto;
-		// margin-left: 6px;
-		// margin-right: 0px;
-		// margin-top: @tabsbar-item-top-offset;
 		order: 100;
-
-		//align-self: flex-end;
-		
-		// html.rtl & {
-		// 	float: left;
-		// 	margin-left: 0px;
-		// 	margin-right: 6px;
-		// }
 	}
 	
 	.logout span {
