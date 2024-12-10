@@ -114,16 +114,6 @@
 	filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d',GradientType=0)",argb(@start),argb(@stop)));
 }
 
-.resize-compensation-top(@offset: 0px) {
-	padding-top: @offset;
-	margin-top: -@offset;
-}
-
-.resize-compensation-bottom(@offset: 0px) {
-	padding-bottom: @offset;
-	margin-bottom: -@offset;
-}
-
 .pass-events-through() {
 	pointer-events:none;
 	
