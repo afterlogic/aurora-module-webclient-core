@@ -78,13 +78,12 @@
 				}
 			}
 		}
-		
+
 		.placeholder {
 			color: #bbbbbb;
 			cursor: text;
 			display: inline-block;
 			float: left;
-			font-size: 12pt;
 			height: 0;
 			position: relative;
 			text-indent: 5px;
@@ -103,9 +102,11 @@
 			}
 		}
 		
-		&.filled .placeholder,
-		&.focused .placeholder {
-			overflow: hidden;
+		&.filled,
+		&.focused {
+			.placeholder {
+				overflow: hidden;
+			}
 		}
 	}
 
