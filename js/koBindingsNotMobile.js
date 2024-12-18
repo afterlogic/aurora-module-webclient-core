@@ -250,13 +250,13 @@ ko.bindingHandlers.droppable = {
 	'update': function (oElement, fValueAccessor) {
 		var
 			oOptions = fValueAccessor(),
-			fValueFunc = oOptions.valueFunc,
+			dropCallback = oOptions.valueFunc,
+			overCallback = oOptions.overCallback,
+			outCallback = oOptions.outCallback,
 			fSwitchObserv = oOptions.switchObserv
 		;
-		if (!_.isFunction(fValueFunc))
-		{
-			if ($(oElement).droppable())
-			{
+		if (!_.isFunction(dropCallback)) {
+			if ($(oElement).droppable()) {
 				$(oElement).droppable('destroy');
 			}
 			return;
@@ -265,21 +265,26 @@ ko.bindingHandlers.droppable = {
 		$(oElement).droppable({
 			'hoverClass': 'droppableHover',
 			'drop': function (oEvent, oUi) {
-				fValueFunc(oEvent, oUi);
-			}
+				dropCallback(oEvent, oUi);
+			},
+			'over': function (oEvent, oUi) {
+				if (_.isFunction(overCallback)) {
+					overCallback(oEvent, oUi)
+				}
+			},
+			'out': function (oEvent, oUi) {
+				if (_.isFunction(outCallback)) {
+					outCallback(oEvent, oUi)
+				}
+			},
 		});
 		
-		if (fSwitchObserv)
-		{
+		if (ko.isObservable(fSwitchObserv)) {
 			fSwitchObserv.subscribe(function (bIsSelected) {
-				if($(oElement).data().droppable)
-				{
-					if(bIsSelected)
-					{
+				if($(oElement).data().droppable) {
+					if(bIsSelected) {
 						$(oElement).droppable('disable');
-					}
-					else
-					{
+					} else {
 						$(oElement).droppable('enable');
 					}
 				}
