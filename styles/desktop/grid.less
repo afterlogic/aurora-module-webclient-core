@@ -25,15 +25,7 @@ html.non-adjustable .panels {
 	flex-grow: 1;
 	background: #fff;
 	
-	&.center_panel, &.item_viewer, &.data {
-		box-shadow: -1px 0 2px rgba(0, 0, 0, 0.11);
-	}
-
 	.box-sizing;
-	
-	.rtl & {
-		box-shadow: 1px 0 2px rgba(0,0,0,0.11);
-	}
 	
 	.panel_content {
 		height: 100%;
@@ -345,7 +337,7 @@ html.non-adjustable .panels {
 		.controls {
 			display: inline-block;
 			float: left;
-			margin: 1px 8px 0px 0px;
+			margin-right: 8px;
 
 			html.rtl & {
 				float: right;
