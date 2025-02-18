@@ -362,8 +362,8 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         // Set cookie in browser only
         $bWebClient = strtolower($sXClientHeader) === 'webclient';
 
-        if ($aArgs['EntryName'] === 'api' && $bWebClient ) {
-            $sAuthTokenKey = \Aurora\System\Application::AUTH_TOKEN_KEY;
+        if (($aArgs['EntryName'] === 'api' && $bWebClient) || in_array($aArgs['EntryName'],['sso', 'postlogin'])) {
+            $sAuthTokenKey = Application::AUTH_TOKEN_KEY;
 
             $oResult = @json_decode($mResult, true);
 
@@ -373,8 +373,12 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
                 } elseif (isset($oResult['Result']) && isset($oResult['Result'][$sAuthTokenKey])) {
                     // Moving AuthToken to cookies
                     Api::setAuthTokenCookie($oResult['Result'][$sAuthTokenKey]);
-                    $oResult['Result'][$sAuthTokenKey] = true;
-                    $mResult = \Aurora\System\Managers\Response::GetJsonFromObject('Json', $oResult);
+                    if ($aArgs['EntryName'] === 'api') {
+                        $oResult['Result'][$sAuthTokenKey] = true;
+                        $mResult = \Aurora\System\Managers\Response::GetJsonFromObject('Json', $oResult);
+                    } elseif (in_array($aArgs['EntryName'],['sso', 'postlogin'])) {
+                        Api::Location('./');
+                    }
                 } elseif (isset($aArgs['Module']) && $aArgs['Module'] === 'Core' && $aArgs['Method'] === 'Logout' && $oResult['Result'] === true) {
                     Api::unsetAuthTokenCookie();
                 }
