@@ -24,8 +24,7 @@ var
 
 	aViewExtensions = []
 ;
-
-if ($('html').hasClass('pdf'))
+if (navigator.pdfViewerEnabled)
 {
 	aViewMimeTypes.push('application/pdf');
 	aViewMimeTypes.push('application/x-pdf');
