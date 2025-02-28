@@ -9,8 +9,7 @@ namespace Aurora\Modules\CoreWebclient;
 
 use Aurora\Api;
 use Aurora\System\Application;
-use Aurora\System\Module\Decorator;
-use Aurora\System\Router;
+use Aurora\Modules\Core\Module as Core;
 
 /**
  * System module that provides Web application core functionality and UI framework.
@@ -64,7 +63,9 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
                 'error' => [$this, 'EntryDefault'],
                 'debugmode' => [$this, 'EntryDefault'],
                 'xdebug_session_start' => [$this, 'EntryDefault'],
-                'install' => [$this, 'EntryCompatibility']
+                'install' => [$this, 'EntryCompatibility'],
+                'sso' => [$this, 'EntrySso'],
+                'postlogin' => [$this, 'EntryPostlogin'],
             ]
         );
 
@@ -112,7 +113,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::Anonymous);
 
         $oUser = \Aurora\System\Api::getAuthenticatedUser();
-        $oIntegrator = \Aurora\Modules\Core\Module::getInstance()->getIntegratorManager();
+        $oIntegrator = Core::getInstance()->getIntegratorManager();
 
         return array(
             'AllowChangeSettings' => $this->oModuleSettings->AllowChangeSettings,
@@ -162,8 +163,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
                 $oUser->setExtendedProp(self::GetName() . '::Theme', $Args['Theme']);
             }
 
-            $oCoreDecorator = \Aurora\Modules\Core\Module::Decorator();
-            $oCoreDecorator->UpdateUserObject($oUser);
+            Core::Decorator()->UpdateUserObject($oUser);
         }
 
         if ($oUser && $oUser->Role === \Aurora\System\Enums\UserRole::SuperAdmin) {
@@ -178,7 +178,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
     {
         \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::Anonymous);
 
-        $oIntegrator = \Aurora\Modules\Core\Module::getInstance()->getIntegratorManager();
+        $oIntegrator = Core::getInstance()->getIntegratorManager();
         return $oIntegrator->compileTemplates();
     }
 
@@ -186,7 +186,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
     {
         \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::Anonymous);
 
-        $oIntegrator = \Aurora\Modules\Core\Module::getInstance()->getIntegratorManager();
+        $oIntegrator = Core::getInstance()->getIntegratorManager();
         list($sLanguage, $sTheme) = $oIntegrator->getThemeAndLanguage();
 
         return $oIntegrator->getLanguage($sLanguage);
@@ -281,7 +281,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
             \header("Location: ./");
         }
 
-        $aCompatibilities = \Aurora\Modules\Core\Module::Decorator()->GetCompatibilities();
+        $aCompatibilities = Core::Decorator()->GetCompatibilities();
         $sContent = '';
         $bResult = true;
         foreach ($aCompatibilities as $sModule => $aItems) {
@@ -330,6 +330,48 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         return $mResult;
     }
 
+    /**
+     * @ignore
+     */
+    public function EntrySso()
+    {
+        try {
+            $sHash = $this->oHttp->GetRequest('hash');
+            if (!empty($sHash)) {
+                $sData = Api::Cacher()->get('SSO:' . $sHash, true);
+                $aData = Api::DecodeKeyValues($sData);
+
+                if (isset($aData['Password'], $aData['Email'])) {
+                    $sLanguage = $this->oHttp->GetRequest('lang');
+                    $oResult = Core::Decorator()->Login($aData['Email'], $aData['Password'], $sLanguage);
+                    return \Aurora\System\Managers\Response::GetJsonFromObject('Json', ['Result' => $oResult]);
+                }
+            } else {
+                Core::Decorator()->Logout();
+            }
+        } catch (\Exception $oExc) {
+            Api::LogException($oExc);
+        }
+    }
+
+    /**
+     * @ignore
+     */
+    public function EntryPostlogin()
+    {
+        if (Core::getInstance()->getConfig('AllowPostLogin')) {
+            $sEmail = trim((string) $this->oHttp->GetRequest('Email', ''));
+            $sLogin = (string) $this->oHttp->GetRequest('Login', '');
+            $sPassword = (string) $this->oHttp->GetRequest('Password', '');
+
+            if ($sLogin === '') {
+                $sLogin = $sEmail;
+            }
+
+            return \Aurora\System\Managers\Response::GetJsonFromObject('Json', ['Result' => Core::Decorator()->Login($sLogin, $sPassword)]);
+        }
+    }
+
     protected function getSuccessHtmlValue($sValue)
     {
         return '<span class="state_ok">' . $sValue . '</span>';
@@ -373,10 +415,19 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
                 } elseif (isset($oResult['Result']) && isset($oResult['Result'][$sAuthTokenKey])) {
                     // Moving AuthToken to cookies
                     Api::setAuthTokenCookie($oResult['Result'][$sAuthTokenKey]);
+                    $bChangeAuthToken = false;
+                    $bRedirect = false;
                     if ($aArgs['EntryName'] === 'api') {
+                        $bChangeAuthToken = true;
+                    } elseif (in_array($aArgs['EntryName'],['sso', 'postlogin'])) {
+                        $bChangeAuthToken = true;
+                        $bRedirect = true;
+                    }
+                    if ($bChangeAuthToken) {
                         $oResult['Result'][$sAuthTokenKey] = true;
                         $mResult = \Aurora\System\Managers\Response::GetJsonFromObject('Json', $oResult);
-                    } elseif (in_array($aArgs['EntryName'],['sso', 'postlogin'])) {
+                    }
+                    if ($bRedirect) {
                         Api::Location('./');
                     }
                 } elseif (isset($aArgs['Module']) && $aArgs['Module'] === 'Core' && $aArgs['Method'] === 'Logout' && $oResult['Result'] === true) {
