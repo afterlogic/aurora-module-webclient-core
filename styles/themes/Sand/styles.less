@@ -54,7 +54,15 @@
 
 .theme-dropdown() {}
 
-.theme-panel() {}
+.theme-panel() {
+	&.center_panel, &.item_viewer, &.data {
+		box-shadow: -1px 0 2px rgba(0, 0, 0, 0.11);
+	}
+	
+	.rtl & {
+		box-shadow: 1px 0 2px rgba(0,0,0,0.11);
+	}
+}
 
 @theme-buttons-primary-background: #81c54b;
 @theme-buttons-secondary-background: #a7afb9;
