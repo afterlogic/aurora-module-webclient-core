@@ -404,7 +404,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         // Set cookie in browser only
         $bWebClient = strtolower($sXClientHeader) === 'webclient';
 
-        if (($aArgs['EntryName'] === 'api' && $bWebClient) || in_array($aArgs['EntryName'],['sso', 'postlogin'])) {
+        if (($aArgs['EntryName'] === 'api' && $bWebClient) || in_array($aArgs['EntryName'], ['sso', 'postlogin'])) {
             $sAuthTokenKey = Application::AUTH_TOKEN_KEY;
 
             $oResult = @json_decode($mResult, true);
@@ -419,7 +419,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
                     $bRedirect = false;
                     if ($aArgs['EntryName'] === 'api') {
                         $bChangeAuthToken = true;
-                    } elseif (in_array($aArgs['EntryName'],['sso', 'postlogin'])) {
+                    } elseif (in_array($aArgs['EntryName'], ['sso', 'postlogin'])) {
                         $bChangeAuthToken = true;
                         $bRedirect = true;
                     }
