@@ -129,16 +129,18 @@ ko.bindingHandlers.dropdown = {
 				}
 			},
 			fFitToScreen = function (iOffsetLeft) {
+				const parent = oCommand['parent'] ? jqDropHelper.closest(oCommand['parent']) :  null;
+
 				oOffset = jqDropHelper.offset();
 				if (oOffset)
 				{
 					iLeft = oOffset.left + 10;
-					iFitToScreenOffset = $(window).width() - (iLeft + jqDropHelper.outerWidth(true));
+					iFitToScreenOffset = (oCommand['parent'] ? $(parent).offset().left + $(parent).width() : $(window).width())
+						- (iLeft + jqDropHelper.outerWidth(true)); 
 
 					if (iFitToScreenOffset > 0)
 					{
 						iFitToScreenOffset = 0;
-						
 					} 
 					if (!bRightAligned)
 					{
