@@ -63,7 +63,7 @@ function BuildThemeCss(sTheme, bMobile) {
 
 	// check if required theme exists in CoreWebclient module or as a separate theme module 
 	if (!fs.existsSync('modules/' + sCoreModule + '/styles/themes/' + sTheme + '/styles' + sPostfix + '.less')
-		&& !fs.existsSync('modules/Theme' + sTheme + '/styles' + sPostfix + '.less')) {
+		&& !fs.existsSync('modules/Theme' + sTheme + '/styles/styles' + sPostfix + '.less')) {
 		console.log(sTheme + ' > styles' + sPostfix + '.css was skipped');
 		return;
 	}
@@ -90,7 +90,7 @@ function BuildThemeCss(sTheme, bMobile) {
 	});
 	
 	// try to find theme as a separate module
-	const SpecialThemeModulePath = `modules/Theme${sTheme}`
+	const SpecialThemeModulePath = `modules/Theme${sTheme}/styles`
 	if (fs.existsSync(`${SpecialThemeModulePath}/styles${sPostfix}.less`)) {
 		aThemeSpecyficFiles.push(`${SpecialThemeModulePath}/styles${sPostfix}.less`)
 
