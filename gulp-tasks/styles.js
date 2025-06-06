@@ -72,6 +72,11 @@ function BuildThemeCss(sTheme, bMobile) {
 		aModulesNames.unshift(aModulesNames.splice(iCoreModuleIndex, 1)[0]);
 	}
 	
+	//remove Theme modules because they are not a regular modules and must be handled separately
+	aModulesNames = aModulesNames.filter(function (sModuleName) {
+		return sModuleName.indexOf('Theme') !== 0
+	})
+	
 	aModulesNames.forEach(function (sModuleName) {
 		if (fs.existsSync('modules/' + sModuleName + '/styles/styles' + sPostfix + '.less')) {
 			//check module override
