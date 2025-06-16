@@ -269,23 +269,15 @@ ko.bindingHandlers.droppable = {
 				fValueFunc(oEvent, oUi);
 			}
 		});
-		
-		if (fSwitchObserv)
-		{
-			fSwitchObserv.subscribe(function (bIsSelected) {
-				if($(oElement).data().uiDroppable)
-				{
-					if(bIsSelected)
-					{
-						$(oElement).droppable('disable');
-					}
-					else
-					{
-						$(oElement).droppable('enable');
-					}
+
+		if (ko.isObservable(fSwitchObserv)) {
+			const checkDropEnabled = function (bDroppable) {
+				if($(oElement).data().uiDroppable) {
+					$(oElement).droppable(bDroppable ? 'disable' : 'enable');
 				}
-			}, this);
-			fSwitchObserv.valueHasMutated();
+			}
+			fSwitchObserv.subscribe(checkDropEnabled, this);
+			checkDropEnabled(fSwitchObserv());
 		}
 	}
 };
