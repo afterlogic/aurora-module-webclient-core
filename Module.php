@@ -129,7 +129,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
             'GoogleAnalyticsAccount' => $this->oModuleSettings->GoogleAnalyticsAccount,
             'HeaderModulesOrder' => $this->oModuleSettings->HeaderModulesOrder,
             'IsDemo' => $this->oModuleSettings->IsDemo,
-            'IsMobile' => $oIntegrator->isMobile(),
+            'IsMobile' => \Aurora\System\Api::IsMobileApplication(),
             'LanguageListWithNames' => $this->getLanguageList($oIntegrator->getLanguageList()),
             'MultipleFilesUploadLimit' => $this->oModuleSettings->MultipleFilesUploadLimit,
             'ShowQuotaBar' => $this->oModuleSettings->ShowQuotaBar,
