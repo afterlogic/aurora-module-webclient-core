@@ -367,7 +367,14 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
                 $sLogin = $sEmail;
             }
 
-            return \Aurora\System\Managers\Response::GetJsonFromObject('Json', ['Result' => Core::Decorator()->Login($sLogin, $sPassword)]);
+            $result = Core::Decorator()->Login($sLogin, $sPassword);
+
+            $redirectUrl = Core::getInstance()->getConfig('PostLoginErrorRedirectUrl');
+            if (isset($result['AuthToken']) || $redirectUrl === '') {
+                return \Aurora\System\Managers\Response::GetJsonFromObject('Json', ['Result' => $result]);
+            } else {
+                Api::Location($redirectUrl);
+            }
         }
     }
 
