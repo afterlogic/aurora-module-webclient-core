@@ -10,6 +10,7 @@ namespace Aurora\Modules\CoreWebclient;
 use Aurora\Api;
 use Aurora\System\Application;
 use Aurora\Modules\Core\Module as Core;
+use Aurora\System\Facades\Route;
 
 /**
  * System module that provides Web application core functionality and UI framework.
@@ -56,16 +57,16 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
      */
     public function init()
     {
-        \Aurora\System\Router::getInstance()->registerArray(
-            self::GetName(),
+        Route::add(
+            $this,
             [
-                'default' => [$this, 'EntryDefault'],
-                'error' => [$this, 'EntryDefault'],
-                'debugmode' => [$this, 'EntryDefault'],
-                'xdebug_session_start' => [$this, 'EntryDefault'],
-                'install' => [$this, 'EntryCompatibility'],
-                'sso' => [$this, 'EntrySso'],
-                'postlogin' => [$this, 'EntryPostlogin'],
+                'default' => 'EntryDefault',
+                'error' => 'EntryDefault',
+                'debugmode' => 'EntryDefault',
+                'xdebug_session_start' => 'EntryDefault',
+                'install' => 'EntryCompatibility',
+                'sso' => 'EntrySso',
+                'postlogin' => 'EntryPostlogin',
             ]
         );
 
