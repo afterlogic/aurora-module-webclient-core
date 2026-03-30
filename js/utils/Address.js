@@ -100,6 +100,11 @@ AddressUtils.getEmailParts = function (sFullEmail, bIgnoreQuotesInName)
 		sEmail = TextUtils.trim(sFullEmail.substring(iLeftBrocketPos + 1, iRightBrocketPos));
 	}
 
+	if (false === sEmail.includes('@')) {
+		sName = sEmail;
+		sEmail = '';
+	}
+
 	return {
 		'name': sName,
 		'email': sEmail,
