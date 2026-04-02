@@ -162,7 +162,8 @@ TextUtils.i18n = function (sKey, oValueList, sDefaultValue, iPluralCount) {
 			if (oValueList.hasOwnProperty(sValueName))
 			{
 				var reg = new RegExp('%' + sValueName + '%', 'g');
-				sResult = sResult.replace(reg, oValueList[sValueName]);
+				var sSanitizedValue = TextUtils.htmlToPlain(oValueList[sValueName]);
+				sResult = sResult.replace(reg, sSanitizedValue);
 			}
 		}
 	}
