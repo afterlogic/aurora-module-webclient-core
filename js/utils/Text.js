@@ -109,6 +109,15 @@ TextUtils.htmlStartsWithBlockquote = function (sHtml)
 	return sBeginWithoutTags === '';
 };
 
+/**
+ * 
+ * @param {string} sHtml 
+ * @returns {string}
+ */
+TextUtils.stripTags = function (sHtml = '') {
+	// Remove everything between < and >
+	return sHtml.toString().replace(/<[^>]*>/gmi, '');
+};
 
 /**
  * @param {string} sKey
@@ -162,7 +171,7 @@ TextUtils.i18n = function (sKey, oValueList, sDefaultValue, iPluralCount) {
 			if (oValueList.hasOwnProperty(sValueName))
 			{
 				var reg = new RegExp('%' + sValueName + '%', 'g');
-				var sSanitizedValue = TextUtils.plainToHtml(oValueList[sValueName]);
+				var sSanitizedValue = TextUtils.stripTags(oValueList[sValueName]);
 				sResult = sResult.replace(reg, sSanitizedValue);
 			}
 		}

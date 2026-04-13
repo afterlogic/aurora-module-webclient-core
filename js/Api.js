@@ -18,7 +18,7 @@ Api.getErrorByCode = function (response, defaultErrorText = '')
 {
 	var
 		errorCode = response.ErrorCode,
-		responseErrorMessage = TextUtils.encodeHtml(response.ErrorMessage || ''),
+		responseErrorMessage = TextUtils.stripTags(response.ErrorMessage || ''),
 		errorText = ModuleErrors.getErrorMessage(response) || ''
 	;
 
