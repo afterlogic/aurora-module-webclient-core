@@ -463,6 +463,12 @@ CApp.prototype.broadcastEvent = function (sEventName, oArguments) {
   return false
 }
 
+/**
+ * 
+ * @param {string} sEventName 
+ * @param {Function} fCallback 
+ * @returns {Function} Unsubscribe callback
+ */
 CApp.prototype.subscribeEvent = function (sEventName, fCallback) {
   if (!_.isArray(this.aEventsCallbacks)) {
     this.aEventsCallbacks = []
@@ -473,6 +479,53 @@ CApp.prototype.subscribeEvent = function (sEventName, fCallback) {
   }
 
   this.aEventsCallbacks[sEventName].push(fCallback)
+
+  return _.bind(function () {
+    this.unsubscribeEvent(sEventName, fCallback);
+  }, this)
+}
+
+/**
+ * Same as `CApp#subscribeEvent`, but fires once
+ * @param {string} sEventName 
+ * @param {Function} fCallback 
+ * @returns {Function} Unsubscribe callback
+ */
+CApp.prototype.subscribeEventOnce = function (sEventName, fCallback) {
+  const self = this;
+  const fWrappedCallback = function () {
+    fCallback.apply(this, arguments);
+
+    self.unsubscribeEvent(sEventName, fWrappedCallback);
+  };
+
+  return this.subscribeEvent(sEventName, fWrappedCallback);
+}
+
+/**
+ * 
+ * @param {string} sEventName Event name
+ * @param {Function} fCallback Original callback function
+ * @returns {void}
+ */
+CApp.prototype.unsubscribeEvent = function (sEventName, fCallback) {
+  if (false === _.isArray(this.aEventsCallbacks)) {
+    return;
+  }
+
+  const callbacksByEventName = this.aEventsCallbacks[sEventName];
+
+  if (false === _.isArray(callbacksByEventName) || callbacksByEventName.length === 0) {
+    return;
+  }
+
+  const nCallbackIndex = callbacksByEventName.findIndex(cbk => cbk === fCallback);
+
+  if (nCallbackIndex === -1) {
+    return;
+  }
+
+  callbacksByEventName.splice(nCallbackIndex, 1);
 }
 
 var App = new CApp()
