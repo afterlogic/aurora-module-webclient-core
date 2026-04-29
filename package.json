@@ -32,7 +32,7 @@
     "ua-parser-js": "^0.7.22",
     "underscore": "~1.12.1",
     "webpack": "^5.75.0",
-    "webpackbar": "^5.0.2",
+    "webpackbar": "^7.0.0",
     "regenerator-runtime": "^0.13.3",
     "core-js": "^3.8.1",
     "video.js": "^7.6.6",
