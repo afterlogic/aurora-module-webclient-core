@@ -152,19 +152,45 @@ var inputosaurustext = {
 					var
 						oLiDraggable = $(ui.draggable),
 						oDragWidget = ui.helper.__widget,
-						sFullVal = oLiDraggable.data('full')
+						sFullVal = oLiDraggable.data('full'),
+						insertIndex = widget._getDropInsertIndex(event),
+						draggedKey = oLiDraggable.data('inputosaurus'),
+						fromIndex = -1
 					;
-
-					if (oDragWidget)
-					{
+					if (oDragWidget && draggedKey) {
+						$.each(oDragWidget._chosenValues, function (k, v) {
+							if (v.key === draggedKey) {
+								fromIndex = k;
+							}
+						});
+					}
+					if (oDragWidget) {
 						oDragWidget._removeLiTag(oLiDraggable, oDragWidget);
+					}
+
+					widget._hideDropSlot();
+
+					if (oDragWidget === widget) {
+						if (fromIndex !== -1 && fromIndex < insertIndex) {
+							insertIndex--;
+						}
+						widget._insertChosenAt(sFullVal, insertIndex);
+						widget._renderTags();
+						widget._setValue(widget._buildValue());
+						return;
 					}
 
 					_.defer(function () {
 						$(els.input).val(sFullVal);
 						$(widget.element).inputosaurus('parseInput');
 					});
-				}
+				},
+				over: function (event, ui) {
+					widget._updateDropSlot(event);
+				},
+				out: function () {
+					widget._hideDropSlot();
+				},
 			});
 		}
 
@@ -768,13 +794,18 @@ var inputosaurustext = {
 						},
 						start: function (event, ui) {
 							ui.helper.__widget = widget;
+							widget._hideDropSlot();
 						},
 						containment: ".popup_panel",
 						tolerance: "pointer",
 						stop: function (event, ui) {
 							var oLiDraggable = $(this);
 							oLiDraggable.css('visibility', 'visible');
-						}
+							widget._hideDropSlot();
+						},
+						drag: function (event, ui) {
+							widget._updateDropSlot(event);
+						},
 					});
 				}
 			}
@@ -785,6 +816,8 @@ var inputosaurustext = {
 
 	_renderTags : function() {
 		var self = this;
+
+		this._hideDropSlot();
 
 		this.elements.ul.find('li:not(.inputosaurus-required)').remove();
 
@@ -825,6 +858,158 @@ var inputosaurustext = {
 
 		widget._resizeInput();
 	},
+
+	_getDropInsertIndex: function (event) {
+		return this._analyzeDropPosition(event).insertIndex;
+	},
+	_insertChosenAt: function (sFullVal, insertIndex) {
+		var
+			sValue = TextUtils.trim(sFullVal),
+			obj
+		;
+		if (!sValue) {
+			return;
+		}
+		if (!this.options.allowDuplicates && _.some(this._chosenValues, function (v) {
+			return v.value === sValue;
+		})) {
+			return;
+		}
+		insertIndex = Math.max(0, Math.min(insertIndex, this._chosenValues.length));
+		obj = {
+			key: 'mi_' + Math.random().toString(16).slice(2, 10),
+			value: sValue
+		};
+		this._chosenValues.splice(insertIndex, 0, obj);
+	},
+
+	_updateDropSlot: function (event) {
+		var
+			info = this._analyzeDropPosition(event),
+			$ul = this.elements.ul,
+			$tags = $ul.children('li.address_capsule'),
+			insertIndex = info.insertIndex,
+			$slot = $ul.children('li.inputosaurus-drop-slot')
+		;
+		if (!$slot.length) {
+			$slot = $(
+				'<li class="inputosaurus-drop-slot inputosaurus-required" aria-hidden="true"></li>'
+			).css({
+				width: 10,
+				minWidth: 10,
+				maxWidth: 10,
+				padding: 0,
+				margin: '2px 0 0 0',
+				border: 'none',
+				background: 'transparent',
+				boxShadow: 'none',
+				cursor: 'default',
+				overflow: 'visible',
+				listStyle: 'none',
+				color: 'transparent',
+				opacity: 0,
+				pointerEvents: 'none'
+			});
+		} else {
+			$slot = $slot.detach();
+		}
+		if (insertIndex >= $tags.length) {
+			$ul.children('li.inputosaurus-input').first().before($slot);
+		} else {
+			$tags.eq(insertIndex).before($slot);
+		}
+	},
+
+	_hideDropSlot: function () {
+		this.elements.ul.children('li.inputosaurus-drop-slot').remove();
+	},
+
+	// ===== INPUTOSAURUS DROP DEBUG — delete block start =====
+	_analyzeDropPosition: function (event) {
+		var
+			$tags = this.elements.ul.children('li.address_capsule'),
+			insertIndex = $tags.length,
+			$target = $(),
+			rect = null,
+			method = 'fallback-each',
+			tagRects = [],
+			slotRect = null
+		;
+		$tags.each(function () {
+			if ($(this).css('visibility') === 'hidden') {
+				return; // оригинал скрыт при drag
+			}
+			var r = this.getBoundingClientRect();
+			tagRects.push({
+				left: r.left,
+				top: r.top,
+				width: r.width,
+				height: r.height,
+				label: $(this).find('span').first().text() || ''
+			});
+		});
+		if (!$tags.length) {
+			var ulRect = this.elements.ul[0].getBoundingClientRect();
+			slotRect = { left: ulRect.left + 4, top: ulRect.top + 4, width: 4, height: Math.max(ulRect.height - 8, 24) };
+			return {
+				insertIndex: 0,
+				method: 'empty',
+				cursor: { x: event.clientX, y: event.clientY },
+				tagRects: tagRects,
+				targetRect: null,
+				slotRect: slotRect
+			};
+		}
+		if (document.elementFromPoint) {
+			$target = $(document.elementFromPoint(event.clientX, event.clientY)).closest('li.address_capsule');
+			if ($target.length && $.contains(this.elements.ul[0], $target[0])) {
+				method = 'elementFromPoint';
+				insertIndex = $tags.index($target[0]);
+				rect = $target[0].getBoundingClientRect();
+				if (event.clientX >= rect.left + rect.width / 2) {
+					insertIndex += 1;
+				}
+			}
+		}
+		if (method === 'fallback-each') {
+			$tags.each(function (i) {
+				rect = this.getBoundingClientRect();
+				if (event.clientY < rect.top || event.clientY > rect.bottom) {
+					return;
+				}
+				if (event.clientX < rect.left + rect.width / 2) {
+					insertIndex = i;
+					return false;
+				}
+				insertIndex = i + 1;
+			});
+		}
+		// слот вставки — та же геометрия, что подразумевает insertIndex
+		if (insertIndex === 0) {
+			rect = $tags.eq(0)[0].getBoundingClientRect();
+			slotRect = { left: rect.left - 2, top: rect.top, width: 4, height: rect.height };
+		} else if (insertIndex >= $tags.length) {
+			rect = $tags.eq($tags.length - 1)[0].getBoundingClientRect();
+			slotRect = { left: rect.right - 2, top: rect.top, width: 4, height: rect.height };
+		} else {
+			rect = $tags.eq(insertIndex)[0].getBoundingClientRect();
+			slotRect = { left: rect.left - 2, top: rect.top, width: 4, height: rect.height };
+		}
+		return {
+			insertIndex: insertIndex,
+			method: method,
+			cursor: { x: event.clientX, y: event.clientY },
+			tagRects: tagRects,
+			targetRect: ($target.length && method === 'elementFromPoint') ? {
+				left: $target[0].getBoundingClientRect().left,
+				top: $target[0].getBoundingClientRect().top,
+				width: $target[0].getBoundingClientRect().width,
+				height: $target[0].getBoundingClientRect().height
+			} : null,
+			slotRect: slotRect
+		};
+	},
+	// ===== INPUTOSAURUS DROP DEBUG — delete block end =====
 
 	focus : function () {
 		this.elements.input.focus();
