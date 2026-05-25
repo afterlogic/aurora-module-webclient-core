@@ -484,10 +484,19 @@ ko.bindingHandlers.autocompleteSimple = {
 					}
 					else
 					{
+						fDataAccessor(oItem.item);
+
+						if (oOptions.onSelect)
+						{
+							jqEl.autocomplete('close');
+							oOptions.onSelect.call(oViewModel, oItem.item);
+
+							return false;
+						}
+
 						_.delay(function () {
 							jqEl.trigger('change');
 						}, 5);
-						fDataAccessor(oItem.item);
 
 						return true;
 					}
@@ -507,6 +516,22 @@ ko.bindingHandlers.autocompleteSimple = {
 					}
 				}
 			}).on('keydown', function(oEvent, oItem) {
+				if (oEvent.keyCode === Enums.Key.Enter && oOptions.onEnter)
+				{
+					var
+						$Widget = jqEl.autocomplete('widget'),
+						bMenuVisible = $Widget.is(':visible'),
+						bActiveMenuItem = !!$Widget.find('.ui-menu-item .ui-state-focus').length || !!$('#ui-active-menuitem').length
+					;
+
+					if (!bMenuVisible || !bActiveMenuItem)
+					{
+						Utils.calmEvent(oEvent);
+						oOptions.onEnter.call(oViewModel);
+
+						return false;
+					}
+				}
 				if (aSourceResponseItems && oSelectedItem && !oSelectedItem.global && oEvent.keyCode === Enums.Key.Del && oEvent.shiftKey) //shift+del on suggestions list
 				{
 					Utils.calmEvent(oEvent);
