@@ -9,6 +9,7 @@ var
 	Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
+	UrlUtils = require('%PathToCoreWebclientModule%/js/utils/Url.js'),
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	Routing = require('%PathToCoreWebclientModule%/js/Routing.js'),
 	Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
@@ -132,7 +133,7 @@ CHeaderView.prototype.switchToMobileVersion = function ()
 	Ajax.send('Core', 'SetMobile', {'Mobile': true}, function (oResponse) {
 		if (oResponse.Result)
 		{
-			window.location.reload();
+			UrlUtils.goToMobileVersion();
 		}
 	}, this);
 };

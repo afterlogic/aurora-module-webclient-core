@@ -20,6 +20,46 @@ UrlUtils.getAppPath = function ()
 };
 
 /**
+ * @return {boolean}
+ */
+UrlUtils.isMobileVersionEntry = function ()
+{
+	let sQuery = (window.location.search || '').replace(/^\?/, '').trim();
+
+	if (sQuery === '')
+	{
+		return false;
+	}
+
+	const iAmpPos = sQuery.indexOf('&');
+	if (iAmpPos > 0)
+	{
+		sQuery = sQuery.substring(0, iAmpPos);
+	}
+
+	const aItems = sQuery.split('/');
+	return _.some(aItems, function (sItem) {
+		return sItem === 'mobile-version';
+	});
+};
+
+/**
+ * @return {string}
+ */
+UrlUtils.getMobileVersionUrl = function ()
+{
+	return UrlUtils.getAppPath() + '?/mobile-version';
+};
+
+/**
+ * Redirects browser to the Vue-based mobile webclient entry.
+ */
+UrlUtils.goToMobileVersion = function ()
+{
+	window.location.href = UrlUtils.getMobileVersionUrl();
+};
+
+/**
  * Downloads by url through iframe or new window.
  *
  * @param {string} sUrl

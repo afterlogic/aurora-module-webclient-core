@@ -77,6 +77,11 @@ $(function () {
 			.then(aModules => {
 				const ModulesManager = require('/modules/CoreWebclient/js/ModulesManager.js')
 				const App = require('/modules/CoreWebclient/js/App.js')
+
+				if (App.redirectToVueMobileIfNeeded()) {
+					return
+				}
+
 				const bSwitchingToMobile = App.checkMobile()
 				
 				if (!bSwitchingToMobile) {

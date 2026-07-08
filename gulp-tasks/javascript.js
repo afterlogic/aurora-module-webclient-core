@@ -243,11 +243,14 @@ $('body').ready(function () {
 
 Promise.all(_.values(oAvailableModules))
 	.then(function(aModules){
-		var
-			ModulesManager = require('modules/CoreWebclient/js/ModulesManager.js'),
-			App = require('modules/CoreWebclient/js/App.js'),
-			bSwitchingToMobile = App.checkMobile()
-		;
+		const ModulesManager = require('modules/CoreWebclient/js/ModulesManager.js');
+		const App = require('modules/CoreWebclient/js/App.js');
+
+		if (App.redirectToVueMobileIfNeeded()) {
+			return;
+		}
+
+		const bSwitchingToMobile = App.checkMobile();
 		if (!bSwitchingToMobile) {
 			if (window.isPublic) {
 				App.setPublic();

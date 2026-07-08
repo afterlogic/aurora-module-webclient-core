@@ -381,6 +381,28 @@ CApp.prototype.tokenProblem = function () {
   Screens.showError(sHtmlError, true)
 }
 
+/**
+ * Redirects users with enabled mobile mode from the legacy Knockout shell to Vue mobile.
+ *
+ * @returns {boolean} True if redirect was initiated.
+ */
+CApp.prototype.redirectToVueMobileIfNeeded = function () {
+  if (window.isNewTab || window.isPublic) {
+    return false
+  }
+
+  if (!UserSettings.AllowMobile || UrlUtils.isMobileVersionEntry()) {
+    return false
+  }
+
+  if (UserSettings.IsMobile === 1) {
+    UrlUtils.goToMobileVersion()
+    return true
+  }
+
+  return false
+}
+
 CApp.prototype.checkMobile = function () {
   /**
    * UserSettings.IsMobile:
@@ -398,7 +420,7 @@ CApp.prototype.checkMobile = function () {
       { Mobile: bMobile },
       function (oResponse) {
         if (bMobile && oResponse.Result) {
-          window.location.reload()
+          UrlUtils.goToMobileVersion()
         }
       },
       this
