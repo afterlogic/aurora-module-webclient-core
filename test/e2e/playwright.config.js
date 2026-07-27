@@ -1,0 +1,131 @@
+// @ts-check
+const fs = require('fs')
+const path = require('path')
+const { defineConfig, devices } = require('@playwright/test')
+
+const e2eRoot = __dirname
+// CoreWebclient/test/e2e → install root (…/modules/CoreWebclient/test/e2e)
+const auroraRoot = path.join(__dirname, '..', '..', '..', '..')
+
+process.env.AURORA_E2E_ROOT = e2eRoot
+process.env.AURORA_ROOT = auroraRoot
+
+// Specs live under modules/*/test/e2e — resolve @playwright/test from the runner.
+const runnerNodeModules = path.join(e2eRoot, 'node_modules')
+const prevNodePath = process.env.NODE_PATH || ''
+if (!prevNodePath.split(path.delimiter).includes(runnerNodeModules)) {
+  process.env.NODE_PATH = prevNodePath
+    ? `${runnerNodeModules}${path.delimiter}${prevNodePath}`
+    : runnerNodeModules
+  // eslint-disable-next-line no-underscore-dangle
+  require('module').Module._initPaths()
+}
+
+function loadEnvE2e() {
+  const envPath = path.join(e2eRoot, '.env.e2e')
+  if (!fs.existsSync(envPath)) {
+    return
+  }
+
+  fs.readFileSync(envPath, 'utf8')
+    .split('\n')
+    .forEach((line) => {
+      const match = line.match(/^([^#=]+)=(.*)$/)
+      if (match && !process.env[match[1].trim()]) {
+        process.env[match[1].trim()] = match[2].trim()
+      }
+    })
+}
+
+loadEnvE2e()
+
+const { resolveWorkerCount } = require('./helpers/credentials')
+
+/**
+ * Discover modules/<Name>/test/e2e that contain at least one *.spec.js.
+ * Skip *Mobile* modules (their E2E lives under vue-mobile/test/e2e).
+ */
+function discoverModuleE2eDirs() {
+  const modulesRoot = path.join(auroraRoot, 'modules')
+  if (!fs.existsSync(modulesRoot)) {
+    return []
+  }
+
+  return fs
+    .readdirSync(modulesRoot, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .filter((d) => !/Mobile/i.test(d.name))
+    .filter((d) => d.name !== 'CoreWebclient')
+    .map((d) => {
+      const moduleName = d.name
+      const testDir = path.join(modulesRoot, moduleName, 'test', 'e2e')
+      return { moduleName, testDir }
+    })
+    .filter(({ testDir }) => {
+      if (!fs.existsSync(testDir) || !fs.statSync(testDir).isDirectory()) {
+        return false
+      }
+      return fs.readdirSync(testDir).some((f) => f.endsWith('.spec.js'))
+    })
+    .sort((a, b) => a.moduleName.localeCompare(b.moduleName))
+}
+
+const browsers = [
+  { name: 'Desktop Chrome', use: { ...devices['Desktop Chrome'] } },
+  { name: 'Desktop Firefox', use: { ...devices['Desktop Firefox'] } },
+]
+
+const moduleDirs = discoverModuleE2eDirs()
+
+/** @type {import('@playwright/test').Project[]} */
+const projects = []
+for (const browser of browsers) {
+  for (const { moduleName, testDir } of moduleDirs) {
+    projects.push({
+      name: `${moduleName} · ${browser.name}`,
+      testDir,
+      testMatch: '*.spec.js',
+      use: { ...browser.use },
+    })
+  }
+}
+
+if (projects.length === 0) {
+  console.warn(
+    '[CoreWebclient/test/e2e] No modules/<Name>/test/e2e/*.spec.js found under',
+    path.join(auroraRoot, 'modules')
+  )
+}
+
+/**
+ * Desktop E2E against a running Aurora instance (MAMP / staging).
+ * Specs live in modules/<Webclient>/test/e2e/; this package is the runner.
+ * Override URL: PLAYWRIGHT_BASE_URL=https://staging.example/
+ * Workers: default 2 when 2+ accounts in .env.e2e; override PLAYWRIGHT_WORKERS.
+ */
+const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:8888/'
+const workers = resolveWorkerCount()
+
+module.exports = defineConfig({
+  fullyParallel: false,
+  forbidOnly: !!process.env.CI,
+  retries: 1,
+  workers,
+  timeout: 120000,
+  expect: {
+    timeout: 15000,
+  },
+  reporter: [
+    ['list', { printSteps: true }],
+    ['html', { open: 'never', outputFolder: 'playwright-report' }],
+  ],
+  use: {
+    baseURL,
+    testIdAttribute: 'data-test-id',
+    actionTimeout: 20000,
+    navigationTimeout: 45000,
+    trace: process.env.CI ? 'on-first-retry' : 'on',
+    screenshot: 'only-on-failure',
+  },
+  projects,
+})
