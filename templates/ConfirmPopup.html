@@ -5,8 +5,8 @@
 		<span class="popup_heading" data-bind="visible: (popupHeading() !== ''), text: popupHeading"></span>
 		<span class="text" data-bind="html: confirmDesc"></span>
 		<div class="buttons">
-			<span class="button success" data-bind="click: yesClick, text: okButtonText" id="selenium_confirm_ok_button"></span>
-			<span class="button secondary_button" data-bind="click: cancelPopup, text: cancelButtonText"></span>
+			<span class="button success" data-bind="click: yesClick, text: okButtonText" id="selenium_confirm_ok_button" data-test-id="confirm-ok"></span>
+			<span class="button secondary_button" data-test-id="confirm-cancel" data-bind="click: cancelPopup, text: cancelButtonText"></span>
 		</div>
 	</div>
 	<span class="helper"></span>

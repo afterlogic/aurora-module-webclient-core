@@ -1,7 +1,7 @@
 <!-- ko if: sTopIframeUrl !== '' && iTopIframeHeightPx > 0 -->
 <iframe data-bind="attr: {'src': sTopIframeUrl, 'height': iTopIframeHeightPx} " style="border: none;"></iframe>
 <!-- /ko -->
-<div class="tabsbar">
+<div class="tabsbar" data-test-id="header-tabs">
 	<div class="content">
 		<!-- ko if: sLogoUrl === '' -->
 			<a href="#" class="item logo"></a>
@@ -27,7 +27,7 @@
 		</span>
 
 		<span class="item logout" data-bind="visible: bShowLogout">
-			<span class="link" data-bind="click: logout">
+			<span class="link" data-test-id="settings-logout" data-bind="click: logout">
 				<span class="icon"></span>
 				<span class="text" data-bind="i18n: {'key': '%MODULENAME%/ACTION_LOGOUT'}"></span>
 			</span>
