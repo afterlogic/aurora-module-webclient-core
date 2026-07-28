@@ -68,7 +68,8 @@ async function loginAsTestUser(page) {
 
   await step('Open desktop login page (clean session)', async () => {
     await page.context().clearCookies()
-    await page.goto('/', { waitUntil: 'domcontentloaded' })
+    // '' = baseURL itself (safe for subdirectory installs; '/' would go to host root)
+    await page.goto('', { waitUntil: 'domcontentloaded' })
     await page.getByTestId('login-email').waitFor({
       state: 'visible',
       timeout: 30000,

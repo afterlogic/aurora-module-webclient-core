@@ -1,11 +1,12 @@
 #!/bin/bash
 # Discover modules/*/test/e2e with *.spec.js and run desktop Playwright suite.
-# Runner: modules/CoreWebclient/test/e2e (shared helpers, config, browsers).
+# Runner package: modules/CoreWebclient (deps + npm scripts).
+# Config / helpers / .env: modules/CoreWebclient/test/e2e/
 #
 # Usage (from Aurora install root):
 #   ./modules/CoreWebclient/test/e2e/run.sh
 #   yarn test:e2e-desktop
-#   ./modules/CoreWebclient/test/e2e/run.sh -- --project="MailWebclient · Desktop Chrome"
+#   ./modules/CoreWebclient/test/e2e/run.sh -- --setup "MailWebclient Chrome"
 #
 # Env:
 #   SKIP_YARN_INSTALL=1
@@ -13,6 +14,7 @@
 set -uo pipefail
 
 E2E_DIR="$(cd "$(dirname "$0")" && pwd)"
+CORE_DIR="$(cd "$E2E_DIR/../.." && pwd)"
 ROOT="$(cd "$E2E_DIR/../../../.." && pwd)"
 SKIP_YARN_INSTALL="${SKIP_YARN_INSTALL:-0}"
 
@@ -47,21 +49,22 @@ if [ "$found" -eq 0 ]; then
 fi
 
 if [ "$SKIP_YARN_INSTALL" != "1" ]; then
-    if [ ! -d "$E2E_DIR/node_modules" ]; then
-        echo "Installing CoreWebclient/test/e2e dependencies..."
-        (cd "$E2E_DIR" && yarn install --frozen-lockfile) || exit 1
+    if [ ! -d "$CORE_DIR/node_modules/@playwright/test" ]; then
+        echo "Installing CoreWebclient dependencies (includes Playwright)..."
+        (cd "$CORE_DIR" && yarn install) || exit 1
     fi
-elif [ ! -d "$E2E_DIR/node_modules" ]; then
-    echo "CoreWebclient/test/e2e/node_modules missing (SKIP_YARN_INSTALL=1)"
+elif [ ! -d "$CORE_DIR/node_modules/@playwright/test" ]; then
+    echo "CoreWebclient/node_modules/@playwright/test missing (SKIP_YARN_INSTALL=1)"
+    echo "Run: cd modules/CoreWebclient && yarn"
     exit 1
 fi
 
 echo "----------------------------------------"
-echo "Running Playwright via CoreWebclient/test/e2e"
+echo "Running Playwright via CoreWebclient"
 echo "----------------------------------------"
 
-cd "$E2E_DIR"
+cd "$CORE_DIR"
 if [ "${1:-}" = "--" ]; then
     shift
 fi
-yarn test:e2e_local "$@"
+yarn test:e2e "$@"

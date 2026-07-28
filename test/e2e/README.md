@@ -1,213 +1,305 @@
 # Desktop E2E (Playwright)
 
-Playwright suite against the classic Knockout desktop UI. Selectors use `data-test-id`.
+Automated tests for the classic **desktop** UI (Knockout). Selectors use `data-test-id`.
 
-**Layout:** this package is the **runner** (config, credentials, shared helpers, browsers).
-Scenarios live in modules:
+This document covers layout, setup, how to run, and every relevant environment variable.
+
+---
+
+## Layout
 
 ```text
-modules/<WebclientModule>/test/e2e/*.spec.js
-modules/<WebclientModule>/test/e2e/helpers/   # domain helpers
-modules/CoreWebclient/test/e2e/helpers/                         # credentials, login, ready, paths
+modules/CoreWebclient/package.json          ← @playwright/test + npm scripts test:e2e*
+modules/CoreWebclient/test/e2e/             ← config, helpers, .env, reports, run.sh
+modules/<WebclientModule>/test/e2e/*.spec.js ← scenarios for that module
 ```
 
-`playwright.config.js` discovers every `modules/*/test/e2e` that contains `*.spec.js`
-and builds projects `ModuleName · Desktop Chrome|Firefox`.
+| Piece | Responsibility |
+|-------|----------------|
+| `CoreWebclient/package.json` | Playwright dependency and `yarn test:e2e*` scripts |
+| `test/e2e/playwright.config.js` | Spec discovery, browsers, baseURL, workers, retries |
+| `test/e2e/helpers/` | Login, credentials, ready waits, shared helper paths |
+| `test/e2e/.env.e2e` | Stand URL and test accounts (gitignored) |
+| `modules/*/test/e2e/*.spec.js` | Mail / Contacts / Login / … scenarios |
+| Install-root `package.json` | Wrappers `yarn test:e2e-desktop*` |
+
+The config **auto-discovers** every `modules/*/test/e2e` that contains `*.spec.js` (skips `*Mobile*` and `CoreWebclient` itself). Add specs under a module — no config edit required.
+
+---
 
 ## Preconditions
 
-1. Aurora is running (MAMP or equivalent / staging).
-2. Document Root points at the project root.
-3. Desktop UI opens at the install root: `http://localhost:8888/`
+1. Aurora is running (MAMP / staging / any HTTP stand).
+2. Document Root points at the **Aurora install root**.
+3. Desktop UI opens in a browser (locally usually `http://localhost:8888/`).
 4. After changing Knockout templates (`data-test-id`), clear the PHP template cache:
 
 ```bash
-# from installation root
+# from install root
 rm -f data/cache/templates-*.cache
 ```
 
-5. If client modules were added/removed (e.g. Turnstile plugin), rebuild desktop JS:
+5. If client modules were added/removed, rebuild desktop JS:
 
 ```bash
+# from install root
 npm run js:build
 npm run js:min   # required when UseAppMinJs is true (loads app.min.js)
 ```
 
-## Setup
+---
 
-Use **Yarn classic (1.x)** and **Node 18 or 22**.
+## Setup (first time)
+
+### 1. Install module dependencies (do this first)
 
 ```bash
-cd modules/CoreWebclient/test/e2e
+cd modules/CoreWebclient
 yarn
-yarn test:e2e:install-browsers
-cp .env.e2e.example .env.e2e
-# edit E2E_LOGIN_0 / E2E_PASSWORD_0 … (one isolated account per worker)
 ```
 
-From the installation root:
+This installs CoreWebclient deps, including `@playwright/test` from `devDependencies`.
+
+### 2. Download Playwright browsers
+
+```bash
+# from modules/CoreWebclient
+yarn test:e2e:install-browsers
+```
+
+Installs **Chromium**, **Firefox**, and **WebKit** (Safari engine).
+
+Or from the install root:
 
 ```bash
 yarn test:e2e-desktop:install-browsers
-yarn test:e2e-desktop                 # ./modules/CoreWebclient/test/e2e/run.sh
-yarn test:e2e-desktop:report
 ```
 
-## Run (local)
+### 3. Create `.env.e2e`
 
 ```bash
-# install root — lists found modules, then runs Playwright
-./modules/CoreWebclient/test/e2e/run.sh
-./modules/CoreWebclient/test/e2e/run.sh -- --project="MailWebclient · Desktop Chrome"
-
 cd modules/CoreWebclient/test/e2e
-yarn test:e2e_local
-yarn test:e2e_local -- --project="*Desktop Chrome"
-yarn test:e2e_local -- --project="ContactsWebclient · Desktop Chrome"
+cp .env.e2e.example .env.e2e
+# edit logins/passwords and URL if needed
+```
+
+`.env.e2e` is **gitignored** — do not commit it.
+
+---
+
+## Environment variables (`.env.e2e`)
+
+| Variable | Required | Meaning |
+|----------|----------|---------|
+| `PLAYWRIGHT_BASE_URL` | yes* | Desktop UI base URL. *Config default: `http://localhost:8888/` |
+| `PLAYWRIGHT_WORKERS` | no | Playwright parallel workers. **Default = 1**. Values > 1 on one PRIMARY mailbox cause races (delete/move/compose). |
+| `E2E_LOGIN_PRIMARY` | yes | Main test user (default login for almost all tests) |
+| `E2E_PASSWORD_PRIMARY` | yes | Primary password |
+| `E2E_LOGIN_SECONDARY` | for share scenarios | Second user (sharing / multi-user flows) |
+| `E2E_PASSWORD_SECONDARY` | for share scenarios | |
+| `E2E_LOGIN_RESERVE` | for ACL scenarios | User with different permissions |
+| `E2E_PASSWORD_RESERVE` | for ACL scenarios | |
+| `E2E_COMPOSE_TO` | no | Compose recipient (default = PRIMARY login) |
+| `SKIP_YARN_INSTALL` | no | For `run.sh`: `1` = skip `yarn` (CI already installed deps) |
+
+### URL and subdirectories
+
+For a subdirectory install, use a **trailing slash** (HTTPS preferred):
+
+```bash
+PLAYWRIGHT_BASE_URL=https://aurora-mta.afterlogic.com/aurora-mta-dev/
+```
+
+
+### Account roles
+
+| Role | Env | When to use |
+|------|-----|-------------|
+| **PRIMARY** | `E2E_LOGIN_PRIMARY` | Almost everything: mail, contacts, files, login |
+| **SECONDARY** | `E2E_LOGIN_SECONDARY` | Sharing: share with X, accept share, etc. |
+| **RESERVE** | `E2E_LOGIN_RESERVE` | Permission / limited-access scenarios |
+
+Helpers in `helpers/credentials.js`: `getPrimaryCredentials()` / `getTestCredentials()`, `getSecondaryCredentials()`, `getReserveCredentials()`.
+
+---
+
+## Run
+
+Use **Yarn classic 1.x** and **Node 18 or 22**.
+
+### From `modules/CoreWebclient`
+
+```bash
+cd modules/CoreWebclient
+yarn test:e2e
 yarn test:e2e:ui
 yarn test:e2e:report
 ```
 
-In the console you will see steps like `→ Open desktop login page`.
-In the HTML report: timeline of steps, screenshots on failure, and a **Trace** button.
+### UI Mode (`yarn test:e2e:ui`)
 
-Config notes:
-- Default **`workers: 2`** when 2+ accounts are configured (capped by pool size). Override with `PLAYWRIGHT_WORKERS=1|2|3|4`.
-- `fullyParallel: false` — tests inside one file stay serial; different files can run on different workers.
-- Each worker logs in as `E2E_LOGIN_N` (`N = worker index % pool size`).
-- Specs resolve `@playwright/test` via `NODE_PATH=modules/CoreWebclient/test/e2e/node_modules` (set in config + scripts).
-- Env for helpers: `AURORA_E2E_ROOT` (this package), `AURORA_ROOT` (install root).
+Opens Playwright’s interactive runner (pick tests, watch steps / DOM / network). **It does not start tests by itself** — select a test (or use filters) and click ▶.
+
+Prefer a narrow `--setup` so the list is not the full matrix (~200+ tests):
 
 ```bash
-PLAYWRIGHT_WORKERS=1 yarn test:e2e_local -- --project="*Desktop Chrome"
-PLAYWRIGHT_WORKERS=4 yarn test:e2e_local -- --project="*Desktop Chrome"
+cd modules/CoreWebclient
+yarn test:e2e:ui --setup "StandardLoginFormWebclient Chrome" login-page.spec.js
 ```
 
-## Adding a module suite
+If the UI opens but a run fails immediately with “Executable doesn't exist” / “Please run … playwright install”, browsers for **this** `@playwright/test` version are missing. From `modules/CoreWebclient` only:
+
+```bash
+yarn test:e2e:install-browsers
+```
+
+Do **not** rely on a bare `npx playwright install` from another directory — that can install browsers for a different Playwright version.
+
+### From the install root
+
+```bash
+yarn test:e2e-desktop                 # run.sh: scan modules + yarn test:e2e
+yarn test:e2e-desktop:ui
+yarn test:e2e-desktop:report
+yarn test:e2e-desktop:install-browsers
+```
+
+### One module / one browser / one file
+
+Use **`--setup "<modules> <browsers>"`** (not `--project`).
+
+- First token (no spaces): module name(s), comma-separated.
+- Rest of the string: browser name(s), comma-separated: `Chrome`, `Firefox`, `Safari`.
+- Expands to Playwright projects `Module · Browser` (e.g. `MailWebclient · Chrome`).
+
+Anything **after** `--setup "…"` is passed straight to Playwright (file name, `--grep`, `--list`, etc.).
+
+```bash
+cd modules/CoreWebclient
+
+# All specs for that module × browser
+yarn test:e2e --setup "StandardLoginFormWebclient Chrome"
+
+# Several modules × several browsers
+yarn test:e2e --setup "MailWebclient,ContactsWebclient Chrome,Firefox"
+
+# Only one file: mail.spec.js under MailWebclient, Safari only
+yarn test:e2e --setup "MailWebclient Safari" mail.spec.js
+```
+
+`mail.spec.js` is a **Playwright file filter**: run matching `*.spec.js` paths (substring / regex), not part of `--setup`.
+
+From the install root via `run.sh`:
+
+```bash
+./modules/CoreWebclient/test/e2e/run.sh -- --setup "MailWebclient Chrome"
+# or:
+yarn test:e2e-desktop -- --setup "MailWebclient Chrome"
+```
+
+Without `--setup`, the full module × browser matrix runs.
+
+Console steps look like `→ Open desktop login page`.  
+HTML report: timeline, failure screenshots, **Trace**.
+
+---
+
+## Browsers (projects)
+
+Each module with specs × each browser = one Playwright project:
+
+| Name in report | Engine |
+|----------------|--------|
+| `… · Chrome` | Chromium |
+| `… · Firefox` | Firefox |
+| `… · Safari` | **Playwright WebKit** (not iOS Safari on a device) |
+
+A full run without a project filter executes **all** combinations — that is slow. For a quick check, use one project (Chrome).
+
+---
+
+## Workers
+
+- Default **`workers: 1`** (no races on a single PRIMARY mailbox).
+- Speed up only explicitly: `PLAYWRIGHT_WORKERS=2` in `.env.e2e` — only if you accept shared-data races.
+- `fullyParallel: false` — tests inside one file stay serial.
+
+---
+
+## Adding tests for a new module
 
 1. Create `modules/YourWebclient/test/e2e/` with `*.spec.js` (and optional `helpers/`).
 2. Import shared helpers:
 
 ```js
 const path = require('path')
-const { sharedHelper, moduleHelper, fixturePath } = require(
+const { sharedHelper } = require(
   path.join(process.env.AURORA_E2E_ROOT, 'helpers/paths')
 )
-const { loginAsTestUser, hasCredentials } = sharedHelper('login')
+const { loginAsTestUser, hasCredentials, step } = sharedHelper('login')
 ```
 
-3. Re-run — discovery picks the folder up automatically (no config edit).
+3. Re-run `yarn test:e2e` — discovery picks the folder up automatically.
 
-## Credentials
+`AURORA_E2E_ROOT` and `AURORA_ROOT` are set by `playwright.config.js`.
+
+---
+
+## Report
+
+After a run:
 
 ```bash
-cp .env.e2e.example .env.e2e
-# edit E2E_LOGIN_0 / E2E_PASSWORD_0, E2E_LOGIN_1 / …
+cd modules/CoreWebclient
+yarn test:e2e:report
+# or from install root:
+yarn test:e2e-desktop:report
 ```
 
-`.env.e2e` is gitignored. Playwright loads it via `playwright.config.js`.
+Report files live in `modules/CoreWebclient/test/e2e/playwright-report/`.
 
-Single-account fallback (when no `E2E_LOGIN_N`):
+---
 
-```bash
-# E2E_LOGIN=...
-# E2E_PASSWORD=...
-```
+## Staging / remote stand
 
-Optional compose override (default = that worker’s login):
-
-```bash
-# E2E_COMPOSE_TO=someone@example.com
-```
-
-## Custom URL
+1. Deploy templates with `data-test-id` and clear `data/cache/templates-*.cache`.
+2. Provide three mailboxes (PRIMARY / SECONDARY / RESERVE) with Mail / Contacts / Files as needed.
+3. On the runner machine:
 
 ```bash
-PLAYWRIGHT_BASE_URL=http://localhost:8888/ yarn test:e2e_local
-```
-
-## Run on staging
-
-1. Deploy Aurora with `data-test-id` templates and cleared `data/cache/templates-*.cache`.
-2. Test accounts need Mail (IMAP), Contacts, and Files.
-3. On the runner:
-
-```bash
-cd modules/CoreWebclient/test/e2e
+cd modules/CoreWebclient
 yarn
 yarn test:e2e:install-browsers
-cp .env.e2e.example .env.e2e
+cp test/e2e/.env.e2e.example test/e2e/.env.e2e
 ```
 
-4. Set in `.env.e2e`:
+4. In `.env.e2e`:
 
 ```bash
-PLAYWRIGHT_BASE_URL=https://your-staging.example/
-E2E_LOGIN_0=staging-user-0@example.com
-E2E_PASSWORD_0=...
-E2E_LOGIN_1=staging-user-1@example.com
-E2E_PASSWORD_1=...
+PLAYWRIGHT_BASE_URL=https://your-staging.example/subdir/
+E2E_LOGIN_PRIMARY=...
+E2E_PASSWORD_PRIMARY=...
+E2E_LOGIN_SECONDARY=...
+E2E_PASSWORD_SECONDARY=...
+E2E_LOGIN_RESERVE=...
+E2E_PASSWORD_RESERVE=...
 ```
 
-5. Run `yarn test:e2e_local` / `yarn test:e2e:report`.
+5. `yarn test:e2e` / `yarn test:e2e:report`.
 
-## Tests by module
+---
 
-| Module | Specs |
-|--------|--------|
-| `StandardLoginFormWebclient` | `login-page`, `login`, `auth-actions` |
-| `MailWebclient` | `mail*`, `compose*` |
-| `ContactsWebclient` | `contacts*` |
-| `FilesWebclient` | `files*` |
-| `SettingsWebclient` | `settings*` |
+## Command cheat sheet
 
-| Spec | What it checks |
-|------|----------------|
-| `login-page.spec.js` | Login form is visible |
-| `login.spec.js` | Full login (Turnstile + credentials) |
-| `auth-actions.spec.js` | Invalid password; forgot-password → back; logout→re-login; password visibility toggle |
-| `mail.spec.js` | Inbox → open first message; sender/reply chrome |
-| `mail-actions.spec.js` | Message UI: details, star, reply / reply-all / forward open, search |
-| `mail-folders.spec.js` | Sidebar → Inbox / Sent / Trash / Spam |
-| `mail-mutations.spec.js` | Headers, move, spam / not spam, delete, send reply/forward, advanced search |
-| `mail-list-actions.spec.js` | Unseen filter + clear; Starred; checkbox bulk delete; empty Trash |
-| `mail-attachments.spec.js` | Compose + attach file → send → open in Sent → attachment list |
-| `compose.spec.js` | Compose + send to `E2E_COMPOSE_TO` (or self) → Sent |
-| `compose-draft.spec.js` | Save draft → reopen; send opened draft → Sent; unsaved close minimizes then save-and-close |
-| `compose-cc-bcc.spec.js` | Show CC/BCC, fill recipients, discard without sending |
-| `mail-forward-resend.spec.js` | Forward as Attachment → compose; Resend → compose (when available) |
-| `contacts.spec.js` | Contacts → open card; create contact |
-| `contacts-actions.spec.js` | Storages switch, search, create/edit/delete, group CRUD, compose from email, share/unshare, find in mail |
-| `contacts-select-actions.spec.js` | Checkbox bulk delete; multi-select compose; assign to group; rename group |
-| `contacts-extra-actions.spec.js` | Team storage browse; compose from contact email |
-| `files.spec.js` | Files → select item; create folder + upload |
-| `files-actions.spec.js` | Storages, search, upload+delete, rename, public link, move (cut/paste), create folder |
-| `files-select-actions.spec.js` | Copy into folder (original remains); multi-select bulk delete; share with teammates; leave share |
-| `files-extra-actions.spec.js` | Copy into folder; file download; rename folder |
-| `settings.spec.js` | Settings (+ first tab) → logout → login form |
-| `settings-actions.spec.js` | Every settings tab; OpenPGP; Paranoid Encryption; Add account (if visible) |
-| `settings-auth.spec.js` | OpenPGP generate control; OpenPGP toggle; Paranoid controls visible |
+| Where | Command | What it does |
+|-------|---------|--------------|
+| `CoreWebclient` | `yarn` | Install deps (including Playwright) |
+| `CoreWebclient` | `yarn test:e2e:install-browsers` | Chromium + Firefox + WebKit |
+| `CoreWebclient` | `yarn test:e2e` | Full run |
+| `CoreWebclient` | `yarn test:e2e:ui` | UI Mode |
+| `CoreWebclient` | `yarn test:e2e:report` | Open HTML report |
+| Install root | `yarn test:e2e-desktop` | Scan + run via `run.sh` |
+| Install root | `yarn test:e2e-desktop:*` | Same ui / report / install-browsers |
 
-## Desktop UX notes (tests / helpers)
+---
 
-- Compose close with unsaved changes **minimizes** the popup; leave via `mail-compose-save-and-close`.
-- Drafts open compose on **double-click** (single click only previews).
-- Recipients (To / CC / BCC) use inputosaurus: fill + Enter.
-- Folder sidebar: `[data-test-id="mail-folder"][data-folder-type="inbox|sent|…"]`.
-- Multi-select: checkboxes (mail/contacts); files often Ctrl/Meta+click.
-- Confirm popup (`confirm-ok`) is optional on some delete paths; helpers use soft confirm.
-- Toolbar actions with duplicate IDs: prefer visible, non-disabled control.
-
-## Intentional skips
-
-- Empty inbox / contacts / files storage
-- `login-password-toggle` absent
-- Forgot-password / OpenPGP / Paranoid / Add account / Share / Resend / Forward-as-attachment when missing
-- Multi-select email toolbar when `contacts-select-email` is missing
-- Headers when the popup window does not open
-- Cut/Copy/Paste when the FilesCutCopyPaste plugin is off
-
-## Known product bugs
-
-None recorded yet. If a scenario fails on a real product bug, keep the
-assertion red and document it here (do not work around in the test).

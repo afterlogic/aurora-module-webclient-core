@@ -1,98 +1,90 @@
 /**
- * Per-worker account pool for parallel E2E.
+ * Role-based accounts for desktop E2E (see .env.e2e.example).
  *
- * Prefer indexed accounts in `.env.e2e`:
- *   E2E_LOGIN_0 / E2E_PASSWORD_0
- *   E2E_LOGIN_1 / E2E_PASSWORD_1
- *   …
- * Fallback: single E2E_LOGIN / E2E_PASSWORD (forces safe workers: 1).
+ *   E2E_LOGIN_PRIMARY / E2E_PASSWORD_PRIMARY   — default login (mutations)
+ *   E2E_LOGIN_SECONDARY / E2E_PASSWORD_SECONDARY — sharing / multi-user flows
+ *   E2E_LOGIN_RESERVE / E2E_PASSWORD_RESERVE   — permissions / ACL scenarios
  *
- * Worker N uses account N % poolSize (via TEST_PARALLEL_INDEX).
+ * Parallel workers stay at 1 by default (PLAYWRIGHT_WORKERS). Roles are for
+ * intentional multi-user steps inside a test, not for worker isolation.
  */
 
-function loadAccountPool() {
-  const pool = []
-  for (let i = 0; i < 16; i++) {
-    const login = process.env[`E2E_LOGIN_${i}`]
-    const password = process.env[`E2E_PASSWORD_${i}`]
-    if (login && password) {
-      pool.push({ login, password })
-    }
+function pair(loginKey, passwordKey) {
+  const login = process.env[loginKey]
+  const password = process.env[passwordKey]
+  if (login && password) {
+    return { login, password }
   }
-  if (pool.length > 0) {
-    return pool
-  }
-  if (process.env.E2E_LOGIN && process.env.E2E_PASSWORD) {
-    return [
-      {
-        login: process.env.E2E_LOGIN,
-        password: process.env.E2E_PASSWORD,
-      },
-    ]
-  }
-  return []
+  return null
 }
 
-function accountPoolSize() {
-  return loadAccountPool().length
+function getPrimaryCredentials() {
+  const creds = pair('E2E_LOGIN_PRIMARY', 'E2E_PASSWORD_PRIMARY')
+  if (!creds) {
+    throw new Error(
+      'Set E2E_LOGIN_PRIMARY and E2E_PASSWORD_PRIMARY in test/e2e/.env.e2e'
+    )
+  }
+  return creds
+}
+
+/** Alias used by existing specs / login helper. */
+function getTestCredentials() {
+  return getPrimaryCredentials()
+}
+
+function getSecondaryCredentials() {
+  const creds = pair('E2E_LOGIN_SECONDARY', 'E2E_PASSWORD_SECONDARY')
+  if (!creds) {
+    throw new Error(
+      'Set E2E_LOGIN_SECONDARY and E2E_PASSWORD_SECONDARY in test/e2e/.env.e2e'
+    )
+  }
+  return creds
+}
+
+function getReserveCredentials() {
+  const creds = pair('E2E_LOGIN_RESERVE', 'E2E_PASSWORD_RESERVE')
+  if (!creds) {
+    throw new Error(
+      'Set E2E_LOGIN_RESERVE and E2E_PASSWORD_RESERVE in test/e2e/.env.e2e'
+    )
+  }
+  return creds
 }
 
 function hasCredentials() {
-  return accountPoolSize() > 0
+  return !!(process.env.E2E_LOGIN_PRIMARY && process.env.E2E_PASSWORD_PRIMARY)
 }
 
-function getWorkerIndex() {
-  const raw = process.env.TEST_PARALLEL_INDEX
-  const index = raw === undefined || raw === '' ? 0 : Number(raw)
-  return Number.isFinite(index) && index >= 0 ? index : 0
+function hasSecondaryCredentials() {
+  return !!(
+    process.env.E2E_LOGIN_SECONDARY && process.env.E2E_PASSWORD_SECONDARY
+  )
 }
 
-/** Credentials for the current Playwright worker. */
-function getTestCredentials() {
-  const pool = loadAccountPool()
-  if (pool.length === 0) {
-    throw new Error(
-      'Set E2E_LOGIN_0/E2E_PASSWORD_0 (… ) or E2E_LOGIN/E2E_PASSWORD in .env.e2e'
-    )
-  }
-  return pool[getWorkerIndex() % pool.length]
+function hasReserveCredentials() {
+  return !!(process.env.E2E_LOGIN_RESERVE && process.env.E2E_PASSWORD_RESERVE)
 }
 
 /**
- * Compose recipient for the current worker.
- * E2E_COMPOSE_TO overrides (same for all workers — use only when intentional).
- * Otherwise send to the worker's own mailbox.
+ * Compose recipient for the default (primary) user.
+ * E2E_COMPOSE_TO overrides when set.
  */
 function getComposeTo() {
   if (process.env.E2E_COMPOSE_TO) {
     return process.env.E2E_COMPOSE_TO
   }
-  return getTestCredentials().login
-}
-
-/**
- * Default worker count: 2 when 2+ accounts exist (speed vs load), else 1.
- * Cap at pool size. Override with PLAYWRIGHT_WORKERS.
- */
-function resolveWorkerCount() {
-  const poolSize = Math.max(accountPoolSize(), 1)
-  const fromEnv = process.env.PLAYWRIGHT_WORKERS
-  if (fromEnv !== undefined && fromEnv !== '') {
-    const n = Number(fromEnv)
-    if (Number.isFinite(n) && n >= 1) {
-      return Math.min(Math.floor(n), poolSize)
-    }
-  }
-  const conservativeDefault = poolSize >= 2 ? 2 : 1
-  return Math.min(conservativeDefault, poolSize)
+  return getPrimaryCredentials().login
 }
 
 module.exports = {
-  loadAccountPool,
-  accountPoolSize,
-  hasCredentials,
-  getWorkerIndex,
+  getPrimaryCredentials,
   getTestCredentials,
+  getSecondaryCredentials,
+  getReserveCredentials,
+  hasCredentials,
+  hasSecondaryCredentials,
+  hasReserveCredentials,
   getComposeTo,
-  resolveWorkerCount,
 }

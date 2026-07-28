@@ -4,14 +4,15 @@ const path = require('path')
 const { defineConfig, devices } = require('@playwright/test')
 
 const e2eRoot = __dirname
-// CoreWebclient/test/e2e → install root (…/modules/CoreWebclient/test/e2e)
+// CoreWebclient/test/e2e → CoreWebclient → modules → install root
+const coreWebclientRoot = path.join(__dirname, '..', '..')
 const auroraRoot = path.join(__dirname, '..', '..', '..', '..')
 
 process.env.AURORA_E2E_ROOT = e2eRoot
 process.env.AURORA_ROOT = auroraRoot
 
-// Specs live under modules/*/test/e2e — resolve @playwright/test from the runner.
-const runnerNodeModules = path.join(e2eRoot, 'node_modules')
+// Specs live under modules/*/test/e2e — resolve @playwright/test from CoreWebclient.
+const runnerNodeModules = path.join(coreWebclientRoot, 'node_modules')
 const prevNodePath = process.env.NODE_PATH || ''
 if (!prevNodePath.split(path.delimiter).includes(runnerNodeModules)) {
   process.env.NODE_PATH = prevNodePath
@@ -38,8 +39,6 @@ function loadEnvE2e() {
 }
 
 loadEnvE2e()
-
-const { resolveWorkerCount } = require('./helpers/credentials')
 
 /**
  * Discover modules/<Name>/test/e2e that contain at least one *.spec.js.
@@ -71,8 +70,10 @@ function discoverModuleE2eDirs() {
 }
 
 const browsers = [
-  { name: 'Desktop Chrome', use: { ...devices['Desktop Chrome'] } },
-  { name: 'Desktop Firefox', use: { ...devices['Desktop Firefox'] } },
+  { name: 'Chrome', use: { ...devices['Desktop Chrome'] } },
+  { name: 'Firefox', use: { ...devices['Desktop Firefox'] } },
+  // Playwright WebKit (Safari engine) — not real Mobile Safari on a device.
+  { name: 'Safari', use: { ...devices['Desktop Safari'] } },
 ]
 
 const moduleDirs = discoverModuleE2eDirs()
@@ -99,18 +100,47 @@ if (projects.length === 0) {
 
 /**
  * Desktop E2E against a running Aurora instance (MAMP / staging).
- * Specs live in modules/<Webclient>/test/e2e/; this package is the runner.
- * Override URL: PLAYWRIGHT_BASE_URL=https://staging.example/
- * Workers: default 2 when 2+ accounts in .env.e2e; override PLAYWRIGHT_WORKERS.
+ * Specs: modules/<Webclient>/test/e2e/
+ * Deps / npm scripts: modules/CoreWebclient/package.json
+ *
+ * Override URL: PLAYWRIGHT_BASE_URL=https://staging.example/subdir/
+ * Workers: PLAYWRIGHT_WORKERS (default 1).
+ *
+ * For subdirectory installs always include a trailing slash. Helpers use
+ * page.goto('') (baseURL itself); goto('/') would hit the host root.
  */
-const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:8888/'
-const workers = resolveWorkerCount()
+function normalizeBaseUrl(url) {
+  try {
+    const u = new URL(url)
+    if (!u.pathname.endsWith('/')) {
+      u.pathname += '/'
+    }
+    return u.href
+  } catch {
+    return url.endsWith('/') ? url : `${url}/`
+  }
+}
+
+function resolveWorkers() {
+  const raw = process.env.PLAYWRIGHT_WORKERS
+  if (raw !== undefined && raw !== '') {
+    const n = Number(raw)
+    if (Number.isFinite(n) && n >= 1) {
+      return Math.floor(n)
+    }
+  }
+  return 1
+}
+
+const baseURL = normalizeBaseUrl(
+  process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:8888/'
+)
 
 module.exports = defineConfig({
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: 1,
-  workers,
+  workers: resolveWorkers(),
   timeout: 120000,
   expect: {
     timeout: 15000,
