@@ -172,17 +172,24 @@ function main() {
   playwrightArgs.push(...rest)
 
   const env = { ...process.env }
-  const nodeModules = path.join(coreRoot, 'node_modules')
+  const nodeModules = path.join(auroraRoot, 'node_modules')
   env.NODE_PATH = env.NODE_PATH
     ? `${nodeModules}${path.delimiter}${env.NODE_PATH}`
     : nodeModules
 
   const playwrightBin = path.join(
-    coreRoot,
-    'node_modules',
+    nodeModules,
     '.bin',
     process.platform === 'win32' ? 'playwright.cmd' : 'playwright'
   )
+
+  if (!fs.existsSync(playwrightBin)) {
+    console.error(
+      `Playwright not found at ${path.join(nodeModules, '@playwright/test')}`
+    )
+    console.error('From Aurora install root run: npm install')
+    process.exit(1)
+  }
 
   const result = spawnSync(playwrightBin, playwrightArgs, {
     cwd: coreRoot,

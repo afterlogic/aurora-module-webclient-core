@@ -1,18 +1,16 @@
 // @ts-check
 const fs = require('fs')
 const path = require('path')
-const { defineConfig, devices } = require('@playwright/test')
 
 const e2eRoot = __dirname
 // CoreWebclient/test/e2e → CoreWebclient → modules → install root
-const coreWebclientRoot = path.join(__dirname, '..', '..')
 const auroraRoot = path.join(__dirname, '..', '..', '..', '..')
 
 process.env.AURORA_E2E_ROOT = e2eRoot
 process.env.AURORA_ROOT = auroraRoot
 
-// Specs live under modules/*/test/e2e — resolve @playwright/test from CoreWebclient.
-const runnerNodeModules = path.join(coreWebclientRoot, 'node_modules')
+// Specs live under modules/*/test/e2e — resolve @playwright/test from install root.
+const runnerNodeModules = path.join(auroraRoot, 'node_modules')
 const prevNodePath = process.env.NODE_PATH || ''
 if (!prevNodePath.split(path.delimiter).includes(runnerNodeModules)) {
   process.env.NODE_PATH = prevNodePath
@@ -21,6 +19,8 @@ if (!prevNodePath.split(path.delimiter).includes(runnerNodeModules)) {
   // eslint-disable-next-line no-underscore-dangle
   require('module').Module._initPaths()
 }
+
+const { defineConfig, devices } = require('@playwright/test')
 
 function loadEnvE2e() {
   const envPath = path.join(e2eRoot, '.env.e2e')

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Discover modules/*/test/e2e with *.spec.js and run desktop Playwright suite.
-# Runner package: modules/CoreWebclient (deps + npm scripts).
+# Playwright package: Aurora install-root node_modules (@playwright/test).
 # Config / helpers / .env: modules/CoreWebclient/test/e2e/
 #
 # Usage (from Aurora install root):
@@ -9,14 +9,14 @@
 #   ./modules/CoreWebclient/test/e2e/run.sh -- --setup "MailWebclient Chrome"
 #
 # Env:
-#   SKIP_YARN_INSTALL=1
+#   SKIP_DEPS_INSTALL=1  (also accepts SKIP_YARN_INSTALL=1 for compatibility)
 
 set -uo pipefail
 
 E2E_DIR="$(cd "$(dirname "$0")" && pwd)"
 CORE_DIR="$(cd "$E2E_DIR/../.." && pwd)"
 ROOT="$(cd "$E2E_DIR/../../../.." && pwd)"
-SKIP_YARN_INSTALL="${SKIP_YARN_INSTALL:-0}"
+SKIP_DEPS_INSTALL="${SKIP_DEPS_INSTALL:-${SKIP_YARN_INSTALL:-0}}"
 
 echo "Scanning modules for test/e2e/*.spec.js ..."
 echo ""
@@ -48,19 +48,19 @@ if [ "$found" -eq 0 ]; then
     exit 1
 fi
 
-if [ "$SKIP_YARN_INSTALL" != "1" ]; then
-    if [ ! -d "$CORE_DIR/node_modules/@playwright/test" ]; then
-        echo "Installing CoreWebclient dependencies (includes Playwright)..."
-        (cd "$CORE_DIR" && yarn install) || exit 1
+if [ "$SKIP_DEPS_INSTALL" != "1" ]; then
+    if [ ! -d "$ROOT/node_modules/@playwright/test" ]; then
+        echo "Installing install-root dependencies (includes Playwright)..."
+        (cd "$ROOT" && npm install) || exit 1
     fi
-elif [ ! -d "$CORE_DIR/node_modules/@playwright/test" ]; then
-    echo "CoreWebclient/node_modules/@playwright/test missing (SKIP_YARN_INSTALL=1)"
-    echo "Run: cd modules/CoreWebclient && yarn"
+elif [ ! -d "$ROOT/node_modules/@playwright/test" ]; then
+    echo "Install-root node_modules/@playwright/test missing (SKIP_DEPS_INSTALL=1)"
+    echo "Run from install root: npm install"
     exit 1
 fi
 
 echo "----------------------------------------"
-echo "Running Playwright via CoreWebclient"
+echo "Running Playwright (desktop) via CoreWebclient config"
 echo "----------------------------------------"
 
 cd "$CORE_DIR"

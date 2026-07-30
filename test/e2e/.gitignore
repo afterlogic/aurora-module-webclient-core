@@ -1,5 +1,5 @@
 .env.e2e
-# Legacy nested install — deps live in modules/CoreWebclient/node_modules
+# Playwright lives in Aurora install-root node_modules; ignore accidental local installs
 node_modules/
 playwright-report/
 test-results/

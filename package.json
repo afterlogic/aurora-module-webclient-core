@@ -44,7 +44,6 @@
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.21.3",
     "@babel/preset-env": "^7.5.5",
-    "@playwright/test": "^1.49.0",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "babel-loader": "^8.0.6",
@@ -66,9 +65,9 @@
     "vue-cli-plugin-quasar": "~5.0.2"
   },
   "scripts": {
-    "test:e2e": "NODE_PATH=./node_modules node test/e2e/scripts/run-e2e.js",
-    "test:e2e:ui": "NODE_PATH=./node_modules node test/e2e/scripts/run-e2e.js --ui",
-    "test:e2e:report": "playwright show-report test/e2e/playwright-report",
-    "test:e2e:install-browsers": "playwright install chromium firefox webkit"
+    "test:e2e": "node test/e2e/scripts/run-e2e.js",
+    "test:e2e:ui": "node test/e2e/scripts/run-e2e.js --ui",
+    "test:e2e:report": "node test/e2e/scripts/playwright-cli.js show-report test/e2e/playwright-report",
+    "test:e2e:install-browsers": "node test/e2e/scripts/playwright-cli.js install chromium firefox webkit"
   }
 }

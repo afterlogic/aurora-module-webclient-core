@@ -9,19 +9,20 @@ This document covers layout, setup, how to run, and every relevant environment v
 ## Layout
 
 ```text
-modules/CoreWebclient/package.json          ← @playwright/test + npm scripts test:e2e*
+package.json (install root)                 ← @playwright/test + yarn test:e2e-desktop*
 modules/CoreWebclient/test/e2e/             ← config, helpers, .env, reports, run.sh
+modules/CoreWebclient/package.json          ← convenience scripts test:e2e* (use root Playwright)
 modules/<WebclientModule>/test/e2e/*.spec.js ← scenarios for that module
 ```
 
 | Piece | Responsibility |
 |-------|----------------|
-| `CoreWebclient/package.json` | Playwright dependency and `yarn test:e2e*` scripts |
+| Install-root `package.json` | `@playwright/test` and `yarn test:e2e-desktop*` |
+| `CoreWebclient` scripts | Thin wrappers; Playwright binary comes from install root |
 | `test/e2e/playwright.config.js` | Spec discovery, browsers, baseURL, workers, retries |
 | `test/e2e/helpers/` | Login, credentials, ready waits, shared helper paths |
 | `test/e2e/.env.e2e` | Stand URL and test accounts (gitignored) |
 | `modules/*/test/e2e/*.spec.js` | Mail / Contacts / Login / … scenarios |
-| Install-root `package.json` | Wrappers `yarn test:e2e-desktop*` |
 
 The config **auto-discovers** every `modules/*/test/e2e` that contains `*.spec.js` (skips `*Mobile*` and `CoreWebclient` itself). Add specs under a module — no config edit required.
 
@@ -51,28 +52,29 @@ npm run js:min   # required when UseAppMinJs is true (loads app.min.js)
 
 ## Setup (first time)
 
-### 1. Install module dependencies (do this first)
+### 1. Install Playwright at the Aurora install root
 
 ```bash
-cd modules/CoreWebclient
-yarn
+# from install root
+npm install
 ```
 
-This installs CoreWebclient deps, including `@playwright/test` from `devDependencies`.
+This installs `@playwright/test` from root `devDependencies` into `node_modules/`.
 
 ### 2. Download Playwright browsers
 
 ```bash
-# from modules/CoreWebclient
-yarn test:e2e:install-browsers
+# from install root
+yarn test:e2e-desktop:install-browsers
 ```
 
 Installs **Chromium**, **Firefox**, and **WebKit** (Safari engine).
 
-Or from the install root:
+Same via CoreWebclient wrappers (still need root `node_modules`):
 
 ```bash
-yarn test:e2e-desktop:install-browsers
+cd modules/CoreWebclient
+yarn test:e2e:install-browsers
 ```
 
 ### 3. Create `.env.e2e`
@@ -100,7 +102,7 @@ cp .env.e2e.example .env.e2e
 | `E2E_LOGIN_RESERVE` | for ACL scenarios | User with different permissions |
 | `E2E_PASSWORD_RESERVE` | for ACL scenarios | |
 | `E2E_COMPOSE_TO` | no | Compose recipient (default = PRIMARY login) |
-| `SKIP_YARN_INSTALL` | no | For `run.sh`: `1` = skip `yarn` (CI already installed deps) |
+| `SKIP_DEPS_INSTALL` | no | For `run.sh`: `1` = skip `npm install` (CI already installed root deps). Alias: `SKIP_YARN_INSTALL`. |
 
 ### URL and subdirectories
 
@@ -125,9 +127,18 @@ Helpers in `helpers/credentials.js`: `getPrimaryCredentials()` / `getTestCredent
 
 ## Run
 
-Use **Yarn classic 1.x** and **Node 18 or 22**.
+Use **Node 18 or 22**. Playwright lives in the **install-root** `node_modules`.
 
-### From `modules/CoreWebclient`
+### From the install root (preferred)
+
+```bash
+yarn test:e2e-desktop                 # run.sh: scan modules + yarn test:e2e
+yarn test:e2e-desktop:ui
+yarn test:e2e-desktop:report
+yarn test:e2e-desktop:install-browsers
+```
+
+### From `modules/CoreWebclient` (wrappers)
 
 ```bash
 cd modules/CoreWebclient
@@ -135,6 +146,8 @@ yarn test:e2e
 yarn test:e2e:ui
 yarn test:e2e:report
 ```
+
+Requires install-root `node_modules/@playwright/test` (run `npm install` at root first).
 
 ### UI Mode (`yarn test:e2e:ui`)
 
@@ -147,22 +160,13 @@ cd modules/CoreWebclient
 yarn test:e2e:ui --setup "StandardLoginFormWebclient Chrome" login-page.spec.js
 ```
 
-If the UI opens but a run fails immediately with “Executable doesn't exist” / “Please run … playwright install”, browsers for **this** `@playwright/test` version are missing. From `modules/CoreWebclient` only:
+If the UI opens but a run fails immediately with “Executable doesn't exist” / “Please run … playwright install”, browsers for **this** `@playwright/test` version are missing. From the **install root**:
 
 ```bash
-yarn test:e2e:install-browsers
+yarn test:e2e-desktop:install-browsers
 ```
 
 Do **not** rely on a bare `npx playwright install` from another directory — that can install browsers for a different Playwright version.
-
-### From the install root
-
-```bash
-yarn test:e2e-desktop                 # run.sh: scan modules + yarn test:e2e
-yarn test:e2e-desktop:ui
-yarn test:e2e-desktop:report
-yarn test:e2e-desktop:install-browsers
-```
 
 ### One module / one browser / one file
 
@@ -267,10 +271,10 @@ Report files live in `modules/CoreWebclient/test/e2e/playwright-report/`.
 3. On the runner machine:
 
 ```bash
-cd modules/CoreWebclient
-yarn
-yarn test:e2e:install-browsers
-cp test/e2e/.env.e2e.example test/e2e/.env.e2e
+# from install root
+npm install
+yarn test:e2e-desktop:install-browsers
+cp modules/CoreWebclient/test/e2e/.env.e2e.example modules/CoreWebclient/test/e2e/.env.e2e
 ```
 
 4. In `.env.e2e`:
@@ -285,7 +289,7 @@ E2E_LOGIN_RESERVE=...
 E2E_PASSWORD_RESERVE=...
 ```
 
-5. `yarn test:e2e` / `yarn test:e2e:report`.
+5. `yarn test:e2e-desktop` / `yarn test:e2e-desktop:report`.
 
 ---
 
@@ -293,13 +297,13 @@ E2E_PASSWORD_RESERVE=...
 
 | Where | Command | What it does |
 |-------|---------|--------------|
-| `CoreWebclient` | `yarn` | Install deps (including Playwright) |
-| `CoreWebclient` | `yarn test:e2e:install-browsers` | Chromium + Firefox + WebKit |
-| `CoreWebclient` | `yarn test:e2e` | Full run |
+| Install root | `npm install` | Install deps (including Playwright) |
+| Install root | `yarn test:e2e-desktop:install-browsers` | Chromium + Firefox + WebKit |
+| Install root | `yarn test:e2e-desktop` | Scan + run via `run.sh` |
+| Install root | `yarn test:e2e-desktop:*` | ui / report / install-browsers |
+| `CoreWebclient` | `yarn test:e2e` | Full run (needs root Playwright) |
 | `CoreWebclient` | `yarn test:e2e:ui` | UI Mode |
 | `CoreWebclient` | `yarn test:e2e:report` | Open HTML report |
-| Install root | `yarn test:e2e-desktop` | Scan + run via `run.sh` |
-| Install root | `yarn test:e2e-desktop:*` | Same ui / report / install-browsers |
 
 ---
 
