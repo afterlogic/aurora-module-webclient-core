@@ -4,6 +4,38 @@ Automated tests for the classic **desktop** UI (Knockout). Selectors use `data-t
 
 This document covers layout, setup, how to run, and every relevant environment variable.
 
+# Quick up and running
+
+`cd` into project root (aurora root)
+
+Then:
+
+```bash
+npm install
+```
+
+```bash
+cp modules/CoreWebclient/test/e2e/.env.e2e.example modules/CoreWebclient/test/e2e/.env.e2e
+```
+
+__FILL ALL THE FIELDS IN `.env.e2e`__
+
+```bash
+npm install -g yarn
+```
+
+```bash
+npx playwright install-deps
+```
+
+```bash
+npm run test:e2e-desktop:install-browsers
+```
+
+```bash
+npm run test:e2e-desktop
+```
+
 ---
 
 ## Layout
