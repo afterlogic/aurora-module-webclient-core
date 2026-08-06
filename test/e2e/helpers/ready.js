@@ -97,15 +97,43 @@ async function clickReady(locator, options = {}) {
   await locator.click(options.clickOptions || {})
 }
 
-/** Header tab: data-test-id on the tab wrapper, click inner a.link. */
+/**
+ * Header tab: data-test-id on the tab wrapper, click inner element.
+ *
+ * Inner click target is variant-aware:
+ *   desktop — a.link (classic Knockout nav item)
+ *   next    — a, button, [role="button"] (Vue SPA router-link or button)
+ *
+ * Strategy: first ensure the wrapper is visible, then click the best available
+ * target.  Playwright's visibility check on deeply nested elements can be flaky
+ * with Vite's incremental DOM — fall back to clicking the wrapper directly.
+ */
 async function clickNav(page, testId) {
-  await clickReady(page.getByTestId(testId).locator('a.link').first())
+  const wrapper = page.getByTestId(testId)
+
+  // Ensure the nav tab itself is rendered and visible.
+  await expect(wrapper).toBeVisible({ timeout: 15000 })
+
+  // Quick probe: is there a clickable child we should prefer?
+  const innerSelector = 'a.link, a, button, [role="button"]'
+  const inner = wrapper.locator(innerSelector).first()
+  const innerVisible = await inner
+    .isVisible({ timeout: 3000 })
+    .catch(() => false)
+
+  await (innerVisible ? inner : wrapper).click()
 }
 
 /** ConfirmPopup OK when present (many desktop deletes skip the dialog). */
 async function confirmOkIfVisible(page, timeout = 15000) {
   const confirmOk = page.getByTestId('confirm-ok')
-  if (await confirmOk.isVisible({ timeout }).catch(() => false)) {
+  // isVisible() does not actually wait/poll (Playwright ignores its timeout
+  // option) — use waitFor so a popup that renders a beat late isn't missed.
+  const appeared = await confirmOk
+    .waitFor({ state: 'visible', timeout })
+    .then(() => true)
+    .catch(() => false)
+  if (appeared) {
     await clickReady(confirmOk)
     await expect(confirmOk)
       .toBeHidden({ timeout: 45000 })

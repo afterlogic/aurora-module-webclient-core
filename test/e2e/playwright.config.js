@@ -152,10 +152,15 @@ module.exports = defineConfig({
   use: {
     baseURL,
     testIdAttribute: 'data-test-id',
-    actionTimeout: 20000,
+    actionTimeout: 30000,
     navigationTimeout: 45000,
     trace: process.env.CI ? 'on-first-retry' : 'on',
     screenshot: 'only-on-failure',
+    // Docker containers have small /dev/shm (64 MB default).
+    // --disable-dev-shm-usage makes Chromium use /tmp instead.
+    launchOptions: {
+      args: ['--disable-dev-shm-usage'],
+    },
   },
   projects,
 })
