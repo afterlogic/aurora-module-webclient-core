@@ -5,6 +5,7 @@ const {
   getComposeTo,
 } = require('./credentials')
 const { initVariant, sel, navId, isSPA, isTraditional } = require('./app-variant')
+const { T } = require('./timeouts')
 
 /** Named step: shows in console + HTML report. */
 async function step(title, fn) {
@@ -18,9 +19,9 @@ async function attachScreenshot(page, name) {
   // Use an explicit 30 s timeout; fall back to viewport screenshot on timeout.
   let body
   try {
-    body = await page.screenshot({ fullPage: true, timeout: 30000 })
+    body = await page.screenshot({ fullPage: true, timeout: T(30000) })
   } catch {
-    body = await page.screenshot({ timeout: 10000 })
+    body = await page.screenshot({ timeout: T(10000) })
   }
   await test.info().attach(name, { body, contentType: 'image/png' })
   console.log(`  → screenshot: ${name}`)
@@ -46,7 +47,11 @@ async function waitForTurnstileToken(page) {
           '.cf-turnstile, .turnstile-place-cover, iframe[src*="challenges.cloudflare.com"]'
         )
       },
-      { timeout: 8000 }
+      // waitForFunction(pageFunction, arg, options) — arg must be explicit or
+      // the "options" object is passed as arg instead, silently discarding
+      // the timeout and falling back to the default actionTimeout.
+      undefined,
+      { timeout: T(8000) }
     )
     .then(() => true)
     .catch(() => false)
@@ -63,7 +68,8 @@ async function waitForTurnstileToken(page) {
         return false
       }
     },
-    { timeout: 45000 }
+    undefined,
+    { timeout: T(45000) }
   )
 }
 
@@ -89,7 +95,7 @@ async function loginAsTestUser(page) {
     // Vite dev server may return a blank page on cold start — short probe first.
     const appeared = await page
       .getByTestId(sel('loginEmail'))
-      .waitFor({ state: 'visible', timeout: isSPA() ? 8000 : 30000 })
+      .waitFor({ state: 'visible', timeout: T(isSPA() ? 8000 : 30000) })
       .then(() => true)
       .catch(() => false)
 
@@ -98,7 +104,7 @@ async function loginAsTestUser(page) {
       await page.goto('', { waitUntil: 'domcontentloaded' })
       await page.getByTestId(sel('loginEmail')).waitFor({
         state: 'visible',
-        timeout: 30000,
+        timeout: T(30000),
       })
     }
 
@@ -117,7 +123,7 @@ async function loginAsTestUser(page) {
 
   await step('Submit login form', async () => {
     await expect(page.getByTestId(sel('loginSubmit'))).toBeEnabled({
-      timeout: 10000,
+      timeout: T(10000),
     })
 
     // Always race click + waitForNavigation.
@@ -126,7 +132,7 @@ async function loginAsTestUser(page) {
     //   .catch(() => null) makes navigation-wait non-fatal for SPA.
     await Promise.all([
       page
-        .waitForNavigation({ waitUntil: 'domcontentloaded', timeout: 45000 })
+        .waitForNavigation({ waitUntil: 'domcontentloaded', timeout: T(45000) })
         .catch(() => null),
       page.getByTestId(sel('loginSubmit')).click(),
     ])
@@ -143,18 +149,18 @@ async function loginAsTestUser(page) {
     // Wait for header tabs (or its equivalent).
     await page.getByTestId(header).waitFor({
       state: 'visible',
-      timeout: 45000,
+      timeout: T(45000),
     })
 
     // Confirm login form is gone.
     await expect(page.getByTestId(sel('loginEmail'))).not.toBeVisible({
-      timeout: 15000,
+      timeout: T(15000),
     })
 
     if (isTraditional()) {
       // Desktop: nav-mail proves the full shell is ready.
       await expect(page.getByTestId(navId('mail'))).toBeVisible({
-        timeout: 30000,
+        timeout: T(30000),
       })
     }
     // Next / SPA: header-tabs + login-form-gone is sufficient.

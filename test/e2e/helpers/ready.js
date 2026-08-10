@@ -1,4 +1,5 @@
 const { expect } = require('@playwright/test')
+const { T } = require('./timeouts')
 
 /**
  * Wait until a list finished loading: items appeared, or empty-state stayed
@@ -14,6 +15,7 @@ async function waitForListReady(
     emptySettleMs = 2000,
   }
 ) {
+  timeout = T(timeout)
   const ids = Array.isArray(itemTestIds) ? itemTestIds : [itemTestIds]
   let emptySince = null
 
@@ -46,24 +48,20 @@ async function waitForListReady(
           return 'items'
         }
 
-        const emptyVisible = emptyTestId
-          ? await page
-              .getByTestId(emptyTestId)
-              .isVisible()
-              .catch(() => false)
-          : false
-
-        if (emptyVisible) {
-          if (emptySince == null) {
-            emptySince = Date.now()
-          }
-          if (Date.now() - emptySince >= emptySettleMs) {
-            return 'empty'
-          }
-          return 'pending'
+        // No spinner and no items already means the list is done loading
+        // with nothing to show — don't hard-require the decorative
+        // emptyTestId marker on top of that. Some empty-state branches
+        // (e.g. "no results for this search", in both legacy's
+        // ContactsView.html and next's ContactsListPanel.vue) render
+        // without any data-test-id at all, which used to strand this in
+        // 'pending' forever whenever that specific branch was the one
+        // showing. Still settle for emptySettleMs to avoid a pre-fetch flash.
+        if (emptySince == null) {
+          emptySince = Date.now()
         }
-
-        emptySince = null
+        if (Date.now() - emptySince >= emptySettleMs) {
+          return 'empty'
+        }
         return 'pending'
       },
       { timeout, intervals: [200, 400, 800] }
@@ -85,7 +83,7 @@ async function waitForListReadySoft(
   } catch {
     if (listVisibleTestId) {
       await expect(page.getByTestId(listVisibleTestId)).toBeVisible({
-        timeout: 5000,
+        timeout: T(5000),
       })
     }
   }
@@ -93,7 +91,7 @@ async function waitForListReadySoft(
 
 /** Click only after the locator is visible. */
 async function clickReady(locator, options = {}) {
-  await expect(locator).toBeVisible({ timeout: options.timeout || 30000 })
+  await expect(locator).toBeVisible({ timeout: T(options.timeout || 30000) })
   await locator.click(options.clickOptions || {})
 }
 
@@ -112,16 +110,33 @@ async function clickNav(page, testId) {
   const wrapper = page.getByTestId(testId)
 
   // Ensure the nav tab itself is rendered and visible.
-  await expect(wrapper).toBeVisible({ timeout: 15000 })
+  await expect(wrapper).toBeVisible({ timeout: T(15000) })
 
   // Quick probe: is there a clickable child we should prefer?
   const innerSelector = 'a.link, a, button, [role="button"]'
   const inner = wrapper.locator(innerSelector).first()
   const innerVisible = await inner
-    .isVisible({ timeout: 3000 })
+    .isVisible({ timeout: T(3000) })
+    .catch(() => false)
+  const target = innerVisible ? inner : wrapper
+
+  await target.click()
+
+  // Both apps mark the active tab wrapper with a `current` CSS class
+  // (legacy: HeaderItemView.html `css: {current: isCurrent}`; next:
+  // AppHeaderLinkItem.vue `:class="{ current: isCurrent }"` — same
+  // data-test-id element). Occasionally a first click right after login
+  // lands with no observable effect (no route change, no network call) —
+  // cause not pinned down, but retrying the click is a safe, cheap
+  // mitigation since it's idempotent (re-clicking the same tab is a noop).
+  const becameCurrent = await expect(wrapper)
+    .toHaveClass(/current/, { timeout: T(4000) })
+    .then(() => true)
     .catch(() => false)
 
-  await (innerVisible ? inner : wrapper).click()
+  if (!becameCurrent) {
+    await target.click().catch(() => undefined)
+  }
 }
 
 /** ConfirmPopup OK when present (many desktop deletes skip the dialog). */
@@ -130,13 +145,13 @@ async function confirmOkIfVisible(page, timeout = 15000) {
   // isVisible() does not actually wait/poll (Playwright ignores its timeout
   // option) — use waitFor so a popup that renders a beat late isn't missed.
   const appeared = await confirmOk
-    .waitFor({ state: 'visible', timeout })
+    .waitFor({ state: 'visible', timeout: T(timeout) })
     .then(() => true)
     .catch(() => false)
   if (appeared) {
     await clickReady(confirmOk)
     await expect(confirmOk)
-      .toBeHidden({ timeout: 45000 })
+      .toBeHidden({ timeout: T(45000) })
       .catch(() => undefined)
   }
 }

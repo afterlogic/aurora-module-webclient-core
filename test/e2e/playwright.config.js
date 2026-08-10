@@ -136,14 +136,24 @@ const baseURL = normalizeBaseUrl(
   process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:8888/'
 )
 
+const { T } = require('./helpers/timeouts')
+
+function resolveRetries() {
+  const raw = Number(process.env.E2E_RETRIES)
+  if (Number.isFinite(raw) && raw >= 0) {
+    return raw
+  }
+  return 1
+}
+
 module.exports = defineConfig({
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: 1,
+  retries: resolveRetries(),
   workers: resolveWorkers(),
-  timeout: 120000,
+  timeout: T(120000),
   expect: {
-    timeout: 15000,
+    timeout: T(15000),
   },
   reporter: [
     ['list', { printSteps: true }],
@@ -152,8 +162,8 @@ module.exports = defineConfig({
   use: {
     baseURL,
     testIdAttribute: 'data-test-id',
-    actionTimeout: 30000,
-    navigationTimeout: 45000,
+    actionTimeout: T(30000),
+    navigationTimeout: T(45000),
     trace: process.env.CI ? 'on-first-retry' : 'on',
     screenshot: 'only-on-failure',
     // Docker containers have small /dev/shm (64 MB default).
