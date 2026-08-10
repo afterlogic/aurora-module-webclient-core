@@ -195,6 +195,7 @@ function main() {
     cwd: coreRoot,
     env,
     stdio: 'inherit',
+    shell: process.platform === 'win32',
   })
 
   if (result.error) {

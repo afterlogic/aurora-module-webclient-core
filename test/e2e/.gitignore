@@ -1,4 +1,5 @@
 .env.e2e
+.auth/
 # Playwright lives in Aurora install-root node_modules; ignore accidental local installs
 node_modules/
 playwright-report/

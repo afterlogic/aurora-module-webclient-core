@@ -5,18 +5,18 @@
 #
 # Usage (from Aurora install root):
 #   ./modules/CoreWebclient/test/e2e/run.sh
-#   yarn test:e2e-desktop
+#   npm run test:e2e-desktop
 #   ./modules/CoreWebclient/test/e2e/run.sh -- --setup "MailWebclient Chrome"
 #
 # Env:
-#   SKIP_DEPS_INSTALL=1  (also accepts SKIP_YARN_INSTALL=1 for compatibility)
+#   SKIP_DEPS_INSTALL=1  (also accepts SKIP_NPM_INSTALL=1 for compatibility)
 
 set -uo pipefail
 
 E2E_DIR="$(cd "$(dirname "$0")" && pwd)"
 CORE_DIR="$(cd "$E2E_DIR/../.." && pwd)"
 ROOT="$(cd "$E2E_DIR/../../../.." && pwd)"
-SKIP_DEPS_INSTALL="${SKIP_DEPS_INSTALL:-${SKIP_YARN_INSTALL:-0}}"
+SKIP_DEPS_INSTALL="${SKIP_DEPS_INSTALL:-${SKIP_NPM_INSTALL:-0}}"
 
 echo "Scanning modules for test/e2e/*.spec.js ..."
 echo ""
@@ -67,4 +67,4 @@ cd "$CORE_DIR"
 if [ "${1:-}" = "--" ]; then
     shift
 fi
-yarn test:e2e "$@"
+npm run test:e2e "$@"
