@@ -70,7 +70,18 @@ function discoverModuleE2eDirs() {
 }
 
 const browsers = [
-  { name: 'Chrome', use: { ...devices['Desktop Chrome'] } },
+  {
+    name: 'Chrome',
+    use: {
+      ...devices['Desktop Chrome'],
+      // Docker containers have small /dev/shm (64 MB default).
+      // --disable-dev-shm-usage makes Chromium use /tmp instead.
+      // Chromium-only flag: Firefox silently ignores it, but WebKit's
+      // launcher hard-rejects unknown args ("Cannot parse arguments") and
+      // exits immediately, so this must not go in the shared/global `use`.
+      launchOptions: { args: ['--disable-dev-shm-usage'] },
+    },
+  },
   { name: 'Firefox', use: { ...devices['Desktop Firefox'] } },
   // Playwright WebKit (Safari engine) — not real Mobile Safari on a device.
   { name: 'Safari', use: { ...devices['Desktop Safari'] } },
@@ -166,11 +177,6 @@ module.exports = defineConfig({
     navigationTimeout: T(45000),
     trace: process.env.CI ? 'on-first-retry' : 'on',
     screenshot: 'only-on-failure',
-    // Docker containers have small /dev/shm (64 MB default).
-    // --disable-dev-shm-usage makes Chromium use /tmp instead.
-    launchOptions: {
-      args: ['--disable-dev-shm-usage'],
-    },
   },
   projects,
 })
