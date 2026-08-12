@@ -89,15 +89,33 @@ const browsers = [
 
 const moduleDirs = discoverModuleE2eDirs()
 
+// One authenticated storageState per browser engine (cookies/localStorage
+// aren't shared across engines). Each module project depends on the setup
+// project for its own browser, so `--project` filters still pull it in.
+const authDir = path.join(e2eRoot, '.auth')
+
 /** @type {import('@playwright/test').Project[]} */
 const projects = []
 for (const browser of browsers) {
+  const setupProjectName = `auth setup · ${browser.name}`
+
+  projects.push({
+    name: setupProjectName,
+    testDir: e2eRoot,
+    testMatch: /auth\.setup\.js/,
+    use: { ...browser.use },
+  })
+
   for (const { moduleName, testDir } of moduleDirs) {
     projects.push({
       name: `${moduleName} · ${browser.name}`,
       testDir,
       testMatch: '*.spec.js',
-      use: { ...browser.use },
+      use: {
+        ...browser.use,
+        storageState: path.join(authDir, `${browser.name}.json`),
+      },
+      dependencies: [setupProjectName],
     })
   }
 }

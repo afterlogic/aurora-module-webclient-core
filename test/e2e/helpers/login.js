@@ -33,11 +33,78 @@ function fieldControl(page, testId) {
   )
 }
 
+const TURNSTILE_MODULE = 'CloudflareTurnstileWebclientPlugin'
+
+/** Mirrors next/src/commons/utils/parseApiResponse.ts (tolerates a non-JSON prefix). */
+function parseApiResponseText(text) {
+  const trimmed = text.trim()
+  try {
+    return JSON.parse(trimmed)
+  } catch {
+    const start = trimmed.indexOf('{')
+    const end = trimmed.lastIndexOf('}')
+    if (start === -1 || end === -1 || end <= start) {
+      return null
+    }
+    try {
+      return JSON.parse(trimmed.slice(start, end + 1))
+    } catch {
+      return null
+    }
+  }
+}
+
 /**
- * Wait for Cloudflare Turnstile token when the plugin is active.
+ * Arm a listener for the bootstrap `Core/GetAppdata` response *before*
+ * navigating. next/Vue fires this request immediately on app mount
+ * (main.ts → loadBootstrapData()) — arming after goto() can miss it.
+ * Resolves to null on desktop (no such request) or on timeout.
+ */
+function armAppDataResponse(page) {
+  return page
+    .waitForResponse(
+      (res) =>
+        res.request().method() === 'POST' &&
+        (res.request().postData() || '').includes('Method=GetAppdata'),
+      { timeout: 20000 }
+    )
+    .then((res) => res.text())
+    .then(parseApiResponseText)
+    .catch(() => null)
+}
+
+/**
+ * desktop: window.auroraAppData is inlined into the HTML before app.js runs,
+ * so Core.AvailableClientModules is already there — read it directly.
+ * next/Vue: app data only arrives via the GetAppdata API response (see
+ * armAppDataResponse) — window.auroraAppData is never set.
+ */
+async function isTurnstileModuleActive(page, appDataResponsePromise) {
+  const fromWindow = await page.evaluate((moduleName) => {
+    const modules = window.auroraAppData?.Core?.AvailableClientModules
+    return Array.isArray(modules) ? modules.includes(moduleName) : null
+  }, TURNSTILE_MODULE)
+
+  if (fromWindow !== null) {
+    return fromWindow
+  }
+
+  const appData = appDataResponsePromise ? await appDataResponsePromise : null
+  const modules = appData?.Result?.Core?.AvailableClientModules
+  return Array.isArray(modules) && modules.includes(TURNSTILE_MODULE)
+}
+
+/**
+ * Wait for a Cloudflare Turnstile token, but only when the backend reports
+ * the plugin as active — otherwise the widget will never load and there is
+ * nothing to wait for.
  * Script loads async — first detect widget/API, then wait for token.
  */
-async function waitForTurnstileToken(page) {
+async function waitForTurnstileToken(page, appDataResponsePromise) {
+  if (!(await isTurnstileModuleActive(page, appDataResponsePromise))) {
+    return
+  }
+
   // Give the Turnstile script a short window to appear.
   const appeared = await page
     .waitForFunction(
@@ -84,6 +151,10 @@ async function waitForTurnstileToken(page) {
 async function loginAsTestUser(page) {
   const { login, password } = getTestCredentials()
 
+  // Must be armed before the first goto() — next/Vue fires GetAppdata
+  // immediately on bootstrap, so listening starts before it can fire.
+  const appDataResponsePromise = armAppDataResponse(page)
+
   await step('Open desktop login page (clean session)', async () => {
     await page.context().clearCookies()
     // '' = baseURL itself (safe for subdirectory installs; '/' would go to host root)
@@ -112,13 +183,13 @@ async function loginAsTestUser(page) {
   })
 
   await step('Wait for Turnstile token (if present)', async () => {
-    await waitForTurnstileToken(page)
+    await waitForTurnstileToken(page, appDataResponsePromise)
   })
 
   await step(`Fill credentials (${login})`, async () => {
     await fieldControl(page, sel('loginEmail')).fill(login)
     await fieldControl(page, sel('loginPassword')).fill(password)
-    await waitForTurnstileToken(page)
+    await waitForTurnstileToken(page, appDataResponsePromise)
   })
 
   await step('Submit login form', async () => {
@@ -170,12 +241,35 @@ async function loginAsTestUser(page) {
   })
 }
 
+/**
+ * Open the app on a context that already carries an authenticated
+ * storageState (see auth.setup.js) — skips the login form entirely.
+ * Use instead of loginAsTestUser() in specs run against `storageState` projects.
+ */
+async function gotoLoggedIn(page) {
+  await step('Open app (reuse authenticated session)', async () => {
+    await page.goto('', { waitUntil: 'domcontentloaded' })
+
+    await page.getByTestId(sel('headerTabs')).waitFor({
+      state: 'visible',
+      timeout: 45000,
+    })
+
+    if (isTraditional()) {
+      await expect(page.getByTestId(navId('mail'))).toBeVisible({
+        timeout: 30000,
+      })
+    }
+  })
+}
+
 module.exports = {
   step,
   attachScreenshot,
   fieldControl,
   waitForTurnstileToken,
   loginAsTestUser,
+  gotoLoggedIn,
   hasCredentials,
   getTestCredentials,
   getComposeTo,
