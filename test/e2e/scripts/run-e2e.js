@@ -2,9 +2,11 @@
 /**
  * Desktop E2E runner wrapper.
  *
- * Translates --setup "modules browsers" into Playwright --project flags:
+ * Translates --setup into Playwright --project flags:
  *   --setup "MailWebclient Chrome"
  *   --setup "MailWebclient,ContactsWebclient Chrome,Firefox"
+ *   --setup "Chrome"                    (all modules, one browser)
+ *   --setup "* Chrome" / --setup "*Chrome"
  *
  * Without --setup, all discovered projects run (full matrix).
  */
@@ -12,6 +14,7 @@
 const { spawnSync } = require('child_process')
 const fs = require('fs')
 const path = require('path')
+const { stripLoopbackProxyEnv } = require('./strip-loopback-proxy')
 
 const coreRoot = path.join(__dirname, '..', '..', '..')
 const e2eRoot = path.join(__dirname, '..')
@@ -94,26 +97,67 @@ function extractSetup(argv) {
   return { setup, rest }
 }
 
-function parseSetupString(setup) {
-  const match = setup.trim().match(/^(\S+)\s+(.+)$/)
-  if (!match) {
+function parseBrowsersList(value) {
+  const browsers = splitCsv(value).map(normalizeBrowser)
+  const unknownBrowsers = browsers.filter((b) => !BROWSERS.includes(b))
+  if (unknownBrowsers.length > 0) {
     throw new Error(
-      `Invalid --setup value: ${JSON.stringify(setup)}\n` +
-        'Expected: "<modules> <browsers>"\n' +
-        'Example: --setup "MailWebclient,ContactsWebclient Chrome,Firefox"'
+      `Unknown browser(s): ${unknownBrowsers.join(', ')}\n` +
+        `Available: ${BROWSERS.join(', ')}`
+    )
+  }
+  return browsers
+}
+
+function parseSetupString(setup, knownModules) {
+  const trimmed = setup.trim()
+  if (!trimmed) {
+    throw new Error(
+      'Empty --setup value.\n' +
+        'Examples: --setup "Chrome" | --setup "* Chrome" | --setup "MailWebclient Chrome"'
     )
   }
 
-  const modules = splitCsv(match[1])
-  const browsers = splitCsv(match[2]).map(normalizeBrowser)
-
-  if (modules.length === 0 || browsers.length === 0) {
-    throw new Error(
-      'Both modules and browsers are required in --setup "modules browsers"'
-    )
+  // All modules × browser(s): "* Chrome", "*Chrome", "* Chrome,Firefox"
+  if (trimmed.startsWith('*')) {
+    const browsersPart = trimmed.slice(1).trim()
+    if (!browsersPart) {
+      throw new Error(
+        'Missing browser after *.\nExample: --setup "* Chrome"'
+      )
+    }
+    return {
+      modules: knownModules,
+      browsers: parseBrowsersList(browsersPart),
+    }
   }
 
-  return { modules, browsers }
+  const match = trimmed.match(/^(\S+)\s+(.+)$/)
+  if (match) {
+    let modules = splitCsv(match[1])
+    const browsers = parseBrowsersList(match[2])
+    if (modules.length === 1 && modules[0] === '*') {
+      modules = knownModules
+    }
+    if (modules.length === 0 || browsers.length === 0) {
+      throw new Error(
+        'Both modules and browsers are required in --setup "modules browsers"'
+      )
+    }
+    return { modules, browsers }
+  }
+
+  // Browser-only: "Chrome", "Chrome,Firefox"
+  const browsers = splitCsv(trimmed).map(normalizeBrowser)
+  if (browsers.every((b) => BROWSERS.includes(b))) {
+    return { modules: knownModules, browsers }
+  }
+
+  throw new Error(
+    `Invalid --setup value: ${JSON.stringify(setup)}\n` +
+      'Expected: "<browser>" | "* <browser>" | "<modules> <browsers>"\n' +
+      'Examples: --setup "Chrome" | --setup "* Chrome" | --setup "MailWebclient Chrome"'
+  )
 }
 
 function expandProjects(modules, browsers, knownModules) {
@@ -122,14 +166,6 @@ function expandProjects(modules, browsers, knownModules) {
     throw new Error(
       `Unknown module(s): ${unknownModules.join(', ')}\n` +
         `Available: ${knownModules.join(', ') || '(none discovered)'}`
-    )
-  }
-
-  const unknownBrowsers = browsers.filter((b) => !BROWSERS.includes(b))
-  if (unknownBrowsers.length > 0) {
-    throw new Error(
-      `Unknown browser(s): ${unknownBrowsers.join(', ')}\n` +
-        `Available: ${BROWSERS.join(', ')}`
     )
   }
 
@@ -157,7 +193,7 @@ function main() {
   if (setup) {
     try {
       const knownModules = discoverModules()
-      const { modules, browsers } = parseSetupString(setup)
+      const { modules, browsers } = parseSetupString(setup, knownModules)
       const projects = expandProjects(modules, browsers, knownModules)
       console.log(`  → --setup → projects: ${projects.join(' | ')}`)
       for (const name of projects) {
@@ -171,11 +207,28 @@ function main() {
 
   playwrightArgs.push(...rest)
 
-  const env = { ...process.env }
+  const rawProxy =
+    process.env.HTTPS_PROXY ||
+    process.env.HTTP_PROXY ||
+    process.env.ALL_PROXY ||
+    ''
+  const env = stripLoopbackProxyEnv({ ...process.env })
+  if (/^https?:\/\/(127\.0\.0\.1|localhost|\[::1\])/i.test(rawProxy)) {
+    console.log(
+      '  → cleared loopback HTTP(S)_PROXY (IDE sandbox); otherwise staging is unreachable'
+    )
+  }
   const nodeModules = path.join(auroraRoot, 'node_modules')
   env.NODE_PATH = env.NODE_PATH
     ? `${nodeModules}${path.delimiter}${env.NODE_PATH}`
     : nodeModules
+
+  if (
+    env.PLAYWRIGHT_BROWSERS_PATH &&
+    /cursor-sandbox-cache/i.test(env.PLAYWRIGHT_BROWSERS_PATH)
+  ) {
+    delete env.PLAYWRIGHT_BROWSERS_PATH
+  }
 
   const playwrightBin = path.join(
     nodeModules,

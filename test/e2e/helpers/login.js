@@ -1,11 +1,17 @@
 const { test, expect } = require('@playwright/test')
 const {
   hasCredentials,
+  hasSecondaryCredentials,
+  hasReserveCredentials,
   getTestCredentials,
+  getPrimaryCredentials,
+  getSecondaryCredentials,
+  getReserveCredentials,
   getComposeTo,
 } = require('./credentials')
-const { initVariant, sel, navId, isSPA, isTraditional } = require('./app-variant')
+const { initVariant, sel, navId } = require('./app-variant')
 const { T } = require('./timeouts')
+const { clickReady } = require('./ready')
 
 /** Named step: shows in console + HTML report. */
 async function step(title, fn) {
@@ -141,15 +147,21 @@ async function waitForTurnstileToken(page, appDataResponsePromise) {
 }
 
 /**
- * Fresh anonymous session, then login with this worker's account from the pool.
+ * Fresh anonymous session, then login with the given credentials.
  * Leaves the app on the post-login shell with header nav visible.
  *
  * Works for both:
  *   desktop — form-submit → page reload → waitForNavigation
  *   next    — AJAX auth → may reload or SPA-transition
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {{ login: string, password: string }} credentials
  */
-async function loginAsTestUser(page) {
-  const { login, password } = getTestCredentials()
+async function loginAs(page, credentials) {
+  const { login, password } = credentials
+  if (!login || !password) {
+    throw new Error('loginAs requires { login, password }')
+  }
 
   // Must be armed before the first goto() — next/Vue fires GetAppdata
   // immediately on bootstrap, so listening starts before it can fire.
@@ -157,8 +169,7 @@ async function loginAsTestUser(page) {
 
   await step('Open desktop login page (clean session)', async () => {
     await page.context().clearCookies()
-    // '' = baseURL itself (safe for subdirectory installs; '/' would go to host root)
-    await page.goto('', { waitUntil: 'domcontentloaded' })
+    await gotoApp(page)
 
     // Detect which variant we are talking to (once per worker).
     await initVariant(page)
@@ -166,13 +177,13 @@ async function loginAsTestUser(page) {
     // Vite dev server may return a blank page on cold start — short probe first.
     const appeared = await page
       .getByTestId(sel('loginEmail'))
-      .waitFor({ state: 'visible', timeout: T(isSPA() ? 8000 : 30000) })
+      .waitFor({ state: 'visible', timeout: T(30000) })
       .then(() => true)
       .catch(() => false)
 
     if (!appeared) {
       console.log('  → login page blank, retrying goto…')
-      await page.goto('', { waitUntil: 'domcontentloaded' })
+      await gotoApp(page)
       await page.getByTestId(sel('loginEmail')).waitFor({
         state: 'visible',
         timeout: T(30000),
@@ -207,38 +218,129 @@ async function loginAsTestUser(page) {
         .catch(() => null),
       page.getByTestId(sel('loginSubmit')).click(),
     ])
-
-    // Give the SPA a moment to start the transition.
-    if (isSPA()) {
-      await page.waitForTimeout(500)
-    }
   })
 
   await step('Wait for app shell after login', async () => {
     const header = sel('headerTabs')
 
-    // Wait for header tabs (or its equivalent).
-    await page.getByTestId(header).waitFor({
-      state: 'visible',
-      timeout: T(45000),
-    })
+    try {
+      await page.getByTestId(header).waitFor({
+        state: 'visible',
+        timeout: T(45000),
+      })
+    } catch (err) {
+      const uiError = (
+        await page
+          .locator('.error, .report, .login_error, .alert, .notification')
+          .first()
+          .innerText()
+          .catch(() => '')
+      ).trim()
+      throw new Error(
+        `Login as ${login} did not reach the app shell. URL: ${page.url()}${
+          uiError ? ` UI: ${uiError}` : ''
+        }`
+      )
+    }
 
     // Confirm login form is gone.
     await expect(page.getByTestId(sel('loginEmail'))).not.toBeVisible({
       timeout: T(15000),
     })
 
-    if (isTraditional()) {
-      // Desktop: nav-mail proves the full shell is ready.
-      await expect(page.getByTestId(navId('mail'))).toBeVisible({
-        timeout: T(30000),
-      })
-    }
-    // Next / SPA: header-tabs + login-form-gone is sufficient.
-    // Mail is the default view → nav-mail is not in the header.
+    await expect(page.getByTestId(navId('mail'))).toBeVisible({
+      timeout: T(30000),
+    })
 
     await attachScreenshot(page, 'after-login-shell')
   })
+}
+
+/** Login as PRIMARY (default account for most specs). */
+async function loginAsTestUser(page) {
+  await loginAs(page, getPrimaryCredentials())
+}
+
+async function loginAsSecondary(page) {
+  await loginAs(page, getSecondaryCredentials())
+}
+
+async function loginAsReserve(page) {
+  await loginAs(page, getReserveCredentials())
+}
+
+/** Logout via header control and wait for the login form. */
+async function logoutToLoginForm(page) {
+  await step('Logout to login form', async () => {
+    await clickReady(page.getByTestId('settings-logout'))
+    await expect(page.getByTestId(sel('loginEmail'))).toBeVisible({
+      timeout: T(30000),
+    })
+  })
+}
+
+/**
+ * Switch account in one scenario: logout (if shell visible) then loginAs.
+ */
+async function switchToUser(page, credentials) {
+  const onLogin = await page
+    .getByTestId(sel('loginEmail'))
+    .isVisible()
+    .catch(() => false)
+  if (!onLogin) {
+    await logoutToLoginForm(page)
+  }
+  await loginAs(page, credentials)
+}
+
+async function switchToSecondary(page) {
+  await switchToUser(page, getSecondaryCredentials())
+}
+
+async function switchToPrimary(page) {
+  await switchToUser(page, getPrimaryCredentials())
+}
+
+/**
+ * Fresh browser context (no PRIMARY storageState) + login.
+ * Use for SECONDARY/RESERVE in the same test as PRIMARY — logout+relogin
+ * on the authenticated context races Turnstile and leftover session state.
+ *
+ * Caller must close `context` (e.g. in `finally`).
+ *
+ * @param {import('@playwright/test').Browser} browser
+ * @param {{ login: string, password: string }} credentials
+ * @param {{ baseURL: string }} options
+ * @returns {Promise<{ context: import('@playwright/test').BrowserContext, page: import('@playwright/test').Page }>}
+ */
+async function openLoggedInPage(browser, credentials, { baseURL }) {
+  const context = await browser.newContext({
+    baseURL,
+    testIdAttribute: 'data-test-id',
+    storageState: { cookies: [], origins: [] },
+  })
+  const page = await context.newPage()
+  await loginAs(page, credentials)
+  return { context, page }
+}
+
+/**
+ * Navigate to baseURL with a remote-staging-friendly budget.
+ * Remote hosts can exceed the default 45s navigationTimeout; retry once on
+ * timeout before failing (same mitigation as the blank-login-page retry).
+ */
+async function gotoApp(page) {
+  const gotoOpts = { waitUntil: 'domcontentloaded', timeout: T(90000) }
+  try {
+    // '' = baseURL itself (safe for subdirectory installs; '/' would go to host root)
+    await page.goto('', gotoOpts)
+  } catch (err) {
+    if (!/Timeout.*exceeded/i.test(String(err))) {
+      throw err
+    }
+    console.log('  → goto slow/failed, retrying…')
+    await page.goto('', gotoOpts)
+  }
 }
 
 /**
@@ -248,18 +350,16 @@ async function loginAsTestUser(page) {
  */
 async function gotoLoggedIn(page) {
   await step('Open app (reuse authenticated session)', async () => {
-    await page.goto('', { waitUntil: 'domcontentloaded' })
+    await gotoApp(page)
 
     await page.getByTestId(sel('headerTabs')).waitFor({
       state: 'visible',
-      timeout: 45000,
+      timeout: T(60000),
     })
 
-    if (isTraditional()) {
-      await expect(page.getByTestId(navId('mail'))).toBeVisible({
-        timeout: 30000,
-      })
-    }
+    await expect(page.getByTestId(navId('mail'))).toBeVisible({
+      timeout: T(30000),
+    })
   })
 }
 
@@ -268,9 +368,22 @@ module.exports = {
   attachScreenshot,
   fieldControl,
   waitForTurnstileToken,
+  loginAs,
   loginAsTestUser,
   gotoLoggedIn,
+  loginAsSecondary,
+  loginAsReserve,
+  logoutToLoginForm,
+  switchToUser,
+  switchToSecondary,
+  switchToPrimary,
+  openLoggedInPage,
   hasCredentials,
+  hasSecondaryCredentials,
+  hasReserveCredentials,
   getTestCredentials,
+  getPrimaryCredentials,
+  getSecondaryCredentials,
+  getReserveCredentials,
   getComposeTo,
 }

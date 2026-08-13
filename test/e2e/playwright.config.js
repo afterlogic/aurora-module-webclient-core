@@ -1,6 +1,12 @@
 // @ts-check
 const fs = require('fs')
 const path = require('path')
+const {
+  stripLoopbackProxyFromProcessEnv,
+} = require('./scripts/strip-loopback-proxy')
+
+// IDE sandboxes may inject HTTP_PROXY=127.0.0.1 → ERR_CONNECTION_CLOSED to staging.
+stripLoopbackProxyFromProcessEnv()
 
 const e2eRoot = __dirname
 // CoreWebclient/test/e2e → CoreWebclient → modules → install root
@@ -28,11 +34,13 @@ function loadEnvE2e() {
     return
   }
 
+  // File wins: Playwright UI keeps process.env across config reloads, so
+  // `if (!process.env[key])` would keep a stale PRIMARY after .env.e2e edits.
   fs.readFileSync(envPath, 'utf8')
     .split('\n')
     .forEach((line) => {
       const match = line.match(/^([^#=]+)=(.*)$/)
-      if (match && !process.env[match[1].trim()]) {
+      if (match) {
         process.env[match[1].trim()] = match[2].trim()
       }
     })

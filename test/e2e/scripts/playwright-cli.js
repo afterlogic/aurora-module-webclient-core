@@ -9,6 +9,7 @@
 const { spawnSync } = require('child_process')
 const fs = require('fs')
 const path = require('path')
+const { stripLoopbackProxyEnv } = require('./strip-loopback-proxy')
 
 const coreRoot = path.join(__dirname, '..', '..', '..')
 const auroraRoot = path.join(coreRoot, '..', '..')
@@ -27,7 +28,13 @@ if (!fs.existsSync(playwrightBin)) {
   process.exit(1)
 }
 
-const env = { ...process.env }
+const env = stripLoopbackProxyEnv({ ...process.env })
+if (
+  env.PLAYWRIGHT_BROWSERS_PATH &&
+  /cursor-sandbox-cache/i.test(env.PLAYWRIGHT_BROWSERS_PATH)
+) {
+  delete env.PLAYWRIGHT_BROWSERS_PATH
+}
 env.NODE_PATH = env.NODE_PATH
   ? `${nodeModules}${path.delimiter}${env.NODE_PATH}`
   : nodeModules

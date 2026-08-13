@@ -130,22 +130,6 @@ function navId(moduleName) {
   return sel('navPrefix') + String(moduleName).toLowerCase()
 }
 
-// ---------------------------------------------------------------------------
-// Strategy flags
-// ---------------------------------------------------------------------------
-
-/** True when the login flow should NOT wait for page navigation (SPA / API auth). */
-function isSPA() {
-  return resolveVariant() === 'next'
-}
-
-/** True when login uses form-submit and page reload. */
-function isTraditional() {
-  return resolveVariant() === 'desktop'
-}
-
-// ---------------------------------------------------------------------------
-
 module.exports = {
   SELECTOR_MAP,
   detectVariant,
@@ -154,6 +138,4 @@ module.exports = {
   getVariant,
   sel,
   navId,
-  isSPA,
-  isTraditional,
 }

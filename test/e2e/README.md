@@ -123,16 +123,21 @@ If the UI opens but a run fails immediately with "Executable doesn't exist" / "P
 
 ### One module / one browser / one file
 
-Use **`--setup "<modules> <browsers>"`** (not `--project`).
+Use **`--setup`** (not raw Playwright `--project`):
 
-- First token (no spaces): module name(s), comma-separated.
-- Rest of the string: browser name(s), comma-separated: `Chrome`, `Firefox`, `Safari`.
-- Expands to Playwright projects `Module · Browser` (e.g. `MailWebclient · Chrome`).
+- `"<browser>"` — all modules × that browser (e.g. `"Chrome"`).
+- `"* <browser>"` or `"*Chrome"` — same as above.
+- `"<modules> <browsers>"` — explicit filter (module names comma-separated, then browsers).
+
+Expands to Playwright projects `Module · Browser` (e.g. `MailWebclient · Chrome`).
 
 Anything **after** `--setup "…"` is passed straight to Playwright (file name, `--grep`, `--list`, etc.). Without `--setup`, the full module × browser matrix runs.
 
 ```bash
 cd modules/CoreWebclient
+
+# All modules × Chrome only
+npm run test:e2e -- --setup "Chrome"
 
 # All specs for that module × browser
 npm run test:e2e -- --setup "StandardLoginFormWebclient Chrome"

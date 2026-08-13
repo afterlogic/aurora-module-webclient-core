@@ -67,4 +67,5 @@ cd "$CORE_DIR"
 if [ "${1:-}" = "--" ]; then
     shift
 fi
-npm run test:e2e "$@"
+# Invoke run-e2e.js directly — npm run would swallow flags like --setup.
+node test/e2e/scripts/run-e2e.js "$@"
