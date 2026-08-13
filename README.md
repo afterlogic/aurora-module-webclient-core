@@ -11,23 +11,20 @@ This repository has a pre-commit hook. To make it work you need to configure git
 Desktop Knockout UI. Prefer launching from the **Aurora install root**:
 
 ```bash
-yarn test:e2e-desktop
-yarn test:e2e-desktop:ui
-yarn test:e2e-desktop -- --setup "MailWebclient Chrome"
+npm run test:e2e-desktop
+npm run test:e2e-desktop:ui
+npm run test:e2e-desktop -- --setup "MailWebclient Chrome"
 ```
 
 Or from this module:
 
 ```bash
-yarn test:e2e:ui --setup "StandardLoginFormWebclient Chrome"
+npm run test:e2e:ui --setup "StandardLoginFormWebclient Chrome"
 ```
 
-Full docs:
+Full docs: [`test/e2e/README.md`](test/e2e/README.md).
 
-- Install root: [`README-e2e-desktop.md`](../../README-e2e-desktop.md)
-- Runner: [`test/e2e/README.md`](test/e2e/README.md)
-
-Mobile suite: [`README-e2e-mobile.md`](../../README-e2e-mobile.md).
+Mobile suite: CoreMobileWebclient [`vue-mobile/test/e2e/README.md`](../CoreMobileWebclient/vue-mobile/test/e2e/README.md).
 
 # License
 This module is licensed under AGPLv3 license if free version of the product is used or Afterlogic Software License if commercial version of the product was purchased.
