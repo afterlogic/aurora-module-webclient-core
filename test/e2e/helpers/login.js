@@ -343,16 +343,39 @@ async function gotoApp(page) {
   }
 }
 
+async function isOnLoginPage(page) {
+  return page
+    .getByTestId(sel('loginEmail'))
+    .or(page.getByRole('button', { name: /sign in/i }))
+    .first()
+    .isVisible()
+    .catch(() => false)
+}
+
 /**
  * Open the app on a context that already carries an authenticated
- * storageState (see auth.setup.js) — skips the login form entirely.
- * Use instead of loginAsTestUser() in specs run against `storageState` projects.
+ * storageState (see auth.setup.js). If the session is missing or stale
+ * (login form), sign in as PRIMARY instead of waiting for the shell.
  */
 async function gotoLoggedIn(page) {
   await step('Open app (reuse authenticated session)', async () => {
     await gotoApp(page)
 
-    await page.getByTestId(sel('headerTabs')).waitFor({
+    const header = page.getByTestId(sel('headerTabs'))
+    const loginEmail = page.getByTestId(sel('loginEmail'))
+
+    await Promise.race([
+      header.waitFor({ state: 'visible', timeout: T(15000) }).catch(() => null),
+      loginEmail.waitFor({ state: 'visible', timeout: T(15000) }).catch(() => null),
+    ])
+
+    if (await isOnLoginPage(page)) {
+      console.log('  → no session (login form), signing in as PRIMARY')
+      await loginAs(page, getPrimaryCredentials())
+      return
+    }
+
+    await header.waitFor({
       state: 'visible',
       timeout: T(60000),
     })
