@@ -60,10 +60,26 @@ var
 			modules: [
 				path.resolve(__dirname, '../../../'),
 				"node_modules"
-			]
+			],
+			alias: {
+				// One jQuery instance for CJS, ESM, AMD, and ProvidePlugin.
+				// jquery-ui 1.14 nests jquery 4.0; two copies leave $.widget
+				// on the wrong object ("r.widget is not a function").
+				jquery: path.resolve(__dirname, '../js/vendors/jquery-singleton.js'),
+				// Same for Knockout: two copies throw
+				// "observable; possibly from another Knockout instance".
+				knockout: path.resolve(__dirname, '../node_modules/knockout'),
+				underscore: path.resolve(__dirname, '../node_modules/underscore'),
+			}
 		},
 		module: {
 			rules: [
+				{
+					// Named AMD define("jquery") inside dist/jquery.js would recurse
+					// through the singleton alias while the module is still loading.
+					test: /jquery[\\/]dist[\\/]jquery\.js$/,
+					parser: { amd: false }
+				},
 				{
 					test: /\.vue$/,
 					loader: 'vue-loader'

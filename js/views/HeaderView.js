@@ -59,7 +59,23 @@ function CHeaderView()
 	this.bDebugMode = Settings.DebugMode;
 	
 	this.mobileDevice = Browser.mobileDevice;
-	this.bShowMobileSwitcher = Browser.mobileDevice && Settings.AllowMobile;
+	this.narrowViewport = ko.observable(
+		typeof window.matchMedia === 'function' && !window.matchMedia('all and (min-width: 768px)').matches
+	);
+	if (typeof window.matchMedia === 'function') {
+		var oDesktopMq = window.matchMedia('all and (min-width: 768px)');
+		var fSyncViewport = _.bind(function () {
+			this.narrowViewport(!oDesktopMq.matches);
+		}, this);
+		if (_.isFunction(oDesktopMq.addEventListener)) {
+			oDesktopMq.addEventListener('change', fSyncViewport);
+		} else if (_.isFunction(oDesktopMq.addListener)) {
+			oDesktopMq.addListener(fSyncViewport);
+		}
+	}
+	this.bShowMobileSwitcher = ko.computed(function () {
+		return Settings.AllowMobile && (Browser.mobileDevice || this.narrowViewport());
+	}, this);
 	
 	App.broadcastEvent('%ModuleName%::ConstructView::after', {'Name': this.ViewConstructorName, 'View': this});
 	

@@ -25,6 +25,7 @@ var
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js')
 ;
 
+require('jquery-ui/ui/widget');
 require('jquery-ui/ui/widgets/autocomplete');
 
 function GetAutocomplete(oInput)

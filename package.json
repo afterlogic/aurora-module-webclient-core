@@ -40,6 +40,12 @@
     "webpack": "^5.75.0",
     "webpackbar": "^7.0.0"
   },
+  "resolutions": {
+    "jquery": "3.7.1"
+  },
+  "overrides": {
+    "jquery": "3.7.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.21.3",
