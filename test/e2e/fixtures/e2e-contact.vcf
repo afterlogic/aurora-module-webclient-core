@@ -1,0 +1,7 @@
+BEGIN:VCARD
+VERSION:3.0
+FN:E2E Import Fixture
+EMAIL:e2e.import.fixture@example.com
+TEL:+10000000000
+ADR:;;E2E Street 1;;;;
+END:VCARD

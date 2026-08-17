@@ -354,7 +354,7 @@ async function isOnLoginPage(page) {
 
 /**
  * Open the app on a context that already carries an authenticated
- * storageState (see auth.setup.js). If the session is missing or stale
+ * storageState (see StandardLoginFormWebclient/test/e2e/auth.setup.js). If the session is missing or stale
  * (login form), sign in as PRIMARY instead of waiting for the shell.
  */
 async function gotoLoggedIn(page) {
