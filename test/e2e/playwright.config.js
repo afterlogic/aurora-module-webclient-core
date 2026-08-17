@@ -97,19 +97,27 @@ const browsers = [
 
 const moduleDirs = discoverModuleE2eDirs()
 
+const loginE2eDir = path.join(
+  auroraRoot,
+  'modules',
+  'StandardLoginFormWebclient',
+  'test',
+  'e2e'
+)
+
 // One authenticated storageState per browser engine (cookies/localStorage
-// aren't shared across engines). Each module project depends on the setup
-// project for its own browser, so `--project` filters still pull it in.
+// aren't shared across engines). Each module project depends on the login
+// setup for its own browser, so `--project` filters still pull it in.
 const authDir = path.join(e2eRoot, '.auth')
 
 /** @type {import('@playwright/test').Project[]} */
 const projects = []
 for (const browser of browsers) {
-  const setupProjectName = `auth setup · ${browser.name}`
+  const setupProjectName = `StandardLoginFormWebclient setup · ${browser.name}`
 
   projects.push({
     name: setupProjectName,
-    testDir: e2eRoot,
+    testDir: loginE2eDir,
     testMatch: /auth\.setup\.js/,
     use: { ...browser.use },
   })

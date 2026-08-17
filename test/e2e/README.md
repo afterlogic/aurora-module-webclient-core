@@ -7,6 +7,8 @@ Automated tests for the classic **desktop** UI (Knockout). Selectors use `data-t
 ```text
 package.json (install root)                  ← @playwright/test + npm run test:e2e-desktop*
 modules/CoreWebclient/test/e2e/               ← config, helpers, .env, reports, run.sh
+modules/StandardLoginFormWebclient/test/e2e/auth.setup.js
+                                              ← login once per browser (Playwright `dependencies`)
 modules/CoreWebclient/package.json            ← convenience scripts test:e2e* (use root Playwright)
 modules/<WebclientModule>/test/e2e/*.spec.js  ← scenarios for that module
 ```
@@ -214,9 +216,16 @@ npm run test:e2e-desktop:report
 
 ---
 
-## Staging / remote stand
+## Known product bugs / stand gates (P0)
 
-1. Deploy templates with `data-test-id` and clear `data/cache/templates-*.cache`.
+- Calendar **Share** menu item is hidden when sharing is disabled on the stand (`calendar-share.spec.js` skips after create).
+- Mail **Signature / Filters / Forward / Autoresponder** tabs are omitted when the corresponding `allow*` flags are off — specs skip rather than fail.
+- After **Rename folder**, delete stays disabled and the UI shows `Mailbox doesn't exist` for the *old* IMAP name. `mail-custom-folders.spec.js` fails on the delete step. File: `MailWebclient/js/popups/EditFolderPopup.js` (`RenameFolder` / `onResponseFolderRename`).
+- After changing Knockout `data-test-id`s, clear `data/cache/templates-*.cache`.
+
+---
+
+## Staging / remote stand
 2. Provide three mailboxes (PRIMARY / SECONDARY / RESERVE) with Mail / Contacts / Files as needed.
 3. Follow **Setup (first time)** above on the runner machine, filling in `.env.e2e` with the staging URL and credentials:
 
