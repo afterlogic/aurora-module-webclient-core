@@ -67,6 +67,7 @@
   },
   "scripts": {
     "test:e2e": "node test/e2e/scripts/run-e2e.js",
+    "test:e2e:email": "node test/e2e/scripts/run-with-email-report.js",
     "test:e2e:ui": "node test/e2e/scripts/run-e2e.js --ui",
     "test:e2e:report": "node test/e2e/scripts/playwright-cli.js show-report test/e2e/playwright-report",
     "test:e2e:install-browsers": "node test/e2e/scripts/playwright-cli.js install chromium firefox webkit"

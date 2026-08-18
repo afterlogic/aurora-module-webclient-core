@@ -88,6 +88,18 @@ PLAYWRIGHT_BASE_URL=https://example.com/aurora/
 
 Helpers in `helpers/credentials.js`: `getPrimaryCredentials()` / `getTestCredentials()`, `getSecondaryCredentials()`, `getReserveCredentials()`.
 
+### Email report
+
+Optional `MAIL_*` / `E2E_MAIL_*`: email-report wrapper (`npm run test:e2e:email` here).
+`WEB_INSTALL_URL` is an optional variable that represents this installation's URL and is used to compose the test results link.
+
+To check the mail setup, run `send-e2e-report.php` with no parameters — this sends a plain test email to confirm the mail delivery channel is working.
+
+```bash
+# cwd = modules/CoreWebclient
+php ./test/e2e/scripts/send-e2e-report.php
+```
+
 ---
 
 ## Run
@@ -106,6 +118,7 @@ Equivalent commands from `modules/CoreWebclient` (thin wrappers around the same 
 ```bash
 cd modules/CoreWebclient
 npm run test:e2e
+npm run test:e2e:email    # runs the suite, then emails the report (see Email report above)
 npm run test:e2e:ui
 npm run test:e2e:report
 ```
