@@ -2,7 +2,7 @@
 
 Knockout desktop UI. Specs live in `modules/<WebclientModule>/test/e2e/*.spec.js`.
 
-There are **35+ spec files**. Calendar, Tasks, and Admin: Calendar now has P0 specs; Tasks and Admin still have none.
+There are **35+ spec files**. Calendar has view / event / share specs; Tasks and Admin still have none.
 
 Proposed next scenarios: [SCENARIOS-BACKLOG.md](SCENARIOS-BACKLOG.md).
 
@@ -16,6 +16,8 @@ npm run test:e2e-desktop -- --setup "MailWebclient Chrome"
 ```
 
 Full matrix is module × Chrome / Firefox / Safari.
+
+To jump to a topic, filter by spec file name (see the table in each module `test/e2e/README.md`) or by nested `test.describe` in Playwright UI.
 
 ---
 
@@ -53,7 +55,7 @@ Specs: `calendar.spec.js`, `calendar-events.spec.js`, `calendar-share.spec.js`, 
 - Starred virtual folder
 - multi-select and bulk-delete in Trash
 - empty Trash
-- create custom folder → Move message → rename / delete *(fails: delete disabled after rename, IMAP Mailbox doesn't exist)*
+- create custom folder → Move message → rename / delete
 - signature: save in Settings → visible in compose
 - filter by subject → message in folder
 - forwarding / autoresponder: enable, save, disable
@@ -91,7 +93,7 @@ Specs: `calendar.spec.js`, `calendar-events.spec.js`, `calendar-share.spec.js`, 
 - minimize unsaved compose, save-and-close
 - attachment in compose, open in Sent
 
-Specs: `mail.spec.js`, `mail-folders.spec.js`, `mail-list-actions.spec.js`, `mail-actions.spec.js`, `mail-mutations.spec.js`, `mail-forward-resend.spec.js`, `compose.spec.js`, `compose-cc-bcc.spec.js`, `compose-draft.spec.js`, `mail-attachments.spec.js`, `mail-custom-folders.spec.js`, `mail-signature.spec.js`, `mail-filters.spec.js`, `mail-forward-autoresponder.spec.js`, `header-nav.spec.js`, `mail-p1.spec.js`.
+Specs: `mail.spec.js`, `mail-folders.spec.js`, `mail-list-actions.spec.js`, `mail-actions.spec.js`, `mail-mutations.spec.js`, `mail-forward-resend.spec.js`, `compose.spec.js`, `compose-cc-bcc.spec.js`, `compose-draft.spec.js`, `compose-from.spec.js`, `mail-attachments.spec.js`, `mail-custom-folders.spec.js`, `mail-signature.spec.js`, `mail-filters.spec.js`, `mail-forward-autoresponder.spec.js`, `mail-message-window.spec.js`, `mail-notes.spec.js`, `header-nav.spec.js`.
 
 ## Files (`FilesWebclient`)
 
@@ -116,10 +118,9 @@ Specs: `mail.spec.js`, `mail-folders.spec.js`, `mail-list-actions.spec.js`, `mai
 - delete to Trash → Restore
 - open zip as folder (`FilesZipFolder`, when enabled)
 - nested folder + breadcrumbs
-- list sorting *(skip if `FilesSortBy.Allow` false)*
 - preview text file (opens viewer)
 
-Specs: `files.spec.js`, `files-actions.spec.js`, `files-extra-actions.spec.js`, `files-select-actions.spec.js`, `files-share-multiuser.spec.js`, `files-storages-send.spec.js`, `files-zip.spec.js`, `files-zip-selected.spec.js`, `files-p1.spec.js`.
+Specs: `files.spec.js`, `files-actions.spec.js`, `files-extra-actions.spec.js`, `files-select-actions.spec.js`, `files-share-multiuser.spec.js`, `files-storages-send.spec.js`, `files-zip.spec.js`, `files-zip-selected.spec.js`, `files-navigation.spec.js`.
 
 ## Contacts (`ContactsWebclient`)
 
@@ -142,7 +143,7 @@ Specs: `files.spec.js`, `files-actions.spec.js`, `files-extra-actions.spec.js`, 
 - export (file download)
 - extra fields phone / address: save and reopen
 
-Specs: `contacts.spec.js`, `contacts-actions.spec.js`, `contacts-extra-actions.spec.js`, `contacts-select-actions.spec.js`, `contacts-p1.spec.js`.
+Specs: `contacts.spec.js`, `contacts-actions.spec.js`, `contacts-extra-actions.spec.js`, `contacts-select-actions.spec.js`, `contacts-import-export.spec.js`.
 
 ## Settings (`SettingsWebclient`)
 
@@ -158,4 +159,4 @@ Specs: `contacts.spec.js`, `contacts-actions.spec.js`, `contacts-extra-actions.s
 - identity display name → visible in compose
 - 2FA: open setup form *(do not enable on stand)*
 
-Specs: `settings.spec.js`, `settings-actions.spec.js`, `settings-auth.spec.js`, `settings-p1.spec.js`.
+Specs: `settings.spec.js`, `settings-actions.spec.js`, `settings-auth.spec.js`, `settings-mail.spec.js`.

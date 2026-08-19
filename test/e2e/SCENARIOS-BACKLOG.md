@@ -2,9 +2,9 @@
 
 Backlog to close the largest gaps against current coverage in [SCENARIOS.md](SCENARIOS.md).
 
-Already strong: Login, Mail (message / compose), Files (CRUD / share), Contacts (CRUD / groups), opening Settings tabs.
+Already strong: Login, Mail (message / compose / folders), Files (CRUD / share / navigation), Contacts (CRUD / groups / import), Settings tabs, Calendar views / events / share.
 
-Holes: Tasks, Admin, settings that change layout, crypto plugins.
+Holes: Tasks, Admin, crypto plugins.
 
 ~30 scenarios, not a dump of every button. Skip Print, OAuth, Admin, and extra Firefox/Safari copies — the matrix already exists; write new specs for Chrome first.
 
@@ -14,7 +14,7 @@ Holes: Tasks, Admin, settings that change layout, crypto plugins.
 
 Covered in [SCENARIOS.md](SCENARIOS.md). Specs:
 
-- Calendar: `calendar.spec.js`, `calendar-events.spec.js`, `calendar-share.spec.js`
+- Calendar: `calendar.spec.js`, `calendar-events.spec.js`, `calendar-share.spec.js`, `calendar-share-multiuser.spec.js`
 - Mail: `mail-custom-folders.spec.js`, `mail-signature.spec.js`, `mail-filters.spec.js`, `mail-forward-autoresponder.spec.js`, `header-nav.spec.js`
 - Files: `files-storages-send.spec.js`, `files-zip.spec.js` (`FilesZipFolder` = open zip as a folder)
 
@@ -24,10 +24,10 @@ Covered in [SCENARIOS.md](SCENARIOS.md). Specs:
 
 Covered in [SCENARIOS.md](SCENARIOS.md). Specs:
 
-- Mail: `mail-p1.spec.js` (17–24)
-- Contacts: `contacts-p1.spec.js` (25–27)
-- Settings: `settings-p1.spec.js` (28–30)
-- Files: `files-p1.spec.js` (31–33)
+- Mail: `mail-list-actions.spec.js` (mark read/unread, empty Spam), `mail-message-window.spec.js`, `mail-attachments.spec.js` (`.eml`, save to Files), `mail-notes.spec.js`, `compose-from.spec.js` (17–24)
+- Contacts: `contacts-import-export.spec.js`, extra fields in `contacts-actions.spec.js` (25–27)
+- Settings: `settings-mail.spec.js` (layout, identity), 2FA in `settings-auth.spec.js` (28–30)
+- Files: `files-navigation.spec.js` (31–33)
 
 Stand gates (`test.skip`): Notes folder missing, Save-to-Files plugin off, single From sender, `AllowChangeLayout` / `FilesSortBy.Allow` false, no 2FA tab, no Import/Export formats.
 

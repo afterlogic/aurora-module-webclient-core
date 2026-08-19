@@ -229,14 +229,6 @@ npm run test:e2e-desktop:report
 
 ---
 
-## Known product bugs / stand gates (P0)
-
-- Calendar **Share** menu item is hidden when sharing is disabled on the stand (`calendar-share.spec.js` skips after create).
-- Mail **Signature / Filters / Forward / Autoresponder** tabs are omitted when the corresponding `allow*` flags are off — specs skip rather than fail.
-- After **Rename folder**, delete stays disabled and the UI shows `Mailbox doesn't exist` for the *old* IMAP name. `mail-custom-folders.spec.js` fails on the delete step. File: `MailWebclient/js/popups/EditFolderPopup.js` (`RenameFolder` / `onResponseFolderRename`).
-- After changing Knockout `data-test-id`s, clear `data/cache/templates-*.cache`.
-
----
 
 ## Staging / remote stand
 2. Provide three mailboxes (PRIMARY / SECONDARY / RESERVE) with Mail / Contacts / Files as needed.
