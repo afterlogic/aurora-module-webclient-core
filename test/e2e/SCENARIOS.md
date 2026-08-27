@@ -105,6 +105,7 @@ Specs: `mail.spec.js`, `mail-folders.spec.js`, `mail-list-actions.spec.js`, `mai
 - New → upload and delete
 - rename file / folder
 - create and revoke public share link
+- New → Create shortcut (external URL), open, delete
 - cut/paste into folder
 - copy (original remains)
 - multi-select copy into folder
@@ -120,7 +121,7 @@ Specs: `mail.spec.js`, `mail-folders.spec.js`, `mail-list-actions.spec.js`, `mai
 - nested folder + breadcrumbs
 - preview text file (opens viewer)
 
-Specs: `files.spec.js`, `files-actions.spec.js`, `files-extra-actions.spec.js`, `files-select-actions.spec.js`, `files-share-multiuser.spec.js`, `files-storages-send.spec.js`, `files-zip.spec.js`, `files-zip-selected.spec.js`, `files-navigation.spec.js`.
+Specs: `files.spec.js`, `files-actions.spec.js`, `files-shortcut.spec.js`, `files-extra-actions.spec.js`, `files-select-actions.spec.js`, `files-share-multiuser.spec.js`, `files-storages-send.spec.js`, `files-zip.spec.js`, `files-zip-selected.spec.js`, `files-navigation.spec.js`.
 
 ## Contacts (`ContactsWebclient`)
 
