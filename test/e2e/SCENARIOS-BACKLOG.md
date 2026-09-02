@@ -33,15 +33,17 @@ Stand gates (`test.skip`): Notes folder missing, Save-to-Files plugin off, singl
 
 ---
 
-## P2 — plugins and security (after P0/P1)
+## P2 — specs written
 
-- OpenPGP: generate key → encrypt in compose → decrypt in Inbox
-- Paranoid Encryption: upload encrypted file → download / open
-- Calendar: accept / decline invite from mail (iCal)
-- Tasks: create / complete / delete a task
-- Files public link: open the URL in a clean session (today we only create/remove it in UI)
-- Contacts share with SECONDARY (today share/unshare is single-user)
-- Files table view, Dropbox / Google Drive — only if the stand enables them
+- OpenPGP: `mail-openpgp.spec.js` (requires `E2E_OPENPGP_PASSWORD`)
+- Paranoid Encryption: `files-paranoid.spec.js`
+- Calendar iCal: `calendar-ical-invite.spec.js`
+- Tasks: `tasks.spec.js`
+- Files public link: `files-public-link.spec.js`
+- Contacts share with SECONDARY: `contacts-share-multiuser.spec.js`
+- Files table view, Dropbox / Google Drive — only if the stand enables them (not automated yet)
+
+Stand gates (`test.skip`): OpenPGP / Paranoid tabs missing, Tasks tab missing, public link action off, SharedContacts share control missing, calendar invite delivery/sync lag.
 
 ---
 
@@ -61,4 +63,4 @@ Stand gates (`test.skip`): Notes folder missing, Save-to-Files plugin off, singl
 |------|-----------|-----|
 | 1–2 | P0 | Done — Calendar, custom folders, signature/filters, Files storages |
 | 3 | 17–24, 25–27, 28–33 | P1 specs written — Mail / Contacts / Files / Settings |
-| 4 | P2 | Crypto and invites once the base UI is stable |
+| 4 | P2 | Crypto, invites, Tasks, public link — specs written |

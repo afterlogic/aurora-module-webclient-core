@@ -41,8 +41,15 @@ Specs: `login-page.spec.js`, `login.spec.js`, `auth-actions.spec.js`.
 - delete event
 - create calendar and open share *(SECONDARY optional)*
 - PRIMARY shares calendar → SECONDARY sees it in sidebar *(requires SECONDARY)*
+- accept calendar invitation from Inbox iCal attachment *(P2)*
 
-Specs: `calendar.spec.js`, `calendar-events.spec.js`, `calendar-share.spec.js`, `calendar-share-multiuser.spec.js`.
+Specs: `calendar.spec.js`, `calendar-events.spec.js`, `calendar-share.spec.js`, `calendar-share-multiuser.spec.js`, `calendar-ical-invite.spec.js`.
+
+## Tasks (`Tasks`)
+
+- create task → mark complete → delete *(requires CalendarWebclient + Tasks module)*
+
+Specs: `tasks.spec.js`.
 
 ## Mail (`MailWebclient`)
 
@@ -105,6 +112,8 @@ Specs: `mail.spec.js`, `mail-folders.spec.js`, `mail-list-actions.spec.js`, `mai
 - New → upload and delete
 - rename file / folder
 - create and revoke public share link
+- open public link URL in anonymous session and download *(P2)*
+- revoked public link shows not-found to anonymous visitor *(P2)*
 - New → Create shortcut (external URL), open, delete
 - cut/paste into folder
 - copy (original remains)
@@ -121,7 +130,7 @@ Specs: `mail.spec.js`, `mail-folders.spec.js`, `mail-list-actions.spec.js`, `mai
 - nested folder + breadcrumbs
 - preview text file (opens viewer)
 
-Specs: `files.spec.js`, `files-actions.spec.js`, `files-shortcut.spec.js`, `files-extra-actions.spec.js`, `files-select-actions.spec.js`, `files-share-multiuser.spec.js`, `files-storages-send.spec.js`, `files-zip.spec.js`, `files-zip-selected.spec.js`, `files-navigation.spec.js`.
+Specs: `files.spec.js`, `files-actions.spec.js`, `files-shortcut.spec.js`, `files-extra-actions.spec.js`, `files-select-actions.spec.js`, `files-share-multiuser.spec.js`, `files-storages-send.spec.js`, `files-zip.spec.js`, `files-zip-selected.spec.js`, `files-navigation.spec.js`, `files-public-link.spec.js`.
 
 ## Contacts (`ContactsWebclient`)
 
@@ -133,6 +142,7 @@ Specs: `files.spec.js`, `files-actions.spec.js`, `files-shortcut.spec.js`, `file
 - create and delete group
 - compose from contact email
 - share → unshare from Shared
+- PRIMARY shares addressbook → SECONDARY sees contact *(requires SECONDARY, SharedContacts)*
 - find in mail from contact menu
 - Team storage (read-only, when present)
 - Send / compose with email
@@ -144,7 +154,7 @@ Specs: `files.spec.js`, `files-actions.spec.js`, `files-shortcut.spec.js`, `file
 - export (file download)
 - extra fields phone / address: save and reopen
 
-Specs: `contacts.spec.js`, `contacts-actions.spec.js`, `contacts-extra-actions.spec.js`, `contacts-select-actions.spec.js`, `contacts-import-export.spec.js`.
+Specs: `contacts.spec.js`, `contacts-actions.spec.js`, `contacts-extra-actions.spec.js`, `contacts-select-actions.spec.js`, `contacts-import-export.spec.js`, `contacts-share-multiuser.spec.js`.
 
 ## Settings (`SettingsWebclient`)
 
@@ -161,3 +171,17 @@ Specs: `contacts.spec.js`, `contacts-actions.spec.js`, `contacts-extra-actions.s
 - 2FA: open setup form *(do not enable on stand)*
 
 Specs: `settings.spec.js`, `settings-actions.spec.js`, `settings-auth.spec.js`, `settings-mail.spec.js`.
+
+## Plugins (P2)
+
+### OpenPGP (`OpenPgpWebclient`)
+
+- encrypt compose → decrypt in Inbox *(requires `E2E_OPENPGP_PASSWORD`, OpenPGP tab)*
+
+Specs: `mail-openpgp.spec.js`.
+
+### Paranoid Encryption (`CoreParanoidEncryptionWebclientPlugin`)
+
+- upload file with client-side encryption when enabled
+
+Specs: `files-paranoid.spec.js`.

@@ -325,6 +325,20 @@ async function openLoggedInPage(browser, credentials, { baseURL }) {
 }
 
 /**
+ * Fresh browser context with no cookies / storage (anonymous visitor).
+ * Caller must close `context` (e.g. in `finally`).
+ */
+async function openAnonymousPage(browser, { baseURL }) {
+  const context = await browser.newContext({
+    baseURL,
+    testIdAttribute: 'data-test-id',
+    storageState: { cookies: [], origins: [] },
+  })
+  const page = await context.newPage()
+  return { context, page }
+}
+
+/**
  * Navigate to baseURL with a remote-staging-friendly budget.
  * Remote hosts can exceed the default 45s navigationTimeout; retry once on
  * timeout before failing (same mitigation as the blank-login-page retry).
@@ -401,6 +415,7 @@ module.exports = {
   switchToSecondary,
   switchToPrimary,
   openLoggedInPage,
+  openAnonymousPage,
   hasCredentials,
   hasSecondaryCredentials,
   hasReserveCredentials,
