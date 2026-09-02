@@ -80,6 +80,26 @@ function armAppDataResponse(page) {
 }
 
 /**
+ * Turnstile is in play only when the plugin is both available *and* switched
+ * on in its own config: ShowTurnstile === true with a non-empty SiteKey
+ * (mirrors next/src/features/login/utils/captchaTokens.ts isTurnstileRequired).
+ * `appData` is the unwrapped payload (window.auroraAppData, or the `Result`
+ * object of a GetAppdata response).
+ */
+function isTurnstileEnabledIn(appData) {
+  const modules = appData?.Core?.AvailableClientModules
+  if (!Array.isArray(modules) || !modules.includes(TURNSTILE_MODULE)) {
+    return false
+  }
+  const config = appData?.[TURNSTILE_MODULE]
+  return (
+    config?.ShowTurnstile === true &&
+    typeof config?.SiteKey === 'string' &&
+    config.SiteKey !== ''
+  )
+}
+
+/**
  * desktop: window.auroraAppData is inlined into the HTML before app.js runs,
  * so Core.AvailableClientModules is already there — read it directly.
  * next/Vue: app data only arrives via the GetAppdata API response (see
@@ -87,8 +107,19 @@ function armAppDataResponse(page) {
  */
 async function isTurnstileModuleActive(page, appDataResponsePromise) {
   const fromWindow = await page.evaluate((moduleName) => {
-    const modules = window.auroraAppData?.Core?.AvailableClientModules
-    return Array.isArray(modules) ? modules.includes(moduleName) : null
+    const appData = window.auroraAppData
+    if (!Array.isArray(appData?.Core?.AvailableClientModules)) {
+      return null
+    }
+    if (!appData.Core.AvailableClientModules.includes(moduleName)) {
+      return false
+    }
+    const config = appData[moduleName]
+    return (
+      config?.ShowTurnstile === true &&
+      typeof config?.SiteKey === 'string' &&
+      config.SiteKey !== ''
+    )
   }, TURNSTILE_MODULE)
 
   if (fromWindow !== null) {
@@ -96,8 +127,7 @@ async function isTurnstileModuleActive(page, appDataResponsePromise) {
   }
 
   const appData = appDataResponsePromise ? await appDataResponsePromise : null
-  const modules = appData?.Result?.Core?.AvailableClientModules
-  return Array.isArray(modules) && modules.includes(TURNSTILE_MODULE)
+  return isTurnstileEnabledIn(appData?.Result)
 }
 
 /**
