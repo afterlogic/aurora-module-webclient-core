@@ -210,6 +210,8 @@ module.exports = defineConfig({
     testIdAttribute: 'data-test-id',
     actionTimeout: T(30000),
     navigationTimeout: T(45000),
+    // Local HTTPS proxy (Paranoid / WebCrypto) uses a self-signed cert.
+    ignoreHTTPSErrors: true,
     trace: process.env.CI ? 'on-first-retry' : 'on',
     screenshot: 'only-on-failure',
   },
