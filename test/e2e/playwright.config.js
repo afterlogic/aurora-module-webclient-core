@@ -61,7 +61,11 @@ function discoverModuleE2eDirs() {
   return fs
     .readdirSync(modulesRoot, { withFileTypes: true })
     .filter((d) => d.isDirectory())
-    .filter((d) => !/Mobile/i.test(d.name))
+    .filter(
+      (d) =>
+        d.name !== 'CoreMobileWebclient' &&
+        !/MobileWebclient$/i.test(d.name)
+    )
     .filter((d) => d.name !== 'CoreWebclient')
     .map((d) => {
       const moduleName = d.name

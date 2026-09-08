@@ -13,7 +13,7 @@ modules/CoreWebclient/package.json            ← convenience scripts test:e2e* 
 modules/<WebclientModule>/test/e2e/*.spec.js  ← scenarios for that module
 ```
 
-The config **auto-discovers** every `modules/*/test/e2e` that contains `*.spec.js` (skips `*Mobile*` and `CoreWebclient` itself). Add specs under a module — no config edit required.
+The config **auto-discovers** every `modules/*/test/e2e` that contains `*.spec.js` (skips `CoreWebclient`, `CoreMobileWebclient`, and desktop-incompatible `*MobileWebclient` modules). Add specs under a module — no config edit required.
 
 ---
 
@@ -41,6 +41,26 @@ The config **auto-discovers** every `modules/*/test/e2e` that contains `*.spec.j
    ```
 
    `.env.e2e` is **gitignored** — do not commit it.
+
+   Local default is usually:
+
+   ```bash
+   PLAYWRIGHT_BASE_URL=http://localhost:8888/
+   ```
+
+   For regular desktop specs, plain local HTTP is enough.
+
+   For local runs that exercise **Paranoid Encryption / OpenPGP / WebCrypto** in Chromium, run the HTTPS helper first and point Playwright to it:
+
+   ```bash
+   ./modules/CoreWebclient/test/e2e/scripts/local-https-proxy.sh
+   ```
+
+   ```bash
+   PLAYWRIGHT_BASE_URL=https://localhost:8890/
+   ```
+
+   Why this matters: `window.crypto.subtle` and related browser crypto flows require HTTPS. If Playwright tries `https://localhost:8890/` while the helper is not running, login setup fails immediately with `ERR_CONNECTION_REFUSED` before the login page even opens.
 
 5. Run:
 
