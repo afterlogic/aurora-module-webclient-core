@@ -4,6 +4,8 @@
  *   E2E_LOGIN_PRIMARY / E2E_PASSWORD_PRIMARY   — default login (mutations)
  *   E2E_LOGIN_SECONDARY / E2E_PASSWORD_SECONDARY — sharing / multi-user flows
  *   E2E_LOGIN_RESERVE / E2E_PASSWORD_RESERVE   — permissions / ACL scenarios
+ *   E2E_LOGIN_ADMIN / E2E_PASSWORD_ADMIN       — AdminPanelWebclient superadmin
+ *   E2E_LOGIN_TENANT_ADMIN / E2E_PASSWORD_TENANT_ADMIN — TenantAdmin desktop user
  *
  * Parallel workers stay at 1 by default (PLAYWRIGHT_WORKERS). Roles are for
  * intentional multi-user steps inside a test, not for worker isolation.
@@ -67,6 +69,37 @@ function hasReserveCredentials() {
   return !!(process.env.E2E_LOGIN_RESERVE && process.env.E2E_PASSWORD_RESERVE)
 }
 
+function getAdminCredentials() {
+  const login = process.env.E2E_LOGIN_ADMIN
+  const password = process.env.E2E_PASSWORD_ADMIN
+  if (!login || password === undefined) {
+    throw new Error(
+      'Set E2E_LOGIN_ADMIN and E2E_PASSWORD_ADMIN in test/e2e/.env.e2e'
+    )
+  }
+  return { login, password }
+}
+
+function hasAdminCredentials() {
+  return !!process.env.E2E_LOGIN_ADMIN && process.env.E2E_PASSWORD_ADMIN !== undefined
+}
+
+function getTenantAdminCredentials() {
+  const creds = pair('E2E_LOGIN_TENANT_ADMIN', 'E2E_PASSWORD_TENANT_ADMIN')
+  if (!creds) {
+    throw new Error(
+      'Set E2E_LOGIN_TENANT_ADMIN and E2E_PASSWORD_TENANT_ADMIN in test/e2e/.env.e2e'
+    )
+  }
+  return creds
+}
+
+function hasTenantAdminCredentials() {
+  return !!(
+    process.env.E2E_LOGIN_TENANT_ADMIN && process.env.E2E_PASSWORD_TENANT_ADMIN
+  )
+}
+
 /**
  * Compose recipient for the default (primary) user.
  * E2E_COMPOSE_TO overrides when set.
@@ -83,8 +116,12 @@ module.exports = {
   getTestCredentials,
   getSecondaryCredentials,
   getReserveCredentials,
+  getAdminCredentials,
+  getTenantAdminCredentials,
   hasCredentials,
   hasSecondaryCredentials,
   hasReserveCredentials,
+  hasAdminCredentials,
+  hasTenantAdminCredentials,
   getComposeTo,
 }

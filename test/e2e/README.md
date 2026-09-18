@@ -89,6 +89,10 @@ rm -f data/cache/templates-*.cache
 | `E2E_PASSWORD_SECONDARY` | for share scenarios | |
 | `E2E_LOGIN_RESERVE` | for ACL scenarios | User with different permissions |
 | `E2E_PASSWORD_RESERVE` | for ACL scenarios | |
+| `E2E_LOGIN_ADMIN` | for adminpanel sign-in | Superadmin login (`/adminpanel/`) |
+| `E2E_PASSWORD_ADMIN` | for adminpanel sign-in | Superadmin password |
+| `E2E_LOGIN_TENANT_ADMIN` | for tenant admin tab | Desktop user with TenantAdmin role |
+| `E2E_PASSWORD_TENANT_ADMIN` | for tenant admin tab | |
 | `E2E_COMPOSE_TO` | no | Compose recipient (default = PRIMARY login) |
 | `SKIP_DEPS_INSTALL` | no | For `run.sh`: `1` = skip `npm install` (CI already installed root deps). Alias: `SKIP_NPM_INSTALL`. |
 
