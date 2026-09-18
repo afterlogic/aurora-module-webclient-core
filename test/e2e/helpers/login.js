@@ -435,6 +435,7 @@ module.exports = {
   attachScreenshot,
   fieldControl,
   waitForTurnstileToken,
+  armAppDataResponse,
   loginAs,
   loginAsTestUser,
   gotoLoggedIn,
