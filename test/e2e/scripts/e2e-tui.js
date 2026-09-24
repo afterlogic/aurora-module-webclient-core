@@ -220,6 +220,15 @@ const SUITES = [
     envFile: path.join(coreRoot, 'test', 'e2e', '.env.e2e'),
     envTemplate: path.join(coreRoot, 'test', 'e2e', '.env.e2e.example'),
     requiredEnv: ['E2E_LOGIN_PRIMARY', 'E2E_PASSWORD_PRIMARY'],
+    // [label, .env.e2e key] of the test accounts shown before a run.
+    accounts: [
+      ['Primary', 'E2E_LOGIN_PRIMARY'],
+      ['Secondary', 'E2E_LOGIN_SECONDARY'],
+      ['Reserve', 'E2E_LOGIN_RESERVE'],
+      ['Admin', 'E2E_LOGIN_ADMIN'],
+      ['Tenant admin', 'E2E_LOGIN_TENANT_ADMIN'],
+      ['Compose to', 'E2E_COMPOSE_TO'],
+    ],
     defaultUrl: 'http://localhost:8888/',
     discover: () =>
       discoverModules(
@@ -252,6 +261,11 @@ const SUITES = [
     envFile: path.join(vueMobileRoot, '.env.e2e'),
     envTemplate: path.join(vueMobileRoot, '.env.e2e.example'),
     requiredEnv: ['E2E_LOGIN', 'E2E_PASSWORD'],
+    accounts: [
+      ['Primary', 'E2E_LOGIN'],
+      ['Secondary', 'E2E_LOGIN_SECONDARY'],
+      ['Compose to', 'E2E_COMPOSE_TO'],
+    ],
     defaultUrl: 'http://localhost:8888/?mobile-version',
     discover: () =>
       discoverModules(
@@ -809,6 +823,34 @@ function renderConfirm() {
   if (extraArgs.length) {
     lines.push(` ${dim('Extra args')}    ${extraArgs.map(quoteArg).join(' ')}`)
   }
+
+  // Logins only — never passwords.
+  lines.push('', ` ${dim('Test accounts')}`)
+  const labelWidth = Math.max(...state.suite.accounts.map(([label]) => label.length)) + 2
+  for (const [label, key] of state.suite.accounts) {
+    const value = envValue(state.suite, key)
+    let shown
+    if (!value) {
+      shown = dim('not set')
+    } else if (envFile.isPlaceholder(value)) {
+      shown = yellow(`${value}  template example`)
+    } else {
+      shown = value
+    }
+    lines.push(`   ${dim(label.padEnd(labelWidth))}${shown}`)
+  }
+
+  if (state.mode.id === 'email') {
+    const recipients = envValue(state.suite, 'E2E_MAIL_TO')
+      .split(',')
+      .map((a) => a.trim())
+      .filter(Boolean)
+    lines.push('')
+    wrap(recipients.join(', '), width, pad).forEach((l, i) =>
+      lines.push(i === 0 ? ` ${dim('Report to')}     ${l}` : l)
+    )
+  }
+
   lines.push('', ` ${dim('Command')}`, `   ${cyan(describeCommand(buildTestCommand()))}`)
   lines.push('', ...renderWebChecks(state.suite, url))
   return lines
