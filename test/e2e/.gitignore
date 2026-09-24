@@ -9,3 +9,4 @@ playwright/.cache/
 debug-login.png
 *.png
 !fixtures/**
+.tui-state.json

@@ -8,23 +8,13 @@ This repository has a pre-commit hook. To make it work you need to configure git
 
 ## E2E tests (Playwright)
 
-Desktop Knockout UI. Prefer launching from the **Aurora install root**:
+Run desktop and mobile E2E tests from the **Aurora install root** with the interactive launcher (it lives in this module, `test/e2e/scripts/e2e-tui.js`):
 
 ```bash
-npm run test:e2e-desktop
-npm run test:e2e-desktop:ui
-npm run test:e2e-desktop -- --setup "MailWebclient Chrome"
+npm run test:e2e:tui
 ```
 
-Or from this module:
-
-```bash
-npm run test:e2e:ui --setup "StandardLoginFormWebclient Chrome"
-```
-
-Full docs: [`test/e2e/README.md`](test/e2e/README.md).
-
-Mobile suite: CoreMobileWebclient [`vue-mobile/test/e2e/README.md`](../CoreMobileWebclient/vue-mobile/test/e2e/README.md).
+Setup and details: [`test/e2e/README.md`](test/e2e/README.md). Mobile suite: CoreMobileWebclient [`vue-mobile/test/e2e/README.md`](../CoreMobileWebclient/vue-mobile/test/e2e/README.md).
 
 # License
 This module is licensed under AGPLv3 license if free version of the product is used or Afterlogic Software License if commercial version of the product was purchased.

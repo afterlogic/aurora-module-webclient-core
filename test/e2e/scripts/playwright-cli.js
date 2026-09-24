@@ -14,13 +14,11 @@ const { stripLoopbackProxyEnv } = require('./strip-loopback-proxy')
 const coreRoot = path.join(__dirname, '..', '..', '..')
 const auroraRoot = path.join(coreRoot, '..', '..')
 const nodeModules = path.join(auroraRoot, 'node_modules')
-const playwrightBin = path.join(
-  nodeModules,
-  '.bin',
-  process.platform === 'win32' ? 'playwright.cmd' : 'playwright'
-)
+// Run the CLI script with node rather than the .bin shim: on Windows the
+// playwright.cmd shim needs a shell, which splits "--project=Module · Chrome".
+const playwrightCli = path.join(nodeModules, '@playwright', 'test', 'cli.js')
 
-if (!fs.existsSync(playwrightBin)) {
+if (!fs.existsSync(playwrightCli)) {
   console.error(
     `Playwright not found at ${path.join(nodeModules, '@playwright/test')}`
   )
@@ -39,7 +37,7 @@ env.NODE_PATH = env.NODE_PATH
   ? `${nodeModules}${path.delimiter}${env.NODE_PATH}`
   : nodeModules
 
-const result = spawnSync(playwrightBin, process.argv.slice(2), {
+const result = spawnSync(process.execPath, [playwrightCli, ...process.argv.slice(2)], {
   cwd: process.cwd(),
   env,
   stdio: 'inherit',

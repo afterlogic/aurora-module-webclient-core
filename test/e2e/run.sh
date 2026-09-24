@@ -5,7 +5,6 @@
 #
 # Usage (from Aurora install root):
 #   ./modules/CoreWebclient/test/e2e/run.sh
-#   npm run test:e2e-desktop
 #   ./modules/CoreWebclient/test/e2e/run.sh -- --setup "MailWebclient Chrome"
 #
 # Env:

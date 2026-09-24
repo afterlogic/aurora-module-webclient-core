@@ -234,13 +234,11 @@ function main() {
     delete env.PLAYWRIGHT_BROWSERS_PATH
   }
 
-  const playwrightBin = path.join(
-    nodeModules,
-    '.bin',
-    process.platform === 'win32' ? 'playwright.cmd' : 'playwright'
-  )
+  // Run the CLI script with node rather than the .bin shim: on Windows the
+  // playwright.cmd shim needs a shell, which splits "--project=Module · Chrome".
+  const playwrightCli = path.join(nodeModules, '@playwright', 'test', 'cli.js')
 
-  if (!fs.existsSync(playwrightBin)) {
+  if (!fs.existsSync(playwrightCli)) {
     console.error(
       `Playwright not found at ${path.join(nodeModules, '@playwright/test')}`
     )
@@ -248,11 +246,10 @@ function main() {
     process.exit(1)
   }
 
-  const result = spawnSync(playwrightBin, playwrightArgs, {
+  const result = spawnSync(process.execPath, [playwrightCli, ...playwrightArgs], {
     cwd: coreRoot,
     env,
     stdio: 'inherit',
-    shell: process.platform === 'win32',
   })
 
   if (result.error) {

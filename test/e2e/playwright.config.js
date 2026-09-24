@@ -48,6 +48,12 @@ function loadEnvE2e() {
 
 loadEnvE2e()
 
+// Installation picked in the e2e-tui launcher. It is not a .env.e2e key, so it
+// survives the file-wins reload above and beats PLAYWRIGHT_BASE_URL from the file.
+if (process.env.E2E_BASE_URL) {
+  process.env.PLAYWRIGHT_BASE_URL = process.env.E2E_BASE_URL
+}
+
 /**
  * Discover modules/<Name>/test/e2e that contain at least one *.spec.js.
  * Skip *Mobile* modules (their E2E lives under vue-mobile/test/e2e).
@@ -152,7 +158,8 @@ if (projects.length === 0) {
  * Specs: modules/<Webclient>/test/e2e/
  * Deps / npm scripts: modules/CoreWebclient/package.json
  *
- * Override URL: PLAYWRIGHT_BASE_URL=https://staging.example/subdir/
+ * Override URL: PLAYWRIGHT_BASE_URL=https://staging.example/subdir/ in .env.e2e,
+ * or E2E_BASE_URL in the environment (wins over .env.e2e; set by e2e-tui.js).
  * Workers: PLAYWRIGHT_WORKERS (default 1).
  *
  * For subdirectory installs always include a trailing slash. Helpers use

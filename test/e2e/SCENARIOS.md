@@ -11,8 +11,8 @@ Conditional `test.skip` inside a test (empty mailbox, no Team/OpenPGP tab, no SE
 Run from the Aurora install root:
 
 ```bash
-npm run test:e2e-desktop
-npm run test:e2e-desktop -- --setup "MailWebclient Chrome"
+npm run test:e2e:tui                  # interactive launcher
+./modules/CoreWebclient/test/e2e/run.sh -- --setup "MailWebclient Chrome"
 ```
 
 Full matrix is module × Chrome / Firefox / Safari.

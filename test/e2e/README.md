@@ -5,8 +5,8 @@ Automated tests for the classic **desktop** UI (Knockout). Selectors use `data-t
 ## Layout
 
 ```text
-package.json (install root)                  ← @playwright/test + npm run test:e2e-desktop*
-modules/CoreWebclient/test/e2e/               ← config, helpers, .env, reports, run.sh
+package.json (install root)                  ← npm run test:e2e:tui (launcher); npm install provides @playwright/test
+modules/CoreWebclient/test/e2e/               ← config, helpers, .env, reports, run.sh, scripts/e2e-tui.js
 modules/StandardLoginFormWebclient/test/e2e/auth.setup.js
                                               ← login once per browser (Playwright `dependencies`)
 modules/CoreWebclient/package.json            ← convenience scripts test:e2e* (use root Playwright)
@@ -29,10 +29,11 @@ The config **auto-discovers** every `modules/*/test/e2e` that contains `*.spec.j
 3. Download the Playwright browsers (Chromium, Firefox, WebKit):
 
    ```bash
-   npm run test:e2e-desktop:install-browsers
+   cd modules/CoreWebclient
+   npm run test:e2e:install-browsers
    ```
 
-   Do **not** rely on a bare `npx playwright install` from another directory — that can install browsers for a different Playwright version than the one under `test:e2e-desktop:install-browsers`.
+   Do **not** rely on a bare `npx playwright install` from another directory — that can install browsers for a different Playwright version than the one under `test:e2e:install-browsers`. The launcher marks browsers that are missing for the installed Playwright version.
 
 4. Create `.env.e2e` and fill in all the fields (URL, test accounts):
 
@@ -62,10 +63,10 @@ The config **auto-discovers** every `modules/*/test/e2e` that contains `*.spec.j
 
    Why this matters: `window.crypto.subtle` and related browser crypto flows require HTTPS. If Playwright tries `https://localhost:8890/` while the helper is not running, login setup fails immediately with `ERR_CONNECTION_REFUSED` before the login page even opens.
 
-5. Run:
+5. Run from the install root:
 
    ```bash
-   npm run test:e2e-desktop
+   npm run test:e2e:tui
    ```
 
 If Knockout templates (`data-test-id`) changed, clear the PHP template cache before testing:
@@ -130,14 +131,33 @@ php ./test/e2e/scripts/send-e2e-report.php
 
 Use **Node 18 or 22**. Playwright lives in the **install-root** `node_modules`.
 
+### Interactive launcher (`npm run test:e2e:tui`)
+
+The usual way to run tests. From the install root (or `modules/CoreWebclient`, same script):
+
 ```bash
-npm run test:e2e-desktop                 # run.sh: scan modules + run
-npm run test:e2e-desktop:ui
-npm run test:e2e-desktop:report
-npm run test:e2e-desktop:install-browsers
+npm run test:e2e:tui
+npm run test:e2e:tui -- --grep compose   # extra args are passed to Playwright
 ```
 
-Equivalent commands from `modules/CoreWebclient` (thin wrappers around the same install-root Playwright):
+A terminal menu for both suites (desktop and `CoreMobileWebclient/vue-mobile`):
+
+1. **Suite** — a suite that is not ready (runner module missing, no specs, no `.env.e2e` or login/password in it still empty or a template example, Playwright or its browsers not installed) is disabled with what is missing. **Enter** on it opens a setup screen that fixes what it can: `npm install` in the install root, installing the Playwright browsers, and the `.env.e2e` wizard. **E** opens the wizard for any suite.
+2. **Installation** — `PLAYWRIGHT_BASE_URL` from the environment / `.env.e2e` is the default; pick a previously used URL or type another one (`D` forgets a URL). The choice is passed as `E2E_BASE_URL`, which the config prefers over `.env.e2e`; nothing is written to `.env.e2e`.
+3. **Modules** and 4. **Browsers / devices** — browsers not installed for this Playwright version are disabled; **I** installs them.
+5. **Mode** — **Run**, **Run + email report** (disabled until `php` and the `MAIL_*` / `E2E_MAIL_TO` settings are there; Enter opens the wizard) or **Playwright UI**.
+
+**`.env.e2e` wizard.** Goes through every field of `.env.e2e.example` in order, with the template comments as help. The input is prefilled with the default — the current `.env.e2e` value, else the same setting from the other suite's `.env.e2e` (mail settings, primary login → `E2E_LOGIN`, base URL), else the template value — so **Enter** keeps it. Commented-out template keys are optional: left empty they stay commented. Values are checked (URLs, port, encryption, emails); template examples such as `your-…@example.com` are highlighted and do not count as configured. A review screen lists all fields before saving; keys that the previous file had and the template does not are kept.
+
+**Web access check.** `.env.e2e` lives under the web root and holds passwords. On the suite and Run screens the launcher requests both suites' `.env.e2e` from this installation (`WEB_INSTALL_URL`) and from the target installation and warns if either is served. Deny access to `.env*` files in the web server config if it is.
+
+It builds the `--setup` value and calls the suite's own runner, so the result is the same as the commands below. The selection and the URL history are remembered in `test/e2e/.tui-state.json` (gitignored).
+
+Keys: `↑↓` move, `Space` toggle, `A` all/none, `Enter` next, `Esc` back, `Q` quit. After a run, `R` opens the HTML report and `Enter` returns to the menu. No dependencies; works in Windows Terminal / PowerShell / cmd, macOS and Linux terminals. Git Bash under mintty has no real TTY — use `winpty node modules/CoreWebclient/test/e2e/scripts/e2e-tui.js` there.
+
+### Commands from `modules/CoreWebclient`
+
+Thin wrappers around the same install-root Playwright, for scripting / CI:
 
 ```bash
 cd modules/CoreWebclient
@@ -145,6 +165,7 @@ npm run test:e2e
 npm run test:e2e:email    # runs the suite, then emails the report (see Email report above)
 npm run test:e2e:ui
 npm run test:e2e:report
+npm run test:e2e:install-browsers
 ```
 
 ### UI Mode (`npm run test:e2e:ui`)
@@ -158,7 +179,7 @@ cd modules/CoreWebclient
 npm run test:e2e:ui -- --setup "StandardLoginFormWebclient Chrome" login-page.spec.js
 ```
 
-If the UI opens but a run fails immediately with "Executable doesn't exist" / "Please run … playwright install", the browsers are missing for this Playwright version — run `npm run test:e2e-desktop:install-browsers` from the install root.
+If the UI opens but a run fails immediately with "Executable doesn't exist" / "Please run … playwright install", the browsers are missing for this Playwright version — run `npm run test:e2e:install-browsers` in `modules/CoreWebclient`.
 
 ### One module / one browser / one file
 
@@ -194,8 +215,6 @@ From the install root via `run.sh`:
 
 ```bash
 ./modules/CoreWebclient/test/e2e/run.sh -- --setup "MailWebclient Chrome"
-# or:
-npm run test:e2e-desktop -- --setup "MailWebclient Chrome"
 ```
 
 Console steps look like `→ Open desktop login page`. HTML report: timeline, failure screenshots, **Trace**.
@@ -247,8 +266,11 @@ A full run without a project filter executes **all** combinations — that is sl
 
 Report files live in `modules/CoreWebclient/test/e2e/playwright-report/`.
 
+Open it with `R` in the launcher after a run, or:
+
 ```bash
-npm run test:e2e-desktop:report
+cd modules/CoreWebclient
+npm run test:e2e:report
 ```
 
 ---
