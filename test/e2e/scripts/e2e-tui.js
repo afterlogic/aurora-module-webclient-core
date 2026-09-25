@@ -242,7 +242,7 @@ const SUITES = [
       { id: 'Safari', hint: 'WebKit', engine: 'webkit' },
     ],
     testArgs: (mode, setup) =>
-      mode === 'email'
+      mode === 'email' || mode === 'email-each'
         ? [path.join(desktopScripts, 'run-with-email-report.js'), '--setup', setup]
         : [path.join(desktopScripts, 'run-e2e.js'), '--setup', setup],
     reportArgs: () => [
@@ -282,7 +282,7 @@ const SUITES = [
       { id: 'iPhone13WebKit', hint: 'iPhone 13 · WebKit', engine: 'webkit' },
     ],
     testArgs: (mode, setup) =>
-      mode === 'email'
+      mode === 'email' || mode === 'email-each'
         ? [path.join(mobileScripts, 'run-with-email-report.js'), '--setup', setup]
         : [path.join(mobileScripts, 'playwright-cli.js'), 'test', '--setup', setup],
     reportArgs: () => [path.join(mobileScripts, 'playwright-cli.js'), 'show-report'],
@@ -400,6 +400,11 @@ function displayUrl(value) {
 const MODES = [
   { id: 'run', label: 'Run', hint: 'run in this terminal, HTML report afterwards' },
   { id: 'email', label: 'Run + email report', hint: 'send the report by email after the run' },
+  {
+    id: 'email-each',
+    label: 'Run + email after each module',
+    hint: 'send a separate report after every module',
+  },
   { id: 'ui', label: 'Playwright UI', hint: 'open the interactive UI mode' },
 ]
 
@@ -472,7 +477,7 @@ function selectedBrowsers(suite) {
 }
 
 function modeProblems(mode) {
-  if (mode.id !== 'email') {
+  if (mode.id !== 'email' && mode.id !== 'email-each') {
     return []
   }
   const problems = []
@@ -622,11 +627,17 @@ function buildSetup() {
   return { modules, browsers, setup: `${modulePart} ${browsers.join(',')}` }
 }
 
-function buildTestCommand() {
+function setupForModule(moduleId) {
+  const { browsers } = buildSetup()
+  return `${moduleId} ${browsers.join(',')}`
+}
+
+function buildTestCommand({ setup, modeId } = {}) {
   const suite = state.suite
   const url = picksFor(suite).url
-  const args = suite.testArgs(state.mode.id, buildSetup().setup)
-  if (state.mode.id === 'ui') {
+  const selectedMode = modeId || state.mode.id
+  const args = suite.testArgs(selectedMode, setup || buildSetup().setup)
+  if (selectedMode === 'ui') {
     args.push('--ui')
   }
   args.push(...extraArgs)
@@ -634,6 +645,50 @@ function buildTestCommand() {
   // launcher's choice from E2E_BASE_URL; mobile reads PLAYWRIGHT_BASE_URL.
   const env = { ...process.env, E2E_BASE_URL: url, PLAYWRIGHT_BASE_URL: url }
   return { command: process.execPath, cwd: suite.cwd, args, env }
+}
+
+function countTests(command) {
+  const result = spawnSync(command.command, [...command.args, '--list'], {
+    cwd: command.cwd,
+    env: command.env,
+    encoding: 'utf8',
+    maxBuffer: 10 * 1024 * 1024,
+  })
+
+  if (result.error || result.status !== 0) {
+    return null
+  }
+
+  const output = `${result.stdout || ''}\n${result.stderr || ''}`
+  const total = output.match(/Total:\s*(\d+)\s+tests?\b/i)
+  if (total) {
+    return Number(total[1])
+  }
+
+  const listed = output.match(/^\s*\[[^\]]+\]\s+›/gm)
+  return listed ? listed.length : null
+}
+
+function countSelectedTests() {
+  const { modules } = buildSetup()
+  let total = 0
+
+  for (const moduleId of modules) {
+    const count = countTests(
+      buildTestCommand({
+        setup: setupForModule(moduleId),
+        modeId: 'run',
+      })
+    )
+
+    if (count === null) {
+      return null
+    }
+
+    total += count
+  }
+
+  return total
 }
 
 function describeCommand({ cwd, args }) {
@@ -1340,15 +1395,53 @@ function afterRunPrompt() {
 
 function runTests() {
   saveState()
+
+  const setup = buildSetup()
   const command = buildTestCommand()
+  const testCount = countSelectedTests()
+
   leaveScreen()
+
   console.log(bold(`▶ ${state.suite.label} E2E`))
   console.log(dim(`  installation: ${displayUrl(picksFor(state.suite).url)}`))
   console.log(dim(`  cwd: ${command.cwd}`))
+
+  if (testCount === null) {
+    console.log(yellow('  tests to run: could not determine'))
+  } else {
+    console.log(cyan(`  tests to run: ${testCount}`))
+  }
+
   console.log(cyan(`  ${describeCommand(command)}`))
   console.log('')
+
   state.phase = 'running'
-  state.lastRun = { kind: 'tests', status: runChild(command) }
+
+  if (state.mode.id !== 'email-each') {
+    state.lastRun = { kind: 'tests', status: runChild(command) }
+    afterRunPrompt()
+    return
+  }
+
+  let status = 0
+
+  for (const moduleId of setup.modules) {
+    const moduleCommand = buildTestCommand({
+      setup: setupForModule(moduleId),
+      modeId: 'email',
+    })
+
+    console.log(bold(`▶ Module: ${moduleId}`))
+    console.log(dim(`  ${describeCommand(moduleCommand)}`))
+    console.log('')
+
+    const moduleStatus = runChild(moduleCommand)
+    if (moduleStatus !== 0) {
+      status = moduleStatus
+    }
+  }
+
+  state.lastRun = { kind: 'tests', status }
   afterRunPrompt()
 }
 
