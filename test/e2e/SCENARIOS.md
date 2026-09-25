@@ -176,7 +176,7 @@ Specs: `settings.spec.js`, `settings-actions.spec.js`, `settings-auth.spec.js`, 
 
 ### OpenPGP (`OpenPgpWebclient`)
 
-- encrypt compose → decrypt in Inbox *(requires `E2E_OPENPGP_PASSWORD`, OpenPGP tab)*
+- encrypt compose → decrypt in Inbox *(OpenPGP tab; `E2E_OPENPGP_PASSWORD` if the key has a passphrase)*
 
 Specs: `mail-openpgp.spec.js`.
 

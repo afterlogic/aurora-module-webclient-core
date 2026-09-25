@@ -35,7 +35,7 @@ Stand gates (`test.skip`): Notes folder missing, Save-to-Files plugin off, singl
 
 ## P2 — specs written
 
-- OpenPGP: `mail-openpgp.spec.js` (requires `E2E_OPENPGP_PASSWORD`)
+- OpenPGP: `mail-openpgp.spec.js` (`E2E_OPENPGP_PASSWORD` if the key has a passphrase)
 - Paranoid Encryption: `files-paranoid.spec.js`
 - Calendar iCal: `calendar-ical-invite.spec.js`
 - Tasks: `tasks.spec.js`
