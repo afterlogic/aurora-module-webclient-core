@@ -193,4 +193,22 @@
 	.input[type="checkbox"] {
 		width: auto;
 	}
+
+	// The arrow of a native select is drawn by the browser right at the edge of the field,
+	// so it is drawn here with some space to the edge
+	select.input:not([multiple]):not([size]) {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 9 5'%3E%3Cpath d='M0.5 0.5L4.5 4.5L8.5 0.5' fill='none' stroke='%23000000' stroke-width='0.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+		background-position: right 10px center;
+		background-repeat: no-repeat;
+		padding-right: 30px;
+
+		html.rtl & {
+			background-position: left 10px center;
+			padding-left: 30px;
+			padding-right: 6px;
+		}
+	}
 }
