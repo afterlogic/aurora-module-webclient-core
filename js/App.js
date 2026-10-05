@@ -285,6 +285,15 @@ CApp.prototype.showLastErrorOnLogin = function () {
     if (UserSettings.LastErrorCode === Enums.Errors.AuthError) {
       Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_AUTH_PROBLEM'), true)
     }
+
+    try {
+      if (window.sessionStorage.getItem('auroraUntrustedDevice')) {
+        window.sessionStorage.removeItem('auroraUntrustedDevice')
+        Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_UNTRUSTED_DEVICE'), true)
+      }
+    } catch (e) {
+      // sessionStorage is not available
+    }
   }
 }
 
@@ -373,6 +382,24 @@ CApp.prototype.askDiscardChanges = function (fOnDiscard, fOnNotDiscard, oCurrent
       }
     }, this)
   Popups.showPopup(ConfirmPopup, [sConfirm, fOnConfirm])
+}
+
+/**
+ * The server doesn't trust this device. Ends the session once and shows the login screen with
+ * the explanation.
+ */
+CApp.prototype.untrustedDeviceProblem = function () {
+  if (this.bUntrustedDeviceHandled) {
+    return
+  }
+  this.bUntrustedDeviceHandled = true
+
+  try {
+    window.sessionStorage.setItem('auroraUntrustedDevice', '1')
+  } catch (e) {
+    // The message on the login screen is not essential
+  }
+  this.logoutAndGotoLogin()
 }
 
 CApp.prototype.tokenProblem = function () {

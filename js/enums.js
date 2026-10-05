@@ -72,6 +72,7 @@ Enums.Errors = {
 	'UserAlreadyExists': 111,
 	'SystemNotConfigured': 112,
 	'LicenseLimit': 115,
+	'UntrustedDevice': 117,
 	'CanNotChangePassword': 502,
 	'AccountOldPasswordNotCorrect': 1020,
 	'AccountAlreadyExists': 704,

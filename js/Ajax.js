@@ -315,6 +315,16 @@ CAjax.prototype.done = function (oRequest, fResponseHandler, oContext, oResponse
           App.logoutAndGotoLogin()
         }
         break
+      case Enums.Errors.UntrustedDevice:
+        // The server doesn't trust this device (e.g. the DeviceId cookie was changed or removed)
+        // and rejects all requests of the session, so there is nothing to retry: end the session
+        if (
+          App.getUserRole() !== Enums.UserRole.Anonymous &&
+          !(oRequest.Module === 'Core' && oRequest.Method === 'Logout')
+        ) {
+          App.untrustedDeviceProblem()
+        }
+        break
     }
 
     oResponse.Result = false

@@ -30,6 +30,9 @@ Api.getErrorByCode = function (response, defaultErrorText = '')
 			case Enums.Errors.AuthError:
 				errorText = TextUtils.i18n('%MODULENAME%/ERROR_PASS_INCORRECT');
 				break;
+			case Enums.Errors.UntrustedDevice:
+				errorText = TextUtils.i18n('%MODULENAME%/ERROR_UNTRUSTED_DEVICE');
+				break;
 			case Enums.Errors.DataBaseError:
 				errorText = TextUtils.i18n('%MODULENAME%/ERROR_DATABASE');
 				break;
