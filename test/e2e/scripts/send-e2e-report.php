@@ -270,7 +270,7 @@ function reportFullySkippedModules(array $rows): int
     foreach ($rows as $row) {
         $modules[$row['module']][] = $row['status'];
     }
-    return count(array_filter($modules, fn (array $st): bool => count(array_unique($st)) === 1 && $st[0] === 'skipped'));
+    return count(array_filter($modules, fn(array $st): bool => count(array_unique($st)) === 1 && $st[0] === 'skipped'));
 }
 
 /**
