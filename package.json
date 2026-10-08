@@ -34,7 +34,7 @@
     "quasar": "^2.0.0",
     "regenerator-runtime": "^0.13.3",
     "ua-parser-js": "^0.7.22",
-    "underscore": "~1.12.1",
+    "underscore": "~1.13.8",
     "video.js": "^7.6.6",
     "vue": "^3.2.13",
     "webpack": "^5.75.0",
