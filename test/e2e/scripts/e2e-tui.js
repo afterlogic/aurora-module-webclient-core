@@ -632,7 +632,7 @@ function setupForModule(moduleId) {
   return `${moduleId} ${browsers.join(',')}`
 }
 
-function buildTestCommand({ setup, modeId } = {}) {
+function buildTestCommand({ setup, modeId, reportModule } = {}) {
   const suite = state.suite
   const url = picksFor(suite).url
   const selectedMode = modeId || state.mode.id
@@ -644,6 +644,14 @@ function buildTestCommand({ setup, modeId } = {}) {
   // Desktop config lets .env.e2e override the environment, so it reads the
   // launcher's choice from E2E_BASE_URL; mobile reads PLAYWRIGHT_BASE_URL.
   const env = { ...process.env, E2E_BASE_URL: url, PLAYWRIGHT_BASE_URL: url }
+  // Per-module email runs: name the module under test in the report subject. The
+  // report would otherwise only show it next to StandardLoginFormWebclient, which
+  // Playwright pulls in as a setup dependency of every module.
+  if (reportModule) {
+    env.E2E_REPORT_MODULE = reportModule
+  } else {
+    delete env.E2E_REPORT_MODULE
+  }
   return { command: process.execPath, cwd: suite.cwd, args, env }
 }
 
@@ -1429,6 +1437,7 @@ function runTests() {
     const moduleCommand = buildTestCommand({
       setup: setupForModule(moduleId),
       modeId: 'email',
+      reportModule: moduleId,
     })
 
     console.log(bold(`▶ Module: ${moduleId}`))

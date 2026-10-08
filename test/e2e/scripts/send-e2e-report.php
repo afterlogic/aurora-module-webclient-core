@@ -106,7 +106,7 @@ const REPORT_STATUS = [
     'failed' => ['❌', 'Failed', '#fdf1f1', '#e8b4b4'],
     'flaky' => ['⚠️', 'Flaky', '#fff8e8', '#ecd29a'],
     'passed' => ['✅', 'Passed', '#f1f9f3', '#b5dcbf'],
-    'skipped' => ['⏭️', 'Skipped', '#f6f6f8', '#d6d6dc'],
+    'skipped' => ['🚫', 'Skipped', '#f6f6f8', '#d6d6dc'],
 ];
 const REPORT_STATUS_ORDER = ['failed' => 0, 'flaky' => 1, 'passed' => 2, 'skipped' => 3];
 
@@ -263,6 +263,16 @@ function reportGroupStatus(array $counts): string
     return 'skipped';
 }
 
+/** Number of modules in which every test was skipped (nothing passed, failed or flaked). */
+function reportFullySkippedModules(array $rows): int
+{
+    $modules = [];
+    foreach ($rows as $row) {
+        $modules[$row['module']][] = $row['status'];
+    }
+    return count(array_filter($modules, fn (array $st): bool => count(array_unique($st)) === 1 && $st[0] === 'skipped'));
+}
+
 /**
  * HTML body: status banner, run details, per-module summary, and every test
  * grouped by module with error excerpts on failed ones and reasons on skipped ones.
@@ -348,7 +358,7 @@ function buildResultsHtml(array $report, string $suiteLabel, string $reportUrl, 
     };
     $out[] = $sectionTitle('Summary by module');
     $summary = "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;font-size:13px;\">";
-    $summary .= "<tr><th style=\"$th\">Module</th><th style=\"$th text-align:center;\">✅ Passed</th><th style=\"$th text-align:center;\">❌ Failed</th>" . (isset($statuses["flaky"]) ? "<th style=\"$th text-align:center;\">⚠️ Flaky</th>" : "") . "<th style=\"$th text-align:center;\">⏭️ Skipped</th><th style=\"$th text-align:right;\">Time</th></tr>";
+    $summary .= "<tr><th style=\"$th\">Module</th><th style=\"$th text-align:center;\">✅ Passed</th><th style=\"$th text-align:center;\">❌ Failed</th>" . (isset($statuses["flaky"]) ? "<th style=\"$th text-align:center;\">⚠️ Flaky</th>" : "") . "<th style=\"$th text-align:center;\">🚫 Skipped</th><th style=\"$th text-align:right;\">Time</th></tr>";
     foreach ($modules as $module => $moduleRows) {
         $c = array_fill_keys(array_keys(REPORT_STATUS), 0);
         $time = 0;
@@ -741,14 +751,27 @@ function main(): void
         $status = $options['status'] ?? getenv('E2E_REPORT_STATUS') ?: null;
         $defaultSubject = getenv('E2E_MAIL_SUBJECT') ?: 'Desktop E2E test report';
         $subject = $options['subject'] ?? $defaultSubject;
-        if ($status !== null) {
-            $subject = '[' . strtoupper($status) . '] ' . $subject;
-        }
-
         $reportUrl = buildReportUrl($webInstallUrl, $envPath, $reportPath);
-
         $installUrl = (string) getenv('PLAYWRIGHT_BASE_URL');
         $report = loadReport(dirname($reportPath) . DIRECTORY_SEPARATOR . 'results.json');
+
+        if ($status !== null) {
+            $icon = $status === 'passed' ? '✅' : '❌';
+            $subject = "$icon [" . strtoupper($status) . '] ' . $subject;
+        }
+        // Set by the TUI for per-module runs; names the module under test (the report
+        // also lists StandardLoginFormWebclient, which runs as a setup dependency).
+        $reportModule = trim((string) getenv('E2E_REPORT_MODULE'));
+        if ($reportModule !== '') {
+            $subject .= " · $reportModule";
+        }
+        if ($report !== null) {
+            $skippedModules = reportFullySkippedModules($report['rows']);
+            if ($skippedModules > 0) {
+                $subject .= ' · ' . REPORT_STATUS['skipped'][0] . " $skippedModules module" . ($skippedModules > 1 ? 's' : '') . ' skipped';
+            }
+        }
+
         if ($report !== null) {
             $body = buildResultsHtml($report, 'Desktop', $reportUrl, $installUrl);
         } else {
