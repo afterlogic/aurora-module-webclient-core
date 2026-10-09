@@ -1,3 +1,4 @@
+const { watchApiErrors } = require('./api-errors')
 const { test, expect } = require('@playwright/test')
 const {
   hasCredentials,
@@ -350,6 +351,7 @@ async function openLoggedInPage(browser, credentials, { baseURL }) {
     storageState: { cookies: [], origins: [] },
   })
   const page = await context.newPage()
+  watchApiErrors(page)
   await loginAs(page, credentials)
   return { context, page }
 }
@@ -402,6 +404,7 @@ async function isOnLoginPage(page) {
  * (login form), sign in as PRIMARY instead of waiting for the shell.
  */
 async function gotoLoggedIn(page) {
+  watchApiErrors(page)
   await step('Open app (reuse authenticated session)', async () => {
     await gotoApp(page)
 
