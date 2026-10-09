@@ -115,9 +115,9 @@ async function clickNav(page, testId) {
   // Quick probe: is there a clickable child we should prefer?
   const innerSelector = 'a.link, a, button, [role="button"]'
   const inner = wrapper.locator(innerSelector).first()
-  const innerVisible = await inner
-    .isVisible({ timeout: T(3000) })
-    .catch(() => false)
+  // isVisible() answers at once (Playwright ignores a timeout here); the wrapper
+  // is already visible, so its child is rendered with it.
+  const innerVisible = await inner.isVisible().catch(() => false)
   const target = innerVisible ? inner : wrapper
 
   await target.click()

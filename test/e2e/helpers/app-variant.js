@@ -68,22 +68,23 @@ async function detectVariant(page) {
   if (!page) return resolveVariant() // fallback to env
 
   try {
-    // Next / Vue SPA — look for a Vue mount point first.
-    // Note: #app is a Vue mount; .login_panel exists in BOTH apps,
-    // so we must check for next markers before desktop ones.
+    // Wait for either marker: isVisible() does not wait (its timeout option is
+    // ignored), so right after goto neither mount point may be rendered yet.
+    // #app is a Vue mount; .login_panel exists in BOTH apps, so the next marker
+    // must be checked before the desktop one.
     const vueApp = page.locator('#app').first()
-    if (await vueApp.isVisible({ timeout: 3000 }).catch(() => false)) {
+    const koMarker = page.locator('.login_panel, [data-bind*="login"]').first()
+    await vueApp
+      .or(koMarker)
+      .first()
+      .waitFor({ state: 'visible', timeout: 3000 })
+    if (await vueApp.isVisible().catch(() => false)) {
       return 'next'
     }
-  } catch { /* ignore */ }
-
-  try {
-    // Desktop login form — Knockout-bound container.
-    const koMarker = page.locator('.login_panel, [data-bind*="login"]').first()
-    if (await koMarker.isVisible({ timeout: 3000 }).catch(() => false)) {
+    if (await koMarker.isVisible().catch(() => false)) {
       return 'desktop'
     }
-  } catch { /* ignore */ }
+  } catch { /* neither marker appeared: fall back to env */ }
 
   return resolveVariant()
 }
