@@ -136,6 +136,12 @@
 		}
 	}
 
+	// VueDatePicker marks today on the cell itself, not on a nested .ui-state-default.
+	.dp--cell-inner.dp--today,
+	.dp--calendar-item:has(> .dp--cell-inner.dp--today) {
+		background: #fff4cf;
+	}
+
 	.ui-state-active {
 		background: #eee;
 	}

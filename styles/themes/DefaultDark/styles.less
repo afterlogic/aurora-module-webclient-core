@@ -873,6 +873,41 @@
 	.fc-unthemed td.fc-today {
 		background: transparent;
 	}
+
+	// FullCalendar 6 week/day view uses different class names than the FC3 rules above.
+	// Without these, the axis, headers, weekends and today stay the light Vue defaults.
+	.calendar-grid-root .fc {
+		--fc-page-bg-color: @background-color-2;
+		--fc-neutral-bg-color: @background-color-2;
+		--fc-today-bg-color: #0B5269;
+		--fc-border-color: @border-color;
+		color: @text-color-1;
+	}
+
+	.fc-timegrid-axis,
+	.fc .fc-col-header-cell {
+		background: @background-color-2;
+		color: @text-color-1;
+	}
+
+	.fc .fc-col-header-cell-cushion,
+	.fc-timegrid-axis-cushion,
+	.fc-timegrid-slot-label-cushion {
+		color: @text-color-1 !important;
+	}
+
+	.fc-show-weekends .fc-day-sat,
+	.fc-show-weekends .fc-day-sun {
+		background: @background-color-2 !important;
+		color: @text-color-1;
+	}
+
+	.fc .fc-day-today:not(.fc-col-header-cell),
+	.fc-daygrid-day.fc-day-today,
+	.fc-timegrid-col.fc-day-today {
+		background: #0B5269 !important;
+		background-color: #0B5269 !important;
+	}
 	
 	.panel.calendars_panel .panel_bottom {
 		background: #22252F;
@@ -906,7 +941,9 @@
 	}
 
 	table.highlight_day td.ui-datepicker-today,
-	td.ui-datepicker-today {
+	td.ui-datepicker-today,
+	.dp--cell-inner.dp--today,
+	.dp--calendar-item:has(> .dp--cell-inner.dp--today) {
 		background: #0B5269 !important;
 	}
 }
@@ -917,6 +954,13 @@
 		background: @background-color-3 !important;
 		border-color: @background-color-3 !important;
 	}
+}
+
+// VueDatePicker puts highlight_week on the day cell, not on table > tr.current_week.
+.panel.calendars_panel .panel_bottom .dp--cell-inner.highlight_day,
+.panel.calendars_panel .panel_bottom .dp--cell-inner.highlight_week {
+	background: @background-color-3 !important;
+	border-color: @background-color-3 !important;
 }
 
 .ui-datepicker-prev,
