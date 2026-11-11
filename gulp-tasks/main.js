@@ -40,7 +40,7 @@ $(function () {
 	})
 
 	const appDataPromise = new Promise((resolve, reject) => {
-		utils.sendRequest('Core', 'GetAppdata', {}, function (res) {
+		utils.sendRequest('Core', 'GetAppData', {}, function (res) {
 			if (res.responseJSON?.ErrorCode) {
 				reject(new Error(res.responseJSON?.ErrorCode))
 			} else {

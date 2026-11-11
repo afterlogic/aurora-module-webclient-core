@@ -62,7 +62,7 @@ function parseApiResponseText(text) {
 }
 
 /**
- * Arm a listener for the bootstrap `Core/GetAppdata` response *before*
+ * Arm a listener for the bootstrap `Core/GetAppData` response *before*
  * navigating. next/Vue fires this request immediately on app mount
  * (main.ts → loadBootstrapData()) — arming after goto() can miss it.
  * Resolves to null on desktop (no such request) or on timeout.
@@ -72,7 +72,7 @@ function armAppDataResponse(page) {
     .waitForResponse(
       (res) =>
         res.request().method() === 'POST' &&
-        (res.request().postData() || '').includes('Method=GetAppdata'),
+        /Method=GetAppData\b/i.test(res.request().postData() || ''),
       { timeout: 20000 }
     )
     .then((res) => res.text())
@@ -85,7 +85,7 @@ function armAppDataResponse(page) {
  * on in its own config: ShowTurnstile === true with a non-empty SiteKey
  * (mirrors next/src/features/login/utils/captchaTokens.ts isTurnstileRequired).
  * `appData` is the unwrapped payload (window.auroraAppData, or the `Result`
- * object of a GetAppdata response).
+ * object of a GetAppData response).
  */
 function isTurnstileEnabledIn(appData) {
   const modules = appData?.Core?.AvailableClientModules
@@ -103,7 +103,7 @@ function isTurnstileEnabledIn(appData) {
 /**
  * desktop: window.auroraAppData is inlined into the HTML before app.js runs,
  * so Core.AvailableClientModules is already there — read it directly.
- * next/Vue: app data only arrives via the GetAppdata API response (see
+ * next/Vue: app data only arrives via the GetAppData API response (see
  * armAppDataResponse) — window.auroraAppData is never set.
  */
 async function isTurnstileModuleActive(page, appDataResponsePromise) {
@@ -194,7 +194,7 @@ async function loginAs(page, credentials) {
     throw new Error('loginAs requires { login, password }')
   }
 
-  // Must be armed before the first goto() — next/Vue fires GetAppdata
+  // Must be armed before the first goto() — next/Vue fires GetAppData
   // immediately on bootstrap, so listening starts before it can fire.
   const appDataResponsePromise = armAppDataResponse(page)
 
