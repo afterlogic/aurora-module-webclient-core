@@ -73,6 +73,7 @@ var Settings = {
 	HeaderModulesOrder: [],
 	IsDemo: false,
 	IsMobile: -1,
+	HasLayoutPreference: false,
 	LanguageList: [{name: 'English', text: 'English'}],
 	MultipleFilesUploadLimit: 50,
 	ShowQuotaBar: false,
@@ -170,6 +171,7 @@ var Settings = {
 			this.HeaderModulesOrder = Types.pArray(oAppDataCoreWebclientSection.HeaderModulesOrder, this.HeaderModulesOrder);
 			this.IsDemo = Types.pBool(oAppDataCoreWebclientSection.IsDemo, this.IsDemo);
 			this.IsMobile = Types.pInt(oAppDataCoreWebclientSection.IsMobile, this.IsMobile);
+			this.HasLayoutPreference = Types.pBool(oAppDataCoreWebclientSection.HasLayoutPreference, this.HasLayoutPreference);
 			this.LanguageList = Types.pArray(oAppDataCoreWebclientSection.LanguageListWithNames, this.LanguageList);
 			this.MultipleFilesUploadLimit = Types.pNonNegativeInt(oAppDataCoreWebclientSection.MultipleFilesUploadLimit, this.MultipleFilesUploadLimit);
 			this.ShowQuotaBar = Types.pBool(oAppDataCoreWebclientSection.ShowQuotaBar, this.ShowQuotaBar);

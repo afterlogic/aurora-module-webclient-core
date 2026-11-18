@@ -112,7 +112,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
             'AllowChangeSettings' => $this->oModuleSettings->AllowChangeSettings,
             'AllowClientDebug' => $this->oModuleSettings->AllowClientDebug,
             'AllowDesktopNotifications' => $oUser && null !== $oUser->getExtendedProp(self::GetName() . '::AllowDesktopNotifications') ? $oUser->getExtendedProp(self::GetName() . '::AllowDesktopNotifications') : $this->oModuleSettings->AllowDesktopNotifications,
-            'AllowMobile' => $this->oModuleSettings->AllowMobile,
+            'AllowMobile' => $this->isMobileWebclientAvailable(),
             'AllowPrefetch' => $this->oModuleSettings->AllowPrefetch,
             'AttachmentSizeLimit' => $this->oModuleSettings->AttachmentSizeLimit,
             'AutoRefreshIntervalMinutes' => $oUser && null !== $oUser->getExtendedProp(self::GetName() . '::AutoRefreshIntervalMinutes') ? $oUser->getExtendedProp(self::GetName() . '::AutoRefreshIntervalMinutes') : $this->oModuleSettings->AutoRefreshIntervalMinutes,
@@ -123,6 +123,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
             'HeaderModulesOrder' => $this->oModuleSettings->HeaderModulesOrder,
             'IsDemo' => $this->oModuleSettings->IsDemo,
             'IsMobile' => $oIntegrator->isMobile(),
+            'HasLayoutPreference' => $oIntegrator->getMobilePreference() !== null,
             'LanguageListWithNames' => $this->getLanguageList($oIntegrator->getLanguageList()),
             'MultipleFilesUploadLimit' => $this->oModuleSettings->MultipleFilesUploadLimit,
             'ShowQuotaBar' => $this->oModuleSettings->ShowQuotaBar,
@@ -220,8 +221,30 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
     public function EntryDefault()
     {
         $sResult = '';
+        $bCheckMobileLayout = false;
 
         $oIntegrator = \Aurora\System\Managers\Integrator::getInstance();
+
+        $oSettings = &\Aurora\System\Api::GetSettings();
+        if ($oSettings && \strlen($oSettings->XFrameOptions) > 0) {
+            @\header('X-Frame-Options: ' . $oSettings->XFrameOptions);
+        }
+
+        if (($_SERVER['REQUEST_METHOD'] ?? '') === 'GET'
+            && ($_SERVER['QUERY_STRING'] ?? '') === ''
+            && $this->isMobileWebclientAvailable()
+        ) {
+            // The layout at the install URL can vary with the browser's saved preference.
+            \header('Cache-Control: private, no-store');
+            $bMobile = $oIntegrator->getMobilePreference();
+            if ($bMobile === true) {
+                $sMobileHtml = \Aurora\Modules\CoreMobileWebclient\Module::Decorator()->RenderMobileVersion();
+                if (\is_string($sMobileHtml) && $sMobileHtml !== '') {
+                    return $sMobileHtml;
+                }
+            }
+            $bCheckMobileLayout = $bMobile === null;
+        }
 
         self::Decorator()->SetHtmlOutputHeaders();
 
@@ -230,7 +253,6 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
             @\header('Last-Modified: ' . \gmdate('D, d M Y H:i:s') . ' GMT');
         }
 
-        $oSettings = &\Aurora\System\Api::GetSettings();
         if ($oSettings) {
             if (($oSettings->CacheCtrl && isset($_COOKIE['aft-cache-ctrl']))) {
                 \Aurora\System\Api::setCookie(
@@ -245,22 +267,22 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 
         $sResult = \file_get_contents($this->GetPath() . '/templates/Index.html');
         if (\is_string($sResult)) {
-            if ($oSettings) {
-                $sFrameOptions = $oSettings->XFrameOptions;
-                if (0 < \strlen($sFrameOptions)) {
-                    @\header('X-Frame-Options: ' . $sFrameOptions);
-                }
-            }
-
             $sResult = strtr($sResult, array(
                 '{{IntegratorDir}}' => $oIntegrator->isRtl() ? 'rtl' : 'ltr',
                 '{{IntegratorLinks}}' => $oIntegrator->buildHeadersLink(),
-                '{{IntegratorBody}}' => $oIntegrator->buildBody()
+                '{{IntegratorBody}}' => $oIntegrator->buildBody(['check_mobile_layout' => $bCheckMobileLayout])
             ));
         }
 
 
         return $sResult;
+    }
+
+    private function isMobileWebclientAvailable(): bool
+    {
+        return $this->oModuleSettings->AllowMobile
+            && \Aurora\System\Api::GetModuleManager()->IsAllowedModule('CoreMobileWebclient')
+            && \is_file(\AU_APP_ROOT_PATH . 'static/vue-mobile/index.html');
     }
 
     /**

@@ -7,6 +7,7 @@ var
 	ko = require('knockout'),
 	
 	Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
+	Api = require('%PathToCoreWebclientModule%/js/Api.js'),
 	App = require('%PathToCoreWebclientModule%/js/App.js'),
 	Browser = require('%PathToCoreWebclientModule%/js/Browser.js'),
 	UrlUtils = require('%PathToCoreWebclientModule%/js/utils/Url.js'),
@@ -59,7 +60,8 @@ function CHeaderView()
 	this.bDebugMode = Settings.DebugMode;
 	
 	this.mobileDevice = Browser.mobileDevice;
-	this.bShowMobileSwitcher = Browser.mobileDevice && Settings.AllowMobile;
+	this.bShowMobileSwitcher = Settings.AllowMobile && !App.isPublic() && !App.isNewTab();
+	this.bShowAutomaticLayout = this.bShowMobileSwitcher && Settings.HasLayoutPreference;
 	
 	App.broadcastEvent('%ModuleName%::ConstructView::after', {'Name': this.ViewConstructorName, 'View': this});
 	
@@ -125,15 +127,26 @@ CHeaderView.prototype.switchToFullVersion = function ()
 	}, this);
 };
 
-/**
- * "?mobile" link sometimes doesn't work, maybe because of browser cache, so Ajax request is sent and page is reloaded using JS.
- */
 CHeaderView.prototype.switchToMobileVersion = function ()
 {
-	Ajax.send('Core', 'SetMobile', {'Mobile': true}, function (oResponse) {
-		if (oResponse.Result)
+	this.setLayoutPreference(true, UrlUtils.getAppPath());
+};
+
+CHeaderView.prototype.useAutomaticLayout = function ()
+{
+	this.setLayoutPreference('auto', UrlUtils.getAppPath());
+};
+
+CHeaderView.prototype.setLayoutPreference = function (mMobile, sUrl)
+{
+	Ajax.send('Core', 'SetMobile', {'Mobile': mMobile}, function (oResponse) {
+		if (oResponse.Result === true)
 		{
-			UrlUtils.goToMobileVersion();
+			window.location.assign(sUrl);
+		}
+		else
+		{
+			Api.showErrorByCode(oResponse);
 		}
 	}, this);
 };

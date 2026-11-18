@@ -13,8 +13,6 @@ import 'core-js'
 import 'regenerator-runtime/runtime'
 import utils from './utils'
 
-require('/modules/CoreWebclient/js/vendors/jquery.cookie.js');
-
 $(function () {
 	window.isPublic = false;
 	window.isNewTab = false;
@@ -78,23 +76,8 @@ $(function () {
 				const ModulesManager = require('/modules/CoreWebclient/js/ModulesManager.js')
 				const App = require('/modules/CoreWebclient/js/App.js')
 
-				if (App.redirectToVueMobileIfNeeded()) {
-					return
-				}
-
-				const bSwitchingToMobile = App.checkMobile()
-				
-				if (!bSwitchingToMobile) {
-					if (window.isPublic) {
-						App.setPublic()
-					}
-					if (window.isNewTab) {
-						App.setNewTab()
-					}
-					
-					ModulesManager.init(_.object(_.keys(oAvailableModules), aModules), window.auroraAppData)
-					App.init()
-				}
+				ModulesManager.init(_.object(_.keys(oAvailableModules), aModules), window.auroraAppData)
+				App.init()
 			})
 			.catch(function (oError) { console.error('An error occurred while loading the component:'); console.error(oError); });
 	})	

@@ -223,7 +223,11 @@ import _ from 'underscore';
 import "core-js";
 import "regenerator-runtime/runtime";
 
-$('body').ready(function () {
+$('body').ready(async function () {
+	if (window.checkMobileLayout && await require('modules/CoreWebclient/gulp-tasks/utils.js').default.reloadForMobileLayout()) {
+		return;
+	}
+
 	var oAvailableModules = {};
 	if (window.aAvailableModules) {
 `
@@ -246,21 +250,14 @@ Promise.all(_.values(oAvailableModules))
 		const ModulesManager = require('modules/CoreWebclient/js/ModulesManager.js');
 		const App = require('modules/CoreWebclient/js/App.js');
 
-		if (App.redirectToVueMobileIfNeeded()) {
-			return;
+		if (window.isPublic) {
+			App.setPublic();
 		}
-
-		const bSwitchingToMobile = App.checkMobile();
-		if (!bSwitchingToMobile) {
-			if (window.isPublic) {
-				App.setPublic();
-			}
-			if (window.isNewTab) {
-				App.setNewTab();
-			}
-			ModulesManager.init(_.object(_.keys(oAvailableModules), aModules), window.auroraAppData);
-			App.init();
+		if (window.isNewTab) {
+			App.setNewTab();
 		}
+		ModulesManager.init(_.object(_.keys(oAvailableModules), aModules), window.auroraAppData);
+		App.init();
 	})
 	.catch(function (oError) { console.error('An error occurred while loading the component:'); console.error(oError); });
 });

@@ -408,57 +408,6 @@ CApp.prototype.tokenProblem = function () {
   Screens.showError(sHtmlError, true)
 }
 
-/**
- * Redirects users with enabled mobile mode from the legacy Knockout shell to Vue mobile.
- *
- * @returns {boolean} True if redirect was initiated.
- */
-CApp.prototype.redirectToVueMobileIfNeeded = function () {
-  if (window.isNewTab || window.isPublic) {
-    return false
-  }
-
-  if (!UserSettings.AllowMobile || UrlUtils.isMobileVersionEntry()) {
-    return false
-  }
-
-  if (UserSettings.IsMobile === 1) {
-    UrlUtils.goToMobileVersion()
-    return true
-  }
-
-  return false
-}
-
-CApp.prototype.checkMobile = function () {
-  /**
-   * UserSettings.IsMobile:
-   *	-1 - first time, mobile is not determined
-   *	0 - mobile is switched off
-   *	1 - mobile is switched on
-   */
-
-  if (UserSettings.AllowMobile && UserSettings.IsMobile === -1) {
-    var Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
-      bMobile = !window.matchMedia('all and (min-width: 768px)').matches
-    Ajax.send(
-      'Core',
-      'SetMobile',
-      { Mobile: bMobile },
-      function (oResponse) {
-        if (bMobile && oResponse.Result) {
-          UrlUtils.goToMobileVersion()
-        }
-      },
-      this
-    )
-
-    return bMobile
-  }
-
-  return false
-}
-
 CApp.prototype.useGoogleAnalytics = function () {
   var oGoogleAnalytics = null,
     oFirstScript = null
