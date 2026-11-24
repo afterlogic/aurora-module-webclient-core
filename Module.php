@@ -449,7 +449,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
                         $mResult = \Aurora\System\Managers\Response::GetJsonFromObject('Json', $oResult);
                     }
                     if ($bRedirect) {
-                        Api::Location('./');
+                        Api::Location(Api::getCookiePath());
                     }
                 } elseif (isset($aArgs['Module']) && $aArgs['Module'] === 'Core' && $aArgs['Method'] === 'Logout' && $oResult['Result'] === true) {
                     Api::unsetAuthTokenCookie();
